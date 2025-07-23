@@ -1,8 +1,8 @@
 {
-  "name": "hmpps-template-typescript",
+  "name": "hmpps-external-movements-ui",
   "version": "0.0.1",
-  "description": "HMPPS Typescript Template",
-  "repository": "git@github.com:ministryofjustice/hmpps-template-typescript.git",
+  "description": "HMPPS External Movements Ui",
+  "repository": "git@github.com:ministryofjustice/hmpps-external-movements-ui.git",
   "license": "MIT",
   "scripts": {
     "prepare": "hmpps-precommit-hooks-prepare",
