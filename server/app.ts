@@ -54,7 +54,13 @@ export default function createApp(services: Services): express.Application {
     }),
   )
 
+  app.use((_req, res, next) => {
+    res.notFound = () => res.status(404).render('pages/not-found')
+    next()
+  })
+
   app.use(routes(services))
+  app.use(dpsComponents.retrieveCaseLoadData({ logger }))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
