@@ -22,8 +22,14 @@ export declare global {
       logout(done: (err: unknown) => void): void
     }
 
+    interface Response {
+      notFound(): void
+    }
+
     interface Locals {
       user: HmppsUser
+      digitalPrisonServicesUrl: string
+      prisonerProfileUrl: string
     }
   }
 }
