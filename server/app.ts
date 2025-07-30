@@ -1,4 +1,5 @@
 import express from 'express'
+import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
 
 import createError from 'http-errors'
 
@@ -18,6 +19,8 @@ import setUpWebSession from './middleware/setUpWebSession'
 
 import routes from './routes'
 import type { Services } from './services'
+import logger from '../logger'
+import config from './config'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -37,6 +40,19 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
+
+  app.get(
+    /(.*)/,
+    dpsComponents.getPageComponents({
+      logger,
+      includeSharedData: true,
+      dpsUrl: config.serviceUrls.digitalPrison,
+      timeoutOptions: {
+        response: config.apis.componentApi.timeout.response,
+        deadline: config.apis.componentApi.timeout.deadline,
+      },
+    }),
+  )
 
   app.use(routes(services))
 

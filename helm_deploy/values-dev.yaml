@@ -11,9 +11,9 @@ generic-service:
     INGRESS_URL: "https://external-movements-ui-dev.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
-    EXAMPLE_API_URL: 'https://template-kotlin-dev.hmpps.service.justice.gov.uk'
+    EXTERNAL_MOVEMENTS_API_URL: 'https://external-movements-api-dev.hmpps.service.justice.gov.uk'
     ENVIRONMENT_NAME: DEV
-    AUDIT_ENABLED: "false"
+    AUDIT_ENABLED: "true"
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-alerts-api-non-prod
