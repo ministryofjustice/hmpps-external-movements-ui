@@ -3,7 +3,7 @@
 
 generic-service:
   ingress:
-    host: external-movements-ui.hmpps.service.justice.gov.uk
+    host: external-movements.hmpps.service.justice.gov.uk
 
   env:
     INGRESS_URL: "https://external-movements-ui.hmpps.service.justice.gov.uk"
