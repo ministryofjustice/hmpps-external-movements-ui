@@ -24,7 +24,8 @@
     "rebuild": "npm run clean && npm i && npm run build",
     "precommit:secrets": "gitleaks git --pre-commit --redact --staged --verbose --config .gitleaks/config.toml",
     "precommit:lint": "node_modules/.bin/lint-staged",
-    "precommit:verify": "npm run typecheck && npm test"
+    "precommit:verify": "npm run typecheck && npm test",
+    "swagger-external-movements": "npx openapi-typescript https://external-movements-api-dev.hmpps.service.justice.gov.uk/v3/api-docs > ./server/@types/externalMovements/index.d.ts && eslint --fix \"./server/@types/externalMovements/index.d.ts\""
   },
   "engines": {
     "node": "^22",
@@ -142,6 +143,7 @@
     "lint-staged": "^16.1.2",
     "mocha-junit-reporter": "^2.2.1",
     "nock": "^14.0.6",
+    "openapi-typescript": "^7.8.0",
     "prettier": "^3.6.2",
     "prettier-plugin-jinja-template": "^2.1.0",
     "supertest": "^7.1.3",
