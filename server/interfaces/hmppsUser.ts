@@ -1,3 +1,5 @@
+import { CaseLoad } from './caseLoad'
+
 export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread'
 
 /**
@@ -6,8 +8,8 @@ export type AuthSource = 'nomis' | 'delius' | 'external' | 'azuread'
 export interface BaseUser {
   authSource: AuthSource
   username: string
-  userId: string
-  name: string
+  userId: string | undefined
+  name: string | undefined
   displayName: string
   userRoles: string[]
   token: string
@@ -23,7 +25,7 @@ export interface BaseUser {
  */
 export interface PrisonUser extends BaseUser {
   authSource: 'nomis'
-  staffId: number
+  staffId: number | undefined
 }
 
 /**
@@ -56,4 +58,8 @@ export interface AzureADUser extends BaseUser {
   authSource: 'azuread'
 }
 
-export type HmppsUser = PrisonUser | ProbationUser | ExternalUser | AzureADUser
+export type HmppsUser = (PrisonUser | ProbationUser | ExternalUser | AzureADUser) & {
+  caseLoads: CaseLoad[] | undefined
+  activeCaseLoad?: CaseLoad | undefined
+  getActiveCaseloadId: () => string | undefined
+}

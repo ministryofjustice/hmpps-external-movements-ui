@@ -2,17 +2,28 @@
   "extends": "@tsconfig/node22/tsconfig.json",
   "compileOnSave": true,
   "compilerOptions": {
-    "isolatedModules": true,
     "outDir": "./dist",
     "sourceMap": true,
+    "skipLibCheck": true,
     "noEmit": false,
-    "allowJs": false,
-    "strict": false,
+    "lib": ["dom", "es2015.promise", "DOM.Iterable", "ESNext"],
+    "types": ["cypress", "express", "express-session", "@testing-library/cypress"],
     "resolveJsonModule": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
-    "typeRoots": ["./server/@types", "./node_modules/@types"]
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "inlineSources": true,
+    // This improves issue grouping in Sentry.
+    "sourceRoot": "/"
   },
   "exclude": [
     "node_modules",
@@ -21,7 +32,12 @@
     "dist",
     "cypress.config.ts",
     "esbuild",
-    "eslint.config.mjs"
+    "eslint.config.mjs",
+    "coverage",
+    "codecov_reports",
+    "test_results",
+    "ctrf",
+    "**/*.cy.ts"
   ],
   "include": ["**/*.js", "**/*.ts"]
 }

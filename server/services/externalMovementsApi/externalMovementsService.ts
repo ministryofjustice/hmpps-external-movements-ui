@@ -1,5 +1,6 @@
 import ExternalMovementsApiClient from './externalMovementsApiClient'
 
 export default class ExternalMovementsService {
-  constructor(private readonly _externalMovementsApiClient: ExternalMovementsApiClient) {}
+  // @ts-expect-error placeholder api client
+  constructor(private readonly externalMovementsApiClient: ExternalMovementsApiClient) {}
 }

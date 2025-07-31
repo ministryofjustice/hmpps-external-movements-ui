@@ -30,6 +30,12 @@ export declare global {
       user: HmppsUser
       digitalPrisonServicesUrl: string
       prisonerProfileUrl: string
+      cspNonce: string
+      csrfToken: ReturnType<CsrfTokenGenerator>
+      asset_path: string
+      applicationName: string
+      environmentName: string
+      environmentNameColour: string
     }
   }
 }

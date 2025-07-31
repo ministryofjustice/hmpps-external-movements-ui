@@ -109,6 +109,8 @@
     "@jgoz/esbuild-plugin-typecheck": "^4.0.3",
     "@ministryofjustice/eslint-config-hmpps": "^0.0.1",
     "@ministryofjustice/hmpps-precommit-hooks": "^0.0.3",
+    "@testing-library/cypress": "^10.0.3",
+    "@testing-library/jest-dom": "^6.6.4",
     "@tsconfig/node22": "^22.0.2",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
