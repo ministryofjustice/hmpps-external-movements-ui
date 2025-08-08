@@ -1,8 +1,6 @@
 import express from 'express'
 import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
 
-import createError from 'http-errors'
-
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
@@ -62,7 +60,7 @@ export default function createApp(services: Services): express.Application {
   app.use(routes(services))
   app.use(dpsComponents.retrieveCaseLoadData({ logger }))
 
-  app.use((req, res, next) => next(createError(404, 'Not found')))
+  app.use((_req, res) => res.notFound())
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
 
   return app
