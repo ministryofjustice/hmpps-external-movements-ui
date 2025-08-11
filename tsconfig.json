@@ -7,7 +7,7 @@
     "skipLibCheck": true,
     "noEmit": false,
     "lib": ["dom", "es2015.promise", "DOM.Iterable", "ESNext"],
-    "types": ["cypress", "express", "express-session", "@testing-library/cypress"],
+    "types": ["express", "express-session"],
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -28,9 +28,7 @@
   "exclude": [
     "node_modules",
     "assets/**/*.js",
-    "integration_tests",
     "dist",
-    "cypress.config.ts",
     "esbuild",
     "eslint.config.mjs",
     "coverage",

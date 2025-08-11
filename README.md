@@ -110,7 +110,7 @@ And then either, run tests in headless mode with:
 
 `npm run int-test`
 
-Or run tests with the cypress UI:
+Or run tests with the Playwright UI:
 
 `npm run int-test-ui`
 
