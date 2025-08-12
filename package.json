@@ -85,6 +85,7 @@
     "@ministryofjustice/hmpps-prison-permissions-lib": "^0.1.0",
     "@ministryofjustice/hmpps-rest-client": "^0.0.1",
     "@playwright/test": "^1.54.2",
+    "@sentry/node": "^10.4.0",
     "applicationinsights": "^2.9.7",
     "body-parser": "^2.2.0",
     "bunyan": "^1.8.15",
