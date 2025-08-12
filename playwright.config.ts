@@ -18,7 +18,7 @@ export default defineConfig({
   retries: process.env['CI'] ? 2 : 0,
 
   // Reporter to use
-  reporter: 'html',
+  reporter: [['html'], ['playwright-ctrf-json-reporter', { outputDir: 'ctrf' }]],
 
   use: {
     // Base URL to use in actions like `await page.goto('/')`.

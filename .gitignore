@@ -118,6 +118,7 @@ dist
 
 .idea
 .vscode
+ctrf/
 dist/
 test_results/
 playwright-report/
