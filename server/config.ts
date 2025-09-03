@@ -77,10 +77,12 @@ export default {
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
     componentApi: {
+      url: get('COMPONENT_API_URL', 'http://localhost:8082', requiredInProduction),
       timeout: {
         response: Number(get('COMPONENT_API_TIMEOUT_RESPONSE', 2500)),
         deadline: Number(get('COMPONENT_API_TIMEOUT_DEADLINE', 2500)),
       },
+      agent: new AgentConfig(Number(get('COMPONENT_API_TIMEOUT_RESPONSE', 2500))),
     },
     externalMovementsApi: {
       url: get('EXTERNAL_MOVEMENTS_API_URL', 'http://localhost:8080', requiredInProduction),
@@ -90,6 +92,15 @@ export default {
         deadline: Number(get('EXTERNAL_MOVEMENTS_API_TIMEOUT_DEADLINE', 5000)),
       },
       agent: new AgentConfig(Number(get('EXTERNAL_MOVEMENTS_API_TIMEOUT_RESPONSE', 5000))),
+    },
+    prisonApi: {
+      healthPath: '/health/ping',
+      url: get('PRISON_API_URL', 'http://127.0.0.1:8080', requiredInProduction),
+      timeout: {
+        response: Number(get('PRISON_API_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('PRISON_API_TIMEOUT_DEADLINE', 10000)),
+      },
+      agent: new AgentConfig(Number(get('PRISON_API_TIMEOUT_RESPONSE', 10000))),
     },
   },
   sqs: {

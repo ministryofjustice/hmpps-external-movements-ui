@@ -17,21 +17,21 @@ import HmppsAuditClient from './hmppsAuditClient'
 import logger from '../../logger'
 import ExternalMovementsApiClient from '../services/externalMovementsApi/externalMovementsApiClient'
 
+const redisClient = config.redis.enabled ? createRedisClient() : null
+const tokenStore = redisClient ? new RedisTokenStore(redisClient) : new InMemoryTokenStore()
+
 export const dataAccess = () => {
-  const hmppsAuthClient = new AuthenticationClient(
-    config.apis.hmppsAuth,
-    logger,
-    config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
-  )
+  const hmppsAuthClient = new AuthenticationClient(config.apis.hmppsAuth, logger, tokenStore)
 
   return {
     applicationInfo,
     hmppsAuthClient,
     externalMovementsApiClient: new ExternalMovementsApiClient(hmppsAuthClient),
     hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
+    tokenStore,
   }
 }
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { AuthenticationClient, HmppsAuditClient, ExternalMovementsApiClient }
+export { AuthenticationClient, HmppsAuditClient, ExternalMovementsApiClient, tokenStore }
