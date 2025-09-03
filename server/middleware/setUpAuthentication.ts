@@ -3,10 +3,12 @@ import flash from 'connect-flash'
 import { Router } from 'express'
 import { Strategy } from 'passport-oauth2'
 import { VerificationClient, AuthenticatedRequest } from '@ministryofjustice/hmpps-auth-clients'
+import { getFrontendComponents } from '@ministryofjustice/hmpps-connect-dps-components'
 import config from '../config'
 import { HmppsUser } from '../interfaces/hmppsUser'
 import generateOauthClientToken from '../utils/clientCredentials'
 import logger from '../../logger'
+import { Services } from '../services'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
@@ -35,7 +37,7 @@ passport.use(
   ),
 )
 
-export default function setupAuthentication() {
+export default function setupAuthentication(services: Services) {
   const router = Router()
   const tokenVerificationClient = new VerificationClient(config.apis.tokenVerification, logger)
 
@@ -43,10 +45,20 @@ export default function setupAuthentication() {
   router.use(passport.session())
   router.use(flash())
 
-  router.get('/autherror', (_req, res) => {
-    res.status(401)
-    return res.render('autherror')
-  })
+  router.get(
+    '/autherror',
+    getFrontendComponents({
+      logger,
+      requestOptions: { includeSharedData: true },
+      componentApiConfig: config.apis.componentApi,
+      dpsUrl: config.serviceUrls.digitalPrison,
+      authenticationClient: services.authenticationClient,
+    }),
+    (_req, res) => {
+      res.status(401)
+      return res.render('autherror')
+    },
+  )
 
   router.get('/sign-in', passport.authenticate('oauth2'))
 

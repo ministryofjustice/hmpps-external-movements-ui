@@ -1,5 +1,5 @@
 import express from 'express'
-import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
+import { getFrontendComponents, retrieveCaseLoadData } from '@ministryofjustice/hmpps-connect-dps-components'
 import * as Sentry from '@sentry/node'
 import './sentry'
 import config from './config'
@@ -38,21 +38,19 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   nunjucksSetup(app)
-  app.use(setUpAuthentication())
+  app.use(setUpAuthentication(services))
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
 
   app.get(
     /(.*)/,
-    dpsComponents.getPageComponents({
+    getFrontendComponents({
       logger,
-      includeSharedData: true,
+      requestOptions: { includeSharedData: true },
+      componentApiConfig: config.apis.componentApi,
       dpsUrl: config.serviceUrls.digitalPrison,
-      timeoutOptions: {
-        response: config.apis.componentApi.timeout.response,
-        deadline: config.apis.componentApi.timeout.deadline,
-      },
+      authenticationClient: services.authenticationClient,
     }),
   )
 
@@ -61,7 +59,13 @@ export default function createApp(services: Services): express.Application {
     next()
   })
 
-  app.use(dpsComponents.retrieveCaseLoadData({ logger }))
+  app.use(
+    retrieveCaseLoadData({
+      logger,
+      prisonApiConfig: config.apis.prisonApi,
+      authenticationClient: services.authenticationClient,
+    }),
+  )
   app.use(routes(services))
 
   if (config.sentry.dsn) Sentry.setupExpressErrorHandler(app)
