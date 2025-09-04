@@ -1,0 +1,25 @@
+{% extends "partials/layout.njk" %}
+
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+  <h1 class="govuk-heading-l govuk-!-margin-bottom-6">Reception and External Movements</h1>
+    <div class="homepage-content">
+      <div class="govuk-width-container">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <div class="card-group govuk-grid-row">
+              <div class="govuk-grid-column-one-third card-group__item">
+                <div class="card card--clickable">
+                  <h2 class="govuk-heading-m card__heading">
+                    <a class="govuk-link govuk-link--no-visited-state card__link" href="/search-prisoner">Add a temporary absence</a>
+                  </h2>
+                  <p class="govuk-body card__description">Create a temporary absence for a prisoner</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

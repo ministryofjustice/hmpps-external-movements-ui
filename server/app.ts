@@ -22,6 +22,8 @@ import sentryMiddleware from './middleware/sentryMiddleware'
 import routes from './routes'
 import type { Services } from './services'
 import logger from '../logger'
+import { auditPageViewMiddleware } from './middleware/audit/auditPageViewMiddleware'
+import { auditApiCallMiddleware } from './middleware/audit/auditApiCallMiddleware'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -39,6 +41,8 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpStaticResources())
   nunjucksSetup(app)
   app.use(setUpAuthentication(services))
+  app.get('*any', auditPageViewMiddleware(services.auditService))
+  app.post('*any', auditApiCallMiddleware(services.auditService))
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())

@@ -40,6 +40,14 @@ const buildConfig = {
         from: path.join(cwd, 'server/views/**/*'),
         to: path.join(cwd, 'dist/server/views'),
       },
+      {
+        from: path.join(cwd, 'server/routes/**/*'),
+        to: path.join(cwd, 'dist/server/routes'),
+      },
+      {
+        from: path.join(cwd, 'server/routes/journeys/**/*'),
+        to: path.join(cwd, 'dist/server/routes/journeys'),
+      },
     ],
   },
 
@@ -98,7 +106,7 @@ const main = () => {
     )
 
     // App
-    chokidar.watch(['server/**/*'], { ...chokidarOptions, ignored: ['**/*.test.ts'] }).on(
+    chokidar.watch(['server/**/*'], { ...chokidarOptions, ignored: ['**/*.test.ts', '**/*.spec.ts'] }).on(
       'all',
       debounce(() => buildApp(buildConfig).catch(e => process.stderr.write(`${e}\n`))),
     )
