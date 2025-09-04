@@ -13,6 +13,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
     COMPONENT_API_URL: "https://frontend-components-dev.hmpps.service.justice.gov.uk" # used by hmpps-connect-dps-components module
     PRISON_API_URL: "https://prison-api-dev.prison.service.justice.gov.uk" # used by hmpps-connect-dps-components module
+    PRISONER_SEARCH_API_URL: "https://prisoner-search-dev.prison.service.justice.gov.uk"
     DPS_HOME_PAGE_URL: "https://digital-dev.prison.service.justice.gov.uk"
     PRISONER_PROFILE_URL: "https://prisoner-dev.digital.prison.service.justice.gov.uk"
     EXTERNAL_MOVEMENTS_API_URL: 'https://external-movements-api-dev.hmpps.service.justice.gov.uk'

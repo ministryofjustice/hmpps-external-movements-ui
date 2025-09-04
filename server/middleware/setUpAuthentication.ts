@@ -96,6 +96,7 @@ export default function setupAuthentication(services: Services) {
 
   router.use((req, res, next) => {
     res.locals.user = req.user as HmppsUser
+    res.locals.user.getActiveCaseloadId = () => res.locals.user.activeCaseLoad?.caseLoadId
     next()
   })
 

@@ -4,9 +4,11 @@ import { dataAccess } from '../data'
 import AuditService from './auditService'
 import ExternalMovementsService from './externalMovementsApi/externalMovementsService'
 import config from '../config'
+import PrisonerSearchApiService from './prisonerSearch/prisonerSearchService'
 
 export const services = () => {
-  const { applicationInfo, hmppsAuditClient, externalMovementsApiClient, tokenStore } = dataAccess()
+  const { applicationInfo, hmppsAuditClient, externalMovementsApiClient, prisonerSearchApiClient, tokenStore } =
+    dataAccess()
 
   const authenticationClient = new AuthenticationClient(config.apis.hmppsAuth, logger, tokenStore)
 
@@ -14,6 +16,7 @@ export const services = () => {
     applicationInfo,
     auditService: new AuditService(hmppsAuditClient),
     externalMovementsService: new ExternalMovementsService(externalMovementsApiClient),
+    prisonerSearchService: new PrisonerSearchApiService(prisonerSearchApiClient),
     authenticationClient,
   }
 }

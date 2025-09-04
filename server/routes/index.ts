@@ -2,14 +2,26 @@ import { Router } from 'express'
 
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
+import breadcrumbs from '../middleware/history/breadcrumbs'
+import { BaseRouter } from './common/routes'
+import { SearchPrisonerRoutes } from './search-prisoner/routes'
+import { historyMiddleware } from '../middleware/history/historyMiddleware'
 
-export default function routes({ auditService }: Services): Router {
-  const router = Router()
+export default function routes(services: Services): Router {
+  const { router, get } = BaseRouter()
 
-  router.get('/', async (req, res) => {
-    await auditService.logPageView(Page.EXAMPLE_PAGE, { who: res.locals.user.username, correlationId: req.id })
-    return res.render('pages/index')
+  router.use(breadcrumbs())
+  const uuidMatcher = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
+  router.use(historyMiddleware(uuidMatcher))
+
+  get('*any', (req, res, next) => {
+    res.locals['query'] = req.query
+    next()
   })
+
+  get('/', Page.HOME_PAGE, async (_req, res) => res.render('view', { showBreadcrumbs: true }))
+
+  router.use('/search-prisoner', SearchPrisonerRoutes(services))
 
   return router
 }

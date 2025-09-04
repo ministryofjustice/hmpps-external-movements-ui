@@ -27,3 +27,6 @@ export const initialiseName = (fullName?: string): string | null => {
   }
   return `${firstName[0]}. ${array.reverse()[0]}`
 }
+
+export const getQueryEntries = (query: object | undefined | null, keys: string[]) =>
+  query ? Object.entries(query).filter(([key]) => keys.includes(key)) : []

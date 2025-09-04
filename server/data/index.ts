@@ -16,6 +16,7 @@ import config from '../config'
 import HmppsAuditClient from './hmppsAuditClient'
 import logger from '../../logger'
 import ExternalMovementsApiClient from '../services/externalMovementsApi/externalMovementsApiClient'
+import PrisonerSearchApiClient from '../services/prisonerSearch/prisonerSearchApiClient'
 
 const redisClient = config.redis.enabled ? createRedisClient() : null
 const tokenStore = redisClient ? new RedisTokenStore(redisClient) : new InMemoryTokenStore()
@@ -27,6 +28,7 @@ export const dataAccess = () => {
     applicationInfo,
     hmppsAuthClient,
     externalMovementsApiClient: new ExternalMovementsApiClient(hmppsAuthClient),
+    prisonerSearchApiClient: new PrisonerSearchApiClient(hmppsAuthClient),
     hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
     tokenStore,
   }
