@@ -1,15 +1,15 @@
-import { Response } from 'express'
 import Prisoner from './prisoner'
 import PrisonerSearchApiClient from './prisonerSearchApiClient'
+import { ApiRequestContext } from '../../data/customRestClient'
 
 export default class PrisonerSearchApiService {
   constructor(private readonly prisonerSearchApiClient: PrisonerSearchApiClient) {}
 
-  getPrisonerDetails(res: Response, prisonerNumber: string): Promise<Prisoner> {
-    return this.prisonerSearchApiClient.getPrisonerDetails(res, prisonerNumber)
+  getPrisonerDetails(context: ApiRequestContext, prisonerNumber: string): Promise<Prisoner> {
+    return this.prisonerSearchApiClient.getPrisonerDetails(context, prisonerNumber)
   }
 
-  searchPrisoner(res: Response, searchTerm: string): Promise<{ content: Prisoner[] }> {
-    return this.prisonerSearchApiClient.searchPrisoner(res, searchTerm)
+  searchPrisoner(context: ApiRequestContext, searchTerm: string): Promise<{ content: Prisoner[] }> {
+    return this.prisonerSearchApiClient.searchPrisoner(context, searchTerm)
   }
 }
