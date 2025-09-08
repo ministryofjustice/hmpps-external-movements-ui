@@ -9,7 +9,7 @@ export class SearchPrisonerController {
       showBreadcrumbs: true,
       searchTerm: req.query.searchTerm,
       results: req.query.searchTerm
-        ? (await this.prisonerSearchApiService.searchPrisoner(res, req.query.searchTerm)).content
+        ? (await this.prisonerSearchApiService.searchPrisoner({ res }, req.query.searchTerm)).content
         : [],
     })
   }
