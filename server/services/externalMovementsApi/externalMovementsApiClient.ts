@@ -1,42 +1,42 @@
-import { RestClient } from '@ministryofjustice/hmpps-rest-client'
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
+import { Response } from 'superagent'
 import config from '../../config'
 import logger from '../../../logger'
+import CustomRestClient, { ApiRequestContext } from '../../data/customRestClient'
+import { components } from '../../@types/externalMovements'
 
-export default class ExternalMovementsApiClient extends RestClient {
+export default class ExternalMovementsApiClient extends CustomRestClient {
   constructor(authenticationClient: AuthenticationClient) {
-    super('External Movements API', config.apis.externalMovementsApi, logger, authenticationClient)
+    super(
+      'External Movements API',
+      config.apis.externalMovementsApi,
+      logger,
+      authenticationClient,
+      true,
+      (retry?: boolean) => (err: Error, res: Response) => {
+        if (!retry) return false
+        if (err) return true
+        if (res?.statusCode) {
+          return res.statusCode >= 500
+        }
+        return undefined
+      },
+    )
   }
 
-  /**
-   * Example: Making a request with the user's own token
-   *
-   * Use this pattern to call the API with a user's access token.
-   * This is useful when authorization depends on the user's roles and permissions.
-   *
-   * Example:
-   * ```
-   * import { asUser } from '@ministryofjustice/hmpps-rest-client'
-   *
-   * getCurrentTime(token: string) {
-   *   return this.get({ path: '/example/time' }, asUser(token))
-   * }
-   * ```
-   */
+  async getAllAbsenceTypes(context: ApiRequestContext) {
+    return this.withContext(context).get<components['schemas']['AbsenceCategorisations']>({
+      path: '/absence-categorisation/ABSENCE_TYPE',
+    })
+  }
 
-  /**
-   * Example: Making a request with a system token for a specific user
-   *
-   * Use this pattern to call the API with a system token tied to a specific user.
-   * This is typically used for auditing purposes to track system-initiated actions on behalf of a user.
-   *
-   * Example:
-   * ```
-   * import { asSystem } from '@ministryofjustice/hmpps-rest-client'
-   *
-   * getCurrentTime(username: string) {
-   *   return this.get({ path: '/example/time' }, asSystem(username))
-   * }
-   * ```
-   */
+  async getAbsenceCategories(
+    context: ApiRequestContext,
+    parentDomain: 'ABSENCE_TYPE' | 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY',
+    parentCode: string,
+  ) {
+    return this.withContext(context).get<components['schemas']['AbsenceCategorisations']>({
+      path: `/absence-categorisation/${parentDomain}/${parentCode}`,
+    })
+  }
 }

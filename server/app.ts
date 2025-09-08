@@ -24,6 +24,9 @@ import type { Services } from './services'
 import logger from '../logger'
 import { auditPageViewMiddleware } from './middleware/audit/auditPageViewMiddleware'
 import { auditApiCallMiddleware } from './middleware/audit/auditApiCallMiddleware'
+import PrisonerImageRoutes from './routes/prisonerImageRoutes'
+import populateValidationErrors from './middleware/validation/populateValidationErrors'
+import { handleApiError } from './middleware/validation/handleApiError'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -46,6 +49,8 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
+
+  app.get('/prisoner-image/:prisonNumber', new PrisonerImageRoutes(services.prisonApiService).GET)
 
   app.get(
     /(.*)/,
@@ -70,12 +75,15 @@ export default function createApp(services: Services): express.Application {
       authenticationClient: services.authenticationClient,
     }),
   )
+
+  app.use(populateValidationErrors())
   app.use(routes(services))
 
   if (config.sentry.dsn) Sentry.setupExpressErrorHandler(app)
 
   app.use((_req, res) => res.notFound())
-  app.use(errorHandler(process.env.NODE_ENV === 'production'))
+  app.use(handleApiError)
+  app.use(errorHandler(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'e2e-test'))
 
   return app
 }

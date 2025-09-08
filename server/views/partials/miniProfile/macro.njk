@@ -1,0 +1,7 @@
+{#
+ Parameters:
+    miniProfile = a component to render details from res.locals.prisonerDetails. Can be populated by populatePrisonerDetailsIfInCaseload() middleware.
+#}
+{% macro miniProfile(prisonerDetails, prisonerProfileUrl) %}
+    {%- include "./template.njk" -%}
+{% endmacro %}

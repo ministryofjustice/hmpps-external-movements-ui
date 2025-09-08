@@ -1,11 +1,12 @@
 import { Router } from 'express'
-
-import type { Services } from '../services'
+import { Services } from '../services'
 import { Page } from '../services/auditService'
 import breadcrumbs from '../middleware/history/breadcrumbs'
 import { BaseRouter } from './common/routes'
 import { SearchPrisonerRoutes } from './search-prisoner/routes'
 import { historyMiddleware } from '../middleware/history/historyMiddleware'
+import insertJourneyIdentifier from '../middleware/journey/insertJourneyIdentifier'
+import { JourneyRoutes } from './journeys/routes'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
@@ -22,6 +23,9 @@ export default function routes(services: Services): Router {
   get('/', Page.HOME_PAGE, async (_req, res) => res.render('view', { showBreadcrumbs: true }))
 
   router.use('/search-prisoner', SearchPrisonerRoutes(services))
+
+  router.use(insertJourneyIdentifier())
+  router.use('/:journeyId', JourneyRoutes(services))
 
   return router
 }
