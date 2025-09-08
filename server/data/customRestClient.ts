@@ -46,7 +46,7 @@ export default class CustomRestClient extends RestClient {
   }
 
   handleApiRequest(apiRequest: ApiRequest, res: Response) {
-    const headers: { [key: string]: string } = {}
+    const headers: { [key: string]: string } = { ...(apiRequest.headers ?? {}) }
     if (res?.locals?.user?.activeCaseLoad?.caseLoadId) {
       headers['CaseloadId'] = res.locals.user.activeCaseLoad.caseLoadId
     }
