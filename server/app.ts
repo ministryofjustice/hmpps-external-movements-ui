@@ -25,7 +25,6 @@ import logger from '../logger'
 import { auditPageViewMiddleware } from './middleware/audit/auditPageViewMiddleware'
 import { auditApiCallMiddleware } from './middleware/audit/auditApiCallMiddleware'
 import PrisonerImageRoutes from './routes/prisonerImageRoutes'
-import populateValidationErrors from './middleware/validation/populateValidationErrors'
 import { handleApiError } from './middleware/validation/handleApiError'
 
 export default function createApp(services: Services): express.Application {
@@ -76,7 +75,6 @@ export default function createApp(services: Services): express.Application {
     }),
   )
 
-  app.use(populateValidationErrors())
   app.use(routes(services))
 
   if (config.sentry.dsn) Sentry.setupExpressErrorHandler(app)

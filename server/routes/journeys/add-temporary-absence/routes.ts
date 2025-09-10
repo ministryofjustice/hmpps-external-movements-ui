@@ -2,6 +2,8 @@ import { Services } from '../../../services'
 import { BaseRouter } from '../../common/routes'
 import { populatePrisonerDetails, toPrisonerDetails } from '../../../middleware/populatePrisonerDetails'
 import { AbsenceTypeRoutes } from './absence-type/routes'
+import redirectCheckAnswersMiddleware from '../../../middleware/journey/redirectCheckAnswersMiddleware'
+import { Page } from '../../../services/auditService'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -15,6 +17,15 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
       res.notFound()
     }
   })
+
+  get('*any', Page.ADD_TEMPORARY_ABSENCE, (req, res, next) => {
+    if (req.journeyData.prisonerDetails) {
+      res.setAuditDetails.prisonNumber(req.journeyData.prisonerDetails.prisonerNumber)
+    }
+    next()
+  })
+
+  router.use(redirectCheckAnswersMiddleware([/check-answers$/]))
 
   router.use('/absence-type', AbsenceTypeRoutes(services))
 
