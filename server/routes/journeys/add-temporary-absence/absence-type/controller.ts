@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import ExternalMovementsService from '../../../../services/externalMovementsApi/externalMovementsService'
+import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
 import { SchemaType } from './schema'
 import { absenceCategorisationMapper } from '../../../common/utils'
 

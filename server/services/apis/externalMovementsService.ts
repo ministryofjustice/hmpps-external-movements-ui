@@ -1,19 +1,21 @@
+import { Response as SuperAgentResponse } from 'superagent'
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
-import { Response } from 'superagent'
+import CustomRestClient, { ApiRequestContext } from '../../data/customRestClient'
 import config from '../../config'
 import logger from '../../../logger'
-import CustomRestClient, { ApiRequestContext } from '../../data/customRestClient'
 import { components } from '../../@types/externalMovements'
 
-export default class ExternalMovementsApiClient extends CustomRestClient {
+export default class ExternalMovementsService {
+  private externalMovementsApiClient: CustomRestClient
+
   constructor(authenticationClient: AuthenticationClient) {
-    super(
+    this.externalMovementsApiClient = new CustomRestClient(
       'External Movements API',
       config.apis.externalMovementsApi,
       logger,
       authenticationClient,
       true,
-      (retry?: boolean) => (err: Error, res: Response) => {
+      (retry?: boolean) => (err: Error, res: SuperAgentResponse) => {
         if (!retry) return false
         if (err) return true
         if (res?.statusCode) {
@@ -25,7 +27,7 @@ export default class ExternalMovementsApiClient extends CustomRestClient {
   }
 
   async getAllAbsenceTypes(context: ApiRequestContext) {
-    return this.withContext(context).get<components['schemas']['AbsenceCategorisations']>({
+    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['AbsenceCategorisations']>({
       path: '/absence-categorisation/ABSENCE_TYPE',
     })
   }
@@ -35,7 +37,7 @@ export default class ExternalMovementsApiClient extends CustomRestClient {
     parentDomain: 'ABSENCE_TYPE' | 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY',
     parentCode: string,
   ) {
-    return this.withContext(context).get<components['schemas']['AbsenceCategorisations']>({
+    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['AbsenceCategorisations']>({
       path: `/absence-categorisation/${parentDomain}/${parentCode}`,
     })
   }

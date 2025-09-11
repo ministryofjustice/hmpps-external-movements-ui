@@ -1,6 +1,6 @@
 import { HmppsUser } from '../../interfaces/hmppsUser'
 import { Breadcrumbs } from '../../middleware/history/breadcrumbs'
-import Prisoner from '../../services/prisonerSearch/prisoner'
+import Prisoner from '../../services/apis/model/prisoner'
 import { PrisonerDetails, JourneyData } from '../journeys'
 
 export declare module 'express-session' {

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import PrisonerSearchApiService from '../../services/prisonerSearch/prisonerSearchService'
+import PrisonerSearchApiService from '../../services/apis/prisonerSearchService'
 
 export class SearchPrisonerController {
   constructor(readonly prisonerSearchApiService: PrisonerSearchApiService) {}

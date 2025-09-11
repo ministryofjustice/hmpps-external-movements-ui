@@ -1,5 +1,5 @@
 import { PrisonerBasePermission, prisonerPermissionsGuard } from '@ministryofjustice/hmpps-prison-permissions-lib'
-import Prisoner from '../services/prisonerSearch/prisoner'
+import Prisoner from '../services/apis/model/prisoner'
 import { PrisonerDetails } from '../@types/journeys'
 import { Services } from '../services'
 
