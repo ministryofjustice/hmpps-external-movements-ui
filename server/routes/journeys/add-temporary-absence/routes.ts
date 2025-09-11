@@ -4,6 +4,9 @@ import { populatePrisonerDetails, toPrisonerDetails } from '../../../middleware/
 import { AbsenceTypeRoutes } from './absence-type/routes'
 import redirectCheckAnswersMiddleware from '../../../middleware/journey/redirectCheckAnswersMiddleware'
 import { Page } from '../../../services/auditService'
+import { AbsenceSubTypeRoutes } from './absence-subtype/routes'
+import { ReasonCategoryRoutes } from './reason-category/routes'
+import { AbsenceReasonRoutes } from './reason/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -25,9 +28,12 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
     next()
   })
 
-  router.use(redirectCheckAnswersMiddleware([/check-answers$/]))
+  router.use(redirectCheckAnswersMiddleware([/absence-type/, /absence-subtype/, /reason/, /check-answers$/]))
 
   router.use('/absence-type', AbsenceTypeRoutes(services))
+  router.use('/absence-subtype', AbsenceSubTypeRoutes(services))
+  router.use('/reason-category', ReasonCategoryRoutes(services))
+  router.use('/reason', AbsenceReasonRoutes(services))
 
   return router
 }
