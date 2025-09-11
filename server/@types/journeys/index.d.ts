@@ -19,5 +19,14 @@ export type JourneyData = {
 }
 
 export type AddTemporaryAbsenceJourney = Partial<{
+  categorySubJourney: Partial<{
+    absenceType: components['schemas']['AbsenceCategorisation']
+    absenceSubType: components['schemas']['AbsenceCategorisation']
+    reasonCategory: components['schemas']['AbsenceCategorisation']
+    reason: components['schemas']['AbsenceCategorisation']
+  }>
   absenceType: components['schemas']['AbsenceCategorisation']
+  absenceSubType: components['schemas']['AbsenceCategorisation']
+  reasonCategory: components['schemas']['AbsenceCategorisation']
+  reason: components['schemas']['AbsenceCategorisation']
 }>

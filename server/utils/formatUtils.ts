@@ -53,3 +53,8 @@ export const firstNameSpaceLastName = (person: { firstName: string; lastName: st
 }
 
 export const possessiveComma = (name: string) => (name.endsWith('s') ? `${name}’` : `${name}’s`)
+
+export const formatRefDataName = (val: string) => {
+  const [firstWord, ...otherWords] = val.split(/\s+/)
+  return [lowercaseExceptAcronym(firstWord ?? ''), ...otherWords].join(' ')
+}

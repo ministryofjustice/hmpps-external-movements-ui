@@ -1,4 +1,7 @@
+import { Request, Response } from 'express'
 import { components } from '../../@types/externalMovements'
+import ExternalMovementsService from '../../services/apis/externalMovementsService'
+import { AddTemporaryAbsenceJourney } from '../../@types/journeys'
 
 export const absenceCategorisationMapper = ({
   code,
@@ -6,6 +9,172 @@ export const absenceCategorisationMapper = ({
   hintText,
 }: components['schemas']['AbsenceCategorisation']) => ({
   value: code,
-  text: description,
+  text: description.replace(/Paid work - |Unpaid work - /, ''),
   hint: hintText ? { text: hintText } : undefined,
 })
+
+export const getAbsenceCategorisationsForDomain = async (
+  externalMovementsService: ExternalMovementsService,
+  req: Request,
+  res: Response,
+  domain: 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY' | 'ABSENCE_REASON',
+) => {
+  const { absenceType, absenceSubType, reasonCategory } = getCategoryFromJourney(req.journeyData.addTemporaryAbsence!)
+
+  if (absenceType?.nextDomain === domain) {
+    return externalMovementsService.getAbsenceCategories({ res }, 'ABSENCE_TYPE', absenceType!.code)
+  }
+
+  if (absenceSubType?.nextDomain === domain) {
+    return externalMovementsService.getAbsenceCategories({ res }, 'ABSENCE_SUB_TYPE', absenceSubType!.code)
+  }
+
+  if (reasonCategory?.nextDomain === domain) {
+    return externalMovementsService.getAbsenceCategories({ res }, 'ABSENCE_REASON_CATEGORY', reasonCategory!.code)
+  }
+
+  throw new Error(
+    `No ${domain} found for Absence Type: ${absenceType?.code}, Absence Subtype: ${absenceSubType?.code}, Reason Category: ${reasonCategory?.code}`,
+  )
+}
+
+export const getAbsenceCategoryBackUrl = (
+  req: Request,
+  domain: 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY' | 'ABSENCE_REASON',
+) => {
+  const { absenceType, absenceSubType, reasonCategory } = getCategoryFromJourney(req.journeyData.addTemporaryAbsence!)
+
+  if (absenceType?.nextDomain === domain) {
+    return 'absence-type'
+  }
+  if (absenceSubType?.nextDomain === domain) {
+    return 'absence-subtype'
+  }
+  if (reasonCategory?.nextDomain === domain) {
+    return 'reason-category'
+  }
+
+  throw new Error(
+    `No ${domain} back url for Absence Type: ${absenceType?.code}, Absence Subtype: ${absenceSubType?.code}, Reason Category: ${reasonCategory?.code}`,
+  )
+}
+
+export const getCategoryFromJourney = (journey: AddTemporaryAbsenceJourney) =>
+  journey.categorySubJourney ?? {
+    absenceType: journey.absenceType,
+    absenceSubType: journey.absenceSubType,
+    reasonCategory: journey.reasonCategory,
+    reason: journey.reason,
+  }
+
+export const updateCategorySubJourney = <T, ResBody, ReqBody, Q>(
+  req: Request<T, ResBody, ReqBody, Q>,
+  domain: 'ABSENCE_TYPE' | 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY' | 'ABSENCE_REASON',
+  val: components['schemas']['AbsenceCategorisation'],
+) => {
+  if (req.journeyData.addTemporaryAbsence!.categorySubJourney) {
+    const { absenceType, absenceSubType, reasonCategory } = req.journeyData.addTemporaryAbsence!.categorySubJourney!
+    switch (domain) {
+      case 'ABSENCE_TYPE':
+        if (absenceType?.code !== val.code) {
+          delete req.journeyData.addTemporaryAbsence!.categorySubJourney.absenceSubType
+          delete req.journeyData.addTemporaryAbsence!.categorySubJourney.reasonCategory
+          delete req.journeyData.addTemporaryAbsence!.categorySubJourney.reason
+        }
+        req.journeyData.addTemporaryAbsence!.categorySubJourney.absenceType = val
+        break
+      case 'ABSENCE_SUB_TYPE':
+        if (absenceSubType?.code !== val.code) {
+          delete req.journeyData.addTemporaryAbsence!.categorySubJourney.reasonCategory
+          delete req.journeyData.addTemporaryAbsence!.categorySubJourney.reason
+        }
+        req.journeyData.addTemporaryAbsence!.categorySubJourney.absenceSubType = val
+        break
+      case 'ABSENCE_REASON_CATEGORY':
+        if (reasonCategory?.code !== val.code) {
+          delete req.journeyData.addTemporaryAbsence!.categorySubJourney.reason
+        }
+        req.journeyData.addTemporaryAbsence!.categorySubJourney.reasonCategory = val
+        break
+      case 'ABSENCE_REASON':
+        req.journeyData.addTemporaryAbsence!.categorySubJourney.reason = val
+        break
+      default:
+        break
+    }
+  } else {
+    const { absenceType, absenceSubType, reasonCategory, reason } = req.journeyData.addTemporaryAbsence!
+    switch (domain) {
+      case 'ABSENCE_TYPE':
+        if (absenceType?.code !== val.code) {
+          req.journeyData.addTemporaryAbsence!.categorySubJourney = { absenceType: val }
+        } else {
+          req.journeyData.addTemporaryAbsence!.categorySubJourney = {
+            ...(absenceType ? { absenceType } : {}),
+            ...(absenceSubType ? { absenceSubType } : {}),
+            ...(reasonCategory ? { reasonCategory } : {}),
+            ...(reason ? { reason } : {}),
+          }
+        }
+        break
+      case 'ABSENCE_SUB_TYPE':
+        if (absenceSubType?.code !== val.code) {
+          req.journeyData.addTemporaryAbsence!.categorySubJourney = {
+            ...(absenceType ? { absenceType } : {}),
+            absenceSubType: val,
+          }
+        } else {
+          req.journeyData.addTemporaryAbsence!.categorySubJourney = {
+            ...(absenceType ? { absenceType } : {}),
+            ...(absenceSubType ? { absenceSubType } : {}),
+            ...(reasonCategory ? { reasonCategory } : {}),
+            ...(reason ? { reason } : {}),
+          }
+        }
+        break
+      case 'ABSENCE_REASON_CATEGORY':
+        if (reasonCategory?.code !== val.code) {
+          req.journeyData.addTemporaryAbsence!.categorySubJourney = {
+            ...(absenceType ? { absenceType } : {}),
+            ...(absenceSubType ? { absenceSubType } : {}),
+            reasonCategory: val,
+          }
+        } else {
+          req.journeyData.addTemporaryAbsence!.categorySubJourney = {
+            ...(absenceType ? { absenceType } : {}),
+            ...(absenceSubType ? { absenceSubType } : {}),
+            ...(reasonCategory ? { reasonCategory } : {}),
+            ...(reason ? { reason } : {}),
+          }
+        }
+        break
+      case 'ABSENCE_REASON':
+        req.journeyData.addTemporaryAbsence!.categorySubJourney = {
+          ...(absenceType ? { absenceType } : {}),
+          ...(absenceSubType ? { absenceSubType } : {}),
+          ...(reasonCategory ? { reasonCategory } : {}),
+          reason: val,
+        }
+        break
+      default:
+        break
+    }
+  }
+}
+
+export const saveCategorySubJourney = <T, ResBody, ReqBody, Q>(req: Request<T, ResBody, ReqBody, Q>) => {
+  delete req.journeyData.addTemporaryAbsence!.absenceType
+  delete req.journeyData.addTemporaryAbsence!.absenceSubType
+  delete req.journeyData.addTemporaryAbsence!.reasonCategory
+  delete req.journeyData.addTemporaryAbsence!.reason
+
+  const { absenceType, absenceSubType, reasonCategory, reason } =
+    req.journeyData.addTemporaryAbsence!.categorySubJourney!
+
+  if (absenceType) req.journeyData.addTemporaryAbsence!.absenceType = absenceType
+  if (absenceSubType) req.journeyData.addTemporaryAbsence!.absenceSubType = absenceSubType
+  if (reasonCategory) req.journeyData.addTemporaryAbsence!.reasonCategory = reasonCategory
+  if (reason) req.journeyData.addTemporaryAbsence!.reason = reason
+
+  delete req.journeyData.addTemporaryAbsence!.categorySubJourney
+}

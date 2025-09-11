@@ -1,25 +1,32 @@
 import { Request, Response } from 'express'
 import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
 import { SchemaType } from './schema'
-import { absenceCategorisationMapper } from '../../../common/utils'
+import {
+  absenceCategorisationMapper,
+  getCategoryFromJourney,
+  saveCategorySubJourney,
+  updateCategorySubJourney,
+} from '../../../common/utils'
 
 export class AbsenceTypeController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
+    const { absenceType } = getCategoryFromJourney(req.journeyData.addTemporaryAbsence!)
+
     res.render('add-temporary-absence/absence-type/view', {
       backUrl: `${res.locals.prisonerProfileUrl}/prisoner/${req.journeyData.prisonerDetails!.prisonerNumber}`,
       options: (await this.externalMovementsService.getAllAbsenceTypes({ res })).items.map(absenceCategorisationMapper),
-      absenceType:
-        res.locals['formResponses']?.['absenceType'] ?? req.journeyData.addTemporaryAbsence!.absenceType?.code,
+      absenceType: res.locals['formResponses']?.['absenceType'] ?? absenceType?.code,
     })
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    req.journeyData.addTemporaryAbsence!.absenceType = req.body.absenceType
+    updateCategorySubJourney(req, 'ABSENCE_TYPE', req.body.absenceType)
 
     if (!req.body.absenceType.nextDomain) {
-      return res.redirect('single-or-repeating')
+      saveCategorySubJourney(req)
+      return res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'single-or-repeating')
     }
 
     switch (req.body.absenceType.nextDomain) {
