@@ -19,7 +19,7 @@ export default class AuditService {
   constructor(private readonly hmppsAuditClient: HmppsAuditClient) {}
 
   async logAuditEvent(event: AuditEvent) {
-    await this.hmppsAuditClient.sendMessage(event)
+    await this.hmppsAuditClient.sendMessage(event, false)
   }
 
   async logPageView(page: Page, eventDetails: PageViewEventDetails) {
@@ -27,6 +27,6 @@ export default class AuditService {
       ...eventDetails,
       what: `PAGE_VIEW_${page}`,
     }
-    await this.hmppsAuditClient.sendMessage(event)
+    await this.hmppsAuditClient.sendMessage(event, false)
   }
 }

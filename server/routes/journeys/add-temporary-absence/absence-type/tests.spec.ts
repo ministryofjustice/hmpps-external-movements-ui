@@ -1,6 +1,6 @@
 import { v4 as uuidV4 } from 'uuid'
 import { expect, test } from '@playwright/test'
-import { resetStubs } from '../../../../../integration_tests/mockApis/wiremock'
+import { getSentAuditEvents, resetStubs } from '../../../../../integration_tests/mockApis/wiremock'
 import auth from '../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../../integration_tests/steps/signIn'
@@ -62,6 +62,32 @@ test.describe('/add-temporary-absence/absence-type', () => {
     await expect(testPage.rotlRadio()).toBeVisible()
     await expect(testPage.rotlRadio()).not.toBeChecked()
     await expect(testPage.button('Continue')).toBeVisible()
+
+    // verify audit events
+    expect(await getSentAuditEvents()).toEqual(
+      expect.arrayContaining([
+        {
+          what: 'PAGE_VIEW',
+          subjectType: 'PRISONER_ID',
+          subjectId: prisonNumber,
+          details: `{"pageUrl":"/${journeyId}/add-temporary-absence/absence-type","pageName":"ADD_TEMPORARY_ABSENCE","activeCaseLoadId":"LEI"}`,
+          service: 'hmpps-external-movements-ui',
+          who: 'USER1',
+          correlationId: expect.any(String),
+          when: expect.any(String),
+        },
+        {
+          what: 'PAGE_VIEW_ACCESS_ATTEMPT',
+          subjectType: 'PRISONER_ID',
+          subjectId: prisonNumber,
+          details: `{"pageUrl":"/${journeyId}/add-temporary-absence/absence-type","pageName":"ADD_TEMPORARY_ABSENCE","activeCaseLoadId":"LEI"}`,
+          service: 'hmpps-external-movements-ui',
+          who: 'USER1',
+          correlationId: expect.any(String),
+          when: expect.any(String),
+        },
+      ]),
+    )
 
     // verify validation error
     await testPage.clickContinue()
