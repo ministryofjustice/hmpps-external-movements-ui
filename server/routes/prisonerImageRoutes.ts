@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import path from 'path'
-import PrisonApiService from '../services/prisonApi/prisonApiService'
+import PrisonApiService from '../services/apis/prisonApiService'
 
 const placeHolderImage = path.join(process.cwd(), '/dist/assets/images/prisoner-profile-image.png')
 

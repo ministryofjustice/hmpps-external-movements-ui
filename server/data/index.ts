@@ -15,9 +15,6 @@ import { createRedisClient } from './redisClient'
 import config from '../config'
 import HmppsAuditClient from './hmppsAuditClient'
 import logger from '../../logger'
-import ExternalMovementsApiClient from '../services/externalMovementsApi/externalMovementsApiClient'
-import PrisonerSearchApiClient from '../services/prisonerSearch/prisonerSearchApiClient'
-import PrisonApiClient from '../services/prisonApi/prisonApiClient'
 import CacheInterface from './cache/cacheInterface'
 import RedisCache from './cache/redisCache'
 import InMemoryCache from './cache/inMemoryCache'
@@ -26,14 +23,11 @@ const redisClient = config.redis.enabled ? createRedisClient() : null
 const tokenStore = redisClient ? new RedisTokenStore(redisClient) : new InMemoryTokenStore()
 
 export const dataAccess = () => {
-  const hmppsAuthClient = new AuthenticationClient(config.apis.hmppsAuth, logger, tokenStore)
+  const authenticationClient = new AuthenticationClient(config.apis.hmppsAuth, logger, tokenStore)
 
   return {
     applicationInfo,
-    hmppsAuthClient,
-    externalMovementsApiClient: new ExternalMovementsApiClient(hmppsAuthClient),
-    prisonerSearchApiClient: new PrisonerSearchApiClient(hmppsAuthClient),
-    prisonApiClient: new PrisonApiClient(hmppsAuthClient),
+    authenticationClient,
     hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
     tokenStore,
     telemetryClient,
@@ -44,4 +38,4 @@ export const dataAccess = () => {
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { AuthenticationClient, HmppsAuditClient, ExternalMovementsApiClient, tokenStore }
+export { AuthenticationClient, HmppsAuditClient, tokenStore }

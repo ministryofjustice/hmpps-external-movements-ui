@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { Request, Response } from 'express'
-import ExternalMovementsService from '../../../../services/externalMovementsApi/externalMovementsService'
+import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
 import { createSchema } from '../../../../middleware/validation/validationMiddleware'
 import { validateAndTransformReferenceData } from '../../../../utils/validations/validateReferenceData'
 
