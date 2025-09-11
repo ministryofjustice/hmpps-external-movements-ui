@@ -20,11 +20,7 @@ export const stubGetPrisonerImage = () => {
       urlPattern: '/prison-api/api/bookings/offenderNo/([a-zA-Z0-9]*)/image/data',
     },
     response: {
-      status: 200,
-      bodyFileName: 'assets/images/prisoner-profile-image.png',
-      headers: {
-        'Content-Type': 'image/png',
-      },
+      status: 404,
     },
   })
 }

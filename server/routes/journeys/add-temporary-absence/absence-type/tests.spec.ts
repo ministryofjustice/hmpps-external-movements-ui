@@ -8,6 +8,7 @@ import { randomPrisonNumber } from '../../../../../integration_tests/data/testDa
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
+import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 
 class AbsenceTypePage extends BaseTestPage {
   async verifyContent(prisonNumber: string) {
@@ -41,6 +42,7 @@ test.describe('/add-temporary-absence/absence-type', () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
+      stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
     ])
