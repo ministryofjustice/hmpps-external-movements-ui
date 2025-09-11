@@ -1,13 +1,7 @@
 import { HmppsUser } from '../../interfaces/hmppsUser'
 import { Breadcrumbs } from '../../middleware/history/breadcrumbs'
 import Prisoner from '../../services/prisonerSearch/prisoner'
-
-export type JourneyData = {
-  instanceUnixEpoch: number
-  isCheckAnswers?: boolean
-  journeyCompleted?: boolean
-  b64History?: string | undefined
-}
+import { PrisonerDetails, JourneyData } from '../journeys'
 
 export declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
@@ -74,6 +68,7 @@ export declare global {
           [key: string]: unknown
         }
       }
+      prisonerDetails?: PrisonerDetails
     }
   }
 }

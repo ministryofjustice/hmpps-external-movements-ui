@@ -7,6 +7,7 @@ import tokenVerification from './tokenVerification'
 interface UserToken {
   name?: string
   roles?: string[]
+  user_id?: string
 }
 
 const createToken = (userToken: UserToken) => {
@@ -20,6 +21,7 @@ const createToken = (userToken: UserToken) => {
     authorities,
     jti: '83b50a10-cca6-41db-985f-e87efb303ddb',
     client_id: 'clientid',
+    user_id: userToken.user_id,
   }
 
   return jwt.sign(payload, 'secret', { expiresIn: '1h' })
@@ -117,6 +119,7 @@ const token = (userToken: UserToken) =>
       },
       jsonBody: {
         access_token: createToken(userToken),
+        auth_source: 'nomis',
         token_type: 'bearer',
         user_name: 'USER1',
         expires_in: 599,

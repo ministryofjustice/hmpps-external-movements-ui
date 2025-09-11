@@ -4,6 +4,7 @@ export enum Page {
   EXAMPLE_PAGE = 'EXAMPLE_PAGE',
   HOME_PAGE = 'HOME_PAGE',
   SEARCH_PRISONER = 'SEARCH_PRISONER',
+  ADD_TEMPORARY_ABSENCE = 'ADD_TEMPORARY_ABSENCE',
 }
 
 export interface PageViewEventDetails {

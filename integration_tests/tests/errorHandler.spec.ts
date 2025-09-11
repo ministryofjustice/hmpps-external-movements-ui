@@ -1,8 +1,12 @@
 import { expect, test } from '@playwright/test'
+import { v4 as uuidV4 } from 'uuid'
 import { resetStubs } from '../mockApis/wiremock'
 import auth from '../mockApis/auth'
 import componentsApi from '../mockApis/componentsApi'
 import { signIn } from '../steps/signIn'
+import { stubGetAllAbsenceTypesError } from '../mockApis/externalMovementsApi'
+import { randomPrisonNumber } from '../data/testData'
+import { stubGetPrisonerDetails } from '../mockApis/prisonerSearchApi'
 
 test.describe('test error handlers', () => {
   test.beforeEach(async ({ page }) => {
@@ -17,10 +21,12 @@ test.describe('test error handlers', () => {
     await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible()
   })
 
-  test.skip('should show user error message on API errors', async ({ page }) => {
-    // TODO: add test after implementing a page that needs an API call
-    // externalMovementsApi.stubApiError()
-    await page.goto('/page-that-needs-api-call')
-    await expect(page.getByText('Error message')).toBeVisible()
+  test('should show user error message on API errors', async ({ page }) => {
+    const prisonNumber = randomPrisonNumber()
+    await stubGetPrisonerDetails({ prisonerNumber: prisonNumber })
+    await stubGetAllAbsenceTypesError()
+
+    await page.goto(`/${uuidV4()}/add-temporary-absence/start/${prisonNumber}`)
+    await expect(page.getByRole('link', { name: 'Stubbed API error returned' })).toBeVisible()
   })
 })

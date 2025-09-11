@@ -3,10 +3,16 @@ import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
 import fs from 'fs'
-import { getQueryEntries, initialiseName } from './utils'
+import { addSelectValue, getQueryEntries, initialiseName, setCheckedValue, setSelectedValue } from './utils'
 import config from '../config'
 import logger from '../../logger'
 import { firstNameSpaceLastName } from './formatUtils'
+import { formatDate } from './dateTimeUtils'
+import {
+  buildErrorSummaryList,
+  customErrorOrderBuilder,
+  findError,
+} from '../middleware/validation/validationMiddleware'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -51,4 +57,11 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
   njkEnv.addFilter('firstNameSpaceLastName', firstNameSpaceLastName)
   njkEnv.addFilter('getQueryEntries', getQueryEntries)
+  njkEnv.addFilter('formatDate', formatDate)
+  njkEnv.addFilter('findError', findError)
+  njkEnv.addFilter('buildErrorSummaryList', buildErrorSummaryList)
+  njkEnv.addFilter('customErrorOrderBuilder', customErrorOrderBuilder)
+  njkEnv.addFilter('addSelectValue', addSelectValue)
+  njkEnv.addFilter('setSelectedValue', setSelectedValue)
+  njkEnv.addFilter('setCheckedValue', setCheckedValue)
 }

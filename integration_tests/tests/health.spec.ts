@@ -3,7 +3,7 @@ import { resetStubs } from '../mockApis/wiremock'
 import auth from '../mockApis/auth'
 import componentsApi from '../mockApis/componentsApi'
 import tokenVerification from '../mockApis/tokenVerification'
-import externalMovementsApi from '../mockApis/externalMovementsApi'
+import { stubExternalMovementsPing } from '../mockApis/externalMovementsApi'
 import { stubPrisonApiHealth } from '../mockApis/prisonApi'
 import { stubPrisonerSearchPing } from '../mockApis/prisonerSearchApi'
 
@@ -14,7 +14,7 @@ test.describe('Healthcheck', () => {
       await Promise.all([
         auth.stubAuthPing(),
         tokenVerification.stubTokenVerificationPing(),
-        externalMovementsApi.stubExternalMovementsPing(),
+        stubExternalMovementsPing(),
         componentsApi.stubComponents(),
         stubPrisonApiHealth(),
         stubPrisonerSearchPing(),
