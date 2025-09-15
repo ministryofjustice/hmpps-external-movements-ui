@@ -40,18 +40,23 @@ export const getAbsenceCategorisationsForDomain = async (
 
 export const getAbsenceCategoryBackUrl = (
   req: Request,
-  domain: 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY' | 'ABSENCE_REASON',
+  domain: 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY' | 'ABSENCE_REASON' | null,
 ) => {
-  const { absenceType, absenceSubType, reasonCategory } = getCategoryFromJourney(req.journeyData.addTemporaryAbsence!)
+  const { absenceType, absenceSubType, reasonCategory, reason } = getCategoryFromJourney(
+    req.journeyData.addTemporaryAbsence!,
+  )
 
-  if (absenceType?.nextDomain === domain) {
+  if ((absenceType?.nextDomain ?? null) === domain) {
     return 'absence-type'
   }
-  if (absenceSubType?.nextDomain === domain) {
+  if ((absenceSubType?.nextDomain ?? null) === domain) {
     return 'absence-subtype'
   }
-  if (reasonCategory?.nextDomain === domain) {
+  if ((reasonCategory?.nextDomain ?? null) === domain) {
     return 'reason-category'
+  }
+  if ((reason?.nextDomain ?? null) === domain) {
+    return 'reason'
   }
 
   throw new Error(

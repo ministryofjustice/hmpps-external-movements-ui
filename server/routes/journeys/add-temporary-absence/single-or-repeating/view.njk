@@ -1,0 +1,48 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Select single or repeating absence - Add a temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukRadios({
+        name: "repeat",
+        errorMessage: validationErrors | findError('repeat'),
+        fieldset: {
+          legend: {
+            text: 'Is this a single or repeating absence?',
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--xl"
+          }
+        },
+        items: [
+          {
+            value: 'SINGLE',
+            text: "Single",
+            hint: {
+              text: "This absence is a one-off and will not repeat."
+            },
+            checked: repeat === false
+          },
+          {
+            value: 'REPEATING',
+            text: "Repeating",
+            hint: {
+              text: "There will be more than one absence. For example, the prisoner will be going out to work on a regular basis."
+            },
+            checked: repeat === true
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}
