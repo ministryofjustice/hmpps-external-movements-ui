@@ -28,7 +28,7 @@ export class BaseTestPage {
     return this
   }
 
-  async clickButton(name: string) {
+  async clickButton(name: string | RegExp) {
     await this.button(name).click()
   }
 
@@ -36,15 +36,15 @@ export class BaseTestPage {
     await this.clickButton('Continue')
   }
 
-  button(name: string) {
+  button(name: string | RegExp) {
     return this.page.getByRole('button', { name })
   }
 
-  radio(name: string) {
+  radio(name: string | RegExp) {
     return this.page.getByRole('radio', { name })
   }
 
-  link(name: string) {
+  link(name: string | RegExp) {
     return this.page.getByRole('link', { name })
   }
 }

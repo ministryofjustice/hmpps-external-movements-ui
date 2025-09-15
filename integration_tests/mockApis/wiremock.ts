@@ -52,4 +52,17 @@ const getMatchingRequests = (body?: string | object) => superagent.post(`${url}/
 const resetStubs = (): Promise<Array<Response>> =>
   Promise.all([superagent.delete(`${url}/mappings`), superagent.delete(`${url}/requests`)])
 
-export { stubFor, getMatchingRequests, resetStubs, successStub, errorStub }
+const getSentAuditEvents = async (): Promise<object[]> => {
+  const wiremockApiResponse: Response = await superagent
+    .post(`${url}/requests/find`)
+    .send({ method: 'POST', urlPath: '/' })
+
+  return (wiremockApiResponse.body || '[]').requests.map((itm: { body?: string }) => {
+    if (!itm.body || !itm.body.includes('MessageBody')) {
+      return undefined
+    }
+    return JSON.parse(JSON.parse(itm.body)['MessageBody'])
+  })
+}
+
+export { stubFor, getMatchingRequests, resetStubs, successStub, errorStub, getSentAuditEvents }

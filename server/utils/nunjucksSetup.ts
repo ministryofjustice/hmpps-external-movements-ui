@@ -6,7 +6,7 @@ import fs from 'fs'
 import { addSelectValue, getQueryEntries, initialiseName, setCheckedValue, setSelectedValue } from './utils'
 import config from '../config'
 import logger from '../../logger'
-import { firstNameSpaceLastName } from './formatUtils'
+import { firstNameSpaceLastName, formatRefDataName } from './formatUtils'
 import { formatDate } from './dateTimeUtils'
 import {
   buildErrorSummaryList,
@@ -56,6 +56,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
   njkEnv.addFilter('firstNameSpaceLastName', firstNameSpaceLastName)
+  njkEnv.addFilter('formatRefDataName', formatRefDataName)
   njkEnv.addFilter('getQueryEntries', getQueryEntries)
   njkEnv.addFilter('formatDate', formatDate)
   njkEnv.addFilter('findError', findError)
