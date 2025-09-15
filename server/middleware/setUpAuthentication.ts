@@ -1,5 +1,6 @@
 import passport from 'passport'
 import flash from 'connect-flash'
+import * as Sentry from '@sentry/node'
 import { Router } from 'express'
 import { Strategy } from 'passport-oauth2'
 import { VerificationClient, AuthenticatedRequest } from '@ministryofjustice/hmpps-auth-clients'
@@ -95,6 +96,7 @@ export default function setupAuthentication(services: Services) {
   })
 
   router.use((req, res, next) => {
+    if (req.isAuthenticated()) Sentry.setUser({ username: req.user.username })
     res.locals.user = req.user as HmppsUser
     res.locals.user.getActiveCaseloadId = () => res.locals.user.activeCaseLoad?.caseLoadId
     next()

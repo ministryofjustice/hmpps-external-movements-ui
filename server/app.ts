@@ -1,7 +1,6 @@
 import express from 'express'
 import { getFrontendComponents, retrieveCaseLoadData } from '@ministryofjustice/hmpps-connect-dps-components'
 import * as Sentry from '@sentry/node'
-import './sentry'
 import config from './config'
 
 import nunjucksSetup from './utils/nunjucksSetup'
@@ -26,6 +25,7 @@ import { auditPageViewMiddleware } from './middleware/audit/auditPageViewMiddlew
 import { auditApiCallMiddleware } from './middleware/audit/auditApiCallMiddleware'
 import PrisonerImageRoutes from './routes/prisonerImageRoutes'
 import { handleApiError } from './middleware/validation/handleApiError'
+import './sentry'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
