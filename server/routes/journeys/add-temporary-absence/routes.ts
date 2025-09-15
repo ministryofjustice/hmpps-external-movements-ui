@@ -7,6 +7,7 @@ import { Page } from '../../../services/auditService'
 import { AbsenceSubTypeRoutes } from './absence-subtype/routes'
 import { ReasonCategoryRoutes } from './reason-category/routes'
 import { AbsenceReasonRoutes } from './reason/routes'
+import { SingleOrRepeatingRoutes } from './single-or-repeating/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -34,6 +35,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/absence-subtype', AbsenceSubTypeRoutes(services))
   router.use('/reason-category', ReasonCategoryRoutes(services))
   router.use('/reason', AbsenceReasonRoutes(services))
+  router.use('/single-or-repeating', SingleOrRepeatingRoutes())
 
   return router
 }
