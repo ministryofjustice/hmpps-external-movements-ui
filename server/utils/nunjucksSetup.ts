@@ -7,13 +7,7 @@ import { addSelectValue, getQueryEntries, initialiseName, setCheckedValue, setSe
 import config from '../config'
 import logger from '../../logger'
 import { firstNameSpaceLastName, formatRefDataName, lastNameCommaFirstName } from './formatUtils'
-import {
-  formatDate,
-  formatInputDate,
-  parseDatePickerMinDate,
-  todayStringGBFormat,
-  yesterdayStringGBFormat,
-} from './dateTimeUtils'
+import { formatDate, formatInputDate, todayStringGBFormat, yesterdayStringGBFormat } from './dateTimeUtils'
 import {
   buildErrorSummaryList,
   customErrorOrderBuilder,
@@ -70,7 +64,6 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('getQueryEntries', getQueryEntries)
   njkEnv.addFilter('formatDate', formatDate)
   njkEnv.addFilter('formatInputDate', formatInputDate)
-  njkEnv.addFilter('parseDatePickerMinDate', parseDatePickerMinDate)
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('buildErrorSummaryList', buildErrorSummaryList)
   njkEnv.addFilter('customErrorOrderBuilder', customErrorOrderBuilder)

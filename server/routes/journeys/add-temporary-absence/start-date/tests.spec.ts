@@ -101,23 +101,12 @@ test.describe('/add-temporary-absence/start-date', () => {
     await testPage.link('Release time minute must be 00 to 59').click()
     await expect(testPage.minuteField()).toBeFocused()
 
-    const today = formatInputDate(new Date().toISOString())!
-    await testPage.dateField().fill(today)
-    await testPage.hourField().fill('00')
-    await testPage.minuteField().fill('00')
-    await testPage.clickContinue()
-
-    await testPage.link('Release time must be in the future').click()
-    await expect(testPage.hourField()).toBeFocused()
-
     // verify next page routing
-    const inputDate = new Date()
-    inputDate.setDate(inputDate.getDate() + 5)
-    const inputDateString = formatInputDate(inputDate.toISOString())!
+    const today = formatInputDate(new Date().toISOString())!
 
-    await testPage.dateField().fill(inputDateString)
-    await testPage.hourField().fill('23')
-    await testPage.minuteField().fill('59')
+    await testPage.dateField().fill(today)
+    await testPage.hourField().fill('12')
+    await testPage.minuteField().fill('30')
     await testPage.clickContinue()
 
     expect(page.url()).toMatch(/\/add-temporary-absence\/end-date/)
@@ -125,8 +114,8 @@ test.describe('/add-temporary-absence/start-date', () => {
     // verify input values are persisted
     await page.goBack()
     await page.reload()
-    await expect(testPage.dateField()).toHaveValue(inputDateString)
-    await expect(testPage.hourField()).toHaveValue('23')
-    await expect(testPage.minuteField()).toHaveValue('59')
+    await expect(testPage.dateField()).toHaveValue(today)
+    await expect(testPage.hourField()).toHaveValue('12')
+    await expect(testPage.minuteField()).toHaveValue('30')
   })
 })
