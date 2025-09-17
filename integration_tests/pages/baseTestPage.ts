@@ -47,4 +47,8 @@ export class BaseTestPage {
   link(name: string | RegExp) {
     return this.page.getByRole('link', { name })
   }
+
+  textbox(name: string | RegExp) {
+    return this.page.getByRole('textbox', { name })
+  }
 }

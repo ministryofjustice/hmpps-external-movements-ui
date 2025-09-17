@@ -1,0 +1,47 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% macro validatedTimeInput(opts) %}
+  {% set id = opts.id %}
+  {% set name = opts.name or id %}
+  {% set fieldset = opts.fieldset %}
+  {% set hint = opts.hint %}
+  {% set classes = opts.classes %}
+
+  {% set hour = opts.hour %}
+  {% set minute = opts.minute %}
+
+  {% if opts.validationErrors %}
+    {% set hourError = opts.validationErrors[name + 'Hour'] or '' %}
+    {% set minuteError = opts.validationErrors[name + 'Minute'] or '' %}
+  {% endif %}
+
+  {% macro joinErrors(errors) %}
+    {% if errors %}{% for error in errors %}{% if error and error.length > 0 %}{{ error }}{% endif %}{% endfor %}{% endif %}
+  {% endmacro %}
+
+  {{ govukDateInput({
+    id: id,
+    name: name,
+    fieldset: fieldset,
+    hint: hint,
+    errorMessage: {
+      html: '<span id="hour-error" class="govuk-error-message">' + joinErrors(hourError) + '</span><span id="minute-error" class="govuk-error-message">' + joinErrors(minuteError) + '</span>'
+    } if hourError or minuteError,
+    items: [
+      {
+        id: name + "Hour",
+        name: name + "Hour",
+        label: "Hour",
+        value: hour,
+        classes: 'govuk-input--width-2'
+      },
+      {
+        id: name + "Minute",
+        name: name + "Minute",
+        label: "Minute",
+        value: minute,
+        classes: 'govuk-input--width-2'
+      }
+    ]
+  }) }}
+{% endmacro %}
