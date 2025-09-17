@@ -96,7 +96,7 @@ jobs:
     needs:
       - build
       - helm_lint
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2.4.6 # temporarily specify an older version to avoid deployment bug
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2.4.9 # temporarily specify an older version to avoid deployment bug
     secrets: inherit
     with:
       environment: 'dev'
