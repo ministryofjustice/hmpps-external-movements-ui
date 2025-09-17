@@ -33,14 +33,14 @@
         name: name + "Hour",
         label: "Hour",
         value: hour,
-        classes: 'govuk-input--width-2'
+        classes: 'govuk-input--width-2' + (' govuk-input--error' if hourError)
       },
       {
         id: name + "Minute",
         name: name + "Minute",
         label: "Minute",
         value: minute,
-        classes: 'govuk-input--width-2'
+        classes: 'govuk-input--width-2' + (' govuk-input--error' if minuteError)
       }
     ]
   }) }}
