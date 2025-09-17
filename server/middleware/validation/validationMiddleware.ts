@@ -8,10 +8,12 @@ export type fieldErrors = {
 }
 export const buildErrorSummaryList = (array: fieldErrors) => {
   if (!array) return null
-  return Object.entries(array).map(([field, error]) => ({
-    text: error?.[0],
-    href: `#${field}`,
-  }))
+  return Object.entries(array)
+    .map(([field, error]) => ({
+      text: error?.[0],
+      href: `#${field}`,
+    }))
+    .filter(({ text }) => text)
 }
 
 export const findError = (errors: fieldErrors, fieldName: string) => {
