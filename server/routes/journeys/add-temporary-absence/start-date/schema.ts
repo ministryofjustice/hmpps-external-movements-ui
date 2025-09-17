@@ -29,6 +29,10 @@ export const schema = createSchema({
       message: 'Enter a release time',
       path: ['startTimeHour'],
     })
+    if (!startTimeMinute?.length) {
+      // empty error message to highlight both input fields with error
+      ctx.addIssue({ code: 'custom', message: '', path: ['startTime'] })
+    }
   } else if (!startTimeMinute?.length) {
     ctx.addIssue({
       code: 'custom',
