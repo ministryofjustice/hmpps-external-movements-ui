@@ -35,22 +35,23 @@ export const schema = createSchema({
       message: 'Enter a release time',
       path: ['startTimeMinute'],
     })
-  } else {
-    if (!parsedHour?.success) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Release time hour must be 00 to 23',
-        path: ['startTimeHour'],
-      })
-    }
-    if (!parsedMinute?.success) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Release time minute must be 00 to 59',
-        path: ['startTimeMinute'],
-      })
-    }
   }
+
+  if (parsedHour?.error) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'Release time hour must be 00 to 23',
+      path: ['startTimeHour'],
+    })
+  }
+  if (parsedMinute?.error) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'Release time minute must be 00 to 59',
+      path: ['startTimeMinute'],
+    })
+  }
+
   if (parsedStartDate.success && parsedHour?.success && parsedMinute?.success) {
     return {
       startDate: parsedStartDate.data,
