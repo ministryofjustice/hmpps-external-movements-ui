@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { $ZodSuperRefineIssue } from 'zod/v4/core'
+import { isToday } from 'date-fns'
 import { createSchema } from '../../../../middleware/validation/validationMiddleware'
 import { checkTodayOrFuture, validateTransformDate } from '../../../../utils/validations/validateDatePicker'
 import { parseHour, parseMinute } from '../../../../utils/validations/validateTime'
@@ -57,6 +58,20 @@ export const schema = createSchema({
   }
 
   if (parsedStartDate.success && parsedHour?.success && parsedMinute?.success) {
+    if (
+      isToday(new Date(parsedStartDate.data)) &&
+      `${parsedHour.data}:${parsedMinute.data}` <= new Date().toLocaleTimeString('en-GB').substring(0, 5)
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Release time must be in the future',
+        path: ['startTimeHour'],
+      })
+      // empty error message to highlight both input fields with error
+      ctx.addIssue({ code: 'custom', message: '', path: ['startTime'] })
+      return z.NEVER
+    }
+
     return {
       startDate: parsedStartDate.data,
       startTimeHour: parsedHour.data,
