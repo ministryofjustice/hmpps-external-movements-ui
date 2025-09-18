@@ -100,6 +100,7 @@ test.describe('/add-temporary-absence/single-or-repeating', () => {
     await expect(testPage.repeatingRadio()).toBeVisible()
     await expect(testPage.repeatingRadio()).not.toBeChecked()
     await expect(testPage.button('Continue')).toBeVisible()
+    testPage.historyParam(page.url(), [/\/add-temporary-absence\/single-or-repeating/])
 
     // verify validation error
     await testPage.clickContinue()
@@ -110,11 +111,16 @@ test.describe('/add-temporary-absence/single-or-repeating', () => {
     await testPage.singleRadio().click()
     await testPage.clickContinue()
     expect(page.url()).toMatch(/\/add-temporary-absence\/start-date/)
+    testPage.historyParam(page.url(), [
+      /\/add-temporary-absence\/single-or-repeating/,
+      /\/add-temporary-absence\/start-date/,
+    ])
 
     // verify input values are persisted
     await page.goBack()
     await page.reload()
     await expect(testPage.singleRadio()).toBeChecked()
+    testPage.historyParam(page.url(), [/\/add-temporary-absence\/single-or-repeating/])
   })
 
   test('should try routing to start-end-date', async ({ page }) => {
