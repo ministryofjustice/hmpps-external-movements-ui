@@ -6,8 +6,8 @@ import fs from 'fs'
 import { addSelectValue, getQueryEntries, initialiseName, setCheckedValue, setSelectedValue } from './utils'
 import config from '../config'
 import logger from '../../logger'
-import { firstNameSpaceLastName, formatRefDataName } from './formatUtils'
-import { formatDate } from './dateTimeUtils'
+import { firstNameSpaceLastName, formatRefDataName, lastNameCommaFirstName } from './formatUtils'
+import { formatDate, formatInputDate, todayStringGBFormat, yesterdayStringGBFormat } from './dateTimeUtils'
 import {
   buildErrorSummaryList,
   customErrorOrderBuilder,
@@ -53,12 +53,17 @@ export default function nunjucksSetup(app: express.Express): void {
     },
   )
 
+  njkEnv.addGlobal('todayStringGBFormat', todayStringGBFormat)
+  njkEnv.addGlobal('yesterdayStringGBFormat', yesterdayStringGBFormat)
+
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
   njkEnv.addFilter('firstNameSpaceLastName', firstNameSpaceLastName)
+  njkEnv.addFilter('lastNameCommaFirstName', lastNameCommaFirstName)
   njkEnv.addFilter('formatRefDataName', formatRefDataName)
   njkEnv.addFilter('getQueryEntries', getQueryEntries)
   njkEnv.addFilter('formatDate', formatDate)
+  njkEnv.addFilter('formatInputDate', formatInputDate)
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('buildErrorSummaryList', buildErrorSummaryList)
   njkEnv.addFilter('customErrorOrderBuilder', customErrorOrderBuilder)

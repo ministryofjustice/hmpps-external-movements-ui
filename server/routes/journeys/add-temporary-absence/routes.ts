@@ -2,12 +2,12 @@ import { Services } from '../../../services'
 import { BaseRouter } from '../../common/routes'
 import { populatePrisonerDetails, toPrisonerDetails } from '../../../middleware/populatePrisonerDetails'
 import { AbsenceTypeRoutes } from './absence-type/routes'
-import redirectCheckAnswersMiddleware from '../../../middleware/journey/redirectCheckAnswersMiddleware'
 import { Page } from '../../../services/auditService'
 import { AbsenceSubTypeRoutes } from './absence-subtype/routes'
 import { ReasonCategoryRoutes } from './reason-category/routes'
 import { AbsenceReasonRoutes } from './reason/routes'
 import { SingleOrRepeatingRoutes } from './single-or-repeating/routes'
+import { StartDateRoutes } from './start-date/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -29,13 +29,12 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
     next()
   })
 
-  router.use(redirectCheckAnswersMiddleware([/absence-type/, /absence-subtype/, /reason/, /check-answers$/]))
-
   router.use('/absence-type', AbsenceTypeRoutes(services))
   router.use('/absence-subtype', AbsenceSubTypeRoutes(services))
   router.use('/reason-category', ReasonCategoryRoutes(services))
   router.use('/reason', AbsenceReasonRoutes(services))
   router.use('/single-or-repeating', SingleOrRepeatingRoutes())
+  router.use('/start-date', StartDateRoutes())
 
   return router
 }
