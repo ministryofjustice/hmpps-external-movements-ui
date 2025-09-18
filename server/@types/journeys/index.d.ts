@@ -36,6 +36,6 @@ export type AddTemporaryAbsenceJourney = Partial<{
   }
   startDate: string
   startTime: string
-  endDate: string
-  endTime: string
+  returnDate: string
+  returnTime: string
 }>

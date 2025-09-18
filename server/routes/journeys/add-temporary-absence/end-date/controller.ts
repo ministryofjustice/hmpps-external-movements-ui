@@ -4,22 +4,22 @@ import { formatInputDate } from '../../../../utils/dateTimeUtils'
 
 export class EndDateController {
   GET = async (req: Request, res: Response) => {
-    const endDate =
-      res.locals['formResponses']?.['endDate'] ?? formatInputDate(req.journeyData.addTemporaryAbsence!.endDate)
+    const returnDate =
+      res.locals['formResponses']?.['returnDate'] ?? formatInputDate(req.journeyData.addTemporaryAbsence!.returnDate)
 
-    const endTime = (req.journeyData.addTemporaryAbsence!.endTime ?? '').split(':')
+    const returnTime = (req.journeyData.addTemporaryAbsence!.returnTime ?? '').split(':')
 
-    const endTimeHour = res.locals['formResponses']?.['endTimeHour'] ?? endTime[0]
-    const endTimeMinute = res.locals['formResponses']?.['endTimeMinute'] ?? endTime[1]
+    const returnTimeHour = res.locals['formResponses']?.['returnTimeHour'] ?? returnTime[0]
+    const returnTimeMinute = res.locals['formResponses']?.['returnTimeMinute'] ?? returnTime[1]
 
     res.render('add-temporary-absence/end-date/view', {
       backUrl: 'start-date',
       startDate:
         req.journeyData.addTemporaryAbsence!.startDateTimeSubJourney?.startDate ??
         req.journeyData.addTemporaryAbsence!.startDate,
-      endDate,
-      endTimeHour,
-      endTimeMinute,
+      returnDate,
+      returnTimeHour,
+      returnTimeMinute,
     })
   }
 
@@ -32,8 +32,8 @@ export class EndDateController {
 
       delete req.journeyData.addTemporaryAbsence!.startDateTimeSubJourney
     }
-    req.journeyData.addTemporaryAbsence!.endDate = req.body.endDate
-    req.journeyData.addTemporaryAbsence!.endTime = `${req.body.endTimeHour}:${req.body.endTimeMinute}`
+    req.journeyData.addTemporaryAbsence!.returnDate = req.body.returnDate
+    req.journeyData.addTemporaryAbsence!.returnTime = `${req.body.returnTimeHour}:${req.body.returnTimeMinute}`
 
     res.redirect('location-type')
   }
