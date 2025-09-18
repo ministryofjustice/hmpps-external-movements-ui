@@ -1,0 +1,99 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Check your answers - Add a temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Check this information before saving this absence</h1>
+
+    <h2 class="govuk-heading-m">Absence information</h2>
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: {
+            text: "Absence type"
+          },
+          value: {
+            text: absenceType.description
+          },
+          actions: {
+            items: [
+                {
+                  href: "absence-type",
+                  text: "Change",
+                  visuallyHiddenText: "absence type",
+                  classes: "govuk-link--no-visited-state"
+                }
+            ]
+          }
+        },
+        {
+          key: {
+          text: "Absence sub-type"
+        },
+          value: {
+          text: absenceSubType.description
+        },
+          actions: {
+          items: [
+            {
+              href: "absence-subtype",
+              text: "Change",
+              visuallyHiddenText: "absence sub-type",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        } if absenceSubType,
+        {
+          key: {
+          text: "Absence reason"
+        },
+          value: {
+          text: reason.description
+        },
+          actions: {
+          items: [
+            {
+              href: "reason",
+              text: "Change",
+              visuallyHiddenText: "absence reason",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        } if reason,
+        {
+          key: {
+          text: "Single or repeating absence"
+        },
+          value: {
+          text: 'Repeating' if repeat else 'Single'
+        },
+          actions: {
+          items: [
+            {
+              href: "single-or-repeating",
+              text: "Change",
+              visuallyHiddenText: "single or repeating absence type",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        }
+      ] | removeNullish
+    }) }}
+
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukButton({
+        text: "Confirm and save",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

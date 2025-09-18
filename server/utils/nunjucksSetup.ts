@@ -77,4 +77,5 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('addSelectValue', addSelectValue)
   njkEnv.addFilter('setSelectedValue', setSelectedValue)
   njkEnv.addFilter('setCheckedValue', setCheckedValue)
+  njkEnv.addFilter('removeNullish', arr => arr.filter(Boolean))
 }

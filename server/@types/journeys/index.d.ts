@@ -38,4 +38,27 @@ export type AddTemporaryAbsenceJourney = Partial<{
   startTime: string
   returnDate: string
   returnTime: string
+  locationSubJourney: {
+    locationType: components['schemas']['CodedDescription']
+  }
+  locationType: components['schemas']['CodedDescription']
+  location: {
+    id: string
+    flat?: string | null
+    property?: string | null
+    street?: string | null
+    area?: string | null
+    cityDescription?: string | null
+    countyDescription?: string | null
+    postcode?: string | null
+    countryDescription: string | null
+  }
+  accompaniedSubJourney: {
+    accompanied: boolean
+  }
+  accompanied: boolean
+  accompaniedBy: components['schemas']['CodedDescription']
+  transport: components['schemas']['CodedDescription']
+  notes: string | null
+  requireApproval: boolean
 }>
