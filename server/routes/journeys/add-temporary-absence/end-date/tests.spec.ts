@@ -10,20 +10,21 @@ import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApi
 import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
+import { formatInputDate } from '../../../../utils/dateTimeUtils'
 
-class EndDatePage extends BaseTestPage {
+class StartDatePage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
-      pageUrl: /\/add-temporary-absence\/end-date/,
-      title: 'Enter absence end date and time - Add a temporary absence - DPS',
+      pageUrl: /\/add-temporary-absence\/start-date/,
+      title: 'Enter absence start date and time - Add a temporary absence - DPS',
       caption: 'Create a Temporary Absence',
       heading: 'Add absence details',
-      backUrl: /start-date/,
+      backUrl: /single-or-repeating/,
     })
   }
 
   dateField() {
-    return this.textbox(/What date will (.+?) return to prison\?/)
+    return this.textbox(/What date will (.+?) be released\?/)
   }
 
   hourField() {
@@ -35,7 +36,7 @@ class EndDatePage extends BaseTestPage {
   }
 }
 
-test.describe('/add-temporary-absence/end-date', () => {
+test.describe('/add-temporary-absence/start-date', () => {
   const prisonNumber = randomPrisonNumber()
 
   test.beforeEach(async ({ page }) => {
@@ -60,12 +61,10 @@ test.describe('/add-temporary-absence/end-date', () => {
           description: 'Police production',
         },
         repeat: false,
-        startDate: '2025-05-05',
-        startTime: '10:00',
       },
     })
 
-    await page.goto(`/${journeyId}/add-temporary-absence/end-date`)
+    await page.goto(`/${journeyId}/add-temporary-absence/start-date`)
   }
 
   test('should try all cases', async ({ page }) => {
@@ -73,7 +72,7 @@ test.describe('/add-temporary-absence/end-date', () => {
     await startJourney(page, journeyId)
 
     // verify page content
-    const testPage = await new EndDatePage(page).verifyContent()
+    const testPage = await new StartDatePage(page).verifyContent()
 
     await expect(testPage.dateField()).toBeVisible()
     await expect(testPage.dateField()).toHaveValue('')
@@ -85,9 +84,9 @@ test.describe('/add-temporary-absence/end-date', () => {
 
     // verify validation error
     await testPage.clickContinue()
-    await testPage.link('Enter or select a return date').click()
+    await testPage.link('Enter or select a release date').click()
     await expect(testPage.dateField()).toBeFocused()
-    await testPage.link('Enter a return time').click()
+    await testPage.link('Enter a release time').click()
     await expect(testPage.hourField()).toBeFocused()
 
     await testPage.dateField().fill('1/1/1999')
@@ -95,32 +94,28 @@ test.describe('/add-temporary-absence/end-date', () => {
     await testPage.minuteField().fill('b')
     await testPage.clickContinue()
 
-    await testPage.link('Enter a date that is the same as or later than 5/5/2025').click()
+    await testPage.link('Release date must be today or in the future').click()
     await expect(testPage.dateField()).toBeFocused()
-    await testPage.link('Return time hour must be 00 to 23').click()
+    await testPage.link('Release time hour must be 00 to 23').click()
     await expect(testPage.hourField()).toBeFocused()
-    await testPage.link('Return time minute must be 00 to 59').click()
+    await testPage.link('Release time minute must be 00 to 59').click()
     await expect(testPage.minuteField()).toBeFocused()
 
-    await testPage.dateField().fill('5/5/2025')
-    await testPage.hourField().fill('10')
-    await testPage.minuteField().fill('0')
-    await testPage.clickContinue()
-
-    await testPage.link('Enter a time that is later than 10:00').click()
-    await expect(testPage.hourField()).toBeFocused()
-
     // verify next page routing
-    await testPage.dateField().fill('6/5/2025')
+    const today = formatInputDate(new Date().toISOString())!
+
+    await testPage.dateField().fill(today)
+    await testPage.hourField().fill('12')
+    await testPage.minuteField().fill('30')
     await testPage.clickContinue()
 
-    expect(page.url()).toMatch(/\/add-temporary-absence\/location-type/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/end-date/)
 
     // verify input values are persisted
     await page.goBack()
     await page.reload()
-    await expect(testPage.dateField()).toHaveValue('6/5/2025')
-    await expect(testPage.hourField()).toHaveValue('10')
-    await expect(testPage.minuteField()).toHaveValue('00')
+    await expect(testPage.dateField()).toHaveValue(today)
+    await expect(testPage.hourField()).toHaveValue('12')
+    await expect(testPage.minuteField()).toHaveValue('30')
   })
 })

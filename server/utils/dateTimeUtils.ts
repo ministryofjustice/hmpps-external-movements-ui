@@ -22,3 +22,9 @@ export const yesterdayStringGBFormat = () => {
   currentDate.setDate(currentDate.getDate() - 1)
   return DATE_FORMAT_GB.format(currentDate)
 }
+
+export const parseDatePickerMinDate = (date: string) => {
+  const currentDate = new Date(date)
+  currentDate.setDate(currentDate.getDate() - 1)
+  return DATE_FORMAT_GB.format(currentDate)
+}

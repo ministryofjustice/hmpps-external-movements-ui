@@ -8,44 +8,42 @@ import { formatInputDate } from '../../../../utils/dateTimeUtils'
 
 export const schema = async (req: Request, _res: Response) => {
   return createSchema({
-    returnDate: z.string().optional(),
-    returnTimeHour: z.string().optional(),
-    returnTimeMinute: z.string().optional(),
-  }).transform(({ returnDate, returnTimeHour, returnTimeMinute }, ctx) => {
+    endDate: z.string().optional(),
+    endTimeHour: z.string().optional(),
+    endTimeMinute: z.string().optional(),
+  }).transform(({ endDate, endTimeHour, endTimeMinute }, ctx) => {
     const startDate = (req.journeyData.addTemporaryAbsence!.startDateTimeSubJourney?.startDate ??
       req.journeyData.addTemporaryAbsence!.startDate)!
     const startTime = (req.journeyData.addTemporaryAbsence!.startDateTimeSubJourney?.startTime ??
       req.journeyData.addTemporaryAbsence!.startTime)!
 
-    const parsedReturnDate = validateTransformDate(
+    const parsedEndDate = validateTransformDate(
       getMinDateChecker(new Date(startDate)),
       'Enter or select a return date',
       'Enter or select a valid return date',
       `Enter a date that is the same as or later than ${formatInputDate(startDate)}`,
-    ).safeParse(returnDate)
+    ).safeParse(endDate)
 
-    parsedReturnDate.error?.issues?.forEach(issue =>
-      ctx.addIssue({ ...issue, path: ['returnDate'] } as $ZodSuperRefineIssue),
-    )
+    parsedEndDate.error?.issues?.forEach(issue => ctx.addIssue({ ...issue, path: ['endDate'] } as $ZodSuperRefineIssue))
 
-    const parsedHour = returnTimeHour?.length ? parseHour(returnTimeHour) : undefined
-    const parsedMinute = returnTimeMinute?.length ? parseMinute(returnTimeMinute) : undefined
+    const parsedHour = endTimeHour?.length ? parseHour(endTimeHour) : undefined
+    const parsedMinute = endTimeMinute?.length ? parseMinute(endTimeMinute) : undefined
 
-    if (!returnTimeHour?.length) {
+    if (!endTimeHour?.length) {
       ctx.addIssue({
         code: 'custom',
         message: 'Enter a return time',
-        path: ['returnTimeHour'],
+        path: ['endTimeHour'],
       })
-      if (!returnTimeMinute?.length) {
+      if (!endTimeMinute?.length) {
         // empty error message to highlight both input fields with error
-        ctx.addIssue({ code: 'custom', message: '', path: ['returnTime'] })
+        ctx.addIssue({ code: 'custom', message: '', path: ['endTime'] })
       }
-    } else if (!returnTimeMinute?.length) {
+    } else if (!endTimeMinute?.length) {
       ctx.addIssue({
         code: 'custom',
         message: 'Enter a return time',
-        path: ['returnTimeMinute'],
+        path: ['endTimeMinute'],
       })
     }
 
@@ -53,32 +51,32 @@ export const schema = async (req: Request, _res: Response) => {
       ctx.addIssue({
         code: 'custom',
         message: 'Return time hour must be 00 to 23',
-        path: ['returnTimeHour'],
+        path: ['endTimeHour'],
       })
     }
     if (parsedMinute?.error) {
       ctx.addIssue({
         code: 'custom',
         message: 'Return time minute must be 00 to 59',
-        path: ['returnTimeMinute'],
+        path: ['endTimeMinute'],
       })
     }
 
-    if (parsedReturnDate.success && parsedHour?.success && parsedMinute?.success) {
-      if (parsedReturnDate.data === startDate && `${parsedHour.data}:${parsedMinute.data}` <= startTime) {
+    if (parsedEndDate.success && parsedHour?.success && parsedMinute?.success) {
+      if (parsedEndDate.data === startDate && `${parsedHour.data}:${parsedMinute.data}` <= startTime) {
         ctx.addIssue({
           code: 'custom',
           message: `Enter a time that is later than ${startTime}`,
-          path: ['returnTimeHour'],
+          path: ['endTimeHour'],
         })
         // empty error message to highlight both input fields with error
-        ctx.addIssue({ code: 'custom', message: '', path: ['returnTime'] })
+        ctx.addIssue({ code: 'custom', message: '', path: ['endTime'] })
         return z.NEVER
       }
       return {
-        returnDate: parsedReturnDate.data,
-        returnTimeHour: parsedHour.data,
-        returnTimeMinute: parsedMinute.data,
+        endDate: parsedEndDate.data,
+        endTimeHour: parsedHour.data,
+        endTimeMinute: parsedMinute.data,
       }
     }
     return z.NEVER
