@@ -64,7 +64,7 @@ export class BaseTestPage {
     }
   }
 
-  stripHistoryParam(url: string) {
+  private stripHistoryParam(url: string) {
     const actualUrl = new URL(url.startsWith('http') ? url : `http://localhost:3000${url}`)
     actualUrl.searchParams.delete('history')
     return url.split('?')[0]! + (actualUrl.searchParams.size ? '?' : '') + actualUrl.searchParams.toString()
