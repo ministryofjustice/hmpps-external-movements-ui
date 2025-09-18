@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test'
+import { deserialiseHistory } from '../../server/middleware/history/historyMiddleware'
 
 export class BaseTestPage {
   constructor(public readonly page: Page) {}
@@ -23,7 +24,8 @@ export class BaseTestPage {
       await expect(this.page.locator('.govuk-caption-l')).toContainText(caption)
     }
     if (backUrl) {
-      await expect(this.page.getByRole('link', { name: /^Back$/ })).toHaveAttribute('href', backUrl)
+      const url = await this.page.getByRole('link', { name: /^Back$/ }).getAttribute('href')
+      expect(this.stripHistoryParam(url!)).toMatch(backUrl)
     }
     return this
   }
@@ -46,5 +48,21 @@ export class BaseTestPage {
 
   link(name: string | RegExp) {
     return this.page.getByRole('link', { name })
+  }
+
+  historyParam(url: string, history: RegExp[]) {
+    const actualUrl = new URL(url)
+    const b64History = actualUrl.searchParams.get('history')
+    const actualHistory = deserialiseHistory(b64History as string)
+
+    for (let i = 0; i < history.length; i += 1) {
+      expect(actualHistory[i]).toMatch(history[i]!)
+    }
+  }
+
+  stripHistoryParam(url: string) {
+    const actualUrl = new URL(url.startsWith('http') ? url : `http://localhost:3000${url}`)
+    actualUrl.searchParams.delete('history')
+    return url.split('?')[0]! + (actualUrl.searchParams.size ? '?' : '') + actualUrl.searchParams.toString()
   }
 }
