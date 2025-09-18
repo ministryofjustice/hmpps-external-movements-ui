@@ -13,8 +13,15 @@ export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
 
   router.use(breadcrumbs())
-  const uuidMatcher = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
-  router.use(historyMiddleware(uuidMatcher))
+  router.use(
+    historyMiddleware(() => [
+      {
+        matcher: /^\/$/,
+        text: 'Reception and External Movements',
+        alias: Page.HOME_PAGE,
+      },
+    ]),
+  )
 
   router.use(populateValidationErrors())
 
