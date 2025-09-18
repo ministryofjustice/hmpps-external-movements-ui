@@ -7,13 +7,13 @@ export class StartDateController {
     const startDate =
       res.locals['formResponses']?.['startDate'] ??
       formatInputDate(
-        req.journeyData.addTemporaryAbsence!.startDate ??
-          req.journeyData.addTemporaryAbsence!.startDateTimeSubJourney?.startDate,
+        req.journeyData.addTemporaryAbsence!.startDateTimeSubJourney?.startDate ??
+          req.journeyData.addTemporaryAbsence!.startDate,
       )
 
     const startTime = (
-      req.journeyData.addTemporaryAbsence!.startTime ??
       req.journeyData.addTemporaryAbsence!.startDateTimeSubJourney?.startTime ??
+      req.journeyData.addTemporaryAbsence!.startTime ??
       ''
     ).split(':')
 
