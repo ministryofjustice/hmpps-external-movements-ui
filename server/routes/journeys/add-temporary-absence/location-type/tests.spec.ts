@@ -51,7 +51,7 @@ test.describe('/add-temporary-absence/location-type', () => {
     await page.goto(`/${journeyId}/add-temporary-absence/location-type`)
   }
 
-  test('should try work reasons scenario', async ({ page }) => {
+  test('should try happy path', async ({ page }) => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId)
 

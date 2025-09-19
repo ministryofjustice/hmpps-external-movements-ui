@@ -2,9 +2,9 @@ import { LocationTypeController } from './controller'
 import { validate } from '../../../../middleware/validation/validationMiddleware'
 import { schemaFactory } from './schemas'
 import { BaseRouter } from '../../../common/routes'
-import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
+import { Services } from '../../../../services'
 
-export const LocationTypeRoutes = (externalMovementsService: ExternalMovementsService) => {
+export const LocationTypeRoutes = ({ externalMovementsService }: Services) => {
   const { router, get, post } = BaseRouter()
   const controller = new LocationTypeController(externalMovementsService)
 

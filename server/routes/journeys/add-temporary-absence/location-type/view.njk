@@ -7,12 +7,16 @@
 
 {% block innerContent %}
     <span class="govuk-caption-l">Add a temporary absence</span>
-    <label for="locationType">
-        <h1 class="govuk-heading-l govuk-!-margin-bottom-7">What type of location will {{prisonerDetails | firstNameSpaceLastName}} be going to?</h1>
-    </label>
     <form method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         {{ govukRadios({
+            fieldset: {
+                legend: {
+                    text: "What type of location will " + prisonerDetails | firstNameSpaceLastName + " be going to?",
+                    isPageHeading: true,
+                    classes: "govuk-fieldset__legend--l"
+                }
+            },
             id: "locationType",
             name: "locationType",
             items: locationTypeOptions | setCheckedValue(locationType),

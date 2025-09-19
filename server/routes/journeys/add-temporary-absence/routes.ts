@@ -38,6 +38,6 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/single-or-repeating', SingleOrRepeatingRoutes())
   router.use('/start-date', StartDateRoutes())
   router.use('/end-date', EndDateRoutes())
-  router.use('/location-type', LocationTypeRoutes(services.externalMovementsService))
+  router.use('/location-type', LocationTypeRoutes(services))
   return router
 }
