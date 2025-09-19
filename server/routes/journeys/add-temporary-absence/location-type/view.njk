@@ -19,7 +19,7 @@
             },
             id: "locationType",
             name: "locationType",
-            items: locationTypeOptions | setCheckedValue(locationType),
+            items: locationTypeOptions | fromRefData | setCheckedValue(locationType),
             errorMessage: validationErrors | findError('locationType')
         }) }}
         {{ govukButton({
