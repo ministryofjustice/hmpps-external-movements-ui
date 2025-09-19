@@ -25,7 +25,7 @@ class LocationTypePage extends BaseTestPage {
   }
 
   locationTypeRadio() {
-    return this.radio('A')
+    return this.radio('locationType A')
   }
 }
 
@@ -40,7 +40,7 @@ test.describe('/add-temporary-absence/location-type', () => {
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
-      stubGetReferenceData('location-type', [{ code: 'AAA', description: 'A', hintText: 'Hint text for A' }]),
+      stubGetReferenceData('location-type'),
     ])
 
     await signIn(page)

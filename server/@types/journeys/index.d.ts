@@ -39,4 +39,7 @@ export type AddTemporaryAbsenceJourney = Partial<{
   returnDate: string
   returnTime: string
   locationType: components['schemas']['CodedDescription']
+  locationSubJourney: Partial<{
+    locationType: components['schemas']['CodedDescription']
+  }>
 }>
