@@ -15,7 +15,7 @@
         {{ govukRadios({
             id: "locationType",
             name: "locationType",
-            items: locationTypeOptions,
+            items: locationTypeOptions | setCheckedValue(locationType),
             errorMessage: validationErrors | findError('locationType')
         }) }}
         {{ govukButton({

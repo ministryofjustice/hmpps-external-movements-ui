@@ -73,5 +73,6 @@ test.describe('/add-temporary-absence/location-type', () => {
     // verify input values are persisted
     await page.goBack()
     await page.reload()
+    await expect(testPage.locationTypeRadio()).toBeChecked()
   })
 })
