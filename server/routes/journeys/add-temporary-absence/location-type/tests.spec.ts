@@ -20,7 +20,7 @@ class LocationTypePage extends BaseTestPage {
       title: 'Select location type - Add a temporary absence - DPS',
       caption: 'Add a temporary absence',
       heading: 'What type of location will Prisoner-Name Prisoner-Surname be going to?',
-      backUrl: /add-absence-details/,
+      backUrl: /end-date/,
     })
   }
 

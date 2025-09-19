@@ -13,7 +13,7 @@ export class LocationTypeController {
       'location-type',
       res.locals['formResponses']?.['locationType'] ?? req.journeyData.addTemporaryAbsence!.locationType,
     )
-    res.render('add-temporary-absence/location-type/view', { locationTypeOptions, backUrl: 'add-absence-details' })
+    res.render('add-temporary-absence/location-type/view', { locationTypeOptions, backUrl: 'end-date' })
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
