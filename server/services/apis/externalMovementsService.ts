@@ -41,4 +41,12 @@ export default class ExternalMovementsService {
       path: `/absence-categorisation/${parentDomain}/${parentCode}`,
     })
   }
+
+  async getReferenceData(context: ApiRequestContext, domain: string) {
+    return (
+      await this.externalMovementsApiClient.withContext(context).get<components['schemas']['ReferenceDataResponse']>({
+        path: `/reference-data/${domain}`,
+      })
+    ).items
+  }
 }

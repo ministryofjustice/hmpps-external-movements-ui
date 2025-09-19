@@ -6,6 +6,7 @@ import {
   testOtherReasons,
   testWorkReasons,
 } from '../data/testData'
+import { components } from '../../server/@types/externalMovements'
 
 export const stubExternalMovementsPing = (httpStatus = 200) =>
   stubFor({
@@ -25,6 +26,13 @@ export const stubGetAllAbsenceTypes = () =>
     method: 'GET',
     urlPattern: '/external-movements-api/absence-categorisation/ABSENCE_TYPE',
     response: testAbsenceTypes,
+  })
+
+export const stubGetReferenceData = (domain: string, items: components['schemas']['CodedDescription'][]) =>
+  successStub({
+    method: 'GET',
+    urlPattern: `/external-movements-api/reference-data/${domain}`,
+    response: { items },
   })
 
 export const stubGetAllAbsenceTypesError = () =>

@@ -1,0 +1,26 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Select location type - Add a temporary absence" %}
+
+{% block innerContent %}
+    <span class="govuk-caption-l">Add a temporary absence</span>
+    <label for="locationType">
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-7">What type of location will {{prisonerDetails | firstNameSpaceLastName}} be going to?</h1>
+    </label>
+    <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {{ govukRadios({
+            id: "locationType",
+            name: "locationType",
+            items: locationTypeOptions,
+            errorMessage: validationErrors | findError('locationType')
+        }) }}
+        {{ govukButton({
+            text: "Continue",
+            preventDoubleClick: true
+        }) }}
+    </form>
+{% endblock %}

@@ -9,6 +9,7 @@ import { AbsenceReasonRoutes } from './reason/routes'
 import { SingleOrRepeatingRoutes } from './single-or-repeating/routes'
 import { StartDateRoutes } from './start-date/routes'
 import { EndDateRoutes } from './end-date/routes'
+import { LocationTypeRoutes } from './location-type/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -37,6 +38,6 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/single-or-repeating', SingleOrRepeatingRoutes())
   router.use('/start-date', StartDateRoutes())
   router.use('/end-date', EndDateRoutes())
-
+  router.use('/location-type', LocationTypeRoutes(services.externalMovementsService))
   return router
 }
