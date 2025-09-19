@@ -15,7 +15,7 @@ export class LocationTypeController {
     )
 
     const locationType =
-      res.locals['formResponses']?.['locationType'] ||
+      res.locals['formResponses']?.locationType ||
       req.journeyData.addTemporaryAbsence!.locationSubJourney?.locationType ||
       req.journeyData.addTemporaryAbsence!.locationType
 
@@ -28,7 +28,7 @@ export class LocationTypeController {
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     req.journeyData.addTemporaryAbsence!.locationSubJourney ??= {}
-    req.journeyData.addTemporaryAbsence!.locationSubJourney.locationType = req.body['locationType']
+    req.journeyData.addTemporaryAbsence!.locationSubJourney.locationType = req.body.locationType
     res.redirect('location-search')
   }
 }
