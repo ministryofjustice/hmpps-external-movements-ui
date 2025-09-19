@@ -19,8 +19,9 @@ export class LocationTypeController {
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    req.journeyData.addTemporaryAbsence!.locationSubJourney ??= {}
-    req.journeyData.addTemporaryAbsence!.locationSubJourney.locationType = req.body.locationType
+    if (req.journeyData.addTemporaryAbsence!.locationType?.code !== req.body.locationType.code) {
+      req.journeyData.addTemporaryAbsence!.locationSubJourney = { locationType: req.body.locationType }
+    }
     res.redirect('location-search')
   }
 }
