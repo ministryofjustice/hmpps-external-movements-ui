@@ -1,7 +1,21 @@
 import { Request, Response } from 'express'
-import { components } from '../../@types/externalMovements'
+import { components, operations } from '../../@types/externalMovements'
 import ExternalMovementsService from '../../services/apis/externalMovementsService'
 import { AddTemporaryAbsenceJourney } from '../../@types/journeys'
+
+export const getReferenceDataOptionsForRadios = async (
+  externalMovementsService: ExternalMovementsService,
+  res: Response,
+  domain: operations['getDomain']['parameters']['path']['domain'],
+  value?: components['schemas']['CodedDescription'] | string,
+) => [
+  ...(await externalMovementsService.getReferenceData({ res }, domain)).map(refData => ({
+    value: refData.code,
+    text: refData.description,
+    hint: refData.hintText ? { text: refData.hintText } : undefined,
+    checked: typeof value === 'string' ? refData.code === value : refData.code === value?.code,
+  })),
+]
 
 export const absenceCategorisationMapper = ({
   code,

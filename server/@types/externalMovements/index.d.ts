@@ -4,7 +4,47 @@
  */
 
 export interface paths {
-  '/absence-categorisation/{domain}': {
+  '/sync/temporary-absence-application/{personIdentifier}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /** @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW */
+    put: operations['syncTap']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/temporary-absence-series/{personIdentifier}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    post: operations['createTapSeries']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/reference-data/{domain}': {
     parameters: {
       query?: never
       header?: never
@@ -16,6 +56,26 @@ export interface paths {
      *     Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
     get: operations['getDomain']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/absence-categorisation/{domain}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    get: operations['getDomain_1']
     put?: never
     post?: never
     delete?: never
@@ -48,20 +108,102 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
+    NomisAudit: {
+      /** Format: date-time */
+      createDatetime: string
+      createUsername: string
+      modifyUserId?: string
+      /** Format: date-time */
+      modifyDatetime?: string
+      /** Format: date-time */
+      auditTimestamp?: string
+      auditUserId?: string
+    }
+    TapApplicationRequest: {
+      /** Format: uuid */
+      id?: string
+      /** Format: int64 */
+      movementApplicationId: number
+      eventSubType: string
+      /** Format: date */
+      applicationDate: string
+      /** Format: date */
+      fromDate: string
+      /** Format: date-time */
+      releaseTime: string
+      /** Format: date */
+      toDate: string
+      /** Format: date-time */
+      returnTime: string
+      applicationStatus: string
+      escortCode?: string
+      transportType?: string
+      comment?: string
+      prisonId?: string
+      toAgencyId?: string
+      /** Format: int64 */
+      toAddressId?: number
+      toAddressOwnerClass?: string
+      contactPersonName?: string
+      applicationType: string
+      temporaryAbsenceType?: string
+      temporaryAbsenceSubType?: string
+      audit: components['schemas']['NomisAudit']
+    }
+    SyncResponse: {
+      /** Format: uuid */
+      id: string
+    }
+    CreateTapSeriesRequest: {
+      /** Format: date-time */
+      submittedAt: string
+      repeat: boolean
+      statusCode: string
+      absenceTypeCode: string
+      absenceSubTypeCode?: string
+      absenceReasonCode?: string
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
+      accompanied: boolean
+      accompaniedByCode?: string
+      transportCode?: string
+      notes?: string
+      locationTypeCode: string
+      locationId?: string
+    }
+    ReferenceId: {
+      /** Format: uuid */
+      id: string
+    }
+    CodedDescription: {
+      code: string
+      description: string
+      hintText?: string
+    }
+    ReferenceDataResponse: {
+      domain: components['schemas']['CodedDescription']
+      items: components['schemas']['CodedDescription'][]
+    }
     AbsenceCategorisation: {
       code: string
       description: string
       hintText?: string
       /** @enum {string} */
-      nextDomain?: 'ABSENCE_TYPE' | 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY' | 'ABSENCE_REASON'
+      nextDomain?:
+        | 'ABSENCE_TYPE'
+        | 'ABSENCE_SUB_TYPE'
+        | 'ABSENCE_REASON_CATEGORY'
+        | 'ABSENCE_REASON'
+        | 'ACCOMPANIED_BY'
+        | 'TRANSPORT'
+        | 'TAP_STATUS'
+        | 'LOCATION_TYPE'
     }
     AbsenceCategorisations: {
       domain: components['schemas']['CodedDescription']
       items: components['schemas']['AbsenceCategorisation'][]
-    }
-    CodedDescription: {
-      code: string
-      description: string
     }
   }
   responses: never
@@ -72,12 +214,96 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  syncTap: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        personIdentifier: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TapApplicationRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['SyncResponse']
+        }
+      }
+    }
+  }
+  createTapSeries: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        personIdentifier: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateTapSeriesRequest']
+      }
+    }
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReferenceId']
+        }
+      }
+    }
+  }
   getDomain: {
     parameters: {
       query?: never
       header?: never
       path: {
-        domain: string
+        /** @description The reference data domain required. This is case insensitive. */
+        domain:
+          | 'absence-reason'
+          | 'absence-reason-category'
+          | 'absence-sub-type'
+          | 'absence-type'
+          | 'accompanied-by'
+          | 'location-type'
+          | 'tap-status'
+          | 'transport'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReferenceDataResponse']
+        }
+      }
+    }
+  }
+  getDomain_1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The reference data domain required. This is case insensitive. */
+        domain: 'absence-reason' | 'absence-reason-category' | 'absence-sub-type' | 'absence-type'
       }
       cookie?: never
     }
@@ -99,7 +325,8 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        domain: string
+        /** @description The reference data domain required. This is case insensitive. */
+        domain: 'absence-reason' | 'absence-reason-category' | 'absence-sub-type' | 'absence-type'
         code: string
       }
       cookie?: never

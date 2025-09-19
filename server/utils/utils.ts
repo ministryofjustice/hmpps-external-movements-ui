@@ -1,3 +1,5 @@
+import { components } from '../@types/externalMovements'
+
 const properCase = (word: string): string => (word[0] ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word)
 
 const isBlank = (str: string): boolean => !str || /^\s*$/.test(str)
@@ -84,4 +86,12 @@ export const setSelectedValue = (items: SelectOption[] | null, selected: string 
 export const setCheckedValue = (items: SelectOption[] | null, selected: string | number): SelectOption[] | null => {
   if (!items) return null
   return items.map(entry => ({ ...entry, checked: entry && entry.value === selected }))
+}
+
+export const fromRefData = (items: components['schemas']['CodedDescription'][]) => {
+  return items.map(refData => ({
+    value: refData.code,
+    text: refData.description,
+    hint: refData.hintText ? { text: refData.hintText } : undefined,
+  }))
 }
