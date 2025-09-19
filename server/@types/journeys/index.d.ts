@@ -30,12 +30,12 @@ export type AddTemporaryAbsenceJourney = Partial<{
   reasonCategory: components['schemas']['AbsenceCategorisation']
   reason: components['schemas']['AbsenceCategorisation']
   repeat: boolean
-  startDateTimeSubJourney: Partial<{
+  startDateTimeSubJourney: {
     startDate: string
     startTime: string
-  }>
+  }
   startDate: string
   startTime: string
-  endDate: string
-  endTime: string
+  returnDate: string
+  returnTime: string
 }>
