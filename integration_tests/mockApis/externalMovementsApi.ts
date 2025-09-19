@@ -4,6 +4,7 @@ import {
   testAbsenceSubType,
   testAbsenceTypes,
   testOtherReasons,
+  testRefData,
   testWorkReasons,
 } from '../data/testData'
 
@@ -25,6 +26,13 @@ export const stubGetAllAbsenceTypes = () =>
     method: 'GET',
     urlPattern: '/external-movements-api/absence-categorisation/ABSENCE_TYPE',
     response: testAbsenceTypes,
+  })
+
+export const stubGetReferenceData = (domain: string) =>
+  successStub({
+    method: 'GET',
+    urlPattern: `/external-movements-api/reference-data/${domain}`,
+    response: { items: testRefData[domain as keyof typeof testRefData] || [] },
   })
 
 export const stubGetAllAbsenceTypesError = () =>

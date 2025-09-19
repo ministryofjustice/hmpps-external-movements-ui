@@ -52,4 +52,12 @@ export default class ExternalMovementsService {
       data: request,
     })
   }
+
+  async getReferenceData(context: ApiRequestContext, domain: string) {
+    return (
+      await this.externalMovementsApiClient.withContext(context).get<components['schemas']['ReferenceDataResponse']>({
+        path: `/reference-data/${domain}`,
+      })
+    ).items
+  }
 }
