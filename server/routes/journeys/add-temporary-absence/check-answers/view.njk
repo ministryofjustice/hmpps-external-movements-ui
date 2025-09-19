@@ -88,6 +88,226 @@
       ] | removeNullish
     }) }}
 
+    <h2 class="govuk-heading-m">Absence dates and times</h2>
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: {
+          text: "Start date"
+        },
+          value: {
+          text: startDate | formatDate
+        },
+          actions: {
+          items: [
+            {
+              href: "start-date#startDate",
+              text: "Change",
+              visuallyHiddenText: "start date",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "Start time"
+        },
+          value: {
+          text: startTime
+        },
+          actions: {
+          items: [
+            {
+              href: "start-date#startTimeHour",
+              text: "Change",
+              visuallyHiddenText: "start time",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "End date"
+        },
+          value: {
+          text: returnDate | formatDate
+        },
+          actions: {
+          items: [
+            {
+              href: "end-date#returnDate",
+              text: "Change",
+              visuallyHiddenText: "end date",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "End time"
+        },
+          value: {
+          text: returnTime
+        },
+          actions: {
+          items: [
+            {
+              href: "end-date#returnTimeHour",
+              text: "Change",
+              visuallyHiddenText: "end time",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        }
+      ]
+    }) }}
+
+
+    <h2 class="govuk-heading-m">Location and transport</h2>
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: {
+          text: "Location type"
+        },
+          value: {
+          text: locationType.description
+        },
+          actions: {
+          items: [
+            {
+              href: "location-type",
+              text: "Change",
+              visuallyHiddenText: "location type",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "Location"
+        },
+          value: {
+          html: location | addressToLines | escape | nl2br
+        },
+          actions: {
+          items: [
+            {
+              href: "location-search",
+              text: "Change",
+              visuallyHiddenText: "location",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "Accompanied or unaccompanied"
+        },
+          value: {
+          text: 'Yes' if accompanied else 'No'
+        },
+          actions: {
+          items: [
+            {
+              href: "accompanied-or-unaccompanied",
+              text: "Change",
+              visuallyHiddenText: "if the prisoner will be accompanied or unaccompanied",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "Accompanied by"
+        },
+          value: {
+          text: accompaniedBy.description
+        },
+          actions: {
+          items: [
+            {
+              href: "accompanied",
+              text: "Change",
+              visuallyHiddenText: "who will accompany the prisoner",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        } if accompanied,
+        {
+          key: {
+          text: "Transport"
+        },
+          value: {
+          text: transport.description
+        },
+          actions: {
+          items: [
+            {
+              href: "transport",
+              text: "Change",
+              visuallyHiddenText: "transport type",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        }
+      ] | removeNullish
+    }) }}
+
+    <h2 class="govuk-heading-m">Comments and approval</h2>
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: {
+          text: "Relevant comments"
+        },
+          value: {
+          html: (notes or "Not provided") | escape | nl2br
+        },
+          actions: {
+          items: [
+            {
+              href: "comments",
+              text: "Change",
+              visuallyHiddenText: "comments",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "Approval needed?"
+        },
+          value: {
+          text: 'Yes' if requireApproval else 'No'
+        },
+          actions: {
+          items: [
+            {
+              href: "approval",
+              text: "Change",
+              visuallyHiddenText: "approval status",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        }
+      ]
+    }) }}
+
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
       {{ govukButton({

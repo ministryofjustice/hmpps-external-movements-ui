@@ -9,6 +9,18 @@ export interface PrisonerDetails {
   cellLocation?: string | undefined
 }
 
+export type Address = {
+  id: string
+  flat?: string | null
+  property?: string | null
+  street?: string | null
+  area?: string | null
+  cityDescription?: string | null
+  countyDescription?: string | null
+  postcode?: string | null
+  countryDescription: string | null
+}
+
 export type JourneyData = {
   instanceUnixEpoch: number
   prisonerDetails?: PrisonerDetails
@@ -42,17 +54,7 @@ export type AddTemporaryAbsenceJourney = Partial<{
     locationType: components['schemas']['CodedDescription']
   }
   locationType: components['schemas']['CodedDescription']
-  location: {
-    id: string
-    flat?: string | null
-    property?: string | null
-    street?: string | null
-    area?: string | null
-    cityDescription?: string | null
-    countyDescription?: string | null
-    postcode?: string | null
-    countryDescription: string | null
-  }
+  location: Address
   accompaniedSubJourney: {
     accompanied: boolean
   }

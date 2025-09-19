@@ -1,3 +1,5 @@
+import { Address } from '../@types/journeys'
+
 const uniformWhitespace = (word: string): string => (word ? word.trim().replace(/\s+/g, ' ') : '')
 
 const isLowerCase = (val: string): boolean => /^[a-z]*$/.test(val)
@@ -57,4 +59,22 @@ export const possessiveComma = (name: string) => (name.endsWith('s') ? `${name}â
 export const formatRefDataName = (val: string) => {
   const [firstWord, ...otherWords] = val.split(/\s+/)
   return [lowercaseExceptAcronym(firstWord ?? ''), ...otherWords].join(' ')
+}
+
+export const addressToLines = ({
+  flat,
+  property,
+  street,
+  cityDescription,
+  countyDescription,
+  postcode,
+  countryDescription,
+}: Address) => {
+  let lineOne = [property, street].filter(s => s).join(', ')
+  if (flat) {
+    lineOne = `${/flat/i.test(flat) ? '' : 'Flat '}${flat}, ${lineOne}`
+  }
+  const addressArray = [lineOne, cityDescription, countyDescription, postcode, countryDescription].filter(s => s)
+  if (addressArray.length) return addressArray.join('\n')
+  return ''
 }
