@@ -13,7 +13,7 @@ import {
 } from './utils'
 import config from '../config'
 import logger from '../../logger'
-import { firstNameSpaceLastName, formatRefDataName, lastNameCommaFirstName } from './formatUtils'
+import { addressToLines, firstNameSpaceLastName, formatRefDataName, lastNameCommaFirstName } from './formatUtils'
 import {
   formatDate,
   formatInputDate,
@@ -84,5 +84,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('addSelectValue', addSelectValue)
   njkEnv.addFilter('setSelectedValue', setSelectedValue)
   njkEnv.addFilter('setCheckedValue', setCheckedValue)
+  njkEnv.addFilter('removeNullish', arr => arr.filter(Boolean))
+  njkEnv.addFilter('addressToLines', addressToLines)
   njkEnv.addFilter('fromRefData', fromRefData)
 }

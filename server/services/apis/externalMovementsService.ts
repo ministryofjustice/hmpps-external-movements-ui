@@ -42,6 +42,17 @@ export default class ExternalMovementsService {
     })
   }
 
+  async createTap(
+    context: ApiRequestContext,
+    prisonNumber: string,
+    request: components['schemas']['CreateTapSeriesRequest'],
+  ) {
+    return this.externalMovementsApiClient.withContext(context).post<components['schemas']['ReferenceId']>({
+      path: `/temporary-absence-series/${prisonNumber}`,
+      data: request,
+    })
+  }
+
   async getReferenceData(context: ApiRequestContext, domain: string) {
     return (
       await this.externalMovementsApiClient.withContext(context).get<components['schemas']['ReferenceDataResponse']>({
