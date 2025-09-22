@@ -1,16 +1,15 @@
 import { z } from 'zod'
 
-const RESULT_VALIDATOR = z.string().min(1)
-
-const parseNumber = (value: string, min: number, max: number, length: number) => {
-  const numValue = Number(value)
-
-  if (Number.isNaN(numValue) || numValue < min || numValue > max) {
-    return RESULT_VALIDATOR.safeParse(null)
-  }
-
-  return RESULT_VALIDATOR.safeParse(numValue.toString().padStart(length, '0'))
-}
+const parseNumber = (value: string, min: number, max: number, length: number) =>
+  z
+    .string()
+    .regex(new RegExp(`^[0-9]{1,${length}}$`))
+    .refine(val => {
+      const numValue = Number(val)
+      return numValue >= min && numValue <= max
+    })
+    .transform(val => val.padStart(length, '0'))
+    .safeParse(value)
 
 export const parseHour = (value: string) => parseNumber(value, 0, 23, 2)
 

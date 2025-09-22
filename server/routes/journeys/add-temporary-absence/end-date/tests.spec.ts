@@ -90,7 +90,7 @@ test.describe('/add-temporary-absence/end-date', () => {
 
     await testPage.dateField().fill('1/1/1999')
     await testPage.hourField().fill('24')
-    await testPage.minuteField().fill('b')
+    await testPage.minuteField().fill('059')
     await testPage.clickContinue()
 
     await testPage.link('Enter a date that is the same as or later than 5/5/2025').click()
