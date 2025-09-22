@@ -56,6 +56,8 @@ export const getAbsenceCategoryBackUrl = (
   req: Request,
   domain: 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY' | 'ABSENCE_REASON' | null,
 ) => {
+  if (req.journeyData.isCheckAnswers && !req.journeyData.addTemporaryAbsence!.categorySubJourney) return 'check-answers'
+
   const { absenceType, absenceSubType, reasonCategory, reason } = getCategoryFromJourney(
     req.journeyData.addTemporaryAbsence!,
   )

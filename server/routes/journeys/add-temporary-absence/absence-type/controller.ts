@@ -1,12 +1,8 @@
 import { Request, Response } from 'express'
 import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
 import { SchemaType } from './schema'
-import {
-  absenceCategorisationMapper,
-  getCategoryFromJourney,
-  saveCategorySubJourney,
-  updateCategorySubJourney,
-} from '../../../common/utils'
+import { absenceCategorisationMapper, getCategoryFromJourney } from '../../../common/utils'
+import { AddTapFlowControl } from '../flow'
 
 export class AbsenceTypeController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -22,22 +18,6 @@ export class AbsenceTypeController {
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    updateCategorySubJourney(req, 'ABSENCE_TYPE', req.body.absenceType)
-
-    if (!req.body.absenceType.nextDomain) {
-      saveCategorySubJourney(req)
-      return res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'single-or-repeating')
-    }
-
-    switch (req.body.absenceType.nextDomain) {
-      case 'ABSENCE_SUB_TYPE':
-        return res.redirect('absence-subtype')
-      case 'ABSENCE_REASON_CATEGORY':
-        return res.redirect('reason-category')
-      case 'ABSENCE_REASON':
-        return res.redirect('reason')
-      default:
-        throw new Error(`Unrecognised absence categorisation domain: ${req.body.absenceType.nextDomain}`)
-    }
+    res.redirect(AddTapFlowControl.saveDataAndGetNextPage(req, { absenceType: req.body.absenceType }))
   }
 }

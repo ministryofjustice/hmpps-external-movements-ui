@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test'
-import { resetStubs } from '../mockApis/wiremock'
 import auth from '../mockApis/auth'
 import componentsApi from '../mockApis/componentsApi'
 import { signIn } from '../steps/signIn'
@@ -7,7 +6,6 @@ import tokenVerification from '../mockApis/tokenVerification'
 
 test.describe('Sign In', () => {
   test.beforeEach(async () => {
-    await resetStubs()
     await Promise.all([auth.stubSignIn(), componentsApi.stubComponentsFail()])
   })
 

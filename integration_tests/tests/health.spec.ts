@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test'
-import { resetStubs } from '../mockApis/wiremock'
 import auth from '../mockApis/auth'
 import componentsApi from '../mockApis/componentsApi'
 import tokenVerification from '../mockApis/tokenVerification'
@@ -10,7 +9,6 @@ import { stubPrisonerSearchPing } from '../mockApis/prisonerSearchApi'
 test.describe('Healthcheck', () => {
   test.describe('All healthy', () => {
     test.beforeEach(async () => {
-      await resetStubs()
       await Promise.all([
         auth.stubAuthPing(),
         tokenVerification.stubTokenVerificationPing(),
@@ -39,7 +37,6 @@ test.describe('Healthcheck', () => {
 
   test.describe('Some unhealthy', () => {
     test.beforeEach(async () => {
-      await resetStubs()
       await Promise.all([auth.stubAuthPing(), tokenVerification.stubTokenVerificationPing(500)])
     })
 
