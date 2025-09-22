@@ -63,12 +63,33 @@ export const getAbsenceCategoryBackUrl = (
   )
 
   if ((absenceType?.nextDomain ?? null) === domain) {
+    if (
+      req.journeyData.isCheckAnswers &&
+      req.journeyData.addTemporaryAbsence!.categorySubJourney?.absenceType?.code ===
+        req.journeyData.addTemporaryAbsence!.absenceType?.code
+    ) {
+      return 'check-answers'
+    }
     return 'absence-type'
   }
   if ((absenceSubType?.nextDomain ?? null) === domain) {
+    if (
+      req.journeyData.isCheckAnswers &&
+      req.journeyData.addTemporaryAbsence!.categorySubJourney?.absenceSubType?.code ===
+        req.journeyData.addTemporaryAbsence!.absenceSubType?.code
+    ) {
+      return 'check-answers'
+    }
     return 'absence-subtype'
   }
   if ((reasonCategory?.nextDomain ?? null) === domain) {
+    if (
+      req.journeyData.isCheckAnswers &&
+      req.journeyData.addTemporaryAbsence!.categorySubJourney?.reasonCategory?.code ===
+        req.journeyData.addTemporaryAbsence!.reasonCategory?.code
+    ) {
+      return 'check-answers'
+    }
     return 'reason-category'
   }
   if ((reason?.nextDomain ?? null) === domain) {

@@ -112,7 +112,7 @@ test.describe('/add-temporary-absence/check-answers', () => {
 
     await testPage.verifyLink('Change absence type', /absence-type/)
     await testPage.verifyLink('Change absence sub-type', /absence-subtype/)
-    await testPage.verifyLink('Change absence reason', /reason/)
+    await testPage.verifyLink('Change absence reason', /reason-category/)
 
     await testPage.verifyLink('Change start date', /start-date#startDate/)
     await testPage.verifyLink('Change start time', /start-date#startTimeHour/)

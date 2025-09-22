@@ -50,7 +50,7 @@ export class AddTapFlowControl {
         return getUrlForNextDomain(data.absenceSubType.nextDomain)
       }
       if (data.reasonCategory) {
-        if (data.reasonCategory.code === journey.reasonCategory?.code) return 'check-answers'
+        // No short-cut back to CYA on unchanged answer, because Paid Work and Unpaid Work needs to proceed to reason page
         updateCategorySubJourney(req, 'ABSENCE_REASON_CATEGORY', data.reasonCategory)
         if (!data.reasonCategory.nextDomain) {
           saveCategorySubJourney(req)
