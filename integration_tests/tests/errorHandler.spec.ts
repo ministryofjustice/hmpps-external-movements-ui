@@ -1,6 +1,5 @@
 import { expect, test } from '@playwright/test'
 import { v4 as uuidV4 } from 'uuid'
-import { resetStubs } from '../mockApis/wiremock'
 import auth from '../mockApis/auth'
 import componentsApi from '../mockApis/componentsApi'
 import { signIn } from '../steps/signIn'
@@ -10,9 +9,7 @@ import { stubGetPrisonerDetails } from '../mockApis/prisonerSearchApi'
 
 test.describe('test error handlers', () => {
   test.beforeEach(async ({ page }) => {
-    await resetStubs()
     await Promise.all([auth.stubSignIn(), componentsApi.stubComponents()])
-
     await signIn(page)
   })
 

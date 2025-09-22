@@ -6,9 +6,8 @@ import {
   getAbsenceCategorisationsForDomain,
   getAbsenceCategoryBackUrl,
   getCategoryFromJourney,
-  saveCategorySubJourney,
-  updateCategorySubJourney,
 } from '../../../common/utils'
+import { AddTapFlowControl } from '../flow'
 
 export class ReasonCategoryController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -26,18 +25,6 @@ export class ReasonCategoryController {
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    updateCategorySubJourney(req, 'ABSENCE_REASON_CATEGORY', req.body.reasonCategory)
-
-    if (!req.body.reasonCategory.nextDomain) {
-      saveCategorySubJourney(req)
-      return res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'single-or-repeating')
-    }
-
-    switch (req.body.reasonCategory.nextDomain) {
-      case 'ABSENCE_REASON':
-        return res.redirect('reason')
-      default:
-        throw new Error(`Unrecognised absence categorisation domain: ${req.body.reasonCategory.nextDomain}`)
-    }
+    res.redirect(AddTapFlowControl.saveDataAndGetNextPage(req, { reasonCategory: req.body.reasonCategory }))
   }
 }

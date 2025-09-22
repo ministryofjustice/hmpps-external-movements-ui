@@ -6,9 +6,8 @@ import {
   getAbsenceCategorisationsForDomain,
   getAbsenceCategoryBackUrl,
   getCategoryFromJourney,
-  saveCategorySubJourney,
-  updateCategorySubJourney,
 } from '../../../common/utils'
+import { AddTapFlowControl } from '../flow'
 
 export class AbsenceReasonController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -27,9 +26,6 @@ export class AbsenceReasonController {
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    updateCategorySubJourney(req, 'ABSENCE_REASON', req.body.reason)
-    saveCategorySubJourney(req)
-
-    res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'single-or-repeating')
+    res.redirect(AddTapFlowControl.saveDataAndGetNextPage(req, { reason: req.body.reason }))
   }
 }

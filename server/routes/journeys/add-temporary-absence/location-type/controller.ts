@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { SchemaType } from './schemas'
 import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
+import { AddTapFlowControl } from '../flow'
 
 export class LocationTypeController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -13,14 +14,12 @@ export class LocationTypeController {
 
     res.render('add-temporary-absence/location-type/view', {
       locationTypeOptions: await this.externalMovementsService.getReferenceData({ res }, 'location-type'),
-      backUrl: 'end-date',
+      backUrl: AddTapFlowControl.getBackUrl(req, 'end-date'),
       locationType: locationType?.code,
     })
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    req.journeyData.addTemporaryAbsence!.locationSubJourney ??= {}
-    req.journeyData.addTemporaryAbsence!.locationSubJourney.locationType = req.body.locationType
-    res.redirect('location-search')
+    res.redirect(AddTapFlowControl.saveDataAndGetNextPage(req, { locationType: req.body.locationType }))
   }
 }

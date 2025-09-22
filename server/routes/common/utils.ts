@@ -56,20 +56,37 @@ export const getAbsenceCategoryBackUrl = (
   req: Request,
   domain: 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY' | 'ABSENCE_REASON' | null,
 ) => {
+  if (req.journeyData.isCheckAnswers && !req.journeyData.addTemporaryAbsence!.categorySubJourney) return 'check-answers'
+
   const { absenceType, absenceSubType, reasonCategory, reason } = getCategoryFromJourney(
     req.journeyData.addTemporaryAbsence!,
   )
 
   if ((absenceType?.nextDomain ?? null) === domain) {
+    if (
+      req.journeyData.isCheckAnswers &&
+      req.journeyData.addTemporaryAbsence!.categorySubJourney?.absenceType?.code ===
+        req.journeyData.addTemporaryAbsence!.absenceType?.code
+    ) {
+      return 'check-answers'
+    }
     return 'absence-type'
   }
   if ((absenceSubType?.nextDomain ?? null) === domain) {
+    if (
+      req.journeyData.isCheckAnswers &&
+      req.journeyData.addTemporaryAbsence!.categorySubJourney?.absenceSubType?.code ===
+        req.journeyData.addTemporaryAbsence!.absenceSubType?.code
+    ) {
+      return 'check-answers'
+    }
     return 'absence-subtype'
   }
-  if ((reasonCategory?.nextDomain ?? null) === domain) {
+  if (reasonCategory && (reasonCategory?.nextDomain ?? null) === domain) {
+    // no short-cut back to CYA for unchanged reason category, because Paid work and Unpaid work category page always need to go back and forth to reason page
     return 'reason-category'
   }
-  if ((reason?.nextDomain ?? null) === domain) {
+  if (reason && (reason?.nextDomain ?? null) === domain) {
     return 'reason'
   }
 
