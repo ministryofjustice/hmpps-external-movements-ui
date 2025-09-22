@@ -64,9 +64,21 @@ export class BaseTestPage {
     }
   }
 
+  async verifyLink(text: string | RegExp, href: string | RegExp) {
+    const url = await this.link(text).getAttribute('href')
+    expect(url).not.toBeNull()
+    expect(this.stripHistoryParam(url!)).toMatch(href)
+  }
+
   private stripHistoryParam(url: string) {
     const actualUrl = new URL(url.startsWith('http') ? url : `http://localhost:3000${url}`)
     actualUrl.searchParams.delete('history')
-    return url.split('?')[0]! + (actualUrl.searchParams.size ? '?' : '') + actualUrl.searchParams.toString()
+    const hash = url.split('#')[1]
+    return (
+      url.split('?')[0]! +
+      (actualUrl.searchParams.size ? '?' : '') +
+      actualUrl.searchParams.toString() +
+      (hash ? `#${hash}` : '')
+    )
   }
 }

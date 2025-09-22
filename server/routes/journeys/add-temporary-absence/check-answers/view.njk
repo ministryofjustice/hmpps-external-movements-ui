@@ -54,6 +54,24 @@
           text: "Absence reason"
         },
           value: {
+          text: reasonCategory.description
+        },
+          actions: {
+          items: [
+            {
+              href: "reason-category",
+              text: "Change",
+              visuallyHiddenText: "absence reason",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        } if reasonCategory and not reason,
+        {
+          key: {
+          text: "Absence reason"
+        },
+          value: {
           text: reason.description
         },
           actions: {
@@ -213,7 +231,7 @@
           text: "Accompanied or unaccompanied"
         },
           value: {
-          text: 'Yes' if accompanied else 'No'
+          text: 'Accompanied' if accompanied else 'Unaccompanied'
         },
           actions: {
           items: [
