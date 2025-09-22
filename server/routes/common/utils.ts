@@ -82,11 +82,11 @@ export const getAbsenceCategoryBackUrl = (
     }
     return 'absence-subtype'
   }
-  if ((reasonCategory?.nextDomain ?? null) === domain) {
+  if (reasonCategory && (reasonCategory?.nextDomain ?? null) === domain) {
     // no short-cut back to CYA for unchanged reason category, because Paid work and Unpaid work category page always need to go back and forth to reason page
     return 'reason-category'
   }
-  if ((reason?.nextDomain ?? null) === domain) {
+  if (reason && (reason?.nextDomain ?? null) === domain) {
     return 'reason'
   }
 
