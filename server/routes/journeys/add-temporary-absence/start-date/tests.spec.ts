@@ -89,7 +89,7 @@ test.describe('/add-temporary-absence/start-date', () => {
 
     await testPage.dateField().fill('1/1/1999')
     await testPage.hourField().fill('24')
-    await testPage.minuteField().fill('b')
+    await testPage.minuteField().fill('1.2')
     await testPage.clickContinue()
 
     await testPage.link('Release date must be today or in the future').click()
