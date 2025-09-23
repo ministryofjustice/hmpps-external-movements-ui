@@ -8,9 +8,7 @@ export class AccompaniedController {
 
   GET = async (req: Request, res: Response) => {
     const accompaniedBy =
-      res.locals['formResponses']?.['accompaniedBy'] ||
-      req.journeyData.addTemporaryAbsence?.accompaniedSubJourney?.accompaniedBy ||
-      req.journeyData.addTemporaryAbsence?.accompaniedBy
+      res.locals['formResponses']?.['accompaniedBy'] || req.journeyData.addTemporaryAbsence?.accompaniedBy
 
     res.render('add-temporary-absence/accompanied/view', {
       accompaniedByOptions: await this.externalMovementsService.getReferenceData({ res }, 'accompanied-by'),
