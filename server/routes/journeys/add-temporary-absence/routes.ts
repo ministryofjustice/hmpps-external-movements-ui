@@ -14,6 +14,7 @@ import { AddTapCheckAnswersRoutes } from './check-answers/routes'
 import { LocationSearchRoutes } from './location-search/routes'
 import { AccompaniedOrUnaccompaniedRoutes } from './accompanied-or-unaccompanied/routes'
 import { AccompaniedRoutes } from './accompanied/routes'
+import { TransportRoutes } from './transport/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -45,6 +46,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/location-type', LocationTypeRoutes(services))
   router.use('/location-search', LocationSearchRoutes())
   router.use('/accompanied-or-unaccompanied', AccompaniedOrUnaccompaniedRoutes())
+  router.use('/transport', TransportRoutes(services))
   router.use('/check-answers', AddTapCheckAnswersRoutes(services))
   router.use('/accompanied', AccompaniedRoutes(services))
   return router
