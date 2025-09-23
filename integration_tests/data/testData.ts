@@ -289,4 +289,9 @@ export const testRefData = {
     { code: 'TAX', description: 'Taxi' },
     { code: 'VAN', description: 'Van' },
   ],
+  'accompanied-by': [
+    { code: 'A', description: 'accompaniedBy A', hintText: 'Hint text for A' },
+    { code: 'B', description: 'accompaniedBy B', hintText: 'Hint text for B' },
+    { code: 'C', description: 'accompaniedBy C', hintText: 'Hint text for C' },
+  ],
 }
