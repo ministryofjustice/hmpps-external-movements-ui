@@ -13,6 +13,8 @@ import { LocationTypeRoutes } from './location-type/routes'
 import { AddTapCheckAnswersRoutes } from './check-answers/routes'
 import { LocationSearchRoutes } from './location-search/routes'
 import { AccompaniedOrUnaccompaniedRoutes } from './accompanied-or-unaccompanied/routes'
+import { TransportRoutes } from './transport/routes'
+import { AbsenceCommentsRoutes } from './comments/routes'
 import { AbsenceApprovalRoutes } from './approval/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
@@ -45,6 +47,8 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/location-type', LocationTypeRoutes(services))
   router.use('/location-search', LocationSearchRoutes())
   router.use('/accompanied-or-unaccompanied', AccompaniedOrUnaccompaniedRoutes())
+  router.use('/transport', TransportRoutes(services))
+  router.use('/comments', AbsenceCommentsRoutes())
   router.use('/approval', AbsenceApprovalRoutes())
   router.use('/check-answers', AddTapCheckAnswersRoutes(services))
 
