@@ -9,13 +9,13 @@ const REQUIRED_MSG = 'Select a transport option'
 
 export const schemaFactory =
   (externalMovementsService: ExternalMovementsService) => async (_req: Request, res: Response) => {
-    const locationTypeMap = new Map(
+    const refDataMap = new Map(
       (await externalMovementsService.getReferenceData({ res }, 'transport')).map(itm => [itm.code, itm]),
     )
     return createSchema({
       transport: z
         .string({ message: REQUIRED_MSG })
-        .transform(validateAndTransformReferenceData(locationTypeMap, REQUIRED_MSG)),
+        .transform(validateAndTransformReferenceData(refDataMap, REQUIRED_MSG)),
     })
   }
 
