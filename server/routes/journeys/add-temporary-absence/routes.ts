@@ -11,6 +11,7 @@ import { StartDateRoutes } from './start-date/routes'
 import { EndDateRoutes } from './end-date/routes'
 import { LocationTypeRoutes } from './location-type/routes'
 import { AddTapCheckAnswersRoutes } from './check-answers/routes'
+import { AccompaniedOrUnaccompaniedRoutes } from './accompanied-or-unaccompanied/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -40,6 +41,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/start-date', StartDateRoutes())
   router.use('/end-date', EndDateRoutes())
   router.use('/location-type', LocationTypeRoutes(services))
+  router.use('/accompanied-or-unaccompanied', AccompaniedOrUnaccompaniedRoutes())
   router.use('/check-answers', AddTapCheckAnswersRoutes(services))
 
   return router
