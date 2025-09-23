@@ -275,4 +275,18 @@ export const testRefData = {
     { code: 'B', description: 'locationType B', hintText: 'Hint text for B' },
     { code: 'C', description: 'locationType C', hintText: 'Hint text for C' },
   ],
+  transport: [
+    { code: 'AMB', description: 'Ambulance' },
+    { code: 'CAR', description: 'Car' },
+    { code: 'CAV', description: 'Category A transport' },
+    { code: 'COA', description: 'Coach' },
+    { code: 'CYCLE', description: 'Bicycle' },
+    { code: 'FOOT', description: 'On foot' },
+    { code: 'IMM', description: 'Immigration vehicle' },
+    { code: 'OD', description: 'Prisoner driver' },
+    { code: 'POL', description: 'Police vehicle' },
+    { code: 'PUT', description: 'Public transport' },
+    { code: 'TAX', description: 'Taxi' },
+    { code: 'VAN', description: 'Van' },
+  ],
 }
