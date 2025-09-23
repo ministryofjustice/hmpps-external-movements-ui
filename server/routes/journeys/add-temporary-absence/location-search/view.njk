@@ -1,0 +1,49 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Search for a location - Add a temporary absence" %}
+
+{% block innerContent %}
+  <span class="govuk-caption-l">Add a temporary absence</span>
+  <h1 class="govuk-heading-l">Search for a location where this absence will take place</h1>
+  <div class="moj-search govuk-!-margin-bottom-6">
+    <form method="post" >
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      {{ govukInput({
+        name: 'locationSearch',
+        classes: "moj-search__input",
+        errorMessage: validationErrors | findError('locationSearch'),
+        label: {
+          text: "Enter an address or postcode"
+        },
+        value: locationSearch
+      }) }}
+      {{ govukButton({
+        classes: "moj-search__button",
+        text: "Search",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+  {% if locationSearch %}
+    {{ govukWarningText({
+      text: "If you cannot find the address you need, you will need to add it in the Utilities area of NOMIS and start this absence again.",
+      iconFallbackText: "Warning"
+    }) }}
+
+    <p><a class="govuk-link govuk-link--no-visited-state" href="location-search/select/id-1">147 Marlborough Road, London, N19 5QH</a></p>
+    <p><a class="govuk-link govuk-link--no-visited-state" href="location-search/select/id-1">147 Marlborough Road, London, N19 5QH</a></p>
+    <p><a class="govuk-link govuk-link--no-visited-state" href="location-search/select/id-1">147 Marlborough Road, London, N19 5QH</a></p>
+    <p><a class="govuk-link govuk-link--no-visited-state" href="location-search/select/id-1">147 Marlborough Road, London, N19 5QH</a></p>
+    <p><a class="govuk-link govuk-link--no-visited-state" href="location-search/select/id-1">147 Marlborough Road, London, N19 5QH</a></p>
+    <p><a class="govuk-link govuk-link--no-visited-state" href="location-search/select/id-1">147 Marlborough Road, London, N19 5QH</a></p>
+    <p><a class="govuk-link govuk-link--no-visited-state" href="location-search/select/id-1">147 Marlborough Road, London, N19 5QH</a></p>
+    <p><a class="govuk-link govuk-link--no-visited-state" href="location-search/select/id-1">147 Marlborough Road, London, N19 5QH</a></p>
+    <p><a class="govuk-link govuk-link--no-visited-state" href="location-search/select/id-1">147 Marlborough Road, London, N19 5QH</a></p>
+    <p><a class="govuk-link govuk-link--no-visited-state" href="location-search/select/id-1">147 Marlborough Road, London, N19 5QH</a></p>
+
+  {% endif %}
+{% endblock %}

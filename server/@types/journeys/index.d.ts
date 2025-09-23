@@ -54,6 +54,7 @@ export type AddTemporaryAbsenceJourney = Partial<{
     locationType: components['schemas']['CodedDescription']
   }
   locationType: components['schemas']['CodedDescription']
+  locationSearch: string
   location: Address
   accompaniedSubJourney: {
     accompanied: boolean
