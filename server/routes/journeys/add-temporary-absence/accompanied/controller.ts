@@ -20,7 +20,6 @@ export class AccompaniedController {
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    req.journeyData.addTemporaryAbsence!.accompaniedSubJourney!.accompaniedBy = req.body.accompaniedBy
     res.redirect(AddTapFlowControl.saveDataAndGetNextPage(req, { accompaniedBy: req.body.accompaniedBy }))
   }
 }
