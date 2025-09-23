@@ -17,7 +17,7 @@ export class BaseTestPage {
     caption?: string
     backUrl?: RegExp
   }) {
-    expect(this.page.url()).toMatch(pageUrl)
+    expect(this.stripHistoryParam(this.page.url())).toMatch(pageUrl)
     expect(await this.page.title()).toEqual(title)
     await expect(this.page.locator('h1')).toContainText(heading)
     if (caption) {
