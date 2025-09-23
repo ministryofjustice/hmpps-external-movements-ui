@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { SchemaType } from './schemas'
 import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
+import { AddTapFlowControl } from '../flow'
 
 export class AccompaniedController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -14,12 +15,12 @@ export class AccompaniedController {
     res.render('add-temporary-absence/accompanied/view', {
       accompaniedByOptions: await this.externalMovementsService.getReferenceData({ res }, 'accompanied-by'),
       accompaniedBy: accompaniedBy?.code,
-      backUrl: 'accompanied-or-unaccompanied',
+      backUrl: AddTapFlowControl.getBackUrl(req, 'accompanied-or-unaccompanied'),
     })
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     req.journeyData.addTemporaryAbsence!.accompaniedSubJourney!.accompaniedBy = req.body.accompaniedBy
-    res.redirect('transport')
+    res.redirect(AddTapFlowControl.saveDataAndGetNextPage(req, { accompaniedBy: req.body.accompaniedBy }))
   }
 }
