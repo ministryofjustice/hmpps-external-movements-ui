@@ -1,0 +1,48 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Select approval option - Add a temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukRadios({
+        name: "requireApproval",
+        errorMessage: validationErrors | findError('requireApproval'),
+        fieldset: {
+          legend: {
+            text: 'Does this absence need to be approved by someone?',
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--xl"
+          }
+        },
+        items: [
+          {
+            value: 'NO',
+            text: "No",
+            hint: {
+              text: "Select this if the absence has already been approved or does not need to be approved by anyone."
+            },
+            checked: requireApproval === false
+          },
+          {
+            value: 'YES',
+            text: "Yes",
+            hint: {
+              text: "Select this if the absence needs to be approved by someone. They will need to review and approve this absence in [dashboard]."
+            },
+            checked: requireApproval === true
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

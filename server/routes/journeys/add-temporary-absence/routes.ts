@@ -16,6 +16,7 @@ import { AccompaniedOrUnaccompaniedRoutes } from './accompanied-or-unaccompanied
 import { AccompaniedRoutes } from './accompanied/routes'
 import { TransportRoutes } from './transport/routes'
 import { AbsenceCommentsRoutes } from './comments/routes'
+import { AbsenceApprovalRoutes } from './approval/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -49,6 +50,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/accompanied-or-unaccompanied', AccompaniedOrUnaccompaniedRoutes())
   router.use('/transport', TransportRoutes(services))
   router.use('/comments', AbsenceCommentsRoutes())
+  router.use('/approval', AbsenceApprovalRoutes())
   router.use('/check-answers', AddTapCheckAnswersRoutes(services))
   router.use('/accompanied', AccompaniedRoutes(services))
   return router
