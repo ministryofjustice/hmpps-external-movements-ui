@@ -17,6 +17,7 @@ import { AccompaniedRoutes } from './accompanied/routes'
 import { TransportRoutes } from './transport/routes'
 import { AbsenceCommentsRoutes } from './comments/routes'
 import { AbsenceApprovalRoutes } from './approval/routes'
+import { AddAbsenceConfirmationRoutes } from './confirmation/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -48,10 +49,12 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/location-type', LocationTypeRoutes(services))
   router.use('/location-search', LocationSearchRoutes())
   router.use('/accompanied-or-unaccompanied', AccompaniedOrUnaccompaniedRoutes())
+  router.use('/accompanied', AccompaniedRoutes(services))
   router.use('/transport', TransportRoutes(services))
   router.use('/comments', AbsenceCommentsRoutes())
   router.use('/approval', AbsenceApprovalRoutes())
   router.use('/check-answers', AddTapCheckAnswersRoutes(services))
-  router.use('/accompanied', AccompaniedRoutes(services))
+  router.use('/confirmation', AddAbsenceConfirmationRoutes())
+
   return router
 }
