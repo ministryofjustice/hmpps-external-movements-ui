@@ -29,10 +29,8 @@ export class BaseTestPage {
       expect(this.stripHistoryParam(url!)).toMatch(backUrl)
     }
 
-    const accessibilityScanResults = await new AxeBuilder({ page: this.page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-      .analyze()
-    expect(accessibilityScanResults.violations).toEqual([])
+    const accessibilityScanResults = await new AxeBuilder({ page: this.page }).analyze()
+    expect(accessibilityScanResults.violations).toHaveLength(0)
     return this
   }
 
