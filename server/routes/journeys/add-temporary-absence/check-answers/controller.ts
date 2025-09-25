@@ -22,6 +22,7 @@ export class AddTapCheckAnswersController {
     const {
       absenceType,
       absenceSubType,
+      reasonCategory,
       reason,
       startDate,
       startTime,
@@ -55,7 +56,12 @@ export class AddTapCheckAnswersController {
       }
 
       if (absenceSubType) request.absenceSubTypeCode = absenceSubType.code
-      if (reason) request.absenceReasonCode = reason.code
+      if (reason) {
+        request.absenceReasonCode = reason.code
+      } else if (reasonCategory) {
+        request.absenceReasonCode = reasonCategory.code
+      }
+
       if (accompanied && accompaniedBy) request.occurrences[0]!.accompaniedByCode = accompaniedBy.code
       if (notes) {
         request.notes = notes
