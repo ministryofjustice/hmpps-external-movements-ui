@@ -18,7 +18,7 @@
     "test": "jest",
     "test:ci": "jest --runInBand",
     "security_audit": "npx audit-ci --config audit-ci.json",
-    "int-test": "npx playwright install --with-deps --only-shell && npx playwright test",
+    "int-test": "npx playwright install --with-deps --only-shell && npx playwright test -c playwright-int.config.ts && npx playwright test -c playwright.config.ts && npx -y ctrf merge ctrf",
     "int-test-ui": "npx playwright test --ui",
     "clean": "rm -rf dist test_results",
     "rebuild": "npm run clean && npm i && npm run build",

@@ -49,8 +49,7 @@ test.describe('Sign In', () => {
     await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
 
     await tokenVerification.stubVerifyToken(true)
-    await auth.stubSignIn({ name: 'bobby brown' })
-    await signIn(page)
+    await signIn(page, { name: 'bobby brown' })
 
     await expect(page.getByTestId('header-user-name')).toContainText('B. Brown')
   })
