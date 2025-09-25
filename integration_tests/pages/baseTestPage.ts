@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test'
+import AxeBuilder from '@axe-core/playwright'
 import { deserialiseHistory } from '../../server/middleware/history/historyMiddleware'
 
 export class BaseTestPage {
@@ -27,6 +28,11 @@ export class BaseTestPage {
       const url = await this.page.getByRole('link', { name: /^Back$/ }).getAttribute('href')
       expect(this.stripHistoryParam(url!)).toMatch(backUrl)
     }
+
+    const accessibilityScanResults = await new AxeBuilder({ page: this.page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze()
+    expect(accessibilityScanResults.violations).toEqual([])
     return this
   }
 
