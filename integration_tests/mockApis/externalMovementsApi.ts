@@ -69,6 +69,6 @@ export const stubGetAbsenceCategory = (
 export const stubPostCreateTap = (prisonNumber: string) =>
   successStub({
     method: 'POST',
-    urlPattern: `/external-movements-api/temporary-absence-series/${prisonNumber}`,
+    urlPattern: `/external-movements-api/temporary-absence-authorisations/${prisonNumber}`,
     response: { id: '3fa85f64-5717-4562-b3fc-2c963f66afa6' },
   })
