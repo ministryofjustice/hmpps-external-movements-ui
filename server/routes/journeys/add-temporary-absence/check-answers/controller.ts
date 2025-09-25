@@ -22,6 +22,7 @@ export class AddTapCheckAnswersController {
     const {
       absenceType,
       absenceSubType,
+      reasonCategory,
       reason,
       startDate,
       startTime,
@@ -38,23 +39,34 @@ export class AddTapCheckAnswersController {
     } = req.journeyData.addTemporaryAbsence!
 
     try {
-      const request: components['schemas']['CreateTapSeriesRequest'] = {
+      const request: components['schemas']['CreateTapAuthorisationRequest'] = {
         submittedAt: new Date().toISOString(),
         repeat: repeat!,
-        statusCode: requireApproval ? 'PEN' : 'APP-SCH',
+        statusCode: requireApproval ? 'PENDING' : 'APPROVED',
         absenceTypeCode: absenceType!.code,
-        releaseAt: `${startDate}T${startTime}:00`,
-        returnBy: `${returnDate}T${returnTime}:00`,
-        accompanied: accompanied!,
-        locationTypeCode: locationType!.code,
-        locationId: location!.id,
+        occurrences: [
+          {
+            releaseAt: `${startDate}T${startTime}:00`,
+            returnBy: `${returnDate}T${returnTime}:00`,
+            locationTypeCode: locationType!.code,
+            locationId: location!.id,
+            transportCode: transport!.code,
+          },
+        ],
       }
 
       if (absenceSubType) request.absenceSubTypeCode = absenceSubType.code
-      if (reason) request.absenceReasonCode = reason.code
-      if (accompanied && accompaniedBy) request.accompaniedByCode = accompaniedBy.code
-      if (transport) request.transportCode = transport.code
-      if (notes) request.notes = notes
+      if (reason) {
+        request.absenceReasonCode = reason.code
+      } else if (reasonCategory) {
+        request.absenceReasonCode = reasonCategory.code
+      }
+
+      if (accompanied && accompaniedBy) request.occurrences[0]!.accompaniedByCode = accompaniedBy.code
+      if (notes) {
+        request.notes = notes
+        request.occurrences[0]!.notes = notes
+      }
 
       await this.externalMovementsService.createTap({ res }, req.journeyData.prisonerDetails!.prisonerNumber, request)
       next()

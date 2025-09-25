@@ -24,7 +24,7 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/temporary-absence-series/{personIdentifier}': {
+  '/temporary-absence-authorisations/{personIdentifier}': {
     parameters: {
       query?: never
       header?: never
@@ -37,7 +37,7 @@ export interface paths {
      *
      *     Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
-    post: operations['createTapSeries']
+    post: operations['createTapAuthorisation']
     delete?: never
     options?: never
     head?: never
@@ -154,19 +154,23 @@ export interface components {
       /** Format: uuid */
       id: string
     }
-    CreateTapSeriesRequest: {
+    CreateTapAuthorisationRequest: {
       /** Format: date-time */
       submittedAt: string
-      repeat: boolean
-      statusCode: string
       absenceTypeCode: string
       absenceSubTypeCode?: string
       absenceReasonCode?: string
+      occurrences: components['schemas']['CreateTapOccurrenceRequest'][]
+      /** @enum {string} */
+      statusCode: 'PENDING' | 'APPROVED'
+      notes?: string
+      repeat: boolean
+    }
+    CreateTapOccurrenceRequest: {
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
       returnBy: string
-      accompanied: boolean
       accompaniedByCode?: string
       transportCode?: string
       notes?: string
@@ -198,7 +202,8 @@ export interface components {
         | 'ABSENCE_REASON'
         | 'ACCOMPANIED_BY'
         | 'TRANSPORT'
-        | 'TAP_STATUS'
+        | 'TAP_AUTHORISATION_STATUS'
+        | 'TAP_OCCURRENCE_STATUS'
         | 'LOCATION_TYPE'
     }
     AbsenceCategorisations: {
@@ -240,7 +245,7 @@ export interface operations {
       }
     }
   }
-  createTapSeries: {
+  createTapAuthorisation: {
     parameters: {
       query?: never
       header?: never
@@ -251,7 +256,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateTapSeriesRequest']
+        'application/json': components['schemas']['CreateTapAuthorisationRequest']
       }
     }
     responses: {
@@ -279,7 +284,8 @@ export interface operations {
           | 'absence-type'
           | 'accompanied-by'
           | 'location-type'
-          | 'tap-status'
+          | 'tap-authorisation-status'
+          | 'tap-occurrence-status'
           | 'transport'
       }
       cookie?: never
