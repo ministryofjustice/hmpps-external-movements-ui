@@ -10,4 +10,6 @@ $govuk-page-width: $moj-page-width;
 @import './components/header-bar';
 @import './components/card';
 @import './components/mini-profile';
+@import './components/miniSummary';
+@import './components/summary-card';
 @import './overrides/local';

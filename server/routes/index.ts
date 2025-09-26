@@ -31,7 +31,10 @@ export default function routes(services: Services): Router {
   })
 
   get('/', Page.HOME_PAGE, async (_req, res) => {
-    res.render('view', { showBreadcrumbs: true })
+    res.render('view', {
+      showBreadcrumbs: true,
+      ...(await services.externalMovementsService.getTapOverview({ res })),
+    })
   })
 
   router.use('/search-prisoner', SearchPrisonerRoutes(services))

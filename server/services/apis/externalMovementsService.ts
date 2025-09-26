@@ -60,4 +60,12 @@ export default class ExternalMovementsService {
       })
     ).items
   }
+
+  async getTapOverview(context: ApiRequestContext) {
+    return this.externalMovementsApiClient
+      .withContext(context)
+      .get<components['schemas']['PrisonExternalMovementOverview']>({
+        path: `/prisons/${context.res.locals.user.getActiveCaseloadId()}/external-movements/overview`,
+      })
+  }
 }
