@@ -4,12 +4,12 @@ export default defineConfig({
   // Look for test files in the "tests" directory, relative to this configuration file.
   testDir: '',
 
-  testMatch: /server\/.*spec.ts/,
+  testMatch: /integration_tests\/.*spec.ts/,
 
   outputDir: 'test_results/playwright',
 
-  fullyParallel: true,
-  workers: process.env['CI'] ? 4 : 8,
+  fullyParallel: false,
+  workers: 1,
 
   // Fail the build on CI if you accidentally left test.only in the source code.
   forbidOnly: !!process.env['CI'],
@@ -18,7 +18,7 @@ export default defineConfig({
   retries: process.env['CI'] ? 2 : 0,
 
   // Reporter to use
-  reporter: [['html'], ['playwright-ctrf-json-reporter', { outputDir: 'ctrf', outputFile: 'ctrf-report.json' }]],
+  reporter: [['html'], ['playwright-ctrf-json-reporter', { outputDir: 'ctrf', outputFile: 'int-report.json' }]],
 
   use: {
     // Base URL to use in actions like `await page.goto('/')`.
