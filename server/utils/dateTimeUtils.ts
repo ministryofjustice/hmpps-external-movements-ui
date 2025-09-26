@@ -23,9 +23,10 @@ export const yesterdayStringGBFormat = () => {
   return DATE_FORMAT_GB.format(currentDate)
 }
 
-export const isoDate = (plusDays: number = 0) => {
+export const isoDate = (plusDays: number = 0, plusMonth: number = 0) => {
   const date = new Date()
   if (plusDays !== 0) date.setDate(date.getDate() + plusDays)
+  if (plusMonth !== 0) date.setMonth(date.getMonth() + plusMonth)
   return format(date, 'yyyy-MM-dd')
 }
 

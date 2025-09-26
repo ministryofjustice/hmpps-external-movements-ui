@@ -63,7 +63,7 @@
             <div class="govuk-grid-row card-body ">
               <div class="govuk-grid-column-full">
                 <p class="govuk-heading-xl govuk-!-padding-top-4">
-                  {{ leavingToday or '0' }}
+                  {{ tapOverview.leavingToday or '0' }}
                 </p>
               </div>
             </div>
@@ -86,7 +86,7 @@
             <div class="govuk-grid-row card-body ">
               <div class="govuk-grid-column-full">
                 <p class="govuk-heading-xl govuk-!-padding-top-4">
-                  {{ returningToday or '0' }}
+                  {{ tapOverview.returningToday or '0' }}
                 </p>
               </div>
             </div>
@@ -101,7 +101,7 @@
                 <h4>Awaiting decisions</h4>
               </div>
               <div class="govuk-summary-list govuk-summary-list__actions govuk-!-font-weight-bold">
-                <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?status=PENDING&from={{ isoDate() }}&to={{ isoDate(30) }}">View<span class="govuk-visually-hidden"> referrals with status ‘Awaiting decision’</span></a>
+                <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?status=PENDING&from={{ isoDate() }}&to={{ isoDate(0, 1) }}">View<span class="govuk-visually-hidden"> referrals with status ‘Awaiting decision’</span></a>
               </div>
             </div>
           </div>
@@ -109,7 +109,7 @@
             <div class="govuk-grid-row card-body ">
               <div class="govuk-grid-column-full">
                 <p class="govuk-heading-xl govuk-!-padding-top-4">
-                  {{ awaitingDecisions or '0' }}
+                  {{ tapOverview.approvalsRequired or '0' }}
                 </p>
               </div>
             </div>
