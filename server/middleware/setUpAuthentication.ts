@@ -28,7 +28,7 @@ passport.use(
       clientID: config.apis.hmppsAuth.authClientId,
       clientSecret: config.apis.hmppsAuth.authClientSecret,
       callbackURL: `${config.ingressUrl}/sign-in/callback`,
-      state: true,
+      state: process.env.NODE_ENV !== 'e2e-test', // disable state check for Playwright tests
       customHeaders: { Authorization: generateOauthClientToken() },
     },
     (token, _refreshToken, params, _profile, done) => {

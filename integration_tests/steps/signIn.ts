@@ -1,7 +1,9 @@
 import { Page } from '@playwright/test'
-import auth from '../mockApis/auth'
+import { v4 as uuidV4 } from 'uuid'
+import auth, { UserToken } from '../mockApis/auth'
 
-export const signIn = async (page: Page) => {
-  await page.goto('/')
-  await page.goto(await auth.getSignInUrl())
+export const signIn = async (page: Page, user: UserToken = {}) => {
+  const authCode = uuidV4()
+  await auth.stubToken(user, authCode)
+  await page.goto(`/sign-in/callback?code=${authCode}`)
 }

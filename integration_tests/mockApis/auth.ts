@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken'
 import type { Response } from 'superagent'
 
-import { stubFor, getMatchingRequests } from './wiremock'
+import { stubFor } from './wiremock'
 import tokenVerification from './tokenVerification'
 
-interface UserToken {
+export interface UserToken {
   name?: string
   roles?: string[]
   user_id?: string
@@ -26,16 +26,6 @@ const createToken = (userToken: UserToken) => {
 
   return jwt.sign(payload, 'secret', { expiresIn: '1h' })
 }
-
-const getSignInUrl = (): Promise<string> =>
-  getMatchingRequests({
-    method: 'GET',
-    urlPath: '/auth/oauth/authorize',
-  }).then(data => {
-    const { requests } = data.body
-    const stateValue = requests[requests.length - 1].queryParams.state.values[0]
-    return `/sign-in/callback?code=codexxxx&state=${stateValue}`
-  })
 
 const favicon = () =>
   stubFor({
@@ -63,13 +53,13 @@ const redirect = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/auth/oauth/authorize\\?response_type=code&redirect_uri=.+?&state=.+?&client_id=clientid',
+      urlPattern: '/auth/oauth/authorize\\?response_type=code&redirect_uri=.+?&client_id=.+?',
     },
     response: {
       status: 200,
       headers: {
         'Content-Type': 'text/html',
-        Location: 'http://localhost:3007/sign-in/callback?code=codexxxx&state=stateyyyy',
+        Location: 'http://localhost:3007/sign-in/callback?code=codexxxx',
       },
       body: '<html><body>Sign in page<h1>Sign in</h1></body></html>',
     },
@@ -105,20 +95,44 @@ const manageDetails = () =>
     },
   })
 
-const token = (userToken: UserToken) =>
+const userToken = (user: UserToken, authCode: string) =>
   stubFor({
     request: {
       method: 'POST',
       urlPattern: '/auth/oauth/token',
+      bodyPatterns: [{ matches: `.*code=${authCode}.*` }],
     },
     response: {
       status: 200,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
-        Location: 'http://localhost:3007/sign-in/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
-        access_token: createToken(userToken),
+        access_token: createToken(user),
+        auth_source: 'nomis',
+        token_type: 'bearer',
+        user_name: 'USER1',
+        expires_in: 599,
+        scope: 'read',
+        internalUser: true,
+      },
+    },
+  })
+
+const systemToken = () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/auth/oauth/token',
+      bodyPatterns: [{ matches: '.*grant_type=client_credentials.*' }],
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        access_token: 'systemtokenstring',
         auth_source: 'nomis',
         token_type: 'bearer',
         user_name: 'USER1',
@@ -172,17 +186,15 @@ const stubAuditSqs = () =>
   })
 
 export default {
-  getSignInUrl,
   stubAuthPing: ping,
   stubAuthManageDetails: manageDetails,
-  stubSignIn: (
-    userToken: UserToken = {},
-  ): Promise<[Response, Response, Response, Response, Response, Response, Response]> =>
+  stubToken: userToken,
+  stubSignIn: (): Promise<[Response, Response, Response, Response, Response, Response, Response]> =>
     Promise.all([
       favicon(),
       redirect(),
+      systemToken(),
       signOut(),
-      token(userToken),
       tokenVerification.stubVerifyToken(),
       stubGetCaseLoads(),
       stubAuditSqs(),
