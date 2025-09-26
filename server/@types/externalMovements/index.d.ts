@@ -24,6 +24,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/sync/scheduled-temporary-absence/{parentId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /** @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW */
+    put: operations['syncTap_1']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/temporary-absence-authorisations/{personIdentifier}': {
     parameters: {
       query?: never
@@ -127,32 +147,42 @@ export interface components {
       eventSubType: string
       /** Format: date */
       applicationDate: string
-      /** Format: date */
-      fromDate: string
-      /** Format: date-time */
-      releaseTime: string
-      /** Format: date */
-      toDate: string
-      /** Format: date-time */
-      returnTime: string
       applicationStatus: string
-      escortCode?: string
-      transportType?: string
       comment?: string
       prisonId?: string
-      toAgencyId?: string
-      /** Format: int64 */
-      toAddressId?: number
-      toAddressOwnerClass?: string
       contactPersonName?: string
       applicationType: string
       temporaryAbsenceType?: string
       temporaryAbsenceSubType?: string
+      /** Format: date */
+      fromDate: string
+      /** Format: date */
+      toDate: string
       audit: components['schemas']['NomisAudit']
     }
     SyncResponse: {
       /** Format: uuid */
       id: string
+    }
+    ScheduledTemporaryAbsenceRequest: {
+      /** Format: uuid */
+      id?: string
+      /** Format: int64 */
+      eventId: number
+      eventStatus: string
+      /** Format: date-time */
+      startTime: string
+      /** Format: date-time */
+      returnTime: string
+      toAddressOwnerClass?: string
+      /** Format: int64 */
+      toAddressId?: number
+      contactPersonName?: string
+      escort?: string
+      comment?: string
+      transportType?: string
+      /** @description Audit data associated with the records */
+      audit: components['schemas']['NomisAudit']
     }
     CreateTapAuthorisationRequest: {
       /** Format: date-time */
@@ -165,17 +195,21 @@ export interface components {
       statusCode: 'PENDING' | 'APPROVED'
       notes?: string
       repeat: boolean
+      /** Format: date */
+      fromDate: string
+      /** Format: date */
+      toDate: string
     }
     CreateTapOccurrenceRequest: {
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
       returnBy: string
-      accompaniedByCode?: string
-      transportCode?: string
-      notes?: string
+      accompaniedByCode: string
+      transportCode: string
       locationTypeCode: string
-      locationId?: string
+      locationId: string
+      notes?: string
     }
     ReferenceId: {
       /** Format: uuid */
@@ -231,6 +265,32 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['TapApplicationRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['SyncResponse']
+        }
+      }
+    }
+  }
+  syncTap_1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        parentId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ScheduledTemporaryAbsenceRequest']
       }
     }
     responses: {
