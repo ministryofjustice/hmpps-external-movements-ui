@@ -9,6 +9,7 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full">
             <div class="card-group govuk-grid-row">
+
               <div class="govuk-grid-column-one-third card-group__item">
                 <div class="card card--clickable">
                   <h2 class="govuk-heading-m card__heading">
@@ -17,9 +18,104 @@
                   <p class="govuk-body card__description">Create a temporary absence for a prisoner</p>
                 </div>
               </div>
+
+              <div class="govuk-grid-column-one-third card-group__item">
+                <div class="card card--clickable">
+                  <h2 class="govuk-heading-m card__heading">
+                    <a class="govuk-link govuk-link--no-visited-state card__link" href="/temporary-absences">View and manage temporary absences</a>
+                  </h2>
+                  <p class="govuk-body card__description">Review upcoming and historic temporary absences, make changes and cancel if required</p>
+                </div>
+              </div>
+
+              <div class="govuk-grid-column-one-third card-group__item">
+                <div class="card card--clickable">
+                  <h2 class="govuk-heading-m card__heading">
+                    <a class="govuk-link govuk-link--no-visited-state card__link" href="/temporary-absence-authorisations">View and approve temporary absence authorisations</a>
+                  </h2>
+                  <p class="govuk-body card__description">Review upcoming and historic temporary absence authorisations. Approve, withdraw approval and make scheduling changes</p>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
       </div>
     </div>
+
+  <div class="homepage-content-after">
+    <h2 class="govuk-heading-l govuk-!-margin-bottom-7">External movements caseload for {{ user.activeCaseLoad.description }}</h2>
+    <h3 class="govuk-heading-m">Temporary absences</h3>
+    <div class="govuk-grid-row hmpps-miniSummaryWrapper govuk-!-margin-bottom-6">
+      <div class="govuk-grid-column-one-third">
+        <div class="hmpps-summary-card">
+          <div class="hmpps-summary-card__header">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-two-thirds">
+                <h4>Leaving today</h4>
+              </div>
+              <div class="govuk-summary-list govuk-summary-list__actions govuk-!-font-weight-bold">
+                <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?status=SCHEDULED&direction=OUT&from={{ isoDate() }}&to={{ isoDate() }}">View<span class="govuk-visually-hidden"> referrals with status ‘Referral submitted’</span></a>
+              </div>
+            </div>
+          </div>
+          <div class="hmpps-summary-card__body">
+            <div class="govuk-grid-row card-body ">
+              <div class="govuk-grid-column-full">
+                <p class="govuk-heading-xl govuk-!-padding-top-4">
+                  {{ leavingToday or '0' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <div class="hmpps-summary-card">
+          <div class="hmpps-summary-card__header">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-two-thirds">
+                <h4>Returning today</h4>
+              </div>
+              <div class="govuk-summary-list govuk-summary-list__actions govuk-!-font-weight-bold">
+                <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?status=SCHEDULED&direction=OUT&from={{ isoDate() }}&to={{ isoDate() }}">View<span class="govuk-visually-hidden"> referrals with status ‘Investigation pending’</span></a>
+              </div>
+            </div>
+          </div>
+          <div class="hmpps-summary-card__body">
+            <div class="govuk-grid-row card-body ">
+              <div class="govuk-grid-column-full">
+                <p class="govuk-heading-xl govuk-!-padding-top-4">
+                  {{ returningToday or '0' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <div class="hmpps-summary-card">
+          <div class="hmpps-summary-card__header">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-two-thirds">
+                <h4>Awaiting decisions</h4>
+              </div>
+              <div class="govuk-summary-list govuk-summary-list__actions govuk-!-font-weight-bold">
+                <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?status=PENDING&from={{ isoDate() }}&to={{ isoDate(30) }}">View<span class="govuk-visually-hidden"> referrals with status ‘Awaiting decision’</span></a>
+              </div>
+            </div>
+          </div>
+          <div class="hmpps-summary-card__body">
+            <div class="govuk-grid-row card-body ">
+              <div class="govuk-grid-column-full">
+                <p class="govuk-heading-xl govuk-!-padding-top-4">
+                  {{ awaitingDecisions or '0' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

@@ -23,6 +23,12 @@ export const yesterdayStringGBFormat = () => {
   return DATE_FORMAT_GB.format(currentDate)
 }
 
+export const isoDate = (plusDays: number = 0) => {
+  const date = new Date()
+  if (plusDays !== 0) date.setDate(date.getDate() + plusDays)
+  return format(date, 'yyyy-MM-dd')
+}
+
 export const parseDatePickerMinDate = (date: string) => {
   const currentDate = new Date(date)
   currentDate.setDate(currentDate.getDate() - 1)
