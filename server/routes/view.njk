@@ -80,7 +80,7 @@
                     <h4>Leaving today</h4>
                   </div>
                   <div class="govuk-summary-list govuk-summary-list__actions govuk-!-font-weight-bold">
-                    <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?status=SCHEDULED&direction=OUT&from={{ isoDate() }}&to={{ isoDate() }}">View<span class="govuk-visually-hidden"> referrals with status ‘Referral submitted’</span></a>
+                    <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?status=SCHEDULED&direction=OUT&fromDate={{ inputDate() }}&toDate={{ inputDate() }}">View<span class="govuk-visually-hidden"> referrals with status ‘Referral submitted’</span></a>
                   </div>
                 </div>
               </div>
@@ -103,7 +103,7 @@
                     <h4>Returning today</h4>
                   </div>
                   <div class="govuk-summary-list govuk-summary-list__actions govuk-!-font-weight-bold">
-                    <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?status=SCHEDULED&direction=OUT&from={{ isoDate() }}&to={{ isoDate() }}">View<span class="govuk-visually-hidden"> referrals with status ‘Investigation pending’</span></a>
+                    <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?status=SCHEDULED&direction=OUT&fromDate={{ inputDate() }}&toDate={{ inputDate() }}">View<span class="govuk-visually-hidden"> referrals with status ‘Investigation pending’</span></a>
                   </div>
                 </div>
               </div>
@@ -126,7 +126,7 @@
                     <h4>Awaiting decisions</h4>
                   </div>
                   <div class="govuk-summary-list govuk-summary-list__actions govuk-!-font-weight-bold">
-                    <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?status=PENDING&from={{ isoDate() }}&to={{ isoDate(0, 1) }}">View<span class="govuk-visually-hidden"> referrals with status ‘Awaiting decision’</span></a>
+                    <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?status=PENDING&fromDate={{ inputDate() }}&toDate={{ inputDate(0, 1) }}">View<span class="govuk-visually-hidden"> referrals with status ‘Awaiting decision’</span></a>
                   </div>
                 </div>
               </div>

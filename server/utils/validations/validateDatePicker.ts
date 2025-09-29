@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { isValid, parseISO, startOfDay, isBefore } from 'date-fns'
 
-const validateDateBase = (missingDateErrorMsg: string, invalidDateErrorMsg: string) => {
+export const validateDateBase = (missingDateErrorMsg: string, invalidDateErrorMsg: string) => {
   return z
     .string({ message: missingDateErrorMsg })
     .min(1, { message: missingDateErrorMsg })

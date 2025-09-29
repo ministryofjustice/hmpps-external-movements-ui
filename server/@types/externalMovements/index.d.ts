@@ -64,6 +64,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/search/temporary-absence-authorisations': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    get: operations['findTapAuthorisations']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/reference-data/{domain}': {
     parameters: {
       query?: never
@@ -235,10 +255,60 @@ export interface components {
       /** Format: uuid */
       id: string
     }
+    TapAuthorisationSearchRequest: {
+      prisonCode: string
+      /** Format: date */
+      fromDate: string
+      /** Format: date */
+      toDate: string
+      status: ('PENDING' | 'APPROVED')[]
+      query?: string
+      /** Format: int32 */
+      page: number
+      /** Format: int32 */
+      size: number
+      sort: string
+    }
     CodedDescription: {
       code: string
       description: string
       hintText?: string
+    }
+    Location: {
+      type: components['schemas']['CodedDescription']
+    }
+    PageMetadata: {
+      /** Format: int64 */
+      totalElements: number
+    }
+    Person: {
+      personIdentifier: string
+      firstName: string
+      lastName: string
+      cellLocation?: string
+    }
+    TapAuthorisationResult: {
+      /** Format: uuid */
+      id: string
+      person: components['schemas']['Person']
+      status: components['schemas']['CodedDescription']
+      absenceType?: components['schemas']['CodedDescription']
+      absenceSubType?: components['schemas']['CodedDescription']
+      absenceReason?: components['schemas']['CodedDescription']
+      repeat: boolean
+      /** Format: date */
+      fromDate: string
+      /** Format: date */
+      toDate: string
+      locations: components['schemas']['Location'][]
+      /** Format: int32 */
+      occurrenceCount: number
+      /** Format: date-time */
+      submittedAt: string
+    }
+    TapAuthorisationSearchResponse: {
+      content: components['schemas']['TapAuthorisationResult'][]
+      metadata: components['schemas']['PageMetadata']
     }
     ReferenceDataResponse: {
       domain: components['schemas']['CodedDescription']
@@ -367,6 +437,28 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['ReferenceId']
+        }
+      }
+    }
+  }
+  findTapAuthorisations: {
+    parameters: {
+      query: {
+        request: components['schemas']['TapAuthorisationSearchRequest']
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['TapAuthorisationSearchResponse']
         }
       }
     }

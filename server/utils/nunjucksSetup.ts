@@ -17,6 +17,7 @@ import { addressToLines, firstNameSpaceLastName, formatRefDataName, lastNameComm
 import {
   formatDate,
   formatInputDate,
+  inputDate,
   isoDate,
   parseDatePickerMinDate,
   todayStringGBFormat,
@@ -70,6 +71,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addGlobal('todayStringGBFormat', todayStringGBFormat)
   njkEnv.addGlobal('yesterdayStringGBFormat', yesterdayStringGBFormat)
   njkEnv.addGlobal('isoDate', isoDate)
+  njkEnv.addGlobal('inputDate', inputDate)
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
