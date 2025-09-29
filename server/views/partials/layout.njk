@@ -31,8 +31,8 @@
   {% endif %}
 
   {% if showBreadcrumbs and breadcrumbs and(not backUrl) %}
-    <div class="csip-breadcrumbs govuk-!-display-none-print">
-      <div class="csip-breadcrumbs__breadcrumbs">
+    <div class="govuk-!-display-none-print">
+      <div>
         {{ govukBreadcrumbs({
           items: breadcrumbs.items
         }) }}
@@ -124,7 +124,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', async function () {
-      try { 
+      try {
         const history = await getHistory()
         if (!history.length) {
           return

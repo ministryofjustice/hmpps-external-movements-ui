@@ -84,6 +84,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/prisons/{prisonIdentifier}/external-movements/overview': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    get: operations['getPrisonerOverview']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/absence-categorisation/{domain}': {
     parameters: {
       query?: never
@@ -224,6 +244,26 @@ export interface components {
       domain: components['schemas']['CodedDescription']
       items: components['schemas']['CodedDescription'][]
     }
+    Configuration: {
+      tapEnabled: boolean
+      courtMovementsEnabled: boolean
+      transfersEnabled: boolean
+      releasesEnabled: boolean
+    }
+    PrisonExternalMovementOverview: {
+      configuration: components['schemas']['Configuration']
+      tapOverview: components['schemas']['TapOverview']
+    }
+    TapOverview: {
+      /** Format: int32 */
+      leavingToday: number
+      /** Format: int32 */
+      returningToday: number
+      /** Format: int32 */
+      leavingNextSevenDays: number
+      /** Format: int32 */
+      approvalsRequired: number
+    }
     AbsenceCategorisation: {
       code: string
       description: string
@@ -359,6 +399,28 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['ReferenceDataResponse']
+        }
+      }
+    }
+  }
+  getPrisonerOverview: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonIdentifier: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonExternalMovementOverview']
         }
       }
     }
