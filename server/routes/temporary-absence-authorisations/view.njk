@@ -104,22 +104,28 @@
       {% for authorisation in results %}
         {% set rows = (rows.push([
           {
-            html: '<a class="govuk-link--no-visited-state" href="' + prisonerProfileUrl + '/prisoner/' + authorisation.person.personIdentifier + '">' + authorisation.person | firstNameSpaceLastName + "</a><br/>" + authorisation.person.personIdentifier
+            html: '<a class="govuk-link--no-visited-state" href="' + prisonerProfileUrl + '/prisoner/' + authorisation.person.personIdentifier + '">' + authorisation.person | firstNameSpaceLastName + "</a><br/>" + authorisation.person.personIdentifier,
+            attributes: { "data-sort-value": authorisation.person | firstNameSpaceLastName }
           },
           {
-            text: authorisation.fromDate | formatDate
+            text: authorisation.fromDate | formatDate,
+            attributes: { "data-sort-value": authorisation.fromDate }
           },
           {
-            text: authorisation.toDate | formatDate
+            text: authorisation.toDate | formatDate,
+            attributes: { "data-sort-value": authorisation.toDate }
           },
           {
-            text: authorisation.absenceType.description
+            text: authorisation.absenceType.description,
+            attributes: { "data-sort-value": authorisation.absenceType.description }
           },
           {
-            text: 'Single' if authorisation.occurrenceCount === 1 else 'Repeating'
+            text: 'Single' if authorisation.occurrenceCount === 1 else 'Repeating',
+            attributes: { "data-sort-value": authorisation.occurrenceCount }
           },
           {
-            text: authorisation.status.description
+            text: authorisation.status.description,
+            attributes: { "data-sort-value": authorisation.status.code | statusPriority }
           },
           {
             classes: 'govuk-link govuk-link--no-visited-state',
@@ -130,26 +136,35 @@
       {% endfor %}
 
       {{ govukTable({
+        attributes: {
+          "data-module": "moj-sortable-table"
+        },
         firstCellIsHeader: false,
         classes: 'table-vertical-align-middle govuk-!-margin-top-6',
         head: [
           {
-            text: "Name and prison number"
+            text: "Name and prison number",
+            attributes: { "aria-sort": "none" }
           },
           {
-            text: "Start date"
+            text: "Start date",
+            attributes: { "aria-sort": "none" }
           },
           {
-            text: "End date"
+            text: "End date",
+            attributes: { "aria-sort": "none" }
           },
           {
-            text: 'Absence type'
+            text: 'Absence type',
+            attributes: { "aria-sort": "none" }
           },
           {
-            text: 'Single or repeating'
+            text: 'Single or repeating',
+            attributes: { "aria-sort": "none" }
           },
           {
-            text: 'Status'
+            text: 'Status',
+            attributes: { "aria-sort": "none" }
           },
           {
             text: "Action",
