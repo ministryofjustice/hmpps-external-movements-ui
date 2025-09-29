@@ -93,7 +93,10 @@ export class AddTapFlowControl {
       }
       if (data.location) {
         journey.location = data.location
-        journey.locationType = journey.locationSubJourney!.locationType
+        if (journey.locationSubJourney) {
+          journey.locationType = journey.locationSubJourney.locationType
+          delete journey.locationSubJourney
+        }
       }
       if (data.accompanied !== undefined) {
         if (data.accompanied && !journey.accompaniedBy) {
@@ -179,8 +182,10 @@ export class AddTapFlowControl {
     }
     if (data.location) {
       journey.location = data.location
-      journey.locationType = journey.locationSubJourney!.locationType
-      delete journey.locationSubJourney
+      if (journey.locationSubJourney) {
+        journey.locationType = journey.locationSubJourney.locationType
+        delete journey.locationSubJourney
+      }
       return 'accompanied-or-unaccompanied'
     }
     if (data.accompanied !== undefined) {

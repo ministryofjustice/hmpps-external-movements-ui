@@ -44,6 +44,8 @@ export class AddTapCheckAnswersController {
         repeat: repeat!,
         statusCode: requireApproval ? 'PENDING' : 'APPROVED',
         absenceTypeCode: absenceType!.code,
+        fromDate: `${startDate}T${startTime}:00`,
+        toDate: `${returnDate}T${returnTime}:00`,
         occurrences: [
           {
             releaseAt: `${startDate}T${startTime}:00`,
@@ -51,6 +53,7 @@ export class AddTapCheckAnswersController {
             locationTypeCode: locationType!.code,
             locationId: location!.id,
             transportCode: transport!.code,
+            accompaniedByCode: accompanied && accompaniedBy ? accompaniedBy.code : 'U',
           },
         ],
       }
@@ -62,7 +65,6 @@ export class AddTapCheckAnswersController {
         request.absenceReasonCode = reasonCategory.code
       }
 
-      if (accompanied && accompaniedBy) request.occurrences[0]!.accompaniedByCode = accompaniedBy.code
       if (notes) {
         request.notes = notes
         request.occurrences[0]!.notes = notes
