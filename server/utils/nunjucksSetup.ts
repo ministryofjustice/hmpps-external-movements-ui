@@ -23,6 +23,7 @@ import {
 import {
   formatDate,
   formatInputDate,
+  formatTime,
   inputDate,
   isoDate,
   parseDatePickerMinDate,
@@ -86,6 +87,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatRefDataName', formatRefDataName)
   njkEnv.addFilter('getQueryEntries', getQueryEntries)
   njkEnv.addFilter('formatDate', formatDate)
+  njkEnv.addFilter('formatTime', formatTime)
   njkEnv.addFilter('formatInputDate', formatInputDate)
   njkEnv.addFilter('parseDatePickerMinDate', parseDatePickerMinDate)
   njkEnv.addFilter('findError', findError)

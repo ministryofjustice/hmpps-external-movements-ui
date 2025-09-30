@@ -69,6 +69,12 @@ export default class ExternalMovementsService {
       })
   }
 
+  async getTapAuthorisation(context: ApiRequestContext, id: string) {
+    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapAuthorisation']>({
+      path: `/temporary-absence-authorisations/${id}`,
+    })
+  }
+
   searchTapAuthorisations(
     context: ApiRequestContext,
     fromDate: string,

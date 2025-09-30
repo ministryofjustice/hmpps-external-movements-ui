@@ -15,6 +15,10 @@ export const formatDate = (date?: string | Date, fmt = 'd MMMM yyyy') => {
   return format(richDate, fmt)
 }
 
+export const formatTime = (date?: string) => {
+  return date?.substring(9, 14) || ''
+}
+
 export const todayStringGBFormat = () => DATE_FORMAT_GB.format(new Date())
 
 export const yesterdayStringGBFormat = () => {
