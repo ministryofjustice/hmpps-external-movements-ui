@@ -30,6 +30,13 @@ export const isoDate = (plusDays: number = 0, plusMonth: number = 0) => {
   return format(date, 'yyyy-MM-dd')
 }
 
+export const inputDate = (plusDays: number = 0, plusMonth: number = 0) => {
+  const date = new Date()
+  if (plusDays !== 0) date.setDate(date.getDate() + plusDays)
+  if (plusMonth !== 0) date.setMonth(date.getMonth() + plusMonth)
+  return format(date, 'd/M/yyyy')
+}
+
 export const parseDatePickerMinDate = (date: string) => {
   const currentDate = new Date(date)
   currentDate.setDate(currentDate.getDate() - 1)

@@ -78,3 +78,12 @@ export const addressToLines = ({
   if (addressArray.length) return addressArray.join('\n')
   return ''
 }
+
+const STATUS_PRIORITY_MAP: { [key: string]: number } = {
+  PENDING: 0,
+  APPROVED: 1,
+  DENIED: 2,
+  WITHDRAWN: 3,
+}
+
+export const statusPriority = (statusCode: string) => STATUS_PRIORITY_MAP[statusCode] ?? 999

@@ -13,10 +13,17 @@ import {
 } from './utils'
 import config from '../config'
 import logger from '../../logger'
-import { addressToLines, firstNameSpaceLastName, formatRefDataName, lastNameCommaFirstName } from './formatUtils'
+import {
+  addressToLines,
+  firstNameSpaceLastName,
+  formatRefDataName,
+  lastNameCommaFirstName,
+  statusPriority,
+} from './formatUtils'
 import {
   formatDate,
   formatInputDate,
+  inputDate,
   isoDate,
   parseDatePickerMinDate,
   todayStringGBFormat,
@@ -70,6 +77,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addGlobal('todayStringGBFormat', todayStringGBFormat)
   njkEnv.addGlobal('yesterdayStringGBFormat', yesterdayStringGBFormat)
   njkEnv.addGlobal('isoDate', isoDate)
+  njkEnv.addGlobal('inputDate', inputDate)
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
@@ -89,4 +97,5 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('removeNullish', arr => arr.filter(Boolean))
   njkEnv.addFilter('addressToLines', addressToLines)
   njkEnv.addFilter('fromRefData', fromRefData)
+  njkEnv.addFilter('statusPriority', statusPriority)
 }

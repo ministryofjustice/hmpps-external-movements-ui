@@ -68,4 +68,28 @@ export default class ExternalMovementsService {
         path: `/prisons/${context.res.locals.user.getActiveCaseloadId()}/external-movements/overview`,
       })
   }
+
+  searchTapAuthorisations(
+    context: ApiRequestContext,
+    fromDate: string,
+    toDate: string,
+    status: string[],
+    query: string | null,
+  ) {
+    const searchParams: string[] = [
+      `prisonCode=${context.res.locals.user.getActiveCaseloadId()}`,
+      `fromDate=${fromDate}`,
+      `toDate=${toDate}`,
+      ...status.map(val => `status=${val}`),
+      'page=1',
+      'size=2147483647',
+    ]
+    if (query) searchParams.push(`query=${encodeURIComponent(query)}`)
+
+    return this.externalMovementsApiClient
+      .withContext(context)
+      .get<components['schemas']['TapAuthorisationSearchResponse']>({
+        path: `/search/temporary-absence-authorisations?${searchParams.join('&')}`,
+      })
+  }
 }

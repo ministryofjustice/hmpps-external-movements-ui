@@ -1,3 +1,4 @@
+import type { HTTPError } from 'superagent'
 import { components } from '../@types/externalMovements'
 
 const properCase = (word: string): string => (word[0] ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word)
@@ -94,4 +95,13 @@ export const fromRefData = (items: components['schemas']['CodedDescription'][]) 
     text: refData.description,
     hint: refData.hintText ? { text: refData.hintText } : undefined,
   }))
+}
+
+export const getApiUserErrorMessage = (error: HTTPError) => {
+  try {
+    const errorRespData = JSON.parse(error.text) as { userMessage?: string }
+    return errorRespData!.userMessage!
+  } catch {
+    return 'API error'
+  }
 }
