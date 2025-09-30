@@ -16,7 +16,7 @@ export interface paths {
      *
      *     Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW */
-    put: operations['syncTap']
+    put: operations['syncTemporaryAbsenceApplication']
     post?: never
     delete?: never
     options?: never
@@ -36,7 +36,7 @@ export interface paths {
      *
      *     Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW */
-    put: operations['syncTap_1']
+    put: operations['syncScheduledTemporaryAbsence']
     post?: never
     delete?: never
     options?: never
@@ -58,6 +58,26 @@ export interface paths {
      *     Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
     post: operations['createTapAuthorisation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/temporary-absence-authorisations/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    get: operations['getTapAuthorisation']
+    put?: never
+    post?: never
     delete?: never
     options?: never
     head?: never
@@ -135,7 +155,7 @@ export interface paths {
      *
      *     Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
-    get: operations['getDomain_1']
+    get: operations['getAbsenceCategorisationDomain']
     put?: never
     post?: never
     delete?: never
@@ -155,7 +175,7 @@ export interface paths {
      *
      *     Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
-    get: operations['getOptions']
+    get: operations['getAbsenceCategorisationOptions']
     put?: never
     post?: never
     delete?: never
@@ -232,7 +252,7 @@ export interface components {
       absenceReasonCode?: string
       occurrences: components['schemas']['CreateTapOccurrenceRequest'][]
       /** @enum {string} */
-      statusCode: 'PENDING' | 'APPROVED'
+      statusCode: 'PENDING' | 'APPROVED' | 'WITHDRAWN' | 'DENIED'
       notes?: string
       repeat: boolean
       /** Format: date */
@@ -255,19 +275,10 @@ export interface components {
       /** Format: uuid */
       id: string
     }
-    TapAuthorisationSearchRequest: {
-      prisonCode: string
-      /** Format: date */
-      fromDate: string
-      /** Format: date */
-      toDate: string
-      status: ('PENDING' | 'APPROVED')[]
-      query?: string
-      /** Format: int32 */
-      page: number
-      /** Format: int32 */
-      size: number
-      sort: string
+    AtAndBy: {
+      /** Format: date-time */
+      at: string
+      by: string
     }
     CodedDescription: {
       code: string
@@ -277,15 +288,57 @@ export interface components {
     Location: {
       type: components['schemas']['CodedDescription']
     }
-    PageMetadata: {
-      /** Format: int64 */
-      totalElements: number
-    }
     Person: {
       personIdentifier: string
       firstName: string
       lastName: string
       cellLocation?: string
+    }
+    TapAuthorisation: {
+      /** Format: uuid */
+      id: string
+      person: components['schemas']['Person']
+      status: components['schemas']['CodedDescription']
+      absenceType?: components['schemas']['CodedDescription']
+      absenceSubType?: components['schemas']['CodedDescription']
+      absenceReason?: components['schemas']['CodedDescription']
+      repeat: boolean
+      /** Format: date */
+      fromDate: string
+      /** Format: date */
+      toDate: string
+      occurrences: components['schemas']['TapOccurrence'][]
+      submitted: components['schemas']['AtAndBy']
+      approved?: components['schemas']['AtAndBy']
+    }
+    TapOccurrence: {
+      /** Format: uuid */
+      id: string
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
+      location: components['schemas']['Location']
+      accompaniedBy: components['schemas']['CodedDescription']
+      transport: components['schemas']['CodedDescription']
+    }
+    TapAuthorisationSearchRequest: {
+      prisonCode: string
+      /** Format: date */
+      fromDate: string
+      /** Format: date */
+      toDate: string
+      status: ('PENDING' | 'APPROVED' | 'WITHDRAWN' | 'DENIED')[]
+      query?: string
+      /** Format: int32 */
+      page: number
+      /** Format: int32 */
+      size: number
+      sort: string
+    }
+    PageMetadata: {
+      /** Format: int64 */
+      totalElements: number
     }
     TapAuthorisationResult: {
       /** Format: uuid */
@@ -363,7 +416,7 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
-  syncTap: {
+  syncTemporaryAbsenceApplication: {
     parameters: {
       query?: never
       header?: never
@@ -389,7 +442,7 @@ export interface operations {
       }
     }
   }
-  syncTap_1: {
+  syncScheduledTemporaryAbsence: {
     parameters: {
       query?: never
       header?: never
@@ -437,6 +490,28 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['ReferenceId']
+        }
+      }
+    }
+  }
+  getTapAuthorisation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['TapAuthorisation']
         }
       }
     }
@@ -517,7 +592,7 @@ export interface operations {
       }
     }
   }
-  getDomain_1: {
+  getAbsenceCategorisationDomain: {
     parameters: {
       query?: never
       header?: never
@@ -540,7 +615,7 @@ export interface operations {
       }
     }
   }
-  getOptions: {
+  getAbsenceCategorisationOptions: {
     parameters: {
       query?: never
       header?: never

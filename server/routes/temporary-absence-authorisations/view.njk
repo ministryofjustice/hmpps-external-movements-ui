@@ -120,8 +120,8 @@
             attributes: { "data-sort-value": authorisation.absenceType.description }
           },
           {
-            text: 'Single' if authorisation.occurrenceCount === 1 else 'Repeating',
-            attributes: { "data-sort-value": authorisation.occurrenceCount }
+            text: ('Repeating' + authorisation.occurrences.length + 'occurrences') if authorisation.repeat else 'Single',
+            attributes: { "data-sort-value": authorisation.occurrences.length }
           },
           {
             text: authorisation.status.description,
