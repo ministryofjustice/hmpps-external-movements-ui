@@ -14,12 +14,18 @@
         <h1 class="govuk-heading-l">Temporary Absence authorisation details</h1>
       </div>
       <div class="govuk-summary-list govuk-summary-list__actions">
-        {{ govukButton({
-          classes: 'govuk-!-margin-top-4',
-          text: "Record approval decision",
-          href: "/temporary-absence-authorisations/" + result.id + "/approval",
-          preventDoubleClick: true
-        }) }}
+        {% if result.status.code === 'PENDING' %}
+          {{ govukButton({
+            classes: 'govuk-!-margin-top-4',
+            text: "Record approval decision",
+            href: "/temporary-absence-authorisations/" + result.id + "/approval",
+            preventDoubleClick: true
+          }) }}
+        {% else %}
+          <div class="govuk-!-margin-top-6">
+            <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}/approval">Change approval decision</a>
+          </div>
+        {% endif %}
       </div>
     </div>
 
