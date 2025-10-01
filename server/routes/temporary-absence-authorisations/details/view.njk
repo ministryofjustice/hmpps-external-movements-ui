@@ -1,0 +1,179 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set fullWidth = true %}
+{% set pageTitle = 'Temporary absence authorisation details' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row govuk-!-margin-bottom-2">
+      <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Manage Temporary Absence</span>
+        <h1 class="govuk-heading-l">Temporary Absence authorisation details</h1>
+      </div>
+      <div class="govuk-summary-list govuk-summary-list__actions">
+        {% if result.status.code === 'PENDING' %}
+          {{ govukButton({
+            classes: 'govuk-!-margin-top-4',
+            text: "Record approval decision",
+            href: "/temporary-absence-authorisations/" + result.id + "/approval",
+            preventDoubleClick: true
+          }) }}
+        {% else %}
+          <div class="govuk-!-margin-top-6">
+            <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}/approval">Change approval decision</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {{ govukSummaryList({
+          card: {
+            classes: "govuk-!-margin-bottom-2",
+            title: {
+              text: "Absence information"
+            }
+          },
+          rows: [
+            {
+              key: { text: "Absence type" },
+              value: { text: result.absenceType.description },
+              actions: { items: [{
+                href: "#",
+                text: "Change",
+                visuallyHiddenText: "absence type"
+              }] }
+            },
+            {
+              key: { text: "Absence sub-type" },
+              value: { text: result.absenceSubType.description },
+              actions: { items: [{
+                href: "#",
+                text: "Change",
+                visuallyHiddenText: "absence sub-type"
+              }] }
+            } if result.absenceSubType,
+            {
+              key: { text: "Absence reason" },
+              value: { text: result.absenceReason.description },
+              actions: { items: [{
+                href: "#",
+                text: "Change",
+                visuallyHiddenText: "absence reason"
+              }] }
+            } if result.absenceReason,
+            {
+              key: { text: "Single or repeating absence" },
+              value: { text: 'Repeating' if result.repeat else 'Single' },
+              actions: { items: [{
+                href: "#",
+                text: "Change",
+                visuallyHiddenText: "single or repeating absence type"
+              }] }
+            },
+            {
+              key: { text: "Absence date" },
+              value: { text: (result.fromDate | formatDate) if result.fromDate === result.toDate else (result.fromDate | formatDate + ' to ' + result.toDate | formatDate) },
+              actions: { items: [{
+                href: "#",
+                text: "Change",
+                visuallyHiddenText: "absence date"
+              }] }
+            },
+            {
+              key: { text: "Approval status" },
+              value: { text: result.status.description }
+            }
+          ] | removeNullish
+        }) }}
+
+        <p class="govuk-!-margin-bottom-7">
+          Submitted at {{ result.submitted.at | formatDate('cccc, d MMMM yyyy HH:mm') }} by {{ result.submitted.by }}
+          {% if result.approved %}
+            <br/>Approved at {{ result.approved.at | formatDate('cccc, d MMMM yyyy HH:mm') }} by {{ result.approved.by }}
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">Absence occurrences</h2>
+      </div>
+      <div class="govuk-summary-list govuk-summary-list__actions">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}/occurrences">Add occurrence</a>
+      </div>
+    </div>
+
+    {% set rows = [] %}
+    {% for occurrence in result.occurrences %}
+      {% set rows = (rows.push([
+        {
+          text: occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm'),
+          attributes: { "data-sort-value": occurrence.releaseAt }
+        },
+        {
+          text: occurrence.returnBy | formatDate('cccc, d MMMM yyyy HH:mm'),
+          attributes: { "data-sort-value": occurrence.returnBy }
+        },
+        {
+          text: 'Slough, Berkshire',
+          attributes: { "data-sort-value": 'Slough, Berkshire' }
+        },
+        {
+          text: occurrence.accompaniedBy.description,
+          attributes: { "data-sort-value": occurrence.accompaniedBy.description }
+        },
+        {
+          text: occurrence.transport.description,
+          attributes: { "data-sort-value": occurrence.transport.description }
+        },
+        {
+          classes: 'govuk-link govuk-link--no-visited-state',
+          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-occurrences/' + occurrence.id + '">View<span class="govuk-visually-hidden"> absence occurrence on ' + occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') + '</span></a>',
+          format: "numeric"
+        }
+      ]), rows) %}
+    {% endfor %}
+
+    {{ govukTable({
+      attributes: {
+        "data-module": "moj-sortable-table"
+      },
+      firstCellIsHeader: false,
+      classes: 'table-vertical-align-middle govuk-!-margin-top-4',
+      head: [
+        {
+          text: "Released at",
+          attributes: { "aria-sort": "none" }
+        },
+        {
+          text: "Return by",
+          attributes: { "aria-sort": "none" }
+        },
+        {
+          text: 'Location',
+          attributes: { "aria-sort": "none" }
+        },
+        {
+          text: 'Accompanied by',
+          attributes: { "aria-sort": "none" }
+        },
+        {
+          text: 'Transport',
+          attributes: { "aria-sort": "none" }
+        },
+        {
+          text: "Action",
+          format: "numeric"
+        }
+      ],
+      rows: rows
+    }) }}
+  </div>
+{% endblock %}
