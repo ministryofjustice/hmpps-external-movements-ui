@@ -69,6 +69,12 @@ export default class ExternalMovementsService {
       })
   }
 
+  async getTapOccurrence(context: ApiRequestContext, id: string) {
+    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapOccurrence']>({
+      path: `/temporary-absence-occurrences/${id}`,
+    })
+  }
+
   async getTapAuthorisation(context: ApiRequestContext, id: string) {
     return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapAuthorisation']>({
       path: `/temporary-absence-authorisations/${id}`,
