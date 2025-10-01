@@ -1,0 +1,4 @@
+{% macro absenceStatusTag(absence) %}
+  {% set status = absence | occurrenceStatus %}
+  <strong class='govuk-tag{{ ' govuk-tag--grey' if status.code !== 'SCHEDULED' else '' }}'>{{ status.description }}</strong>
+{% endmacro %}

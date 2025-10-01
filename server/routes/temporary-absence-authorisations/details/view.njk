@@ -92,9 +92,9 @@
         }) }}
 
         <p class="govuk-!-margin-bottom-7">
-          Submitted at {{ result.submitted.at | formatDate('cccc, d MMMM yyyy HH:mm') }} by {{ result.submitted.by }}
+          Submitted at {{ result.submitted.at | formatDate('cccc, d MMMM yyyy HH:mm') }} by {{ result.submitted.displayName }} ({{ result.submitted.by }})
           {% if result.approved %}
-            <br/>Approved at {{ result.approved.at | formatDate('cccc, d MMMM yyyy HH:mm') }} by {{ result.approved.by }}
+            <br/>Approved at {{ result.approved.at | formatDate('cccc, d MMMM yyyy HH:mm') }} by {{ result.approved.displayName }} ({{ result.approved.by }})
           {% endif %}
         </p>
       </div>
@@ -135,7 +135,7 @@
         },
         {
           classes: 'govuk-link govuk-link--no-visited-state',
-          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-occurrences/' + occurrence.id + '">View<span class="govuk-visually-hidden"> absence occurrence on ' + occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') + '</span></a>',
+          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">View<span class="govuk-visually-hidden"> absence occurrence on ' + occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') + '</span></a>',
           format: "numeric"
         }
       ]), rows) %}
