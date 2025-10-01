@@ -4,7 +4,7 @@
 }
 
 .horizontal-form {
-  * {
+  *:not(.moj-datepicker__button):not(.moj-js-datepicker-grid) {
     width: 100%;
   }
 
@@ -12,7 +12,7 @@
     display: flex;
     flex-flow: row wrap;
 
-    * {
+    *:not(.moj-datepicker__button):not(.moj-js-datepicker-grid) {
       width: auto;
       margin-bottom: 0;
     }
@@ -29,7 +29,7 @@
       margin-bottom: govuk-spacing(1);
     }
 
-    button {
+    button:not(.moj-datepicker__button) {
       margin-right: govuk-spacing(3);
       margin-bottom: $govuk-border-width-form-element;
     }
@@ -54,7 +54,7 @@
   @include govuk-media-query($from: desktop) {
     display: flex;
 
-    * {
+    *:not(.moj-datepicker__button):not(.moj-js-datepicker-grid) {
       width: auto;
       margin-bottom: 0;
     }

@@ -9,6 +9,7 @@ import insertJourneyIdentifier from '../middleware/journey/insertJourneyIdentifi
 import { JourneyRoutes } from './journeys/routes'
 import populateValidationErrors from '../middleware/validation/populateValidationErrors'
 import { BrowseTapAuthorisationsRoutes } from './temporary-absence-authorisations/routes'
+import { BrowseTapOccurrencesRoutes } from './temporary-absences/routes'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
@@ -24,6 +25,11 @@ export default function routes(services: Services): Router {
       {
         matcher: /temporary-absence-authorisations$/,
         text: 'Temporary Absence authorisations',
+        alias: Page.EXAMPLE_PAGE,
+      },
+      {
+        matcher: /temporary-absences$/,
+        text: 'Temporary Absences',
         alias: Page.EXAMPLE_PAGE,
       },
     ]),
@@ -45,6 +51,7 @@ export default function routes(services: Services): Router {
 
   router.use('/search-prisoner', SearchPrisonerRoutes(services))
   router.use('/temporary-absence-authorisations', BrowseTapAuthorisationsRoutes(services))
+  router.use('/temporary-absences', BrowseTapOccurrencesRoutes(services))
 
   router.use(insertJourneyIdentifier())
   router.use('/:journeyId', JourneyRoutes(services))

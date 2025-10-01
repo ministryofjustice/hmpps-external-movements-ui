@@ -15,7 +15,7 @@ export class TapAuthorisationDetailsController {
         prisonerNumber: result.person.personIdentifier,
         lastName: result.person.lastName,
         firstName: result.person.firstName,
-        dateOfBirth: '',
+        dateOfBirth: result.person.dateOfBirth,
         prisonName: res.locals.user.activeCaseLoad?.description,
         cellLocation: result.person.cellLocation,
       }

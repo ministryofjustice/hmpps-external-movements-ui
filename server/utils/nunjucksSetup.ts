@@ -18,6 +18,7 @@ import {
   firstNameSpaceLastName,
   formatRefDataName,
   lastNameCommaFirstName,
+  occurrenceStatus,
   statusPriority,
 } from './formatUtils'
 import {
@@ -100,4 +101,5 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('addressToLines', addressToLines)
   njkEnv.addFilter('fromRefData', fromRefData)
   njkEnv.addFilter('statusPriority', statusPriority)
+  njkEnv.addFilter('occurrenceStatus', occurrenceStatus)
 }

@@ -64,6 +64,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/temporary-absence-occurrences/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    get: operations['getTapOccurrence']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/temporary-absence-authorisations/{id}': {
     parameters: {
       query?: never
@@ -76,6 +96,26 @@ export interface paths {
      *     Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
     get: operations['getTapAuthorisation']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/search/temporary-absence-occurrences': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    get: operations['findTapOccurrences']
     put?: never
     post?: never
     delete?: never
@@ -279,6 +319,16 @@ export interface components {
       /** Format: date-time */
       at: string
       by: string
+      displayName: string
+    }
+    Authorisation: {
+      /** Format: uuid */
+      id: string
+      person: components['schemas']['Person']
+      status: components['schemas']['CodedDescription']
+      absenceType?: components['schemas']['CodedDescription']
+      absenceSubType?: components['schemas']['CodedDescription']
+      absenceReason?: components['schemas']['CodedDescription']
     }
     CodedDescription: {
       code: string
@@ -292,7 +342,35 @@ export interface components {
       personIdentifier: string
       firstName: string
       lastName: string
+      /** Format: date */
+      dateOfBirth: string
       cellLocation?: string
+    }
+    TapOccurrence: {
+      /** Format: uuid */
+      id: string
+      authorisation: components['schemas']['Authorisation']
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
+      location: components['schemas']['Location']
+      accompaniedBy: components['schemas']['CodedDescription']
+      transport: components['schemas']['CodedDescription']
+      added: components['schemas']['AtAndBy']
+      cancelled?: components['schemas']['AtAndBy']
+    }
+    Occurrence: {
+      /** Format: uuid */
+      id: string
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
+      location: components['schemas']['Location']
+      accompaniedBy: components['schemas']['CodedDescription']
+      transport: components['schemas']['CodedDescription']
+      isCancelled: boolean
     }
     TapAuthorisation: {
       /** Format: uuid */
@@ -307,20 +385,52 @@ export interface components {
       fromDate: string
       /** Format: date */
       toDate: string
-      occurrences: components['schemas']['TapOccurrence'][]
+      occurrences: components['schemas']['Occurrence'][]
       submitted: components['schemas']['AtAndBy']
       approved?: components['schemas']['AtAndBy']
     }
-    TapOccurrence: {
+    TapOccurrenceSearchRequest: {
+      prisonCode: string
+      /** Format: date */
+      fromDate: string
+      /** Format: date */
+      toDate: string
+      query?: string
+      /** Format: int32 */
+      page: number
+      /** Format: int32 */
+      size: number
+      sort: string
+    }
+    PageMetadata: {
+      /** Format: int64 */
+      totalElements: number
+    }
+    TapOccurrenceAuthorisation: {
       /** Format: uuid */
       id: string
+      person: components['schemas']['Person']
+      status: components['schemas']['CodedDescription']
+      absenceType?: components['schemas']['CodedDescription']
+      absenceSubType?: components['schemas']['CodedDescription']
+      absenceReason?: components['schemas']['CodedDescription']
+    }
+    TapOccurrenceResult: {
+      /** Format: uuid */
+      id: string
+      authorisation: components['schemas']['TapOccurrenceAuthorisation']
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
       returnBy: string
-      location: components['schemas']['Location']
       accompaniedBy: components['schemas']['CodedDescription']
       transport: components['schemas']['CodedDescription']
+      location: components['schemas']['Location']
+      isCancelled: boolean
+    }
+    TapOccurrenceSearchResponse: {
+      content: components['schemas']['TapOccurrenceResult'][]
+      metadata: components['schemas']['PageMetadata']
     }
     TapAuthorisationSearchRequest: {
       prisonCode: string
@@ -335,10 +445,6 @@ export interface components {
       /** Format: int32 */
       size: number
       sort: string
-    }
-    PageMetadata: {
-      /** Format: int64 */
-      totalElements: number
     }
     TapAuthorisationResult: {
       /** Format: uuid */
@@ -494,6 +600,28 @@ export interface operations {
       }
     }
   }
+  getTapOccurrence: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['TapOccurrence']
+        }
+      }
+    }
+  }
   getTapAuthorisation: {
     parameters: {
       query?: never
@@ -512,6 +640,28 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['TapAuthorisation']
+        }
+      }
+    }
+  }
+  findTapOccurrences: {
+    parameters: {
+      query: {
+        request: components['schemas']['TapOccurrenceSearchRequest']
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['TapOccurrenceSearchResponse']
         }
       }
     }
