@@ -102,4 +102,5 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('fromRefData', fromRefData)
   njkEnv.addFilter('statusPriority', statusPriority)
   njkEnv.addFilter('occurrenceStatus', occurrenceStatus)
+  njkEnv.addFilter('initialiseName', initialiseName)
 }

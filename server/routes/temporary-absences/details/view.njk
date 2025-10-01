@@ -92,7 +92,7 @@
         }) }}
 
         <p class="govuk-!-margin-bottom-7">
-          Added at {{ result.added.at | formatDate('cccc, d MMMM yyyy HH:mm') }} by {{ result.added.displayName }} ({{ result.added.by }})
+          Added at {{ result.added.at | formatDate('cccc, d MMMM yyyy HH:mm') }} by {{ result.added.displayName | initialiseName }} ({{ result.added.by }})
         </p>
       </div>
     </div>

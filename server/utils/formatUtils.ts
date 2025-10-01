@@ -109,3 +109,17 @@ export const occurrenceStatus = (occurrence: components['schemas']['TapOccurrenc
 
   return occurrence.authorisation.status
 }
+
+/**
+ * Converts an unformatted name string to the format, 'J. Bloggs'.
+ * Specifically, this method initialises the first name and appends it by the last name. Any middle names are stripped.
+ * @param fullName name to be converted.
+ * @returns name converted to initialised format.
+ */
+export const initialiseName = (fullName?: string): string | null => {
+  // this check is for the authError page
+  if (!fullName) return null
+
+  const array = fullName.split(' ')
+  return `${array[0]?.[0]}. ${array.reverse()[0]}`
+}
