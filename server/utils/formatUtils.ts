@@ -1,4 +1,5 @@
 import { Address } from '../@types/journeys'
+import { components } from '../@types/externalMovements'
 
 const uniformWhitespace = (word: string): string => (word ? word.trim().replace(/\s+/g, ' ') : '')
 
@@ -84,6 +85,27 @@ const STATUS_PRIORITY_MAP: { [key: string]: number } = {
   APPROVED: 1,
   DENIED: 2,
   WITHDRAWN: 3,
+  SCHEDULED: 4,
+  CANCELLED: 5,
+  COMPLETED: 6,
 }
 
 export const statusPriority = (statusCode: string) => STATUS_PRIORITY_MAP[statusCode] ?? 999
+
+export const occurrenceStatus = (occurrence: components['schemas']['TapOccurrenceResult']) => {
+  if (occurrence.isCancelled) {
+    return {
+      code: 'CANCELLED',
+      description: 'Cancelled',
+    }
+  }
+
+  if (occurrence.authorisation.status.code === 'APPROVED') {
+    return {
+      code: 'SCHEDULED',
+      description: 'Scheduled',
+    }
+  }
+
+  return occurrence.authorisation.status
+}

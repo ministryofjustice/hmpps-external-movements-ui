@@ -65,10 +65,11 @@ export const deduplicateFieldErrors = (error: z.ZodError<unknown>) => {
 }
 
 export const validateOnGET =
-  (schema: z.ZodTypeAny, ...queryProps: string[]): RequestHandler =>
+  (schema: z.ZodTypeAny | SchemaFactory, ...queryProps: string[]): RequestHandler =>
   async (req, res, next) => {
     if (queryProps.some(prop => prop === '*' || Object.hasOwn(req.query, prop))) {
-      const result = schema.safeParse(normaliseNewLines(req.query))
+      const resolvedSchema = typeof schema === 'function' ? await schema(req, res) : schema
+      const result = resolvedSchema.safeParse(normaliseNewLines(req.query))
       res.locals['query'] = {
         ...req.query,
       }
