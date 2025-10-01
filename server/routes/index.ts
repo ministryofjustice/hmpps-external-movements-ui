@@ -27,6 +27,11 @@ export default function routes(services: Services): Router {
         text: 'Temporary Absence authorisations',
         alias: Page.EXAMPLE_PAGE,
       },
+      {
+        matcher: /temporary-absences$/,
+        text: 'Temporary Absences',
+        alias: Page.EXAMPLE_PAGE,
+      },
     ]),
   )
 
