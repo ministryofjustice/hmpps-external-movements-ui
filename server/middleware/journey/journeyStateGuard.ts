@@ -39,7 +39,7 @@ export default function journeyStateGuard(rules: JourneyStateGuard, appInsightsC
     const [, uuid, flow, rawRequestedPage] = req.originalUrl.split('/')
     const requestedPage = rawRequestedPage!.split('?')[0]!
 
-    if (!uuid || !validate(uuid) || flow === 'csip-record' || req.originalUrl.endsWith('/start')) {
+    if (!uuid || !validate(uuid) || req.originalUrl.endsWith('/start')) {
       // This page does not concern us
       return next()
     }
