@@ -6,34 +6,10 @@ import { signIn } from '../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApis/externalMovementsApi'
-import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { formatInputDate } from '../../../../utils/dateTimeUtils'
-
-export class StartDatePage extends BaseTestPage {
-  async verifyContent() {
-    return this.verify({
-      pageUrl: /\/add-temporary-absence\/start-date/,
-      title: 'Enter absence start date and time - Add a temporary absence - DPS',
-      caption: 'Create a Temporary Absence',
-      heading: 'Add absence details',
-      backUrl: /single-or-repeating/,
-    })
-  }
-
-  dateField() {
-    return this.textbox(/What date will (.+?) be released\?/)
-  }
-
-  hourField() {
-    return this.textbox('Hour')
-  }
-
-  minuteField() {
-    return this.textbox('Minute')
-  }
-}
+import { StartDatePage } from './test.page'
 
 test.describe('/add-temporary-absence/start-date', () => {
   const prisonNumber = randomPrisonNumber()

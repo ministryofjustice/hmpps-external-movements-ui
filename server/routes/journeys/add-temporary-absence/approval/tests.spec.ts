@@ -6,29 +6,9 @@ import { signIn } from '../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApis/externalMovementsApi'
-import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
-
-export class AbsenceApprovalPage extends BaseTestPage {
-  async verifyContent() {
-    return this.verify({
-      pageUrl: /\/add-temporary-absence\/approval/,
-      title: 'Select approval option - Add a temporary absence - DPS',
-      caption: 'Create a Temporary Absence',
-      heading: 'Does this absence need to be approved by someone?',
-      backUrl: /comments/,
-    })
-  }
-
-  yesRadio() {
-    return this.radio('Yes')
-  }
-
-  noRadio() {
-    return this.radio('No')
-  }
-}
+import { AbsenceApprovalPage } from './test.page'
 
 test.describe('/add-temporary-absence/approval', () => {
   const prisonNumber = randomPrisonNumber()

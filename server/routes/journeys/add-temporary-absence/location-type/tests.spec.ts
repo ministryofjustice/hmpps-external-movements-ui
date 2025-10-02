@@ -5,28 +5,12 @@ import componentsApi from '../../../../../integration_tests/mockApis/componentsA
 import { signIn } from '../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
-import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import {
   stubGetAllAbsenceTypes,
   stubGetReferenceData,
 } from '../../../../../integration_tests/mockApis/externalMovementsApi'
-
-export class LocationTypePage extends BaseTestPage {
-  async verifyContent() {
-    return this.verify({
-      pageUrl: /\/add-temporary-absence\/location-type/,
-      title: 'Select location type - Add a temporary absence - DPS',
-      caption: 'Add a temporary absence',
-      heading: 'What type of location will Prisoner-Name Prisoner-Surname be going to?',
-      backUrl: /end-date/,
-    })
-  }
-
-  locationTypeRadio() {
-    return this.radio('locationType A')
-  }
-}
+import { LocationTypePage } from './test.page'
 
 test.describe('/add-temporary-absence/location-type', () => {
   const prisonNumber = randomPrisonNumber()

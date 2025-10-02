@@ -5,31 +5,13 @@ import componentsApi from '../../../../../integration_tests/mockApis/componentsA
 import { signIn } from '../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
-import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import {
   stubGetAllAbsenceTypes,
   stubGetReferenceData,
 } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
-
-export class TransportPage extends BaseTestPage {
-  async verifyContent(isAccompanied: boolean) {
-    return this.verify({
-      pageUrl: /\/add-temporary-absence\/transport/,
-      title: 'Select transport - Add a temporary absence - DPS',
-      caption: 'Add a temporary absence',
-      heading: 'What transport will Prisoner-Name Prisoner-Surname use?',
-      backUrl: isAccompanied
-        ? /\/add-temporary-absence\/accompanied$/
-        : /\/add-temporary-absence\/accompanied-or-unaccompanied/,
-    })
-  }
-
-  transportTypeRadio() {
-    return this.radio('Ambulance')
-  }
-}
+import { TransportPage } from './test.page'
 
 test.describe('/add-temporary-absence/transport', () => {
   const prisonNumber = randomPrisonNumber()

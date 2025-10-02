@@ -6,29 +6,9 @@ import { signIn } from '../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApis/externalMovementsApi'
-import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
-
-export class AccompaniedOrUnaccompaniedPage extends BaseTestPage {
-  async verifyContent() {
-    return this.verify({
-      pageUrl: /\/add-temporary-absence\/accompanied-or-unaccompanied/,
-      title: 'Select if accompanied or unaccompanied - Add a temporary absence - DPS',
-      caption: 'Create a Temporary Absence',
-      heading: 'Will Prisoner-Name Prisoner-Surname be accompanied?',
-      backUrl: /location-search/,
-    })
-  }
-
-  yesRadio() {
-    return this.radio('Yes')
-  }
-
-  noRadio() {
-    return this.radio('No')
-  }
-}
+import { AccompaniedOrUnaccompaniedPage } from './test.page'
 
 test.describe('/add-temporary-absence/accompanied-or-unaccompanied', () => {
   const prisonNumber = randomPrisonNumber()

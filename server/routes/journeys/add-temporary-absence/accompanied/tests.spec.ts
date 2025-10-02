@@ -5,26 +5,10 @@ import componentsApi from '../../../../../integration_tests/mockApis/componentsA
 import { signIn } from '../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
-import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { stubGetReferenceData } from '../../../../../integration_tests/mockApis/externalMovementsApi'
-
-export class AccompaniedPage extends BaseTestPage {
-  async verifyContent() {
-    return this.verify({
-      pageUrl: /\/add-temporary-absence\/accompanied$/,
-      title: 'Select who will accompany the prisoner - Add a temporary absence - DPS',
-      caption: 'Add a temporary absence',
-      heading: 'Who will accompany Prisoner-Name Prisoner-Surname?',
-      backUrl: /accompanied-or-unaccompanied/,
-    })
-  }
-
-  accompaniedByRadio() {
-    return this.radio('accompaniedBy A')
-  }
-}
+import { AccompaniedPage } from './test.page'
 
 test.describe('/add-temporary-absence/accompanied', () => {
   const prisonNumber = randomPrisonNumber()

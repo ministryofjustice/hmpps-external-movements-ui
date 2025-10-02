@@ -6,33 +6,9 @@ import { signIn } from '../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApis/externalMovementsApi'
-import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
-
-export class EndDatePage extends BaseTestPage {
-  async verifyContent() {
-    return this.verify({
-      pageUrl: /\/add-temporary-absence\/end-date/,
-      title: 'Enter absence end date and time - Add a temporary absence - DPS',
-      caption: 'Create a Temporary Absence',
-      heading: 'Add absence details',
-      backUrl: /start-date/,
-    })
-  }
-
-  dateField() {
-    return this.textbox(/What date will (.+?) return to prison\?/)
-  }
-
-  hourField() {
-    return this.textbox('Hour')
-  }
-
-  minuteField() {
-    return this.textbox('Minute')
-  }
-}
+import { EndDatePage } from './test.page'
 
 test.describe('/add-temporary-absence/end-date', () => {
   const prisonNumber = randomPrisonNumber()
