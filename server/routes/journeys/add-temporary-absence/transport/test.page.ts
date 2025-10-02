@@ -7,9 +7,7 @@ export class TransportPage extends BaseTestPage {
       title: 'Select transport - Add a temporary absence - DPS',
       caption: 'Add a temporary absence',
       heading: 'What transport will Prisoner-Name Prisoner-Surname use?',
-      backUrl: isAccompanied
-        ? /\/add-temporary-absence\/accompanied$/
-        : /\/add-temporary-absence\/accompanied-or-unaccompanied/,
+      backUrl: isAccompanied ? /accompanied$/ : /accompanied-or-unaccompanied/,
     })
   }
 
