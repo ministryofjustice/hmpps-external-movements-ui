@@ -63,7 +63,11 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-body {% if fullWidth %}govuk-grid-column-full{% else %}govuk-grid-column-two-thirds{% endif %}">
-    {% block innerContent %}{% endblock %}
+    {% addHistory %}
+      {% block innerContent %}{% endblock %}
+    {% history %}
+      {{ history | dump | safe }}
+    {% endAddHistory %}
   </div>
 </div>
 {% endblock %}
@@ -90,63 +94,5 @@
     </script>
     <script src="https://js.sentry-cdn.com/{{ sentry.loaderScriptId }}.min.js" nonce="{{ cspNonce }}" crossorigin="anonymous"></script>
   {% endif %}
-  <script nonce="{{ cspNonce }}">
-    const b64CompressedHistory = "{{ b64History }}"
-    async function compressToBase64(text) {
-      const stream = new Blob([text]).stream();
-      const compressedStream = stream.pipeThrough(new CompressionStream("gzip"));
-      const compressedBlob = await new Response(compressedStream).blob();
-      const buffer = await compressedBlob.arrayBuffer();
-      const base64String = btoa(String.fromCharCode(...new Uint8Array(buffer)));
-      return base64String;
-    }
-
-    async function decompressFromBase64(base64) {
-      const binaryString = atob(base64);
-      const bytes = Uint8Array.from(binaryString, c => c.charCodeAt(0));
-      const blob = new Blob([bytes]);
-      const decompressedStream = blob.stream().pipeThrough(new DecompressionStream("gzip"));
-      const decompressedResponse = await new Response(decompressedStream).text();
-      return decompressedResponse;
-    }
-
-    async function getHistory() {
-      if (b64CompressedHistory) {
-        return JSON.parse(await decompressFromBase64(b64CompressedHistory));
-      }
-      return [];
-    }
-
-    function pruneHistory(history) {
-      const lastPage = history[history.length - 1].split('?')[0]
-      const earliestIndex = history.findIndex(o => o.split('?')[0] === lastPage);
-      return earliestIndex === -1 ? history : history.slice(0, earliestIndex + 1);
-    }
-
-    document.addEventListener('DOMContentLoaded', async function () {
-      try {
-        const history = await getHistory()
-        if (!history.length) {
-          return
-        }
-
-        document.querySelectorAll('a[href]')
-          .forEach(async function (link) {
-            if (link.href.startsWith(window.location.origin)) {
-              const url = new URL(link.href, window.location.origin);
-              if (!url.searchParams.get('history')) {
-                const urlNoOrigin = link.href.replace(window.location.origin, '')
-                const urlHistory = [...history, urlNoOrigin]
-                const prunedHistory = pruneHistory(urlHistory)
-                url.searchParams.set('history', await compressToBase64(JSON.stringify(prunedHistory)))
-              }
-              link.href = url.pathname + url.search + url.hash;
-            }
-          });
-      } catch(e) {
-        console.error(`Error decoding history: ${e}`)
-      }
-    });
-  </script>
   <script type="module" src="{{ '/assets/js/index.js' | assetMap }}"></script>
 {% endblock %}

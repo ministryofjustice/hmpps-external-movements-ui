@@ -16,7 +16,7 @@ class AbsenceCommentsPage extends BaseTestPage {
       title: 'Enter optional comments - Add a temporary absence - DPS',
       caption: 'Create a Temporary Absence',
       heading: 'Enter any relevant comments (optional)',
-      backUrl: /\/add-temporary-absence\/transport/,
+      backUrl: /transport/,
     })
   }
 

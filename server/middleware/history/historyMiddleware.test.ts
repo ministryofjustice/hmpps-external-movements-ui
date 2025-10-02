@@ -125,14 +125,14 @@ describe('historyMiddleware', () => {
   })
 
   it('should construct backUrl correctly when given valid history', () => {
-    const b64History = historyToBase64([
+    const history = [
       '/key-worker',
       '/key-worker/allocate',
       '/key-worker/staff-profile/488095',
       '/key-worker/staff-profile/488095/case-notes',
       '/key-worker/start-update-staff/488095',
-    ])
-    const res = { locals: { b64History } }
+    ]
+    const res = { locals: { history } }
     const backUrl = createBackUrlFor(res as Response, /staff-profile/, `default`)
     expect(backUrl).toBe(
       `/key-worker/staff-profile/488095/case-notes?history=${historyToBase64(['/key-worker', '/key-worker/allocate', '/key-worker/staff-profile/488095', '/key-worker/staff-profile/488095/case-notes'], true)}`,
@@ -140,10 +140,9 @@ describe('historyMiddleware', () => {
   })
 
   it('should use fallback value when history is invalid', () => {
-    const b64History = ''
-    const res = { locals: { b64History } }
+    const res = { locals: {} }
     const backUrl = createBackUrlFor(res as Response, /staff-profile/, `default`)
-    expect(backUrl).toBe(`default?history=${historyToBase64([], true)}`)
+    expect(backUrl).toBe(`default?history=${historyToBase64(['default'], true)}`)
   })
 
   it('should inject history when a POST redirect GET is made without explicitly setting it', () => {
