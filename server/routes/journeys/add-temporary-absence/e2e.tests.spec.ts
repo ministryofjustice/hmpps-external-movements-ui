@@ -9,6 +9,7 @@ import { stubGetPrisonerImage } from '../../../../integration_tests/mockApis/pri
 import {
   stubGetAbsenceCategory,
   stubGetAllAbsenceTypes,
+  stubGetReferenceData,
 } from '../../../../integration_tests/mockApis/externalMovementsApi'
 import { injectJourneyData } from '../../../../integration_tests/steps/journey'
 import { AbsenceTypePage } from './absence-type/test.page'
@@ -34,11 +35,14 @@ test.describe('/add-temporary-absence/e2e', () => {
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
-      stubGetAllAbsenceTypes(),
+      await stubGetAbsenceCategory('ABSENCE_TYPE', 'SE'),
       stubGetAbsenceCategory('ABSENCE_TYPE', 'SR'),
       stubGetAbsenceCategory('ABSENCE_SUB_TYPE', 'RDR'),
       stubGetAbsenceCategory('ABSENCE_SUB_TYPE', 'SPL'),
       stubGetAbsenceCategory('ABSENCE_REASON_CATEGORY', 'PW'),
+      stubGetReferenceData('location-type'),
+      stubGetReferenceData('accompanied-by'),
+      stubGetReferenceData('transport'),
     ])
 
     await signIn(page)
