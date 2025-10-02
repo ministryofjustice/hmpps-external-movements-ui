@@ -35,7 +35,6 @@ test.describe('/add-temporary-absence/e2e', () => {
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
-      await stubGetAbsenceCategory('ABSENCE_TYPE', 'SE'),
       stubGetAbsenceCategory('ABSENCE_TYPE', 'SR'),
       stubGetAbsenceCategory('ABSENCE_SUB_TYPE', 'RDR'),
       stubGetAbsenceCategory('ABSENCE_SUB_TYPE', 'SPL'),
@@ -56,6 +55,7 @@ test.describe('/add-temporary-absence/e2e', () => {
   test('type -> reason -> single-or-repeating', async ({ page }) => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId)
+    await stubGetAbsenceCategory('ABSENCE_TYPE', 'SE')
 
     await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
     expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
