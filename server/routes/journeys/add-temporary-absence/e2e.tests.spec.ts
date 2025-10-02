@@ -6,7 +6,10 @@ import { signIn } from '../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetPrisonerImage } from '../../../../integration_tests/mockApis/prisonApi'
-import { stubGetAllAbsenceTypes } from '../../../../integration_tests/mockApis/externalMovementsApi'
+import {
+  stubGetAbsenceCategory,
+  stubGetAllAbsenceTypes,
+} from '../../../../integration_tests/mockApis/externalMovementsApi'
 import { injectJourneyData } from '../../../../integration_tests/steps/journey'
 import { AbsenceTypePage } from './absence-type/test.page'
 import { AbsenceSubTypePage } from './absence-subtype/test.page'
@@ -31,6 +34,11 @@ test.describe('/add-temporary-absence/e2e', () => {
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
+      stubGetAllAbsenceTypes(),
+      stubGetAbsenceCategory('ABSENCE_TYPE', 'SR'),
+      stubGetAbsenceCategory('ABSENCE_SUB_TYPE', 'RDR'),
+      stubGetAbsenceCategory('ABSENCE_SUB_TYPE', 'SPL'),
+      stubGetAbsenceCategory('ABSENCE_REASON_CATEGORY', 'PW'),
     ])
 
     await signIn(page)
