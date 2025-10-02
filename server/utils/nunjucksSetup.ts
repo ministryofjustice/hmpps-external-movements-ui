@@ -36,6 +36,7 @@ import {
   customErrorOrderBuilder,
   findError,
 } from '../middleware/validation/validationMiddleware'
+import { historyExtension } from '../middleware/history/historyExtension'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -75,6 +76,8 @@ export default function nunjucksSetup(app: express.Express): void {
       express: app,
     },
   )
+
+  njkEnv.addExtension('HistoryExtension', historyExtension)
 
   njkEnv.addGlobal('todayStringGBFormat', todayStringGBFormat)
   njkEnv.addGlobal('yesterdayStringGBFormat', yesterdayStringGBFormat)

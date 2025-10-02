@@ -55,7 +55,6 @@ export declare global {
       breadcrumbs: Breadcrumbs
       historyBackUrl?: string
       history?: string[]
-      b64History?: string
       auditEvent: {
         who: string
         correlationId: string
