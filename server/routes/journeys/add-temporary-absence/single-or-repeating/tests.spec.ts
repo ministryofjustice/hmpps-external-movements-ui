@@ -10,7 +10,7 @@ import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPag
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 
-class SingleOrRepeatingPage extends BaseTestPage {
+export class SingleOrRepeatingPage extends BaseTestPage {
   async verifyContent(backUrl: RegExp) {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/single-or-repeating/,

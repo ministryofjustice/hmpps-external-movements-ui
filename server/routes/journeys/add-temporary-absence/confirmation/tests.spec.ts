@@ -9,7 +9,7 @@ import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApi
 import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 
-class AddAbsenceConfirmationPage extends BaseTestPage {
+export class AddAbsenceConfirmationPage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/confirmation/,

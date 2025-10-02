@@ -8,7 +8,8 @@ export default function setUpJourneyData(store: CacheInterface<JourneyData>) {
     const key = `${req.user?.username}.${journeyId}`
 
     const cached = await store.get(key)
-    req.journeyData = cached ?? req.journeyData ?? { instanceUnixEpoch: Date.now() }
+    req.journeyData = cached ??
+      req.journeyData ?? { instanceUnixEpoch: Date.now(), stateGuard: process.env.NODE_ENV !== 'e2e-test' }
     res.prependOnceListener('close', async () => {
       await store.set(key, req.journeyData, 20 * 60 * 60)
     })

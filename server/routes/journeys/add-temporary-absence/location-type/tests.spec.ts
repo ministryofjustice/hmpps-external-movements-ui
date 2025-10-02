@@ -12,7 +12,7 @@ import {
   stubGetReferenceData,
 } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 
-class LocationTypePage extends BaseTestPage {
+export class LocationTypePage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/location-type/,

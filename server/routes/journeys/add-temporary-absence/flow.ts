@@ -222,7 +222,7 @@ export class AddTapFlowControl {
   }
 }
 
-const getUrlForNextDomain = (nextDomain: components['schemas']['AbsenceCategorisation']['nextDomain']) => {
+export const getUrlForNextDomain = (nextDomain: components['schemas']['AbsenceCategorisation']['nextDomain']) => {
   switch (nextDomain) {
     case 'ABSENCE_SUB_TYPE':
       return 'absence-subtype'

@@ -13,7 +13,7 @@ import {
 } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 
-class TransportPage extends BaseTestPage {
+export class TransportPage extends BaseTestPage {
   async verifyContent(isAccompanied: boolean) {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/transport/,

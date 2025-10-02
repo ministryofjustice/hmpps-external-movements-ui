@@ -10,7 +10,7 @@ import { injectJourneyData } from '../../../../../integration_tests/steps/journe
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { stubGetReferenceData } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 
-class AccompaniedPage extends BaseTestPage {
+export class AccompaniedPage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/accompanied$/,

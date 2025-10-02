@@ -13,7 +13,7 @@ import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPag
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 
-class AbsenceReasonPage extends BaseTestPage {
+export class AbsenceReasonPage extends BaseTestPage {
   async verifyContent(workReason: boolean) {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/reason/,

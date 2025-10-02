@@ -11,7 +11,7 @@ import { injectJourneyData } from '../../../../../integration_tests/steps/journe
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { formatInputDate } from '../../../../utils/dateTimeUtils'
 
-class StartDatePage extends BaseTestPage {
+export class StartDatePage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/start-date/,

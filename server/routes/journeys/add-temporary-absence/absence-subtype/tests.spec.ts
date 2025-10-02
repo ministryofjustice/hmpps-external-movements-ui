@@ -13,7 +13,7 @@ import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPag
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 
-class AbsenceSubTypePage extends BaseTestPage {
+export class AbsenceSubTypePage extends BaseTestPage {
   async verifyContent(typeName: string) {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/absence-subtype/,

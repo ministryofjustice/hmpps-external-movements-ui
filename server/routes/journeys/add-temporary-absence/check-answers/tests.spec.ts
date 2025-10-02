@@ -14,7 +14,7 @@ import { injectJourneyData } from '../../../../../integration_tests/steps/journe
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { getSentAuditEvents } from '../../../../../integration_tests/mockApis/wiremock'
 
-class AddTapCYAPage extends BaseTestPage {
+export class AddTapCYAPage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/check-answers/,

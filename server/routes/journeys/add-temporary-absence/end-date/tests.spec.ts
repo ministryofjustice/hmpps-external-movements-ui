@@ -10,7 +10,7 @@ import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPag
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 
-class EndDatePage extends BaseTestPage {
+export class EndDatePage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/end-date/,
