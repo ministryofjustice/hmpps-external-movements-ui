@@ -7,32 +7,8 @@ import { signIn } from '../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApis/externalMovementsApi'
-import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
-
-class AbsenceTypePage extends BaseTestPage {
-  async verifyContent(prisonNumber: string) {
-    return this.verify({
-      pageUrl: /\/add-temporary-absence\/absence-type/,
-      title: 'Select absence type - Add a temporary absence - DPS',
-      caption: 'Create a Temporary Absence',
-      heading: 'What type of absence is this?',
-      backUrl: new RegExp(`/prisoner/${prisonNumber}`),
-    })
-  }
-
-  rotlRadio() {
-    return this.radio('Standard ROTL (Release on Temporary Licence)')
-  }
-
-  securityEscortRadio() {
-    return this.radio('Security escort')
-  }
-
-  ppRadio() {
-    return this.radio('Police production')
-  }
-}
+import { AbsenceTypePage } from './test.page'
 
 test.describe('/add-temporary-absence/absence-type', () => {
   const prisonNumber = randomPrisonNumber()

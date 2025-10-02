@@ -9,33 +9,9 @@ import {
   stubGetAbsenceCategory,
   stubGetAllAbsenceTypes,
 } from '../../../../../integration_tests/mockApis/externalMovementsApi'
-import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
-
-class AbsenceSubTypePage extends BaseTestPage {
-  async verifyContent(typeName: string) {
-    return this.verify({
-      pageUrl: /\/add-temporary-absence\/absence-subtype/,
-      title: `Select ${typeName} type - Add a temporary absence - DPS`,
-      caption: 'Create a Temporary Absence',
-      heading: `What type of ${typeName} is this?`,
-      backUrl: /absence-type/,
-    })
-  }
-
-  crlRadio() {
-    return this.radio('CRL (Childcare Resettlement Licence)')
-  }
-
-  rdrRadio() {
-    return this.radio('RDR (Resettlement Day Release)')
-  }
-
-  splRadio() {
-    return this.radio('SPL (Special Purpose Licence)')
-  }
-}
+import { AbsenceSubTypePage } from './test.page'
 
 test.describe('/add-temporary-absence/absence-subtype', () => {
   const prisonNumber = randomPrisonNumber()

@@ -6,24 +6,8 @@ import { signIn } from '../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApis/externalMovementsApi'
-import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
-
-class AbsenceCommentsPage extends BaseTestPage {
-  async verifyContent() {
-    return this.verify({
-      pageUrl: /\/add-temporary-absence\/comments/,
-      title: 'Enter optional comments - Add a temporary absence - DPS',
-      caption: 'Create a Temporary Absence',
-      heading: 'Enter any relevant comments (optional)',
-      backUrl: /transport/,
-    })
-  }
-
-  commentsInput() {
-    return this.textbox('Enter any relevant comments (optional)')
-  }
-}
+import { AbsenceCommentsPage } from './test.page'
 
 test.describe('/add-temporary-absence/comments', () => {
   const prisonNumber = randomPrisonNumber()

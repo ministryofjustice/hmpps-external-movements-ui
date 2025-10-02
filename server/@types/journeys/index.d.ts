@@ -28,6 +28,7 @@ export type JourneyData = {
   isCheckAnswers?: boolean
   journeyCompleted?: boolean
   b64History?: string | undefined
+  stateGuard?: boolean
 }
 
 export type AddTemporaryAbsenceJourney = Partial<{

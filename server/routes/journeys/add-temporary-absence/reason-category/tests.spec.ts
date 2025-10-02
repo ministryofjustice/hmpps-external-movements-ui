@@ -9,29 +9,9 @@ import {
   stubGetAbsenceCategory,
   stubGetAllAbsenceTypes,
 } from '../../../../../integration_tests/mockApis/externalMovementsApi'
-import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
-
-class ReasonCategoryPage extends BaseTestPage {
-  async verifyContent() {
-    return this.verify({
-      pageUrl: /\/add-temporary-absence\/reason-category/,
-      title: 'Select absence reason - Add a temporary absence - DPS',
-      caption: 'Create a Temporary Absence',
-      heading: 'What is the reason for this absence?',
-      backUrl: /absence-subtype/,
-    })
-  }
-
-  fbRadio() {
-    return this.radio('Accommodation-related')
-  }
-
-  pwRadio() {
-    return this.radio(/^Paid work$/)
-  }
-}
+import { ReasonCategoryPage } from './test.page'
 
 test.describe('/add-temporary-absence/reason-category', () => {
   const prisonNumber = randomPrisonNumber()
