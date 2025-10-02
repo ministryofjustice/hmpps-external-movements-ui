@@ -136,6 +136,10 @@
               const url = new URL(link.href, window.location.origin);
               if (!url.searchParams.get('history')) {
                 const urlNoOrigin = link.href.replace(window.location.origin, '')
+                const currentPath = decodeURIComponent(window.location.href.substring(window.location.origin.length).replace(/history=.[^&]+(&|$)/, ''))
+                if (history[history.length - 1] !== currentPath) {
+                  history.push(currentPath)
+                }
                 const urlHistory = [...history, urlNoOrigin]
                 const prunedHistory = pruneHistory(urlHistory)
                 url.searchParams.set('history', await compressToBase64(JSON.stringify(prunedHistory)))

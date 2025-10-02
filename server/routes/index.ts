@@ -24,13 +24,23 @@ export default function routes(services: Services): Router {
       },
       {
         matcher: /temporary-absence-authorisations$/,
-        text: 'Temporary Absence authorisations',
-        alias: Page.EXAMPLE_PAGE,
+        text: 'Browse absence authorisations',
+        alias: 'temp-page-1',
+      },
+      {
+        matcher: /temporary-absence-authorisations\/(\w|-)+$/,
+        text: 'Absence authorisation',
+        alias: 'temp-page-2',
       },
       {
         matcher: /temporary-absences$/,
-        text: 'Temporary Absences',
-        alias: Page.EXAMPLE_PAGE,
+        text: 'Browse temporary absences',
+        alias: 'temp-page-3',
+      },
+      {
+        matcher: /temporary-absences\/(\w|-)+$/,
+        text: 'Temporary absence',
+        alias: 'temp-page-4',
       },
     ]),
   )
