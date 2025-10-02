@@ -77,7 +77,9 @@ export class BaseTestPage {
   }
 
   private stripHistoryParam(url: string) {
-    const actualUrl = new URL(url.startsWith('http') ? url : `http://localhost:3000${url}`)
+    const actualUrl = new URL(
+      url.startsWith('http') ? url : `http://localhost:3000${url.startsWith('/') ? url : `/${url}`}`,
+    )
     actualUrl.searchParams.delete('history')
     const hash = url.split('#')[1]
     return (

@@ -24,6 +24,7 @@ import { AccompaniedOrUnaccompaniedPage } from './accompanied-or-unaccompanied/t
 import { AccompaniedPage } from './accompanied/test.page'
 import { TransportPage } from './transport/test.page'
 import { AbsenceApprovalPage } from './approval/test.page'
+import { AbsenceCommentsPage } from './comments/test.page'
 
 test.describe('/add-temporary-absence/e2e', () => {
   const prisonNumber = randomPrisonNumber()
@@ -273,9 +274,14 @@ test.describe('/add-temporary-absence/e2e', () => {
     await transportPage.clickContinue()
 
     await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/approval/)
+    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/comments/)
 
-    // Comments page is optional so we ship to approval
+    const commentsPage = new AbsenceCommentsPage(page)
+    await commentsPage.commentsInput().fill('Sample text')
+    await commentsPage.clickContinue()
+
+    await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
+    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/approval/)
 
     const approvalPage = new AbsenceApprovalPage(page)
     await approvalPage.yesRadio().click()

@@ -16,68 +16,71 @@ function replaceResRedirect(req: Request, res: Response, history: string[]) {
 
     const baseUrl = `${req.protocol}://${req.get('host')}`
     const builtUrl = new URL(url, `${baseUrl}${req.originalUrl}`)
-    const prunedHistory = pruneHistory(builtUrl.pathname + builtUrl.search, history)
-    prunedHistory.push(noHistoryParam(builtUrl.pathname + builtUrl.search))
+    const prunedHistory = pruneHistory(builtUrl.pathname + builtUrl.search, [
+      ...history,
+      noHistoryParam(builtUrl.pathname + builtUrl.search),
+    ])
     builtUrl.searchParams.set('history', serialiseHistory(prunedHistory))
 
     return originalRedirect.call(res, status, builtUrl.toString())
   }
 }
 
+const handlePOSTRedirect = (req: Request, res: Response, next: NextFunction, landmarks: Landmark[]) => {
+  // POSTs should have the history maintained in the referrer header
+  // and optionally the originalUrl IF not POSTing to a custom location (ie, /filter)
+  const url = new URL(req.headers['referer'] || `http://0.0.0.0${req.originalUrl}`)
+  const history = deserialiseHistory(url.searchParams.get('history') as string)
+
+  if (!history.length) {
+    return next()
+  }
+
+  res.locals.history = history
+  res.locals.breadcrumbs = new Breadcrumbs(res)
+  res.locals.breadcrumbs.addItems(...getBreadcrumbs(req, res, landmarks))
+
+  replaceResRedirect(req, res, history)
+
+  return next()
+}
+
+const getBreadcrumbs = (req: Request, res: Response, landmarks: Landmark[]) => {
+  const breadcrumbs: Breadcrumb[] = []
+
+  const itemsToAdd = new Map<string, Breadcrumb>()
+
+  for (const [i, url] of (res.locals.history || []).entries()) {
+    const urlNoQuery = url.split('?')[0]!
+    const matched = landmarks.find(mapping => urlNoQuery.match(mapping.matcher))
+    if (matched && !req.originalUrl.split('?')[0]!.match(matched.matcher)) {
+      const historyUpUntil = res.locals.history!.slice(0, i + 1)
+      const urlWithParams = new URLSearchParams(url.split('?')[1] || '')
+      urlWithParams.set('history', serialiseHistory(historyUpUntil))
+      itemsToAdd.set(matched.text, {
+        alias: matched.alias,
+        text: matched.text,
+        href: `${url.split('?')[0]}?${urlWithParams.toString()}`,
+      })
+    }
+  }
+
+  for (const breadcrumb of itemsToAdd.values()) {
+    breadcrumbs.push(breadcrumb)
+  }
+
+  return breadcrumbs
+}
+
 export function historyMiddleware(
   getLandmarks: (req: Request, res: Response) => Landmark[],
   ...excludeUrls: RegExp[]
 ): RequestHandler {
-  const handlePOSTRedirect = (req: Request, res: Response, next: NextFunction) => {
-    // POSTs should have the history maintained in the referrer header
-    // and optionally the originalUrl IF not POSTing to a custom location (ie, /filter)
-    const url = new URL(req.headers['referer'] || `http://0.0.0.0${req.originalUrl}`)
-    const history = deserialiseHistory(url.searchParams.get('history') as string)
-
-    if (!history.length) {
-      return next()
-    }
-
-    res.locals.history = history
-    res.locals.b64History = url.searchParams.get('history') as string
-    res.locals.breadcrumbs = new Breadcrumbs(res)
-    res.locals.breadcrumbs.addItems(...getBreadcrumbs(req, res))
-
-    replaceResRedirect(req, res, history)
-
-    return next()
-  }
-
-  const getBreadcrumbs = (req: Request, res: Response) => {
-    const breadcrumbs: Breadcrumb[] = []
-
-    const itemsToAdd = new Map<string, Breadcrumb>()
-
-    for (const [i, url] of (res.locals.history || []).entries()) {
-      const urlNoQuery = url.split('?')[0]!
-      const matched = getLandmarks(req, res).find(mapping => urlNoQuery.match(mapping.matcher))
-      if (matched && !req.originalUrl.split('?')[0]!.match(matched.matcher)) {
-        const historyUpUntil = res.locals.history!.slice(0, i + 1)
-        const urlWithParams = new URLSearchParams(url.split('?')[1] || '')
-        urlWithParams.set('history', serialiseHistory(historyUpUntil))
-        itemsToAdd.set(matched.text, {
-          alias: matched.alias,
-          text: matched.text,
-          href: `${url.split('?')[0]}?${urlWithParams.toString()}`,
-        })
-      }
-    }
-
-    for (const breadcrumb of itemsToAdd.values()) {
-      breadcrumbs.push(breadcrumb)
-    }
-
-    return breadcrumbs
-  }
-
   return (req, res, next) => {
+    const landmarks = getLandmarks(req, res)
+
     if (req.method === 'POST') {
-      return handlePOSTRedirect(req, res, next)
+      return handlePOSTRedirect(req, res, next, landmarks)
     }
 
     if (req.method !== 'GET') {
@@ -90,9 +93,8 @@ export function historyMiddleware(
 
     if (shouldExcludeUrl(req.originalUrl)) {
       res.locals.history = queryHistory
-      res.locals.b64History = serialiseHistory(queryHistory)
       res.locals.breadcrumbs = new Breadcrumbs(res)
-      res.locals.breadcrumbs.addItems(...getBreadcrumbs(req, res))
+      res.locals.breadcrumbs.addItems(...getBreadcrumbs(req, res, landmarks))
       return next()
     }
 
@@ -100,8 +102,7 @@ export function historyMiddleware(
 
     if (!queryHistory.length) {
       const refererHistory = getHistoryFromReferer(req)
-      const history = pruneHistory(req.originalUrl, refererHistory)
-      history.push(noHistoryParam(req.originalUrl))
+      const history = pruneHistory(req.originalUrl, [...refererHistory, noHistoryParam(req.originalUrl)])
 
       res.locals.history = history
 
@@ -111,10 +112,9 @@ export function historyMiddleware(
       if (req.originalUrl.split('?')[0]!.length < 2) {
         // If homepage don't bother redirecting
         res.locals.history = [`/`]
-        res.locals.b64History = serialiseHistory(history)
 
         res.locals.breadcrumbs = new Breadcrumbs(res)
-        res.locals.breadcrumbs.addItems(...getBreadcrumbs(req, res))
+        res.locals.breadcrumbs.addItems(...getBreadcrumbs(req, res, landmarks))
         return next()
       }
 
@@ -125,13 +125,11 @@ export function historyMiddleware(
     const history = pruneHistory(req.originalUrl, queryHistory)
 
     res.locals.history = history
-    res.locals.b64History = serialiseHistory(history)
 
     res.locals.historyBackUrl = getLastDifferentPage(history) || req.headers?.['referer'] || `/`
 
     res.locals.breadcrumbs = new Breadcrumbs(res)
-    res.locals.breadcrumbs.addItems(...getBreadcrumbs(req, res))
-
+    res.locals.breadcrumbs.addItems(...getBreadcrumbs(req, res, landmarks))
     replaceResRedirect(req, res, history)
 
     return next()
@@ -163,7 +161,7 @@ export function serialiseHistory(history: string[]) {
 }
 
 function pruneHistory(url: string, history: string[]) {
-  const dedupedHistory = deduplicateHistory(history)
+  const dedupedHistory = deduplicateHistory([...history, decodeURIComponent(noHistoryParam(url))])
   const targetUrlNoQuery = url.split('?')[0]!
   const lastIndex = dedupedHistory
     .slice(0, dedupedHistory.length - 1)
@@ -216,8 +214,8 @@ function getHistoryFromReferer(req: Request) {
 }
 
 export function createBackUrlFor(res: Response, matcher: RegExp, fallback: string) {
-  const history = deserialiseHistory(res.locals.b64History!)
-  const last = history.findLast(o => matcher.test(o)) || fallback
+  const history = res.locals.history ?? []
+  const last = res.locals.history?.findLast(o => matcher.test(o)) || fallback
   const prunedHistory = pruneHistory(last, history)
   const searchParams = new URLSearchParams(last.split('?')[1] || '')
   searchParams.set('history', serialiseHistory(prunedHistory))
