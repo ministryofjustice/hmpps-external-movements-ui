@@ -241,6 +241,20 @@ export class AddTapFlowControl {
       return 'repeating-pattern'
     }
 
+    if (data.patternType) {
+      journey.patternType = data.patternType
+      switch (data.patternType) {
+        case 'FREEFORM':
+          return 'select-days-and-times'
+        case 'WEEKLY':
+          return 'select-days-times-weekly'
+        case 'ROTATING':
+          return 'select-first-date-rotating'
+        default:
+          throw new Error(`Unknown pattern type ${data.patternType}`)
+      }
+    }
+
     logger.warn('No valid data sent for AddTapFlowControl.saveDataAndGetNextPageForRepeatingTap')
     return ''
   }

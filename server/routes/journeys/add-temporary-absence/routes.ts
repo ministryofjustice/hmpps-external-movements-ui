@@ -23,6 +23,7 @@ import journeyStateGuard from '../../../middleware/journey/journeyStateGuard'
 import { AddTemporaryAbsenceJourney } from '../../../@types/journeys'
 import preventNavigationToExpiredJourneys from '../../../middleware/journey/preventNavigationToExpiredJourneys'
 import { StartEndDatesRoutes } from './start-end-dates/routes'
+import { RepeatingPatternRoutes } from './repeating-pattern/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -68,6 +69,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/confirmation', AddAbsenceConfirmationRoutes())
 
   router.use('/start-end-dates', StartEndDatesRoutes())
+  router.use('/repeating-pattern', RepeatingPatternRoutes())
 
   return router
 }

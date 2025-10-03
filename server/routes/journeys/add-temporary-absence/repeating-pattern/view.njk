@@ -1,0 +1,53 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Enter repeating pattern - Add a temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukRadios({
+        name: "patternType",
+        errorMessage: validationErrors | findError('patternType'),
+        fieldset: {
+          legend: {
+            text: 'Will these absences take place in a repeating pattern?',
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--xl"
+          }
+        },
+        items: [
+          {
+            value: 'FREEFORM',
+            text: "No",
+            hint: {
+              text: "These absences will not take place in a repeating pattern."
+            }
+          },
+          {
+            value: 'WEEKLY',
+            text: "Yes, repeats weekly",
+            hint: {
+            text: "These absences take place at the same days and times each week."
+          }
+          },
+          {
+            value: 'ROTATING',
+            text: "Yes, repeats on a rotating pattern",
+            hint: {
+              text: "These absences take place on a repeating pattern. For example, 4 days on, 4 days off."
+            }
+          }
+        ] | setCheckedValue(patternType)
+      }) }}
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}
