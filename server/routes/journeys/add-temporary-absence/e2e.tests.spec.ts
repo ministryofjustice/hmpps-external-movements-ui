@@ -426,8 +426,7 @@ test.describe('/add-temporary-absence/e2e', () => {
 
     expect(page.url().split('?')[0]).toMatch(/\/$/)
 
-    const apiResponse = await getApiBody(`/external-movements-api/temporary-absence-authorisations/${prisonNumber}`)
-    expect((apiResponse || []).map(o => ({ ...o, submittedAt: undefined }))).toEqual([
+    expect(await getApiBody(`/external-movements-api/temporary-absence-authorisations/${prisonNumber}`)).toEqual([
       {
         absenceSubTypeCode: 'CRL',
         absenceTypeCode: 'SR',
@@ -446,7 +445,7 @@ test.describe('/add-temporary-absence/e2e', () => {
         ],
         repeat: false,
         statusCode: 'PENDING',
-        submittedAt: undefined,
+        submittedAt: expect.any(String),
         toDate: '2069-10-11T12:30:00',
       },
     ])
