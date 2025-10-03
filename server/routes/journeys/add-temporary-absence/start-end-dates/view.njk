@@ -1,0 +1,52 @@
+{% extends "partials/layout.njk" %}
+{% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
+
+{% set pageTitle = 'Enter absence start and end dates - Add a temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <h1 class="govuk-heading-l">Add absence period</h1>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ mojDatePicker({
+        id: "fromDate",
+        name: "fromDate",
+        label: {
+          text: 'What date will ' + prisonerDetails | firstNameSpaceLastName + ' be released for the first absence?',
+          classes: "govuk-fieldset__legend--m"
+        },
+        hint: {
+          text: 'For example, 17/5/2024.'
+        },
+        value: fromDate,
+        errorMessage: validationErrors | findError('fromDate'),
+        classes: 'hmpps-datepicker--fixed-width govuk-body',
+        minDate: yesterdayStringGBFormat()
+      }) }}
+
+      {{ mojDatePicker({
+        id: "toDate",
+        name: "toDate",
+        label: {
+          text: 'What date will ' + prisonerDetails | firstNameSpaceLastName + ' return from the last absence?',
+          classes: "govuk-fieldset__legend--m"
+        },
+        hint: {
+          text: 'For example, 17/5/2024.'
+        },
+        value: toDate,
+        errorMessage: validationErrors | findError('toDate'),
+        classes: 'hmpps-datepicker--fixed-width govuk-body',
+        minDate: yesterdayStringGBFormat()
+      }) }}
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

@@ -65,4 +65,22 @@ export type AddTemporaryAbsenceJourney = Partial<{
   transport: components['schemas']['CodedDescription']
   notes: string | null
   requireApproval: boolean
+
+  fromDate: string
+  toDate: string
+  patternType: 'FREEFORM' | 'WEEKLY' | 'ROTATING'
+  freeFormPattern: {
+    startDate: string
+    startTime: string
+    returnDate: string
+    returnTime: string
+    locationId?: string
+  }[]
+  weeklyPattern: {
+    dayOfWeek: number
+    overnight: boolean
+    startTime: string
+    returnTime: string
+    locationId?: string
+  }[]
 }>

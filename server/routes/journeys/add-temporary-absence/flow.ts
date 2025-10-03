@@ -29,6 +29,8 @@ export class AddTapFlowControl {
   ): string {
     const journey = req.journeyData.addTemporaryAbsence!
 
+    if (journey.repeat) return this.saveDataAndGetNextPageForRepeatingTap(req, data)
+
     // Check answers flow
     if (req.journeyData.isCheckAnswers) {
       if (data.absenceType) {
@@ -218,6 +220,28 @@ export class AddTapFlowControl {
     }
 
     logger.warn('No valid data sent for AddTapFlowControl.saveDataAndGetNextPage')
+    return ''
+  }
+
+  private static saveDataAndGetNextPageForRepeatingTap<T, ResBody, ReqBody, Q>(
+    req: Request<T, ResBody, ReqBody, Q>,
+    data: AddTemporaryAbsenceJourney,
+  ): string {
+    const journey = req.journeyData.addTemporaryAbsence!
+
+    // Check answers flow
+    if (req.journeyData.isCheckAnswers) {
+      // TODO: add check answer flow
+    }
+
+    // Normal flow
+    if (data.fromDate && data.toDate) {
+      journey.fromDate = data.fromDate
+      journey.toDate = data.toDate
+      return 'repeating-pattern'
+    }
+
+    logger.warn('No valid data sent for AddTapFlowControl.saveDataAndGetNextPageForRepeatingTap')
     return ''
   }
 }
