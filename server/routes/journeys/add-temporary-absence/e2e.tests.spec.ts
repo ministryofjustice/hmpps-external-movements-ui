@@ -28,6 +28,7 @@ import { AbsenceApprovalPage } from './approval/test.page'
 import { AbsenceCommentsPage } from './comments/test.page'
 import { AddTapCYAPage } from './check-answers/test.page'
 import { LocationSearchPage } from './location-search/test.page'
+import { getApiBody } from '../../../../integration_tests/mockApis/wiremock'
 
 test.describe('/add-temporary-absence/e2e', () => {
   const prisonNumber = randomPrisonNumber()
@@ -64,21 +65,21 @@ test.describe('/add-temporary-absence/e2e', () => {
       await startJourney(page, journeyId)
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
 
       const absencePage = new AbsenceTypePage(page)
       await absencePage.securityEscortRadio().click()
       await absencePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/reason/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/reason/)
 
       const reasonPage = new AbsenceReasonPage(page)
       await reasonPage.page.getByRole('radio', { name: /CRL/ }).click()
       await reasonPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
     })
 
     test('type -> subtype -> single-or-repeating', async ({ page }) => {
@@ -86,21 +87,21 @@ test.describe('/add-temporary-absence/e2e', () => {
       await startJourney(page, journeyId)
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
 
       const absencePage = new AbsenceTypePage(page)
       await absencePage.rotlRadio().click()
       await absencePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-subtype/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-subtype/)
 
       const subtypePage = new AbsenceSubTypePage(page)
       await subtypePage.crlRadio().click()
       await subtypePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
     })
 
     test('type -> subtype -> reason-category -> single-or-repeating', async ({ page }) => {
@@ -108,28 +109,28 @@ test.describe('/add-temporary-absence/e2e', () => {
       await startJourney(page, journeyId)
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
 
       const absencePage = new AbsenceTypePage(page)
       await absencePage.rotlRadio().click()
       await absencePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-subtype/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-subtype/)
 
       const subtypePage = new AbsenceSubTypePage(page)
       await subtypePage.rdrRadio().click()
       await subtypePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/reason-category/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/reason-category/)
 
       const reasonCategoryPage = new ReasonCategoryPage(page)
       await reasonCategoryPage.fbRadio().click()
       await reasonCategoryPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
     })
 
     test('type -> subtype -> reason-category -> reason -> single-or-repeating', async ({ page }) => {
@@ -137,35 +138,35 @@ test.describe('/add-temporary-absence/e2e', () => {
       await startJourney(page, journeyId)
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
 
       const absencePage = new AbsenceTypePage(page)
       await absencePage.rotlRadio().click()
       await absencePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-subtype/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-subtype/)
 
       const subtypePage = new AbsenceSubTypePage(page)
       await subtypePage.rdrRadio().click()
       await subtypePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/reason-category/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/reason-category/)
 
       const reasonCategoryPage = new ReasonCategoryPage(page)
       await reasonCategoryPage.pwRadio().click()
       await reasonCategoryPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/reason/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/reason/)
 
       const reasonPage = new AbsenceReasonPage(page)
       await reasonPage.workReasonRadio().click()
       await reasonPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
     })
 
     test('type -> subtype -> reason -> single-or-repeating', async ({ page }) => {
@@ -173,28 +174,28 @@ test.describe('/add-temporary-absence/e2e', () => {
       await startJourney(page, journeyId)
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
 
       const absencePage = new AbsenceTypePage(page)
       await absencePage.rotlRadio().click()
       await absencePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-subtype/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-subtype/)
 
       const subtypePage = new AbsenceSubTypePage(page)
       await subtypePage.rdrRadio().click()
       await subtypePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/reason/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/reason/)
 
       const reasonPage = new AbsenceReasonPage(page)
       await reasonPage.page.getByRole('radio', { name: 'Accommodation-related' }).click()
       await reasonPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
     })
 
     test('type -> single-or-repeating -> rest of the journey', async ({ page }) => {
@@ -202,21 +203,21 @@ test.describe('/add-temporary-absence/e2e', () => {
       await startJourney(page, journeyId)
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
 
       const absencePage = new AbsenceTypePage(page)
       await absencePage.ppRadio().click()
       await absencePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
 
       const singleOrRepeatingPage = new SingleOrRepeatingPage(page)
       await singleOrRepeatingPage.singleRadio().click()
       await singleOrRepeatingPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/start-date/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/start-date/)
 
       const startDatePage = new StartDatePage(page)
       await startDatePage.dateField().fill('10/10/2069')
@@ -225,7 +226,7 @@ test.describe('/add-temporary-absence/e2e', () => {
       await startDatePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/end-date/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/end-date/)
 
       const endDatePage = new EndDatePage(page)
       await endDatePage.dateField().fill('11/10/2069')
@@ -234,34 +235,34 @@ test.describe('/add-temporary-absence/e2e', () => {
       await endDatePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/location-type/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/location-type/)
 
       const locationTypePage = new LocationTypePage(page)
       await locationTypePage.locationTypeRadio().click()
       await locationTypePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/location-search/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/location-search/)
 
       // TODO: Location Search Page tests do not exist yet
       await page.goto(`/${journeyId}/add-temporary-absence/location-search/select/id-1`)
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
 
       const accompaniedOrUnaccompaniedPage = new AccompaniedOrUnaccompaniedPage(page)
       await accompaniedOrUnaccompaniedPage.yesRadio().click()
       await accompaniedOrUnaccompaniedPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied/)
 
       const accompaniedPage = new AccompaniedPage(page)
       await accompaniedPage.accompaniedByRadio().click()
       await accompaniedPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/transport/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/transport/)
 
       const transportPage = new TransportPage(page)
 
@@ -273,27 +274,27 @@ test.describe('/add-temporary-absence/e2e', () => {
       await accompaniedOrUnaccompaniedPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/transport/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/transport/)
 
       await transportPage.transportTypeRadio().click()
       await transportPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/comments/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/comments/)
 
       const commentsPage = new AbsenceCommentsPage(page)
       await commentsPage.commentsInput().fill('Sample text')
       await commentsPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/approval/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/approval/)
 
       const approvalPage = new AbsenceApprovalPage(page)
       await approvalPage.yesRadio().click()
       await approvalPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/check-answers/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/check-answers/)
     })
   })
 
@@ -302,19 +303,19 @@ test.describe('/add-temporary-absence/e2e', () => {
     await startJourney(page, journeyId)
     await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
 
     const absencePage = new AbsenceTypePage(page)
     await absencePage.ppRadio().click()
     await absencePage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/single-or-repeating/)
 
     const singleOrRepeatingPage = new SingleOrRepeatingPage(page)
     await singleOrRepeatingPage.singleRadio().click()
     await singleOrRepeatingPage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/start-date/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/start-date/)
 
     const startDatePage = new StartDatePage(page)
     await startDatePage.dateField().fill('10/10/2069')
@@ -322,7 +323,7 @@ test.describe('/add-temporary-absence/e2e', () => {
     await startDatePage.minuteField().fill('30')
     await startDatePage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/end-date/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/end-date/)
 
     const endDatePage = new EndDatePage(page)
     await endDatePage.dateField().fill('11/10/2069')
@@ -330,20 +331,20 @@ test.describe('/add-temporary-absence/e2e', () => {
     await endDatePage.minuteField().fill('30')
     await endDatePage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/location-type/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/location-type/)
 
     const locationTypePage = new LocationTypePage(page)
     await locationTypePage.locationTypeRadio().click()
     await locationTypePage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/location-search/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/location-search/)
 
     const locationSearchPage = new LocationSearchPage(page)
     await locationSearchPage.searchBox().fill('147 Marlborough Road')
     await locationSearchPage.searchButton().click()
     await locationSearchPage.page.getByRole('link', { name: '147 Marlborough Road, London, N19 5QH' }).first().click()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
 
     const accompaniedOrUnaccompaniedPage = new AccompaniedOrUnaccompaniedPage(page)
     await accompaniedOrUnaccompaniedPage.yesRadio().click()
@@ -353,25 +354,25 @@ test.describe('/add-temporary-absence/e2e', () => {
     await accompaniedPage.accompaniedByRadio().click()
     await accompaniedPage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/transport/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/transport/)
 
     const transportPage = new TransportPage(page)
     await transportPage.transportTypeRadio().click()
     await transportPage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/comments/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/comments/)
 
     const commentsPage = new AbsenceCommentsPage(page)
     await commentsPage.commentsInput().fill('Sample text')
     await commentsPage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/approval/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/approval/)
 
     const approvalPage = new AbsenceApprovalPage(page)
     await approvalPage.yesRadio().click()
     await approvalPage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/check-answers/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/check-answers/)
 
     const checkAnswersPage = new AddTapCYAPage(page)
     await checkAnswersPage.verifyAnswer('Absence type', 'Police production')
@@ -390,39 +391,70 @@ test.describe('/add-temporary-absence/e2e', () => {
     await checkAnswersPage.verifyAnswer('Relevant comments', 'Sample text')
     await checkAnswersPage.verifyAnswer('Approval needed?', 'Yes')
 
-    await (await checkAnswersPage.changeLinkFor('Absence type')).click()
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
+    await checkAnswersPage.clickChangeLinkFor('Absence type')
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-type/)
 
     await absencePage.rotlRadio().click()
     await absencePage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/absence-subtype/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/absence-subtype/)
 
     const absenceSubTypePage = new AbsenceSubTypePage(page)
     await absenceSubTypePage.crlRadio().click()
     await absenceSubTypePage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/check-answers/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/check-answers/)
 
     await checkAnswersPage.verifyAnswer('Absence type', 'Standard ROTL (Release on Temporary Licence)')
     await checkAnswersPage.verifyAnswer('Absence sub-type', 'CRL (Childcare Resettlement Licence)')
 
-    await (await checkAnswersPage.changeLinkFor('if the prisoner will be accompanied or unaccompanied')).click()
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
+    await checkAnswersPage.clickChangeLinkFor('if the prisoner will be accompanied or unaccompanied')
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
 
     await accompaniedOrUnaccompaniedPage.noRadio().click()
     await accompaniedOrUnaccompaniedPage.clickContinue()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/check-answers/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/check-answers/)
 
     await checkAnswersPage.verifyAnswer('Accompanied or unaccompanied', 'Unaccompanied')
     await checkAnswersPage.verifyAnswerNotVisible('Accompanied by')
     await checkAnswersPage.clickButton('Confirm and save')
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/confirmation/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/confirmation/)
 
     await page.goBack()
 
-    expect((await page.url()).split('?')[0]).toMatch(/\/$/)
+    expect(page.url().split('?')[0]).toMatch(/\/$/)
+
+    expect(
+      (await getApiBody(`/external-movements-api/temporary-absence-authorisations/${prisonNumber}`)).map(o => {
+        return {
+          ...o,
+          submittedAt: undefined,
+        }
+      }),
+    ).toEqual([
+      {
+        absenceSubTypeCode: 'CRL',
+        absenceTypeCode: 'SR',
+        fromDate: '2069-10-10T12:30:00',
+        notes: 'Sample text',
+        occurrences: [
+          {
+            accompaniedByCode: 'U',
+            locationId: 'id-1',
+            locationTypeCode: 'A',
+            notes: 'Sample text',
+            releaseAt: '2069-10-10T12:30:00',
+            returnBy: '2069-10-11T12:30:00',
+            transportCode: 'AMB',
+          },
+        ],
+        repeat: false,
+        statusCode: 'PENDING',
+        submittedAt: undefined,
+        toDate: '2069-10-11T12:30:00',
+      },
+    ])
   })
 })

@@ -23,7 +23,10 @@ export class AddTapCYAPage extends BaseTestPage {
     await expect(rowHeading).not.toBeVisible()
   }
 
-  async changeLinkFor(heading: string) {
-    return this.page.getByRole('link', { name: new RegExp(`Change\\s*${heading}`, 'i') }).first()
+  async clickChangeLinkFor(heading: string) {
+    return this.page
+      .getByRole('link', { name: new RegExp(`Change\\s*${heading}`, 'i') })
+      .first()
+      .click()
   }
 }

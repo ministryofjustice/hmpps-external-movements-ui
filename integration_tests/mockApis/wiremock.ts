@@ -65,4 +65,14 @@ const getSentAuditEvents = async (): Promise<object[]> => {
   })
 }
 
-export { stubFor, getMatchingRequests, resetStubs, successStub, errorStub, getSentAuditEvents }
+const getApiBody = async (urlPattern: string): Promise<object[]> => {
+  const wiremockApiResponse: Response = await superagent
+    .post(`${url}/requests/find`)
+    .send({ method: 'POST', urlPattern })
+
+  return (wiremockApiResponse.body || '[]').requests.map((itm: { body?: string }) => {
+    return itm.body ? JSON.parse(itm.body) : undefined
+  })
+}
+
+export { stubFor, getMatchingRequests, resetStubs, successStub, errorStub, getSentAuditEvents, getApiBody }
