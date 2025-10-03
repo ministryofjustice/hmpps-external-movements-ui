@@ -21,6 +21,7 @@ import { AbsenceApprovalRoutes } from './approval/routes'
 import { AddAbsenceConfirmationRoutes } from './confirmation/routes'
 import journeyStateGuard from '../../../middleware/journey/journeyStateGuard'
 import { AddTemporaryAbsenceJourney } from '../../../@types/journeys'
+import preventNavigationToExpiredJourneys from '../../../middleware/journey/preventNavigationToExpiredJourneys'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -44,6 +45,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
       }
       next()
     },
+    preventNavigationToExpiredJourneys(),
     journeyStateGuard(guard, services.telemetryClient),
   )
 
@@ -139,4 +141,5 @@ const guard = {
   comments: (req: Request) => (get(req, '', 'transport') ? undefined : '/transport'),
   approval: (req: Request) => (get(req, '', 'notes') !== undefined ? undefined : '/comments'),
   'check-answers': (req: Request) => (get(req, '', 'requireApproval') ? undefined : '/approval'),
+  confirmation: (req: Request) => (req.journeyData.journeyCompleted ? undefined : '/check-answers'),
 }

@@ -1,9 +1,7 @@
 import { Request, Response } from 'express'
 
 export class AddAbsenceConfirmationController {
-  GET = async (req: Request, res: Response) => {
-    req.journeyData.journeyCompleted = true
-    delete req.journeyData.addTemporaryAbsence
+  GET = async (_req: Request, res: Response) => {
     res.render('add-temporary-absence/confirmation/view', {})
   }
 }
