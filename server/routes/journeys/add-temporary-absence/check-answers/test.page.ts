@@ -17,4 +17,16 @@ export class AddTapCYAPage extends BaseTestPage {
     await expect(rowHeading).toBeVisible()
     await expect(rowHeading.locator('//following-sibling::dd').first()).toContainText(value)
   }
+
+  async verifyAnswerNotVisible(heading: string | RegExp) {
+    const rowHeading = this.page.locator('dt', { hasText: heading })
+    await expect(rowHeading).not.toBeVisible()
+  }
+
+  async clickChangeLinkFor(heading: string) {
+    return this.page
+      .getByRole('link', { name: new RegExp(`Change\\s*${heading}`, 'i') })
+      .first()
+      .click()
+  }
 }
