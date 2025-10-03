@@ -10,8 +10,8 @@ export const schema = createSchema({
 }).transform(({ fromDate, toDate }, ctx) => {
   const parsedFromDate = validateTransformDate(
     checkTodayOrFuture,
-    'Enter or select a first release date',
-    'Enter or select a valid first release date',
+    'Enter or select a release date',
+    'Enter or select a valid release date',
     'Release date must be today or in the future',
   ).safeParse(fromDate)
 
@@ -19,8 +19,8 @@ export const schema = createSchema({
 
   const parsedToDate = validateTransformDate(
     checkTodayOrFuture,
-    'Enter or select a last return date',
-    'Enter or select a valid last return date',
+    'Enter or select a return date',
+    'Enter or select a valid return date',
     'Return date must be today or in the future',
   ).safeParse(toDate)
 
