@@ -27,6 +27,7 @@ import { TransportPage } from './transport/test.page'
 import { AbsenceApprovalPage } from './approval/test.page'
 import { AbsenceCommentsPage } from './comments/test.page'
 import { AddTapCYAPage } from './check-answers/test.page'
+import { LocationSearchPage } from './location-search/test.page'
 
 test.describe('/add-temporary-absence/e2e', () => {
   const prisonNumber = randomPrisonNumber()
@@ -337,8 +338,10 @@ test.describe('/add-temporary-absence/e2e', () => {
 
     expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/location-search/)
 
-    // TODO: Location Search Page tests do not exist yet
-    await page.goto(`/${journeyId}/add-temporary-absence/location-search/select/id-1`)
+    const locationSearchPage = new LocationSearchPage(page)
+    await locationSearchPage.searchBox().fill('147 Marlborough Road')
+    await locationSearchPage.searchButton().click()
+    await locationSearchPage.page.getByRole('link', { name: '147 Marlborough Road, London, N19 5QH' }).first().click()
 
     expect((await page.url()).split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
 
