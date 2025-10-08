@@ -19,7 +19,7 @@ export const formatTime = (date?: string) => {
   return date?.substring(9, 14) || ''
 }
 
-export const todayStringGBFormat = () => DATE_FORMAT_GB.format(new Date())
+export const todayStringGBFormat = () => format(new Date(), 'd/M/yyyy')
 
 export const yesterdayStringGBFormat = () => {
   const currentDate = new Date()
@@ -27,8 +27,8 @@ export const yesterdayStringGBFormat = () => {
   return DATE_FORMAT_GB.format(currentDate)
 }
 
-export const isoDate = (plusDays: number = 0, plusMonth: number = 0) => {
-  const date = new Date()
+export const addDaysMonths = (dateString: string, plusDays: number = 0, plusMonth: number = 0) => {
+  const date = new Date(dateString)
   if (plusDays !== 0) date.setDate(date.getDate() + plusDays)
   if (plusMonth !== 0) date.setMonth(date.getMonth() + plusMonth)
   return format(date, 'yyyy-MM-dd')
@@ -46,3 +46,5 @@ export const parseDatePickerMinDate = (date: string) => {
   currentDate.setDate(currentDate.getDate() - 1)
   return DATE_FORMAT_GB.format(currentDate)
 }
+
+export const parseDatePickerMaxDate = (date: string) => DATE_FORMAT_GB.format(new Date(date))

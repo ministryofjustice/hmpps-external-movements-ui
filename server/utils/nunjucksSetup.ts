@@ -26,7 +26,8 @@ import {
   formatInputDate,
   formatTime,
   inputDate,
-  isoDate,
+  addDaysMonths,
+  parseDatePickerMaxDate,
   parseDatePickerMinDate,
   todayStringGBFormat,
   yesterdayStringGBFormat,
@@ -81,7 +82,6 @@ export default function nunjucksSetup(app: express.Express): void {
 
   njkEnv.addGlobal('todayStringGBFormat', todayStringGBFormat)
   njkEnv.addGlobal('yesterdayStringGBFormat', yesterdayStringGBFormat)
-  njkEnv.addGlobal('isoDate', isoDate)
   njkEnv.addGlobal('inputDate', inputDate)
 
   njkEnv.addFilter('initialiseName', initialiseName)
@@ -94,6 +94,8 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatTime', formatTime)
   njkEnv.addFilter('formatInputDate', formatInputDate)
   njkEnv.addFilter('parseDatePickerMinDate', parseDatePickerMinDate)
+  njkEnv.addFilter('parseDatePickerMaxDate', parseDatePickerMaxDate)
+  njkEnv.addFilter('addDaysMonths', addDaysMonths)
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('buildErrorSummaryList', buildErrorSummaryList)
   njkEnv.addFilter('customErrorOrderBuilder', customErrorOrderBuilder)

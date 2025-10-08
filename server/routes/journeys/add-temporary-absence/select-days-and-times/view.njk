@@ -1,0 +1,153 @@
+{% extends "partials/layout.njk" %}
+{% from "partials/custom-date-picker/macro.njk" import mojDatePicker %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+
+{% set fullWidth = true %}
+{% set pageTitle = 'Enter absence dates - Add a temporary absence' %}
+
+{% set absences = absences or [{ startDate: '', startTimeHour: '', startTimeMinute: '', returnDate: '', returnTimeHour: '', returnTimeMinute: '' }] %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Create a Temporary Absence</span>
+        <h1 class="govuk-heading-l">Enter absence dates and times for {{ startDate | formatDate('d MMMM') }} to {{ endDate | formatDate('d MMMM') }}</h1>
+      </div>
+    </div>
+
+    <form method="post" data-module="moj-add-another" class="add-another-form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {% for absence in absences %}
+        {% call govukFieldset({
+          classes: "moj-add-another__item",
+          legend: {
+            text: "Absence date and time",
+            classes: "moj-add-another__title govuk-fieldset__legend--m",
+            isPageHeading: false
+          }
+        }) %}
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              {{ mojDatePicker({
+                id: "absences[" + loop.index0 + "].startDate",
+                name: "absences[" + loop.index0 + "][startDate]",
+                label: {
+                  text: 'Release date',
+                  classes: "govuk-fieldset__legend--m"
+                },
+                hint: {
+                  text: 'For example, 17/5/2024.'
+                },
+                value: absence.startDate,
+                errorMessage: validationErrors | findError("absences[" + loop.index0 + "].startDate"),
+                classes: 'hmpps-datepicker--fixed-width govuk-body',
+                minDate: startDate | parseDatePickerMinDate,
+                maxDate: endDate | parseDatePickerMaxDate,
+                attributes: {
+                  "data-id": "absences[%index%].startDate",
+                  "data-name": "absences[%index%][startDate]"
+                }
+              }) }}
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              {{ validatedTimeInput({
+                addAnother: {
+                  id: 'absences',
+                  index: loop.index0
+                },
+                id: "startTime",
+                name: "startTime",
+                fieldset: {
+                  legend: {
+                    text: 'Release time',
+                    classes: "govuk-fieldset__legend--m"
+                  }
+                },
+                validationErrors: validationErrors,
+                hour: absence.startTimeHour,
+                minute: absence.startTimeMinute
+              }) }}
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              {{ mojDatePicker({
+                id: "absences[" + loop.index0 + "].returnDate",
+                name: "absences[" + loop.index0 + "][returnDate]",
+                label: {
+                  text: 'Return date',
+                  classes: "govuk-fieldset__legend--m"
+                },
+                hint: {
+                  text: 'For example, 17/5/2024.'
+                },
+                value: absence.returnDate,
+                errorMessage: validationErrors | findError("absences[" + loop.index0 + "].returnDate"),
+                classes: 'hmpps-datepicker--fixed-width govuk-body',
+                minDate: startDate | parseDatePickerMinDate,
+                maxDate: endDate | addDaysMonths(1) | parseDatePickerMaxDate,
+                attributes: {
+                  "data-id": "absences[%index%].returnDate",
+                  "data-name": "absences[%index%][returnDate]"
+                }
+              }) }}
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+              {{ validatedTimeInput({
+                addAnother: {
+                  id: 'absences',
+                  index: loop.index0
+                },
+                id: "returnTime",
+                name: "returnTime",
+                fieldset: {
+                  legend: {
+                    text: 'Return time',
+                    classes: "govuk-fieldset__legend--m"
+                  }
+                },
+                validationErrors: validationErrors,
+                hour: absence.returnTimeHour,
+                minute: absence.returnTimeMinute
+              }) }}
+            </div>
+          </div>
+
+          {% if absences.length > 1 %}
+            {{ govukButton({
+              name: "remove",
+              value: loop.index0,
+              text: "Remove",
+              classes: "govuk-button--secondary moj-add-another__remove-button"
+            }) }}
+          {% endif %}
+        {% endcall %}
+      {% endfor %}
+
+      <div class="moj-button-action">
+        {{ govukButton({
+          name: "add",
+          text: "Add another absence",
+          classes: "govuk-button--secondary moj-add-another__add-button govuk-!-margin-bottom-4"
+        }) }}
+      </div>
+
+      {{ govukButton({
+        name: "save",
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}
+
+  {% block pageScripts %}
+    <script nonce="{{ cspNonce }}">
+      window.onload = function () {
+        document.querySelector(".add-another-form").addEventListener('components-init', () => {
+          // TODO: add script to auto fill return date = release date
+        })
+      }
+    </script>
+  {% endblock %}
