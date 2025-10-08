@@ -1,0 +1,79 @@
+import { Request, Response } from 'express'
+import { AddTapFlowControl } from '../flow'
+import { getSelectDayRange } from './utils'
+import { SchemaType } from './schema'
+import { AddTemporaryAbsenceJourney } from '../../../../@types/journeys'
+import { formatInputDate } from '../../../../utils/dateTimeUtils'
+
+export class FreeformSelectDaysController {
+  GET = async (req: Request<{ idx?: string }>, res: Response) => {
+    const { startDate, endDate, outOfRange, previousIdx, nextIdx, isOptional } = getSelectDayRange(req)
+    if (outOfRange) return res.notFound()
+
+    return res.render('add-temporary-absence/select-days-and-times/view', {
+      backUrl: AddTapFlowControl.getBackUrl(
+        req,
+        previousIdx ?? (req.params.idx === undefined ? 'repeating-pattern' : '../repeating-pattern'),
+      ),
+      startDate,
+      endDate,
+      isLastWeek: nextIdx === undefined,
+      isOptional,
+      absences:
+        res.locals['formResponses']?.['absences'] ??
+        this.getAbsencesFromJourney(req.journeyData.addTemporaryAbsence!, startDate, endDate),
+    })
+  }
+
+  POST = async (req: Request<{ idx?: string }, unknown, SchemaType>, res: Response) => {
+    const { startDate: fromDate, endDate: toDate, nextIdx } = getSelectDayRange(req)
+    if (req.body.save !== undefined) {
+      req.journeyData.addTemporaryAbsence!.freeFormPattern ??= []
+
+      req.journeyData.addTemporaryAbsence!.freeFormPattern =
+        req.journeyData.addTemporaryAbsence!.freeFormPattern.filter(
+          ({ startDate }) => !(startDate >= fromDate && startDate <= toDate),
+        )
+
+      req.journeyData.addTemporaryAbsence!.freeFormPattern.push(
+        ...req.body.absences.map(
+          ({ startDate, startTimeHour, startTimeMinute, returnDate, returnTimeHour, returnTimeMinute }) => ({
+            startDate,
+            startTime: `${startTimeHour}:${startTimeMinute}`,
+            returnDate,
+            returnTime: `${returnTimeHour}:${returnTimeMinute}`,
+          }),
+        ),
+      )
+
+      if (nextIdx) {
+        return res.redirect(req.params.idx === undefined ? `select-days-and-times/${nextIdx}` : nextIdx)
+      }
+
+      return res.redirect(req.params.idx === undefined ? 'check-absences' : '../check-absences')
+    }
+
+    // TODO: handle add and remove actions for no-js support
+    return res.redirect('')
+  }
+
+  private getAbsencesFromJourney = (journey: AddTemporaryAbsenceJourney, fromDate: string, toDate: string) => {
+    const absences = journey.freeFormPattern
+      ?.filter(({ startDate }) => startDate >= fromDate && startDate <= toDate)
+      .map(({ startDate, startTime, returnDate, returnTime }) => {
+        const [startTimeHour, startTimeMinute] = startTime.split(':')
+        const [returnTimeHour, returnTimeMinute] = returnTime.split(':')
+        return {
+          startDate: formatInputDate(startDate),
+          startTimeHour,
+          startTimeMinute,
+          returnDate: formatInputDate(returnDate),
+          returnTimeHour,
+          returnTimeMinute,
+        }
+      })
+
+    if (absences?.length) return absences
+    return undefined
+  }
+}
