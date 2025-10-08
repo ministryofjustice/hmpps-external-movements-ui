@@ -1,7 +1,7 @@
 import { Request } from 'express'
 import z from 'zod'
 import { $ZodSuperRefineIssue } from 'zod/v4/core'
-import { addDays, format, differenceInDays } from 'date-fns'
+import { addDays, format, differenceInDays, isToday } from 'date-fns'
 import { createSchema } from '../../../../middleware/validation/validationMiddleware'
 import { validateTransformDate } from '../../../../utils/validations/validateDatePicker'
 import { formatInputDate } from '../../../../utils/dateTimeUtils'
@@ -146,6 +146,20 @@ const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: 
       parsedReturnMinute?.success
     ) {
       if (
+        isToday(new Date(parsedStartDate.data)) &&
+        `${parsedStartHour.data}:${parsedStartMinute.data}` <= new Date().toLocaleTimeString('en-GB').substring(0, 5)
+      ) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Release time must be in the future',
+          path: ['startTimeHour'],
+        })
+        // empty error message to highlight both input fields with error
+        ctx.addIssue({ code: 'custom', message: '', path: ['startTime'] })
+        return z.NEVER
+      }
+
+      if (
         parsedStartDate.data === parsedReturnDate.data &&
         `${parsedReturnHour.data}:${parsedReturnMinute.data}` <= `${parsedStartHour.data}:${parsedStartMinute.data}`
       ) {
@@ -199,8 +213,8 @@ export const schema = async (
       absence.returnTimeMinute === '',
   )
 
-  const { startDate: fromDate, endDate: toDate } = getSelectDayRange(req)
-  const maxReturnDate = format(addDays(new Date(toDate), 1), 'yyyy-MM-dd')
+  const { startDate: fromDate, endDate: toDate, nextIdx } = getSelectDayRange(req)
+  const maxReturnDate = nextIdx ? format(addDays(new Date(toDate), 1), 'yyyy-MM-dd') : toDate
 
   return createSchema({
     absences: z.array(

@@ -28,6 +28,6 @@ export const getSelectDayRange = (req: Request<{ idx?: string }>): SelectDayRang
       endDate > req.journeyData.addTemporaryAbsence!.toDate! ? req.journeyData.addTemporaryAbsence!.toDate! : endDate,
     outOfRange: startDate > req.journeyData.addTemporaryAbsence!.toDate!,
     previousIdx: week > 1 ? (week - 1).toString() : undefined,
-    nextIdx: endDate !== req.journeyData.addTemporaryAbsence!.toDate ? (week + 1).toString() : undefined,
+    nextIdx: endDate < req.journeyData.addTemporaryAbsence!.toDate! ? (week + 1).toString() : undefined,
   }
 }

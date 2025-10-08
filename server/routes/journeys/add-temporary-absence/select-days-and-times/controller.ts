@@ -7,7 +7,7 @@ import { formatInputDate } from '../../../../utils/dateTimeUtils'
 
 export class FreeformSelectDaysController {
   GET = async (req: Request<{ idx?: string }>, res: Response) => {
-    const { startDate, endDate, outOfRange, previousIdx } = getSelectDayRange(req)
+    const { startDate, endDate, outOfRange, previousIdx, nextIdx } = getSelectDayRange(req)
     if (outOfRange) return res.notFound()
 
     return res.render('add-temporary-absence/select-days-and-times/view', {
@@ -17,6 +17,7 @@ export class FreeformSelectDaysController {
       ),
       startDate,
       endDate,
+      isLastWeek: nextIdx === undefined,
       absences:
         res.locals['formResponses']?.['absences'] ??
         this.getAbsencesFromJourney(req.journeyData.addTemporaryAbsence!, startDate, endDate),

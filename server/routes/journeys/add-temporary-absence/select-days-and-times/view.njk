@@ -86,7 +86,7 @@
                 errorMessage: validationErrors | findError("absences[" + loop.index0 + "].returnDate"),
                 classes: 'hmpps-datepicker--fixed-width govuk-body',
                 minDate: startDate | parseDatePickerMinDate,
-                maxDate: endDate | addDaysMonths(1) | parseDatePickerMaxDate,
+                maxDate: (endDate | parseDatePickerMaxDate) if isLastWeek else (endDate | addDaysMonths(1) | parseDatePickerMaxDate),
                 attributes: {
                   "data-id": "absences[%index%].returnDate",
                   "data-name": "absences[%index%][returnDate]"
