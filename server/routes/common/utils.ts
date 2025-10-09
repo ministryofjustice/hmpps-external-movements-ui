@@ -214,3 +214,10 @@ export const saveCategorySubJourney = <T, ResBody, ReqBody, Q>(req: Request<T, R
 
   delete req.journeyData.addTemporaryAbsence!.categorySubJourney
 }
+
+export const getIdx = (idx?: string, fallback: number | undefined = 1) => {
+  if (idx === undefined) return fallback
+  const num = Number(idx)
+  if (Number.isNaN(num)) return fallback
+  return num
+}

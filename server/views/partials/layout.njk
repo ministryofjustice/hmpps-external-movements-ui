@@ -95,4 +95,5 @@
     <script src="https://js.sentry-cdn.com/{{ sentry.loaderScriptId }}.min.js" nonce="{{ cspNonce }}" crossorigin="anonymous"></script>
   {% endif %}
   <script type="module" src="{{ '/assets/js/index.js' | assetMap }}"></script>
+  {% block pageScripts %}{% endblock %}
 {% endblock %}
