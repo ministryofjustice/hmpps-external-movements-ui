@@ -228,3 +228,88 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     expect(page.url()).toMatch(/check-absences/)
   })
 })
+
+test.describe('/add-temporary-absence/select-days-and-time edge case', () => {
+  const prisonNumber = randomPrisonNumber()
+
+  test.beforeEach(async ({ page }) => {
+    await Promise.all([
+      auth.stubSignIn(),
+      componentsApi.stubComponents(),
+      stubGetPrisonerImage(),
+      stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
+      stubGetAllAbsenceTypes(),
+    ])
+
+    await signIn(page)
+  })
+
+  const startJourney = async (page: Page, journeyId: string, idx?: string) => {
+    await page.goto(`/${journeyId}/add-temporary-absence/start/${prisonNumber}`)
+    await injectJourneyData(page, journeyId, {
+      addTemporaryAbsence: {
+        absenceType: {
+          code: 'PP',
+          description: 'Police production',
+        },
+        repeat: true,
+        fromDate: '2001-01-01',
+        toDate: '2001-01-08',
+        patternType: 'FREEFORM',
+      },
+    })
+
+    await page.goto(`/${journeyId}/add-temporary-absence/select-days-and-times${idx ? `/${idx}` : ''}`)
+  }
+
+  test('should require mandatory input on last week', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    // does not input last return date on previous page
+    let testPage = await new FreeformSelectDaysPage(page).verifyContent('1 January to 7 January', /repeating-pattern/)
+    await testPage.releaseDateField(0).fill('1/1/2001')
+    await testPage.releaseHourField(0).fill('10')
+    await testPage.releaseMinuteField(0).fill('00')
+    await testPage.returnDateField(0).fill('1/1/2001')
+    await testPage.returnHourField(0).fill('17')
+    await testPage.returnMinuteField(0).fill('30')
+    await testPage.clickContinue()
+
+    // verify mandatory input
+    testPage = await new FreeformSelectDaysPage(page).verifyContent('8 January to 8 January', /1/)
+    await testPage.clickContinue()
+    await testPage.link('Enter or select a release date').click()
+    await expect(testPage.releaseDateField(0)).toBeFocused()
+  })
+
+  test('should allow blank input on last week if last return date is filled on previous page', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    // input last return date on previous page
+    let testPage = await new FreeformSelectDaysPage(page).verifyContent('1 January to 7 January', /repeating-pattern/)
+
+    await testPage.releaseDateField(0).fill('1/1/2001')
+    await testPage.releaseHourField(0).fill('10')
+    await testPage.releaseMinuteField(0).fill('00')
+    await testPage.returnDateField(0).fill('1/1/2001')
+    await testPage.returnHourField(0).fill('17')
+    await testPage.returnMinuteField(0).fill('30')
+
+    await testPage.clickButton('Add another absence')
+    await testPage.releaseDateField(1).fill('7/1/2001')
+    await testPage.releaseHourField(1).fill('17')
+    await testPage.releaseMinuteField(1).fill('00')
+    await testPage.returnDateField(1).fill('8/1/2001')
+    await testPage.returnHourField(1).fill('10')
+    await testPage.returnMinuteField(1).fill('30')
+
+    await testPage.clickContinue()
+
+    // verify optional input, empty form allowed
+    testPage = await new FreeformSelectDaysPage(page).verifyContent('8 January to 8 January (optional)', /1/)
+    await testPage.clickContinue()
+    expect(page.url()).toMatch(/check-absences/)
+  })
+})

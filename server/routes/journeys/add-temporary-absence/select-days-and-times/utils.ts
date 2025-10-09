@@ -8,6 +8,7 @@ type SelectDayRange = {
   outOfRange: boolean
   previousIdx: string | undefined
   nextIdx: string | undefined
+  isOptional: boolean
 }
 
 export const getSelectDayRange = (req: Request<{ idx?: string }>): SelectDayRange => {
@@ -22,12 +23,23 @@ export const getSelectDayRange = (req: Request<{ idx?: string }>): SelectDayRang
     'yyyy-MM-dd',
   )
 
+  const previousIdx = week > 1 ? (week - 1).toString() : undefined
+  const nextIdx = endDate < req.journeyData.addTemporaryAbsence!.toDate! ? (week + 1).toString() : undefined
+
+  const isOptional =
+    (previousIdx && nextIdx) ||
+    (nextIdx === undefined &&
+      req.journeyData.addTemporaryAbsence!.freeFormPattern?.find(
+        ({ returnDate }) => returnDate === req.journeyData.addTemporaryAbsence!.toDate,
+      ))
+
   return {
     startDate,
     endDate:
       endDate > req.journeyData.addTemporaryAbsence!.toDate! ? req.journeyData.addTemporaryAbsence!.toDate! : endDate,
     outOfRange: startDate > req.journeyData.addTemporaryAbsence!.toDate!,
-    previousIdx: week > 1 ? (week - 1).toString() : undefined,
-    nextIdx: endDate < req.journeyData.addTemporaryAbsence!.toDate! ? (week + 1).toString() : undefined,
+    previousIdx,
+    nextIdx,
+    isOptional: !!isOptional,
   }
 }

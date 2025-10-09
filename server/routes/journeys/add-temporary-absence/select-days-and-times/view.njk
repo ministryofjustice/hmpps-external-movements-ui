@@ -14,7 +14,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <span class="govuk-caption-l">Create a Temporary Absence</span>
-        <h1 class="govuk-heading-l">Enter absence dates and times for {{ startDate | formatDate('d MMMM') }} to {{ endDate | formatDate('d MMMM') + (' (optional)' if not (isFirstWeek or isLastWeek) else '') }}</h1>
+        <h1 class="govuk-heading-l">Enter absence dates and times for {{ startDate | formatDate('d MMMM') }} to {{ endDate | formatDate('d MMMM') + (' (optional)' if isOptional else '') }}</h1>
       </div>
     </div>
 
@@ -24,7 +24,7 @@
         {% call govukFieldset({
           classes: "moj-add-another__item",
           legend: {
-            text: "Absence date and time",
+            text: "Add absence date and time",
             classes: "moj-add-another__title govuk-fieldset__legend--m",
             isPageHeading: false
           }
