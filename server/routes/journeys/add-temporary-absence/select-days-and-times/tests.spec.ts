@@ -66,6 +66,19 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await expect(testPage.button('Continue')).toBeVisible()
     await expect(testPage.button('Remove')).toHaveCount(0)
 
+    // verify mandatory input
+    await testPage.clickContinue()
+    await testPage.link('Enter or select a release date').click()
+    await expect(testPage.releaseDateField(0)).toBeFocused()
+
+    // verify minimal input
+    await testPage.releaseDateField(0).fill('1/1/2001')
+    await testPage.releaseHourField(0).fill('10')
+    await testPage.releaseMinuteField(0).fill('00')
+    await testPage.returnDateField(0).fill('1/1/2001')
+    await testPage.returnHourField(0).fill('17')
+    await testPage.returnMinuteField(0).fill('30')
+
     await testPage.clickContinue()
     expect(page.url()).toMatch(/select-days-and-times\/2/)
   })
@@ -185,8 +198,9 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId, '2')
 
-    const testPage = await new FreeformSelectDaysPage(page).verifyContent('8 January to 14 January', /1/)
+    const testPage = await new FreeformSelectDaysPage(page).verifyContent('8 January to 14 January (optional)', /1/)
 
+    // verify optional input, empty form allowed
     await testPage.clickContinue()
     expect(page.url()).toMatch(/select-days-and-times\/3/)
   })
@@ -196,6 +210,19 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await startJourney(page, journeyId, '3')
 
     const testPage = await new FreeformSelectDaysPage(page).verifyContent('15 January to 18 January', /2/)
+
+    // verify mandatory input
+    await testPage.clickContinue()
+    await testPage.link('Enter or select a release date').click()
+    await expect(testPage.releaseDateField(0)).toBeFocused()
+
+    // verify minimal input
+    await testPage.releaseDateField(0).fill('18/1/2001')
+    await testPage.releaseHourField(0).fill('10')
+    await testPage.releaseMinuteField(0).fill('00')
+    await testPage.returnDateField(0).fill('18/1/2001')
+    await testPage.returnHourField(0).fill('17')
+    await testPage.returnMinuteField(0).fill('30')
 
     await testPage.clickContinue()
     expect(page.url()).toMatch(/check-absences/)

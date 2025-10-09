@@ -17,6 +17,7 @@ export class FreeformSelectDaysController {
       ),
       startDate,
       endDate,
+      isFirstWeek: previousIdx === undefined,
       isLastWeek: nextIdx === undefined,
       absences:
         res.locals['formResponses']?.['absences'] ??

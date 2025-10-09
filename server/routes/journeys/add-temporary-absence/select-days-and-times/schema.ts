@@ -213,12 +213,12 @@ export const schema = async (
       absence.returnTimeMinute === '',
   )
 
-  const { startDate: fromDate, endDate: toDate, nextIdx } = getSelectDayRange(req)
+  const { startDate: fromDate, endDate: toDate, nextIdx, previousIdx } = getSelectDayRange(req)
   const maxReturnDate = nextIdx ? format(addDays(new Date(toDate), 1), 'yyyy-MM-dd') : toDate
 
   return createSchema({
     absences: z.array(
-      req.body.save === undefined || isAllBlank
+      req.body.save === undefined || (isAllBlank && nextIdx && previousIdx)
         ? z.object({
             startDate: z.string().optional(),
             startTimeHour: z.string().optional(),

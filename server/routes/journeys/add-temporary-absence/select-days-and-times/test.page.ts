@@ -6,7 +6,7 @@ export class FreeformSelectDaysPage extends BaseTestPage {
       pageUrl: /\/add-temporary-absence\/select-days-and-times/,
       title: 'Enter absence dates - Add a temporary absence - DPS',
       caption: 'Create a Temporary Absence',
-      heading: `Enter absence dates and times for ${dateRange} (optional)`,
+      heading: `Enter absence dates and times for ${dateRange}`,
       backUrl,
     })
   }
