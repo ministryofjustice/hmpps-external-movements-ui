@@ -25,6 +25,8 @@ import preventNavigationToExpiredJourneys from '../../../middleware/journey/prev
 import { StartEndDatesRoutes } from './start-end-dates/routes'
 import { RepeatingPatternRoutes } from './repeating-pattern/routes'
 
+import { SelectDaysTimesWeeklyRoutes } from './select-days-times-weekly/routes'
+
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
 
@@ -71,6 +73,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/start-end-dates', StartEndDatesRoutes())
   router.use('/repeating-pattern', RepeatingPatternRoutes())
 
+  router.use('/select-days-times-weekly', SelectDaysTimesWeeklyRoutes())
   return router
 }
 

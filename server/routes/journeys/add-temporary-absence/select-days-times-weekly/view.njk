@@ -1,0 +1,223 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
+
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Enter absence dates and times - Add a temporary absence" %}
+
+{% macro dayEntry(opts) %}
+    {{ validatedTimeInput({
+        id: opts.id + "Release",
+        name:  opts.id + "Release",
+        classes: 'govuk-!-static-margin-bottom-6',
+        fieldset: {
+            legend: {
+                text: 'Release time'
+            }
+        },
+        validationErrors: validationErrors,
+        hour: opts.releaseHour,
+        minute: opts.releaseMinute
+    }) }}
+
+    {{ validatedTimeInput({
+        id: opts.id + "Return",
+        name:  opts.id + "Return",
+        classes: 'govuk-!-static-margin-bottom-6',
+        fieldset: {
+            legend: {
+                text: 'Return time'
+            }
+        },
+        validationErrors: validationErrors,
+        hour: opts.returnHour,
+        minute: opts.returnMinute
+    }) }}
+
+    {% set overnightHtml %}
+        {{ validatedTimeInput({
+            id: opts.id + "Overnight",
+            name:  opts.id + "Overnight",
+            classes: 'govuk-!-static-margin-bottom-6',
+            fieldset: {
+                legend: {
+                    text: "Return time on " + opts.nextDay
+                }
+            },
+            validationErrors: validationErrors,
+            hour: opts.overnightHour,
+            minute: opts.overnightMinute
+        }) }}
+    {% endset %}
+
+    {{ govukCheckboxes({
+        id: opts.id + "IsOvernight",
+        name: opts.id + "IsOvernight",
+        classes: 'govuk-!-static-margin-bottom-6 govuk-checkboxes--small',
+        items: [
+            {
+                value: "true",
+                text: "Is this an overnight absence?",
+                checked: opts.isOvernight,
+                conditional: {
+                    html: overnightHtml
+                }
+            }
+        ],
+        validationErrors: validationErrors
+    }) }}
+{% endmacro %}
+
+{% block innerContent %}
+    <span class="govuk-caption-l">Add a temporary absence</span>
+    <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {{ govukCheckboxes({
+            name: "days",
+            errorMessage: validationErrors | findError('days'),
+            hint: {
+                text: "You can select more than one day. When entering times use the 24-hour clock. For example, 09:09 or 17:32."
+            },
+            fieldset: {
+                legend: {
+                    text: "Enter the days and times for these absences",
+                    isPageHeading: true,
+                    classes: "govuk-fieldset__legend--xl"
+                }
+            },
+            items: [
+                {
+                    text: "Monday",
+                    value: "monday",
+                    checked: days | contains('monday'),
+                    conditional: {
+                        html: dayEntry({
+                            id: "monday",
+                            nextDay: "Tuesday",
+                            releaseHour: mondayReleaseHour,
+                            releaseMinute: mondayReleaseMinute,
+                            returnHour: mondayReturnHour,
+                            returnMinute: mondayReturnMinute,
+                            overnightHour: mondayOvernightHour,
+                            overnightMinute: mondayOvernightMinute,
+                            isOvernight: mondayIsOvernight
+                        })
+                    }
+                },
+                {
+                    text: "Tuesday",
+                    value: "tuesday",
+                    checked: days | contains('tuesday'),
+                    conditional: {
+                        html: dayEntry({
+                            id: "tuesday",
+                            nextDay: "Wednesday",
+                            releaseHour: tuesdayReleaseHour,
+                            releaseMinute: tuesdayReleaseMinute,
+                            returnHour: tuesdayReturnHour,
+                            returnMinute: tuesdayReturnMinute,
+                            overnightHour: tuesdayOvernightHour,
+                            overnightMinute: tuesdayOvernightMinute,
+                            isOvernight: tuesdayIsOvernight
+                        })
+                    }
+                },
+                {
+                    text: "Wednesday",
+                    value: "wednesday",
+                    checked: days | contains('wednesday'),
+                    conditional: {
+                        html: dayEntry({
+                            id: "wednesday",
+                            nextDay: "thursday",
+                            releaseHour: wednesdayReleaseHour,
+                            releaseMinute: wednesdayReleaseMinute,
+                            returnHour: wednesdayReturnHour,
+                            returnMinute: wednesdayReturnMinute,
+                            overnightHour: wednesdayOvernightHour,
+                            overnightMinute: wednesdayOvernightMinute,
+                            isOvernight: wednesdayIsOvernight
+                        })
+                    }
+                },
+                {
+                    text: "Thursday",
+                    value: 'thursday',
+                    checked: days | contains('thursday'),
+                    conditional: {
+                        html: dayEntry({
+                            id: "thursday",
+                            nextDay: "friday",
+                            releaseHour: thursdayReleaseHour,
+                            releaseMinute: thursdayReleaseMinute,
+                            returnHour: thursdayReturnHour,
+                            returnMinute: thursdayReturnMinute,
+                            overnightHour: thursdayOvernightHour,
+                            overnightMinute: thursdayOvernightMinute,
+                            isOvernight: thursdayIsOvernight
+                        })
+                    }
+                },
+                {
+                    text: "Friday",
+                    value: 'friday',
+                    checked: days | contains('friday'),
+                    conditional: {
+                        html: dayEntry({
+                            id: "friday",
+                            nextDay: "saturday",
+                            releaseHour: fridayReleaseHour,
+                            releaseMinute: fridayReleaseMinute,
+                            returnHour: fridayReturnHour,
+                            returnMinute: fridayReturnMinute,
+                            overnightHour: fridayOvernightHour,
+                            overnightMinute: fridayOvernightMinute,
+                            isOvernight: fridayIsOvernight
+                        })
+                    }
+                },
+                {
+                    text: "Saturday",
+                    value: 'saturday',
+                    checked: days | contains('saturday'),
+                    conditional: {
+                        html: dayEntry({
+                            id: "saturday",
+                            nextDay: "sunday",
+                            releaseHour: saturdayReleaseHour,
+                            releaseMinute: saturdayReleaseMinute,
+                            returnHour: saturdayReturnHour,
+                            returnMinute: saturdayReturnMinute,
+                            overnightHour: saturdayOvernightHour,
+                            overnightMinute: saturdayOvernightMinute,
+                            isOvernight: saturdayIsOvernight
+                        })
+                    }
+                },
+                {
+                    text: "Sunday",
+                    value: 'sunday',
+                    checked: days | contains('sunday'),
+                    conditional: {
+                        html: dayEntry({
+                            id: "sunday",
+                            nextDay: "monday",
+                            releaseHour: sundayReleaseHour,
+                            releaseMinute: sundayReleaseMinute,
+                            returnHour: sundayReturnHour,
+                            returnMinute: sundayReturnMinute,
+                            overnightHour: sundayOvernightHour,
+                            overnightMinute: sundayOvernightMinute,
+                            isOvernight: sundayIsOvernight
+                        })
+                    }
+                }
+            ]
+        }) }}
+        {{ govukButton({
+            text: "Continue",
+            preventDoubleClick: true
+        }) }}
+    </form>
+{% endblock %}
