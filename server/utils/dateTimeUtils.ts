@@ -19,8 +19,10 @@ export const formatTime = (date?: string) => {
   return date?.substring(9, 14) || ''
 }
 
-export const todayStringGBFormat = () => format(new Date(), 'd/M/yyyy')
+// dd/MM/yyyy format for Date Picker's minDate / maxDate value
+export const todayStringGBFormat = () => DATE_FORMAT_GB.format(new Date())
 
+// dd/MM/yyyy format for Date Picker's minDate / maxDate value
 export const yesterdayStringGBFormat = () => {
   const currentDate = new Date()
   currentDate.setDate(currentDate.getDate() - 1)
