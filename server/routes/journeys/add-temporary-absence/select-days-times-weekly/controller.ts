@@ -25,7 +25,10 @@ export class SelectDaysTimesWeeklyController {
 
     res.render('add-temporary-absence/select-days-times-weekly/view', {
       backUrl: 'repeating-pattern',
-      days: res.locals['formResponses']?.['days'] ?? [],
+      days:
+        res.locals['formResponses']?.['days'] ??
+        req.journeyData.addTemporaryAbsence?.weeklyPattern?.map(o => o.day) ??
+        [],
       ...getDayTimes('monday'),
       ...getDayTimes('tuesday'),
       ...getDayTimes('wednesday'),

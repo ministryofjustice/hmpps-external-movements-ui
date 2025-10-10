@@ -5,14 +5,10 @@ import { AddTemporaryAbsenceJourney } from '../../../../@types/journeys'
 
 const ERROR_NO_DAYS = 'Select at least one day'
 
+const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+
 export const schema = createSchema({
-  days: z.union([
-    z.string(),
-    z
-      .array(z.enum(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']))
-      .min(1, { message: ERROR_NO_DAYS })
-      .nonempty({ message: ERROR_NO_DAYS }),
-  ]),
+  days: z.optional(z.union([z.string().array().min(1, { message: ERROR_NO_DAYS }), z.enum(weekDays)])),
   ...addOptions('monday'),
   ...addOptions('tuesday'),
   ...addOptions('wednesday'),
@@ -21,6 +17,13 @@ export const schema = createSchema({
   ...addOptions('saturday'),
   ...addOptions('sunday'),
 }).transform((obj, ctx) => {
+  if (!obj.days) {
+    ctx.addIssue({
+      code: 'custom',
+      message: ERROR_NO_DAYS,
+      path: ['days'],
+    })
+  }
   return [
     transformForDay('monday', '', obj as never, ctx),
     transformForDay('tuesday', 'monday', obj as never, ctx),
@@ -56,10 +59,7 @@ function transformForDay(day: string, previousDay: string, data: never, ctx: z.c
     ? parseMinute(data[keyOvernightMinute])
     : undefined
 
-  addHHMMErrors(day, 'Release', parsedStartHour, parsedStartMinute, ctx)
-  addHHMMErrors(day, 'Return', parsedEndHour, parsedEndMinute, ctx)
-  addHHMMErrors(day, 'Overnight', parsedOvernightHour, parsedOvernightMinute, ctx)
-
+  addInvalidHHMMErrors(day, 'Release', parsedStartHour, parsedStartMinute, ctx)
   addEmptyHHMMErrors(day, 'Release', parsedStartHour, parsedStartMinute, ctx)
 
   if ((data['days'] as Array<string>)?.includes(previousDay)) {
@@ -68,12 +68,14 @@ function transformForDay(day: string, previousDay: string, data: never, ctx: z.c
   }
 
   if (data[keyIsOvernight] !== 'true') {
+    addInvalidHHMMErrors(day, 'Return', parsedEndHour, parsedEndMinute, ctx)
     addEmptyHHMMErrors(day, 'Return', parsedEndHour, parsedEndMinute, ctx)
 
     if (parsedStartHour && parsedStartMinute && parsedEndHour && parsedEndMinute) {
       addBeforeErrors(day, parsedStartHour!, parsedStartMinute!, parsedEndHour!, parsedEndMinute!, ctx)
     }
   } else {
+    addInvalidHHMMErrors(day, 'Overnight', parsedOvernightHour, parsedOvernightMinute, ctx)
     addEmptyHHMMErrors(day, 'Overnight', parsedOvernightHour, parsedOvernightMinute, ctx)
   }
 
@@ -107,7 +109,7 @@ function validatePreviousDayOvernightOverlap(
     if (previousDayReleaseTime > dayReleaseTime) {
       ctx.addIssue({
         code: 'custom',
-        message: 'The overnight time of the previous day must be before the release time',
+        message: 'The release time must be later than the overnight return time',
         path: [`${day}ReleaseHour`],
       })
       ctx.addIssue({
@@ -168,30 +170,41 @@ function addBeforeErrors(
   if (endTime < startTime) {
     ctx.addIssue({
       code: 'custom',
-      message: 'Return time must be later than release time',
+      message: 'The return time must come after the release date and time',
       path: [`${day}ReturnHour`],
     })
   }
 }
 
-function addHHMMErrors(
+function addInvalidHHMMErrors(
   day: string,
   segment: 'Release' | 'Return' | 'Overnight',
   parsedHour: z.ZodSafeParseResult<string> | undefined,
   parsedMinute: z.ZodSafeParseResult<string> | undefined,
   ctx: z.core.$RefinementCtx,
 ) {
-  if (parsedHour?.error) {
+  const error = `Enter a valid ${segment.toLowerCase()} time`
+  if (parsedHour?.error && parsedMinute?.error) {
     ctx.addIssue({
       code: 'custom',
-      message: `${segment} time hour must be 00 to 23`,
+      message: error,
       path: [`${day}${segment}Hour`],
     })
-  }
-  if (parsedMinute?.error) {
     ctx.addIssue({
       code: 'custom',
-      message: `${segment} time minute must be 00 to 59`,
+      message: '',
+      path: [`${day}${segment}Minute`],
+    })
+  } else if (parsedHour?.error) {
+    ctx.addIssue({
+      code: 'custom',
+      message: error,
+      path: [`${day}${segment}Hour`],
+    })
+  } else if (parsedMinute?.error) {
+    ctx.addIssue({
+      code: 'custom',
+      message: error,
       path: [`${day}${segment}Minute`],
     })
   }
