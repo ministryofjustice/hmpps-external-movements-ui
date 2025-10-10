@@ -21,14 +21,21 @@ Parameters:
   {% set fieldset = opts.fieldset %}
   {% set hint = opts.hint %}
   {% set classes = opts.classes %}
+  {% set addAnother = opts.addAnother %}
 
   {% set hour = opts.hour %}
   {% set minute = opts.minute %}
 
   {% if opts.validationErrors %}
-    {% set timeError = opts.validationErrors[name] %}
-    {% set hourError = opts.validationErrors[name + 'Hour'] or '' %}
-    {% set minuteError = opts.validationErrors[name + 'Minute'] or '' %}
+    {% if addAnother %}
+      {% set timeError = opts.validationErrors[addAnother.id + '[' + addAnother.index + '].' + name] %}
+      {% set hourError = opts.validationErrors[addAnother.id + '[' + addAnother.index + '].' + name + 'Hour'] or '' %}
+      {% set minuteError = opts.validationErrors[addAnother.id + '[' + addAnother.index + '].' + name + 'Minute'] or '' %}
+    {% else %}
+      {% set timeError = opts.validationErrors[name] %}
+      {% set hourError = opts.validationErrors[name + 'Hour'] or '' %}
+      {% set minuteError = opts.validationErrors[name + 'Minute'] or '' %}
+    {% endif %}
   {% endif %}
 
   {% macro joinErrors(errors) %}
@@ -45,15 +52,23 @@ Parameters:
     } if hourError or minuteError,
     items: [
       {
-        id: name + "Hour",
-        name: name + "Hour",
+        id: (addAnother.id + '[' + addAnother.index + '].' + name + 'Hour') if addAnother else (name + 'Hour'),
+        name: (addAnother.id + '[' + addAnother.index + '][' + name + 'Hour]') if addAnother else (name + 'Hour'),
+        attributes: {
+          "data-id": addAnother.id + "[%index%]." + name + "Hour",
+          "data-name": addAnother.id + "[%index%][" + name + "Hour]"
+        } if addAnother else undefined,
         label: "Hour",
         value: hour,
         classes: 'govuk-input--width-2' + (' govuk-input--error' if hourError or timeError)
       },
       {
-        id: name + "Minute",
-        name: name + "Minute",
+        id: (addAnother.id + '[' + addAnother.index + '].' + name + 'Minute') if addAnother else (name + 'Minute'),
+        name: (addAnother.id + '[' + addAnother.index + '][' + name + 'Minute]') if addAnother else (name + 'Minute'),
+        attributes: {
+          "data-id": addAnother.id + "[%index%]." + name + "Minute",
+          "data-name": addAnother.id + "[%index%][" + name + "Minute]"
+        } if addAnother else undefined,
         label: "Minute",
         value: minute,
         classes: 'govuk-input--width-2' + (' govuk-input--error' if minuteError or timeError)

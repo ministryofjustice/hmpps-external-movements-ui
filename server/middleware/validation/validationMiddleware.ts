@@ -55,9 +55,29 @@ const normaliseNewLines = (body: Record<string, unknown>) => {
   )
 }
 
+const pathArrayToString = (previous: string | number | symbol, next: string | number | symbol): string | number => {
+  if (!previous) {
+    return next.toString()
+  }
+  if (typeof next === 'number') {
+    return `${String(previous)}[${next.toString()}]`
+  }
+  return `${String(previous)}.${next.toString()}`
+}
+
 export const deduplicateFieldErrors = (error: z.ZodError<unknown>) => {
+  const flattened: Record<string, string[]> = {}
+  error.issues.forEach(issue => {
+    // only field issues have a path
+    if (issue.path.length > 0) {
+      const path = issue.path.reduce(pathArrayToString) as string
+      flattened[path] ??= []
+      flattened[path].push(issue.message)
+    }
+  })
+
   return Object.fromEntries(
-    Object.entries(z.flattenError(error).fieldErrors).map(([key, value]) => [
+    Object.entries(flattened).map(([key, value]) => [
       key,
       Array.isArray(value) ? [...new Set(value)].map(o => o.replace(/^Invalid input$/, '')) : [],
     ]),
