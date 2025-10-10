@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import { AddTapFlowControl } from '../flow'
 import { getSelectDayRange } from './utils'
 import { SchemaType } from './schema'
 import { AddTemporaryAbsenceJourney } from '../../../../@types/journeys'
@@ -10,11 +9,12 @@ export class FreeformSelectDaysController {
     const { startDate, endDate, outOfRange, previousIdx, nextIdx, isOptional } = getSelectDayRange(req)
     if (outOfRange) return res.notFound()
 
+    let backUrl = previousIdx ?? (req.params.idx === undefined ? 'repeating-pattern' : '../repeating-pattern')
+    if (req.journeyData.addTemporaryAbsence!.isCheckPattern)
+      backUrl = req.params.idx === undefined ? 'check-absences' : '../check-absences'
+
     return res.render('add-temporary-absence/select-days-and-times/view', {
-      backUrl: AddTapFlowControl.getBackUrl(
-        req,
-        previousIdx ?? (req.params.idx === undefined ? 'repeating-pattern' : '../repeating-pattern'),
-      ),
+      backUrl,
       startDate,
       endDate,
       isLastWeek: nextIdx === undefined,
@@ -46,7 +46,7 @@ export class FreeformSelectDaysController {
         ),
       )
 
-      if (nextIdx) {
+      if (nextIdx && !req.journeyData.addTemporaryAbsence!.isCheckPattern) {
         return res.redirect(req.params.idx === undefined ? `select-days-and-times/${nextIdx}` : nextIdx)
       }
 

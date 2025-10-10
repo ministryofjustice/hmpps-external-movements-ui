@@ -1,0 +1,24 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Check absences - Add a temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Check the dates and times of these absences before continuing</h1>
+
+    {% if patternType === 'FREEFORM' %}
+      {% include './partials/freeform.njk' %}
+    {% endif %}
+
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukButton({
+        classes: "govuk-!-margin-top-5",
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

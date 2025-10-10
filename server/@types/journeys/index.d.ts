@@ -83,4 +83,5 @@ export type AddTemporaryAbsenceJourney = Partial<{
     returnTime: string
     locationId?: string
   }[]
+  isCheckPattern: boolean
 }>
