@@ -236,13 +236,20 @@ export class AddTapFlowControl {
 
     // Normal flow
     if (data.fromDate && data.toDate) {
+      if (journey.fromDate !== data.fromDate || journey.toDate !== data.toDate) delete journey.isCheckPattern
+
       journey.fromDate = data.fromDate
       journey.toDate = data.toDate
       return 'repeating-pattern'
     }
 
     if (data.patternType) {
+      if (journey.patternType !== data.patternType) delete journey.isCheckPattern
+
       journey.patternType = data.patternType
+
+      if (journey.isCheckPattern) return 'check-absences'
+
       switch (data.patternType) {
         case 'FREEFORM':
           return 'select-days-and-times'
