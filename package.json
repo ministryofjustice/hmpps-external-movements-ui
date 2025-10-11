@@ -85,7 +85,7 @@
     "@ministryofjustice/hmpps-monitoring": "^0.0.2",
     "@ministryofjustice/hmpps-prison-permissions-lib": "^0.2.1",
     "@ministryofjustice/hmpps-rest-client": "^0.0.3",
-    "@playwright/test": "^1.55.1",
+    "@playwright/test": "^1.56.0",
     "@sentry/node": "^10.17.0",
     "applicationinsights": "^2.9.7",
     "body-parser": "^2.2.0",
@@ -98,7 +98,7 @@
     "date-fns": "^4.1.0",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
-    "govuk-frontend": "^5.12.0",
+    "govuk-frontend": "^5.13.0",
     "helmet": "^8.1.0",
     "http-errors": "^2.0.0",
     "jwt-decode": "^4.0.0",
@@ -109,7 +109,7 @@
     "redis": "^5.8.3",
     "superagent": "^10.2.3",
     "uuid": "^11.1.0",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.3",
