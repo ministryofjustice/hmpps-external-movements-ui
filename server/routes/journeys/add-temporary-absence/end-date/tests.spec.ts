@@ -88,7 +88,7 @@ test.describe('/add-temporary-absence/end-date', () => {
     await testPage.dateField().fill('6/5/2025')
     await testPage.clickContinue()
 
-    expect(page.url()).toMatch(/\/add-temporary-absence\/location-type/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/search-location/)
 
     // verify input values are persisted
     await page.goBack()

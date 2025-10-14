@@ -8,18 +8,35 @@ import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApi
 import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
-import { AbsenceApprovalPage } from './test.page'
+import { SearchLocationPage } from './test.page'
+import { stubGetAddress, stubSearchAddresses } from '../../../../../integration_tests/mockApis/osPlacesApi'
 
-test.describe('/add-temporary-absence/approval', () => {
+test.describe('/add-temporary-absence/search-location', () => {
   const prisonNumber = randomPrisonNumber()
 
   test.beforeEach(async ({ page }) => {
+    const address = {
+      addressString: 'Address',
+      buildingName: '',
+      subBuildingName: '',
+      thoroughfareName: 'Random Street',
+      dependentLocality: '',
+      postTown: '',
+      county: '',
+      postcode: 'RS1 34T',
+      country: 'E',
+      uprn: 1001,
+    }
+
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
+      stubSearchAddresses('random', [address]),
+      stubSearchAddresses('SW1H%209AJ', [address]), // query used by the module to check OS Places API availability
+      stubGetAddress('1001', address),
     ])
 
     await signIn(page)
@@ -34,16 +51,9 @@ test.describe('/add-temporary-absence/approval', () => {
           description: 'Police production',
         },
         repeat: false,
-        startDate: '2025-05-05',
-        startTime: '10:00',
-        returnDate: '2025-05-05',
-        returnTime: '12:00',
-        location: { id: 'id', street: 'Random Street', countryDescription: 'UK' },
-        accompanied: false,
-        transport: { code: 'POL', description: 'Police vehicle' },
       },
     })
-    await page.goto(`/${journeyId}/add-temporary-absence/approval`)
+    await page.goto(`/${journeyId}/add-temporary-absence/search-location`)
   }
 
   test('should try all cases', async ({ page }) => {
@@ -51,27 +61,20 @@ test.describe('/add-temporary-absence/approval', () => {
     await startJourney(page, journeyId)
 
     // verify page content
-    const testPage = await new AbsenceApprovalPage(page).verifyContent()
+    const testPage = await new SearchLocationPage(page).verifyContent()
 
-    await expect(testPage.yesRadio()).toBeVisible()
-    await expect(testPage.yesRadio()).not.toBeChecked()
-    await expect(testPage.noRadio()).toBeVisible()
-    await expect(testPage.noRadio()).not.toBeChecked()
+    await expect(testPage.searchField()).toBeVisible()
     await expect(testPage.button('Continue')).toBeVisible()
 
     // verify validation error
     await testPage.clickContinue()
-    await testPage.link('Select if this absence needs to be approved').click()
-    await expect(testPage.noRadio()).toBeFocused()
+    await testPage.link('Find and select an address').click()
+    await expect(testPage.searchField()).toBeFocused()
 
-    // verify next page routing
-    await testPage.yesRadio().click()
+    // // verify next page routing
+    await testPage.searchField().fill('random')
+    await testPage.selectAddress('Address, RS1 34T')
     await testPage.clickContinue()
-    expect(page.url()).toMatch(/\/add-temporary-absence\/check-answers/)
-
-    // verify input values are persisted
-    await page.goBack()
-    await page.reload()
-    await expect(testPage.yesRadio()).toBeChecked()
+    expect(page.url()).toMatch(/\/add-temporary-absence\/confirm-location/)
   })
 })

@@ -33,6 +33,7 @@ generic-service:
     TOKEN_VERIFICATION_ENABLED: 'true'
     AUDIT_SQS_REGION: 'eu-west-2'
     AUDIT_SERVICE_NAME: 'hmpps-external-movements-ui' # Your audit service name
+    OS_PLACES_API_URL: 'https://api.os.uk/search/places/v1'
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -57,6 +58,8 @@ generic-service:
     hmpps-external-movements-ui-sentry:
       SENTRY_DSN: "SENTRY_DSN"
       SENTRY_LOADER_SCRIPT_ID: "SENTRY_LOADER_SCRIPT_ID"
+    os-data-hub:
+      OS_PLACES_API_KEY: "OS_PLACES_API_KEY"
     # This secret will need to be created in your namespace (note it isn't in hmpps-templates-dev)
     # IRSA configuration in your namespace will also be required, and then uncomment serviceAccountName above.
     sqs-hmpps-audit-secret:

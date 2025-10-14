@@ -20,20 +20,34 @@ import { AbsenceReasonPage } from './reason/test.page'
 import { SingleOrRepeatingPage } from './single-or-repeating/test.page'
 import { StartDatePage } from './start-date/test.page'
 import { EndDatePage } from './end-date/test.page'
-import { LocationTypePage } from './location-type/test.page'
 import { AccompaniedOrUnaccompaniedPage } from './accompanied-or-unaccompanied/test.page'
 import { AccompaniedPage } from './accompanied/test.page'
 import { TransportPage } from './transport/test.page'
 import { AbsenceApprovalPage } from './approval/test.page'
 import { AbsenceCommentsPage } from './comments/test.page'
 import { AddTapCYAPage } from './check-answers/test.page'
-import { LocationSearchPage } from './location-search/test.page'
 import { getApiBody } from '../../../../integration_tests/mockApis/wiremock'
+import { stubGetAddress, stubSearchAddresses } from '../../../../integration_tests/mockApis/osPlacesApi'
+import { SearchLocationPage } from './search-location/test.page'
+import { BaseTestPage } from '../../../../integration_tests/pages/baseTestPage'
 
 test.describe('/add-temporary-absence/e2e', () => {
   const prisonNumber = randomPrisonNumber()
 
   test.beforeEach(async ({ page }) => {
+    const address = {
+      addressString: 'Address',
+      buildingName: '',
+      subBuildingName: '',
+      thoroughfareName: 'Random Street',
+      dependentLocality: '',
+      postTown: '',
+      county: '',
+      postcode: 'RS1 34T',
+      country: 'E',
+      uprn: 2001,
+    }
+
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
@@ -45,9 +59,11 @@ test.describe('/add-temporary-absence/e2e', () => {
       stubGetAbsenceCategory('ABSENCE_SUB_TYPE', 'RDR'),
       stubGetAbsenceCategory('ABSENCE_SUB_TYPE', 'SPL'),
       stubGetAbsenceCategory('ABSENCE_REASON_CATEGORY', 'PW'),
-      stubGetReferenceData('location-type'),
       stubGetReferenceData('accompanied-by'),
       stubGetReferenceData('transport'),
+      stubSearchAddresses('qwerty', [address]),
+      stubSearchAddresses('SW1H%209AJ', [address]), // query used by the module to check OS Places API availability
+      stubGetAddress('2001', address),
       stubPostCreateTap(prisonNumber),
     ])
 
@@ -235,17 +251,14 @@ test.describe('/add-temporary-absence/e2e', () => {
       await endDatePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/location-type/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/search-location/)
 
-      const locationTypePage = new LocationTypePage(page)
-      await locationTypePage.locationTypeRadio().click()
-      await locationTypePage.clickContinue()
+      const searchLocationPage = new SearchLocationPage(page)
+      await searchLocationPage.searchField().fill('qwerty')
+      await searchLocationPage.selectAddress('Address, RS1 34T')
+      await searchLocationPage.clickContinue()
 
-      await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/location-search/)
-
-      // TODO: Location Search Page tests do not exist yet
-      await page.goto(`/${journeyId}/add-temporary-absence/location-search/select/id-1`)
+      await new BaseTestPage(page).clickButton('Use this address')
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
       expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
@@ -331,18 +344,16 @@ test.describe('/add-temporary-absence/e2e', () => {
     await endDatePage.minuteField().fill('30')
     await endDatePage.clickContinue()
 
-    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/location-type/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/search-location/)
 
-    const locationTypePage = new LocationTypePage(page)
-    await locationTypePage.locationTypeRadio().click()
-    await locationTypePage.clickContinue()
+    const searchLocationPage = new SearchLocationPage(page)
+    await searchLocationPage.searchField().fill('qwerty')
+    await searchLocationPage.selectAddress('Address, RS1 34T')
+    await searchLocationPage.clickContinue()
 
-    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/location-search/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/confirm-location/)
 
-    const locationSearchPage = new LocationSearchPage(page)
-    await locationSearchPage.searchBox().fill('147 Marlborough Road')
-    await locationSearchPage.searchButton().click()
-    await locationSearchPage.page.getByRole('link', { name: '147 Marlborough Road, London, N19 5QH' }).first().click()
+    await new BaseTestPage(page).clickButton('Use this address')
 
     expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
 
@@ -383,8 +394,7 @@ test.describe('/add-temporary-absence/e2e', () => {
     await checkAnswersPage.verifyAnswer('Start time', '12:30')
     await checkAnswersPage.verifyAnswer('End date', '11 October 2069')
     await checkAnswersPage.verifyAnswer('End time', '12:30')
-    await checkAnswersPage.verifyAnswer('Location type', 'locationType A')
-    await checkAnswersPage.verifyAnswer(/Location\s+$/, /147 Marlborough Road\s*London\s*N19 5QH\s*England/)
+    await checkAnswersPage.verifyAnswer(/Location\s+$/, /Random Street\s*RS1 34T\s*England/)
     await checkAnswersPage.verifyAnswer('Accompanied or unaccompanied', 'Accompanied')
     await checkAnswersPage.verifyAnswer('Accompanied by', 'accompaniedBy A')
     await checkAnswersPage.verifyAnswer('Transport', 'Ambulance')
@@ -435,8 +445,8 @@ test.describe('/add-temporary-absence/e2e', () => {
         occurrences: [
           {
             accompaniedByCode: 'U',
-            locationId: 'id-1',
-            locationTypeCode: 'A',
+            locationId: '2001',
+            locationTypeCode: 'CORP',
             notes: 'Sample text',
             releaseAt: '2069-10-10T12:30:00',
             returnBy: '2069-10-11T12:30:00',

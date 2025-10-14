@@ -7,7 +7,7 @@ export class AccompaniedOrUnaccompaniedPage extends BaseTestPage {
       title: 'Select if accompanied or unaccompanied - Add a temporary absence - DPS',
       caption: 'Create a Temporary Absence',
       heading: 'Will Prisoner-Name Prisoner-Surname be accompanied?',
-      backUrl: /location-search/,
+      backUrl: /confirm-location/,
     })
   }
 

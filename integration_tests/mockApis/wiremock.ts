@@ -1,23 +1,26 @@
 import superagent, { type SuperAgentRequest, type Response } from 'superagent'
 
-const url = 'http://localhost:9091/__admin'
+const adminUrl = 'http://localhost:9091/__admin'
 
 const stubFor = (mapping: Record<string, unknown>): SuperAgentRequest =>
-  superagent.post(`${url}/mappings`).send(mapping)
+  superagent.post(`${adminUrl}/mappings`).send(mapping)
 
 const successStub = ({
   method,
   urlPattern,
+  url,
   response,
 }: {
   method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
-  urlPattern: string
+  urlPattern?: string
+  url?: string
   response: unknown
 }) =>
   stubFor({
     request: {
       method,
-      urlPattern,
+      ...(url ? { url } : {}),
+      ...(urlPattern ? { urlPattern } : {}),
     },
     response: {
       status: 200,
@@ -47,14 +50,14 @@ const errorStub = ({
     },
   })
 
-const getMatchingRequests = (body?: string | object) => superagent.post(`${url}/requests/find`).send(body)
+const getMatchingRequests = (body?: string | object) => superagent.post(`${adminUrl}/requests/find`).send(body)
 
 const resetStubs = (): Promise<Array<Response>> =>
-  Promise.all([superagent.delete(`${url}/mappings`), superagent.delete(`${url}/requests`)])
+  Promise.all([superagent.delete(`${adminUrl}/mappings`), superagent.delete(`${adminUrl}/requests`)])
 
 const getSentAuditEvents = async (): Promise<object[]> => {
   const wiremockApiResponse: Response = await superagent
-    .post(`${url}/requests/find`)
+    .post(`${adminUrl}/requests/find`)
     .send({ method: 'POST', urlPath: '/' })
 
   return (wiremockApiResponse.body || '[]').requests.map((itm: { body?: string }) => {
@@ -67,7 +70,7 @@ const getSentAuditEvents = async (): Promise<object[]> => {
 
 const getApiBody = async (urlPattern: string): Promise<object[]> => {
   const wiremockApiResponse: Response = await superagent
-    .post(`${url}/requests/find`)
+    .post(`${adminUrl}/requests/find`)
     .send({ method: 'POST', urlPattern })
 
   return (wiremockApiResponse.body || '[]').requests.map((itm: { body?: string }) => {

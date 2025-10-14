@@ -1,0 +1,32 @@
+{% extends "partials/layout.njk" %}
+{% from "dps/components/address-autosuggest/macro.njk" import addressAutosuggest %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Search for a location - Add a temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <h1 class="govuk-heading-l"><label for="address-autosuggest-input">Search for a location where this absence will take place</label></h1>
+
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      <div id="address-hint" class="govuk-hint">Start typing a postcode or address</div>
+      <div id="address-input">
+        {{ addressAutosuggest({
+          classes: 'govuk-!-margin-bottom-5',
+          inputValue: inputValue,
+          errorMessage: validationErrors | findError('address-autosuggest-input'),
+          findUrl: '/api/addresses/find'
+        }) }}
+      </div>
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+
+    <a href="enter-location" class="govuk-link govuk-link--no-visited-state">Enter the address manually</a>
+  </div>
+{% endblock %}

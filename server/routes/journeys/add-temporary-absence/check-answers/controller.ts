@@ -9,7 +9,7 @@ export class AddTapCheckAnswersController {
     req.journeyData.isCheckAnswers = true
     delete req.journeyData.addTemporaryAbsence!.categorySubJourney
     delete req.journeyData.addTemporaryAbsence!.startDateTimeSubJourney
-    delete req.journeyData.addTemporaryAbsence!.locationSubJourney
+    delete req.journeyData.addTemporaryAbsence!.confirmLocationSubJourney
     delete req.journeyData.addTemporaryAbsence!.accompaniedSubJourney
 
     res.render('add-temporary-absence/check-answers/view', {
@@ -32,7 +32,6 @@ export class AddTapCheckAnswersController {
       accompaniedBy,
       transport,
       notes,
-      locationType,
       location,
       repeat,
       requireApproval,
@@ -50,7 +49,7 @@ export class AddTapCheckAnswersController {
           {
             releaseAt: `${startDate}T${startTime}:00`,
             returnBy: `${returnDate}T${returnTime}:00`,
-            locationTypeCode: locationType!.code,
+            locationTypeCode: 'CORP',
             locationId: location!.id,
             transportCode: transport!.code,
             accompaniedByCode: accompanied && accompaniedBy ? accompaniedBy.code : 'U',
