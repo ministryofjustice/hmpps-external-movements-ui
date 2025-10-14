@@ -4,7 +4,7 @@ import { AddTapFlowControl } from '../flow'
 export class ConfirmLocationController {
   GET = async (req: Request, res: Response) => {
     res.render('add-temporary-absence/confirm-location/view', {
-      backUrl: AddTapFlowControl.getBackUrl(req, 'location'),
+      backUrl: AddTapFlowControl.getBackUrl(req, 'search-location'),
       address:
         req.journeyData.addTemporaryAbsence!.confirmLocationSubJourney!.location ??
         req.journeyData.addTemporaryAbsence!.location,
