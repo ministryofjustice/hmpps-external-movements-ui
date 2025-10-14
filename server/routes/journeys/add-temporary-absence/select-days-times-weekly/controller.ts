@@ -3,7 +3,9 @@ import { SchemaType } from './schemas'
 
 export class SelectDaysTimesWeeklyController {
   GET = async (req: Request, res: Response) => {
-    const getDayTimes = (day: string) => {
+    const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    const getDayTimes = (dayIndex: number) => {
+      const day = weekDays[dayIndex]
       const dayObj = req.journeyData.addTemporaryAbsence?.weeklyPattern?.find(o => o.day === day)
       const startTime = dayObj?.startTime
       const returnTime = dayObj?.overnight ? '' : dayObj?.returnTime
@@ -11,15 +13,15 @@ export class SelectDaysTimesWeeklyController {
       const isOvernight = dayObj?.overnight
 
       return {
-        [`${day}ReleaseHour`]: res.locals['formResponses']?.[`${day}ReleaseHour`] ?? startTime?.split(':')[0] ?? '',
-        [`${day}ReleaseMinute`]: res.locals['formResponses']?.[`${day}ReleaseMinute`] ?? startTime?.split(':')[1] ?? '',
-        [`${day}ReturnHour`]: res.locals['formResponses']?.[`${day}ReturnHour`] ?? returnTime?.split(':')[0] ?? '',
-        [`${day}ReturnMinute`]: res.locals['formResponses']?.[`${day}ReturnMinute`] ?? returnTime?.split(':')[1] ?? '',
-        [`${day}OvernightHour`]:
-          res.locals['formResponses']?.[`${day}OvernightHour`] ?? overnightTime?.split(':')[0] ?? '',
-        [`${day}OvernightMinute`]:
-          res.locals['formResponses']?.[`${day}OvernightMinute`] ?? overnightTime?.split(':')[1] ?? '',
-        [`${day}IsOvernight`]: res.locals['formResponses']?.[`${day}IsOvernight`] ?? isOvernight ?? '',
+        day,
+        nextDay: weekDays[(dayIndex + 1) % 7],
+        releaseHour: res.locals['formResponses']?.[`${day}ReleaseHour`] ?? startTime?.split(':')[0] ?? '',
+        releaseMinute: res.locals['formResponses']?.[`${day}ReleaseMinute`] ?? startTime?.split(':')[1] ?? '',
+        returnHour: res.locals['formResponses']?.[`${day}ReturnHour`] ?? returnTime?.split(':')[0] ?? '',
+        returnMinute: res.locals['formResponses']?.[`${day}ReturnMinute`] ?? returnTime?.split(':')[1] ?? '',
+        overnightHour: res.locals['formResponses']?.[`${day}OvernightHour`] ?? overnightTime?.split(':')[0] ?? '',
+        overnightMinute: res.locals['formResponses']?.[`${day}OvernightMinute`] ?? overnightTime?.split(':')[1] ?? '',
+        isOvernight: res.locals['formResponses']?.[`${day}IsOvernight`] ?? isOvernight ?? '',
       }
     }
 
@@ -29,13 +31,7 @@ export class SelectDaysTimesWeeklyController {
         res.locals['formResponses']?.['days'] ??
         req.journeyData.addTemporaryAbsence?.weeklyPattern?.map(o => o.day) ??
         [],
-      ...getDayTimes('monday'),
-      ...getDayTimes('tuesday'),
-      ...getDayTimes('wednesday'),
-      ...getDayTimes('thursday'),
-      ...getDayTimes('friday'),
-      ...getDayTimes('saturday'),
-      ...getDayTimes('sunday'),
+      dayData: [...Array(7).keys()].map(i => getDayTimes(i)),
     })
   }
 
