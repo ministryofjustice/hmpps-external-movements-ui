@@ -106,10 +106,12 @@ const main = () => {
     )
 
     // App
-    chokidar.watch(['server/**/*'], { ...chokidarOptions, ignored: ['**/*.test.ts', '**/*.spec.ts'] }).on(
-      'all',
-      debounce(() => buildApp(buildConfig).catch(e => process.stderr.write(`${e}\n`))),
-    )
+    chokidar
+      .watch(['server/**/*'], { ...chokidarOptions, ignored: ['**/*.test.ts', '**/*.spec.ts', '**/*.page.ts'] })
+      .on(
+        'all',
+        debounce(() => buildApp(buildConfig).catch(e => process.stderr.write(`${e}\n`))),
+      )
   }
 }
 

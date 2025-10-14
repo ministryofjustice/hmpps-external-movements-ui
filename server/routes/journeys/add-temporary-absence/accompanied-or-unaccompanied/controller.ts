@@ -5,7 +5,7 @@ import { AddTapFlowControl } from '../flow'
 export class AccompaniedOrUnaccompaniedController {
   GET = async (req: Request, res: Response) => {
     res.render('add-temporary-absence/accompanied-or-unaccompanied/view', {
-      backUrl: AddTapFlowControl.getBackUrl(req, 'location-search'),
+      backUrl: AddTapFlowControl.getBackUrl(req, 'confirm-location'),
       accompanied:
         res.locals['formResponses']?.['accompanied'] ??
         req.journeyData.addTemporaryAbsence!.accompaniedSubJourney?.accompanied ??

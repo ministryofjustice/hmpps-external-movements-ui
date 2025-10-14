@@ -111,6 +111,15 @@ export default {
       },
       agent: new AgentConfig(Number(get('PRISONER_SEARCH_API_TIMEOUT_RESPONSE', 20000))),
     },
+    osPlacesApi: {
+      url: get('OS_PLACES_API_URL', 'https://api.os.uk/search/places/v1', requiredInProduction),
+      apiKey: get('OS_PLACES_API_KEY', '', requiredInProduction),
+      timeout: {
+        response: Number(get('OS_PLACES_API_TIMEOUT_RESPONSE', 3000)),
+        deadline: Number(get('OS_PLACES_API_TIMEOUT_DEADLINE', 3000)),
+      },
+      agent: new AgentConfig(Number(get('OS_PLACES_API_TIMEOUT_DEADLINE', 3000))),
+    },
   },
   sqs: {
     audit: auditConfig(),

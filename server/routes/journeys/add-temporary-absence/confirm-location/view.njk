@@ -1,0 +1,26 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Confirm address - Add a temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <h1 class="govuk-heading-l">Confirm address</h1>
+
+    {{ govukInsetText({
+      html: address | addressToLines | escape | nl2br
+    }) }}
+
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukButton({
+        text: "Use this address",
+        preventDoubleClick: true
+      }) }}
+    </form>
+
+    <a href="search-location" class="govuk-link govuk-link--no-visited-state">Enter a different address</a>
+  </div>
+{% endblock %}

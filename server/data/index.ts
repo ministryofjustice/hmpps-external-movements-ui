@@ -18,6 +18,8 @@ import logger from '../../logger'
 import CacheInterface from './cache/cacheInterface'
 import RedisCache from './cache/redisCache'
 import InMemoryCache from './cache/inMemoryCache'
+// eslint-disable-next-line import/order
+import { OsPlacesApiClient } from '@ministryofjustice/hmpps-connect-dps-shared-items'
 
 const redisClient = config.redis.enabled ? createRedisClient() : null
 const tokenStore = redisClient ? new RedisTokenStore(redisClient) : new InMemoryTokenStore()
@@ -29,6 +31,7 @@ export const dataAccess = () => {
     applicationInfo,
     authenticationClient,
     hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
+    osPlacesApiClient: new OsPlacesApiClient(logger, config.apis.osPlacesApi),
     tokenStore,
     telemetryClient,
     cacheStore: <T>(prefix: string): CacheInterface<T> =>

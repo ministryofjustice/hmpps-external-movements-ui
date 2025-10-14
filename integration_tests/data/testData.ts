@@ -270,11 +270,6 @@ export const testOtherReasons = {
 }
 
 export const testRefData = {
-  'location-type': [
-    { code: 'A', description: 'locationType A', hintText: 'Hint text for A' },
-    { code: 'B', description: 'locationType B', hintText: 'Hint text for B' },
-    { code: 'C', description: 'locationType C', hintText: 'Hint text for C' },
-  ],
   transport: [
     { code: 'AMB', description: 'Ambulance' },
     { code: 'CAR', description: 'Car' },

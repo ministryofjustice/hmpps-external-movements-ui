@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import { getFrontendComponents, retrieveCaseLoadData } from '@ministryofjustice/hmpps-connect-dps-components'
 import * as Sentry from '@sentry/node'
 import './sentry'
@@ -50,6 +50,15 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCurrentUser())
 
   app.get('/prisoner-image/:prisonNumber', new PrisonerImageRoutes(services.prisonApiService).GET)
+
+  app.get('/api/addresses/find/:query', async (req: Request<{ query: string }>, res: Response) => {
+    try {
+      const results = await services.osPlacesAddressService.getAddressesMatchingQuery(req.params.query)
+      res.json({ status: 200, results })
+    } catch (error) {
+      res.status(404).json({ status: 404, error: (error as { message?: string }).message })
+    }
+  })
 
   app.get(
     /(.*)/,
