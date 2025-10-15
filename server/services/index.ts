@@ -8,6 +8,7 @@ import config from '../config'
 import PrisonerSearchApiService from './apis/prisonerSearchService'
 import PrisonApiService from './apis/prisonApiService'
 import PersonalRelationshipsService from './apis/personalRelationshipsService'
+import InMemoryCache from '../data/cache/inMemoryCache'
 
 export const services = () => {
   const { applicationInfo, hmppsAuditClient, osPlacesApiClient, telemetryClient, authenticationClient, cacheStore } =
@@ -18,7 +19,7 @@ export const services = () => {
     auditService: new AuditService(hmppsAuditClient),
     externalMovementsService: new ExternalMovementsService(authenticationClient),
     personalRelationshipsService: new PersonalRelationshipsService(
-      cacheStore('address-reference'),
+      new InMemoryCache('address-reference'),
       authenticationClient,
     ),
     prisonerSearchService: new PrisonerSearchApiService(authenticationClient),
