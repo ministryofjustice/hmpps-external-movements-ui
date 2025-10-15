@@ -42,7 +42,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   nunjucksSetup(app)
-  app.use(setUpAuthentication(services))
+  app.use(setUpAuthentication())
   app.get('*any', auditPageViewMiddleware(services.auditService))
   app.post('*any', auditApiCallMiddleware(services.auditService))
   app.use(authorisationMiddleware())
@@ -67,7 +67,6 @@ export default function createApp(services: Services): express.Application {
       requestOptions: { includeSharedData: true },
       componentApiConfig: config.apis.componentApi,
       dpsUrl: config.serviceUrls.digitalPrison,
-      authenticationClient: services.authenticationClient,
     }),
   )
 
@@ -80,7 +79,6 @@ export default function createApp(services: Services): express.Application {
     retrieveCaseLoadData({
       logger,
       prisonApiConfig: config.apis.prisonApi,
-      authenticationClient: services.authenticationClient,
     }),
   )
 
