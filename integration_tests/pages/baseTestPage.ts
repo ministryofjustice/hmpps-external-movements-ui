@@ -60,6 +60,10 @@ export class BaseTestPage {
     return this.page.getByRole('textbox', { name })
   }
 
+  checkbox(name: string | RegExp) {
+    return this.page.getByRole('checkbox', { name })
+  }
+
   historyParam(url: string, history: RegExp[]) {
     const actualUrl = new URL(url)
     const b64History = actualUrl.searchParams.get('history')
