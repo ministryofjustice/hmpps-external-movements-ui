@@ -8,13 +8,17 @@
 
 {% macro dayEntry(opts) %}
     {{ validatedTimeInput({
-        id: opts.id + "Release",
-        name:  opts.id + "Release",
+        id: "release",
+        name: "release",
         classes: 'govuk-!-static-margin-bottom-6',
         fieldset: {
             legend: {
-                text: 'Release time'
+                html: 'Release time<span class="govuk-visually-hidden">on ' + opts.id + '</span>'
             }
+        },
+        addAnother: {
+            id: 'days',
+            index: opts.i
         },
         validationErrors: validationErrors,
         hour: opts.releaseHour,
@@ -22,13 +26,17 @@
     }) }}
 
     {{ validatedTimeInput({
-        id: opts.id + "Return",
-        name:  opts.id + "Return",
+        id: "return",
+        name: "return",
         classes: 'govuk-!-static-margin-bottom-6',
         fieldset: {
             legend: {
-                text: 'Return time'
+                html: 'Return time<span class="govuk-visually-hidden">on ' + opts.id + '</span>'
             }
+        },
+        addAnother: {
+            id: 'days',
+            index: opts.i
         },
         validationErrors: validationErrors,
         hour: opts.returnHour,
@@ -36,24 +44,28 @@
     }) }}
 
     {% set overnightHtml %}
-    {{ validatedTimeInput({
-            id: opts.id + "Overnight",
-            name:  opts.id + "Overnight",
+        {{ validatedTimeInput({
+            id: "overnight",
+            name: "overnight",
             classes: 'govuk-!-static-margin-bottom-6',
             fieldset: {
                 legend: {
                     text: "Return time on " + opts.nextDay
                 }
             },
+            addAnother: {
+                id: 'days',
+                index: opts.i
+            },
             validationErrors: validationErrors,
             hour: opts.overnightHour,
             minute: opts.overnightMinute
-        }) }}
+            }) }}
     {% endset %}
 
     {{ govukCheckboxes({
-        id: opts.id + "IsOvernight",
-        name: opts.id + "IsOvernight",
+        id: "days[" + opts.i + "].isOvernight",
+        name: "days[" + opts.i + "][isOvernight]",
         classes: 'govuk-!-static-margin-bottom-6 govuk-checkboxes--small',
         items: [
             {
@@ -81,6 +93,7 @@
                 checked: days | contains(day.day),
                 conditional: {
                     html: dayEntry({
+                        i: day.index,
                         id: day.day,
                         nextDay: day.nextDay,
                         releaseHour: day.releaseHour,
@@ -95,8 +108,8 @@
             }), dayItems) %}
         {% endfor %}
         {{ govukCheckboxes({
-            name: "days",
-            errorMessage: validationErrors | findError('days'),
+            name: "selectedDays",
+            errorMessage: validationErrors | findError('selectedDays'),
             hint: {
                 text: "You can select more than one day. When entering times use the 24-hour clock. For example, 09:09 or 17:32."
             },

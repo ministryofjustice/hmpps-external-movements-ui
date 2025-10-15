@@ -1,6 +1,7 @@
 import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 
 type Day = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
+const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 export class SelectDaysTimesWeeklyPage extends BaseTestPage {
   async verifyContent() {
@@ -13,11 +14,11 @@ export class SelectDaysTimesWeeklyPage extends BaseTestPage {
     })
   }
 
-  timeEntry(day: Day, segment: 'Release' | 'Return' | 'Overnight', cronoUnit: 'Hour' | 'Minute') {
-    return this.page.locator(`#${day}${segment}${cronoUnit}`)
+  timeEntry(day: Day, segment: 'release' | 'return' | 'overnight', cronoUnit: 'Hour' | 'Minute') {
+    return this.page.locator(`[id="days[${weekDays.indexOf(day)}].${segment}${cronoUnit}"]`)
   }
 
   isOvernight(day: Day) {
-    return this.page.locator(`#${day}IsOvernight`)
+    return this.page.locator(`[id="days[${weekDays.indexOf(day)}][isOvernight]"]`)
   }
 }
