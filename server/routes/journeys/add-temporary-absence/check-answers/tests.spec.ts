@@ -60,7 +60,6 @@ test.describe('/add-temporary-absence/check-answers', () => {
         startTime: '10:00',
         returnDate: '2025-05-05',
         returnTime: '12:00',
-        locationType: { code: 'CORP', description: 'Business' },
         location: { id: 'id', street: 'Random Street', countryDescription: 'UK' },
         accompanied: true,
         accompaniedBy: { code: 'P', description: 'Police escort' },
@@ -84,7 +83,6 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await testPage.verifyAnswer('End date', '5 May 2025')
     await testPage.verifyAnswer('End time', '12:00')
 
-    await testPage.verifyAnswer('Location type', 'Business')
     await testPage.verifyAnswer(/Location\s+$/, 'Random Street')
     await testPage.verifyAnswer('Accompanied or unaccompanied', 'Accompanied')
     await testPage.verifyAnswer('Accompanied by', 'Police escort')
@@ -102,8 +100,7 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await testPage.verifyLink('Change end date', /end-date#returnDate/)
     await testPage.verifyLink('Change end time', /end-date#returnTimeHour/)
 
-    await testPage.verifyLink('Change location type', /location-type/)
-    await testPage.verifyLink(/Change location$/, /location-search/)
+    await testPage.verifyLink(/Change location$/, /search-location/)
     await testPage.verifyLink(
       'Change if the prisoner will be accompanied or unaccompanied',
       /accompanied-or-unaccompanied/,
@@ -135,7 +132,6 @@ test.describe('/add-temporary-absence/check-answers', () => {
         startTime: '10:00',
         returnDate: '2025-05-05',
         returnTime: '12:00',
-        locationType: { code: 'CORP', description: 'Business' },
         location: { id: 'id', street: 'Random Street', countryDescription: 'UK' },
         accompanied: false,
         transport: { code: 'POL', description: 'Police vehicle' },
@@ -157,7 +153,6 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await testPage.verifyAnswer('End date', '5 May 2025')
     await testPage.verifyAnswer('End time', '12:00')
 
-    await testPage.verifyAnswer('Location type', 'Business')
     await testPage.verifyAnswer(/Location\s+$/, 'Random Street')
     await testPage.verifyAnswer('Accompanied or unaccompanied', 'Unaccompanied')
     await expect(page.locator('dt', { hasText: 'Accompanied by' })).toHaveCount(0)
@@ -175,8 +170,7 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await testPage.verifyLink('Change end date', /end-date#returnDate/)
     await testPage.verifyLink('Change end time', /end-date#returnTimeHour/)
 
-    await testPage.verifyLink('Change location type', /location-type/)
-    await testPage.verifyLink(/Change location$/, /location-search/)
+    await testPage.verifyLink(/Change location$/, /search-location/)
     await testPage.verifyLink(
       'Change if the prisoner will be accompanied or unaccompanied',
       /accompanied-or-unaccompanied/,

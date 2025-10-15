@@ -10,9 +10,7 @@ import { AbsenceReasonRoutes } from './reason/routes'
 import { SingleOrRepeatingRoutes } from './single-or-repeating/routes'
 import { StartDateRoutes } from './start-date/routes'
 import { EndDateRoutes } from './end-date/routes'
-import { LocationTypeRoutes } from './location-type/routes'
 import { AddTapCheckAnswersRoutes } from './check-answers/routes'
-import { LocationSearchRoutes } from './location-search/routes'
 import { AccompaniedOrUnaccompaniedRoutes } from './accompanied-or-unaccompanied/routes'
 import { AccompaniedRoutes } from './accompanied/routes'
 import { TransportRoutes } from './transport/routes'
@@ -25,6 +23,9 @@ import preventNavigationToExpiredJourneys from '../../../middleware/journey/prev
 import { StartEndDatesRoutes } from './start-end-dates/routes'
 import { RepeatingPatternRoutes } from './repeating-pattern/routes'
 import { FreeformSelectDaysRoutes } from './select-days-and-times/routes'
+import { CheckPatternRoutes } from './check-absences/routes'
+import { SearchLocationRoutes } from './search-location/routes'
+import { ConfirmLocationRoutes } from './confirm-location/routes'
 
 import { SelectDaysTimesWeeklyRoutes } from './select-days-times-weekly/routes'
 
@@ -61,8 +62,8 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/single-or-repeating', SingleOrRepeatingRoutes())
   router.use('/start-date', StartDateRoutes())
   router.use('/end-date', EndDateRoutes())
-  router.use('/location-type', LocationTypeRoutes(services))
-  router.use('/location-search', LocationSearchRoutes())
+  router.use('/search-location', SearchLocationRoutes(services))
+  router.use('/confirm-location', ConfirmLocationRoutes())
   router.use('/accompanied-or-unaccompanied', AccompaniedOrUnaccompaniedRoutes())
   router.use('/accompanied', AccompaniedRoutes(services))
   router.use('/transport', TransportRoutes(services))
@@ -74,6 +75,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/start-end-dates', StartEndDatesRoutes())
   router.use('/repeating-pattern', RepeatingPatternRoutes())
   router.use('/select-days-and-times', FreeformSelectDaysRoutes())
+  router.use('/check-absences', CheckPatternRoutes())
 
   router.use('/select-days-times-weekly', SelectDaysTimesWeeklyRoutes())
   return router
@@ -136,9 +138,11 @@ const guard = {
   },
   'start-date': (req: Request) => (get(req, '', 'repeat') === undefined ? '/single-or-repeating' : undefined),
   'end-date': (req: Request) => (get(req, 'startDateTimeSubJourney', 'startDate') ? undefined : '/start-date'),
-  'location-type': (req: Request) => (get(req, '', 'returnDate') ? undefined : '/end-date'),
-  'location-search': (req: Request) => (get(req, 'locationSubJourney', 'locationType') ? undefined : '/location-type'),
-  'accompanied-or-unaccompanied': (req: Request) => (get(req, '', 'location') ? undefined : '/location-search'),
+  'search-location': (req: Request) => (get(req, '', 'returnDate') ? undefined : '/end-date'),
+  'enter-location': (req: Request) => (get(req, '', 'returnDate') ? undefined : '/end-date'),
+  'confirm-location': (req: Request) =>
+    get(req, 'confirmLocationSubJourney', 'location') ? undefined : '/search-location',
+  'accompanied-or-unaccompanied': (req: Request) => (get(req, '', 'location') ? undefined : '/search-location'),
   accompanied: (req: Request) =>
     get(req, 'accompaniedSubJourney', 'accompanied') ? undefined : '/accompanied-or-unaccompanied',
   transport: (req: Request) => {
@@ -150,6 +154,6 @@ const guard = {
   },
   comments: (req: Request) => (get(req, '', 'transport') ? undefined : '/transport'),
   approval: (req: Request) => (get(req, '', 'notes') !== undefined ? undefined : '/comments'),
-  'check-answers': (req: Request) => (get(req, '', 'requireApproval') ? undefined : '/approval'),
+  'check-answers': (req: Request) => (get(req, '', 'requireApproval') !== undefined ? undefined : '/approval'),
   confirmation: (req: Request) => (req.journeyData.journeyCompleted ? undefined : '/check-answers'),
 }

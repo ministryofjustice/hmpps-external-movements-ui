@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import { getFrontendComponents, retrieveCaseLoadData } from '@ministryofjustice/hmpps-connect-dps-components'
 import * as Sentry from '@sentry/node'
 import './sentry'
@@ -42,7 +42,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   nunjucksSetup(app)
-  app.use(setUpAuthentication(services))
+  app.use(setUpAuthentication())
   app.get('*any', auditPageViewMiddleware(services.auditService))
   app.post('*any', auditApiCallMiddleware(services.auditService))
   app.use(authorisationMiddleware())
@@ -51,6 +51,15 @@ export default function createApp(services: Services): express.Application {
 
   app.get('/prisoner-image/:prisonNumber', new PrisonerImageRoutes(services.prisonApiService).GET)
 
+  app.get('/api/addresses/find/:query', async (req: Request<{ query: string }>, res: Response) => {
+    try {
+      const results = await services.osPlacesAddressService.getAddressesMatchingQuery(req.params.query)
+      res.json({ status: 200, results })
+    } catch (error) {
+      res.status(404).json({ status: 404, error: (error as { message?: string }).message })
+    }
+  })
+
   app.get(
     /(.*)/,
     getFrontendComponents({
@@ -58,7 +67,6 @@ export default function createApp(services: Services): express.Application {
       requestOptions: { includeSharedData: true },
       componentApiConfig: config.apis.componentApi,
       dpsUrl: config.serviceUrls.digitalPrison,
-      authenticationClient: services.authenticationClient,
     }),
   )
 
@@ -71,7 +79,6 @@ export default function createApp(services: Services): express.Application {
     retrieveCaseLoadData({
       logger,
       prisonApiConfig: config.apis.prisonApi,
-      authenticationClient: services.authenticationClient,
     }),
   )
 

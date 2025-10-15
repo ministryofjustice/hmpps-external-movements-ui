@@ -1,0 +1,30 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% for period in periods %}
+  {% set rows = [] %}
+  {% for absence in period.absences %}
+    {% set rows = (rows.push({
+      key: {
+        classes: 'half-width',
+        html: absence.startDate | formatDate('cccc, d MMMM') if absence.startDate === absence.returnDate else (absence.startDate | formatDate('cccc, d MMMM') + ' to <br/>' + absence.returnDate | formatDate('cccc, d MMMM'))
+      },
+      value: {
+        html: 'Release: ' + absence.startTime + '<br/>Return: ' + absence.returnTime
+      }
+    }), rows) %}
+  {% endfor %}
+
+  {{ govukSummaryList({
+    card: {
+      title: {
+        text: "Week starting " + period.startDate | formatDate('cccc, d MMMM yyyy')
+      },
+      actions: { items: [{
+        classes: "govuk-link--no-visited-state",
+        href: "select-days-and-times/" + loop.index,
+        text: "Change dates and times" if rows.length else "Add absence"
+      }] }
+    },
+    rows: rows if rows.length else [{ key: { text: "No absence entered" } }]
+  }) }}
+{% endfor %}

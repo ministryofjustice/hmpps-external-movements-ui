@@ -51,11 +51,9 @@ export type AddTemporaryAbsenceJourney = Partial<{
   startTime: string
   returnDate: string
   returnTime: string
-  locationSubJourney: {
-    locationType: components['schemas']['CodedDescription']
+  confirmLocationSubJourney: {
+    location: Address
   }
-  locationType: components['schemas']['CodedDescription']
-  locationSearch: string
   location: Address
   accompaniedSubJourney: {
     accompanied: boolean
@@ -83,4 +81,5 @@ export type AddTemporaryAbsenceJourney = Partial<{
     returnTime: string
     locationId?: string
   }[]
+  isCheckPattern: boolean
 }>

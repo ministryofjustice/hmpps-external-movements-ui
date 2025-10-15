@@ -89,7 +89,7 @@ export const validateOnGET =
   async (req, res, next) => {
     if (queryProps.some(prop => prop === '*' || Object.hasOwn(req.query, prop))) {
       const resolvedSchema = typeof schema === 'function' ? await schema(req, res) : schema
-      const result = resolvedSchema.safeParse(normaliseNewLines(req.query))
+      const result = await resolvedSchema.safeParseAsync(normaliseNewLines(req.query))
       res.locals['query'] = {
         ...req.query,
       }
@@ -108,7 +108,7 @@ export const validate = (schema: z.ZodTypeAny | SchemaFactory, retainQueryString
       return next()
     }
     const resolvedSchema = typeof schema === 'function' ? await schema(req, res) : schema
-    const result = resolvedSchema.safeParse(normaliseNewLines(req.body))
+    const result = await resolvedSchema.safeParseAsync(normaliseNewLines(req.body))
     if (result.success) {
       req.body = result.data
       return next()

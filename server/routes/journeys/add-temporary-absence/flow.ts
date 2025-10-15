@@ -16,8 +16,8 @@ export class AddTapFlowControl {
         return journey.startDateTimeSubJourney ? normalPreviousPage : 'check-answers'
       case 'accompanied-or-unaccompanied':
         return journey.accompaniedSubJourney ? normalPreviousPage : 'check-answers'
-      case 'location-type':
-        return journey.locationSubJourney ? normalPreviousPage : 'check-answers'
+      case 'search-location':
+        return journey.confirmLocationSubJourney ? normalPreviousPage : 'check-answers'
       default:
         return 'check-answers'
     }
@@ -88,16 +88,14 @@ export class AddTapFlowControl {
         journey.returnDate = data.returnDate
         journey.returnTime = data.returnTime
       }
-      if (data.locationType) {
-        if (data.locationType.code === journey.locationType?.code) return 'check-answers'
-        journey.locationSubJourney = { locationType: data.locationType }
-        return 'location-search'
-      }
       if (data.location) {
-        journey.location = data.location
-        if (journey.locationSubJourney) {
-          journey.locationType = journey.locationSubJourney.locationType
-          delete journey.locationSubJourney
+        journey.confirmLocationSubJourney = { location: data.location }
+        return 'confirm-location'
+      }
+      if (data.confirmLocationSubJourney) {
+        if (journey.confirmLocationSubJourney) {
+          journey.location = journey.confirmLocationSubJourney.location
+          delete journey.confirmLocationSubJourney
         }
       }
       if (data.accompanied !== undefined) {
@@ -176,17 +174,16 @@ export class AddTapFlowControl {
       }
       journey.returnDate = data.returnDate
       journey.returnTime = data.returnTime
-      return 'location-type'
-    }
-    if (data.locationType) {
-      journey.locationSubJourney = { locationType: data.locationType }
-      return 'location-search'
+      return 'search-location'
     }
     if (data.location) {
-      journey.location = data.location
-      if (journey.locationSubJourney) {
-        journey.locationType = journey.locationSubJourney.locationType
-        delete journey.locationSubJourney
+      journey.confirmLocationSubJourney = { location: data.location }
+      return 'confirm-location'
+    }
+    if (data.confirmLocationSubJourney) {
+      if (journey.confirmLocationSubJourney) {
+        journey.location = journey.confirmLocationSubJourney.location
+        delete journey.confirmLocationSubJourney
       }
       return 'accompanied-or-unaccompanied'
     }
@@ -236,13 +233,20 @@ export class AddTapFlowControl {
 
     // Normal flow
     if (data.fromDate && data.toDate) {
+      if (journey.fromDate !== data.fromDate || journey.toDate !== data.toDate) delete journey.isCheckPattern
+
       journey.fromDate = data.fromDate
       journey.toDate = data.toDate
       return 'repeating-pattern'
     }
 
     if (data.patternType) {
+      if (journey.patternType !== data.patternType) delete journey.isCheckPattern
+
       journey.patternType = data.patternType
+
+      if (journey.isCheckPattern) return 'check-absences'
+
       switch (data.patternType) {
         case 'FREEFORM':
           return 'select-days-and-times'
