@@ -75,7 +75,7 @@ export type AddTemporaryAbsenceJourney = Partial<{
     locationId?: string
   }[]
   weeklyPattern: {
-    dayOfWeek: number
+    day: number
     overnight: boolean
     startTime: string
     returnTime: string

@@ -27,6 +27,7 @@ import { CheckPatternRoutes } from './check-absences/routes'
 import { SearchLocationRoutes } from './search-location/routes'
 import { ConfirmLocationRoutes } from './confirm-location/routes'
 import { EnterLocationRoutes } from './enter-location/routes'
+import { SelectDaysTimesWeeklyRoutes } from './select-days-times-weekly/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -76,6 +77,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/repeating-pattern', RepeatingPatternRoutes())
   router.use('/select-days-and-times', FreeformSelectDaysRoutes())
   router.use('/check-absences', CheckPatternRoutes())
+  router.use('/select-days-times-weekly', SelectDaysTimesWeeklyRoutes())
 
   return router
 }
