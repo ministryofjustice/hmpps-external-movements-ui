@@ -10,6 +10,7 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
     uprn: z.string().optional(),
   }).transform(async (val, ctx) => {
     const address = val.uprn && (await osPlacesAddressService.getAddressByUprn(val.uprn))
+
     if (!address) {
       ctx.addIssue({ code: 'custom', message: ERR_MSG, path: ['address-autosuggest-input'] })
       return z.NEVER

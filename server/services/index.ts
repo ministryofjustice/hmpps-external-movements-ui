@@ -28,7 +28,6 @@ export const services = () => {
     authenticationClient,
     cacheStore,
     telemetryClient,
-    osPlacesApiClient,
   }
 }
 
