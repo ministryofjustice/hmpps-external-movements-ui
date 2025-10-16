@@ -7,6 +7,7 @@ $govuk-page-width: $moj-page-width;
 @import "govuk-frontend/dist/govuk/index";
 @import "@ministryofjustice/frontend/moj/all";
 @import '@ministryofjustice/hmpps-connect-dps-shared-items/dist/assets/scss/all';
+@import 'accessible-autocomplete/dist/accessible-autocomplete.min';
 
 @import './components/header-bar';
 @import './components/card';
@@ -14,4 +15,5 @@ $govuk-page-width: $moj-page-width;
 @import './components/miniSummary';
 @import './components/summary-card';
 @import './components/horizontal-search-form';
+@import './components/autocomplete';
 @import './overrides/local';
