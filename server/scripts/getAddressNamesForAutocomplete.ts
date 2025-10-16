@@ -3,7 +3,7 @@
 // it just happens to have a copy of the reference data from NOMIS, which is suitable for our usage.
 // It should be replaced if a more appropriate source is found.
 
-import { asSystem, RestClient } from '@ministryofjustice/hmpps-rest-client'
+import { AgentConfig, asSystem, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import { AuthenticationClient, InMemoryTokenStore } from '@ministryofjustice/hmpps-auth-clients'
 import { writeFileSync } from 'node:fs'
 import config from '../config'
@@ -21,7 +21,14 @@ type AddressReferenceData = {
 const getData = async () => {
   const restClient = new RestClient(
     'Personal Relationships API',
-    config.apis.personalRelationshipsApi,
+    {
+      url: process.env['PERSONAL_RELATIONSHIPS_API_URL']!,
+      timeout: {
+        response: 10000,
+        deadline: 10000,
+      },
+      agent: new AgentConfig(10000),
+    },
     logger,
     new AuthenticationClient(config.apis.hmppsAuth, logger, new InMemoryTokenStore()),
   )
