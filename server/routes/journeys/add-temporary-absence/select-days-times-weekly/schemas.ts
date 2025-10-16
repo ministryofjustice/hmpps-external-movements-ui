@@ -61,12 +61,12 @@ export const schema = createSchema({
             ctx.addIssue({
               code: 'custom',
               message: 'The release time must be later than the overnight return time',
-              path: [`days[${i}].releaseHour`],
+              path: ['days', i, 'releaseHour'],
             })
             ctx.addIssue({
               code: 'custom',
               message: '',
-              path: [`days[${i}].releaseMinute`],
+              path: ['days', i, 'releaseMinute'],
             })
           }
         }
@@ -110,25 +110,25 @@ function addEmptyHHMMErrors(
     ctx.addIssue({
       code: 'custom',
       message: errorMessage,
-      path: [`days[${index}].${segment}Hour`],
+      path: ['days', index, `${segment}Hour`],
     })
 
     ctx.addIssue({
       code: 'custom',
       message: '',
-      path: [`days[${index}].${segment}Minute`],
+      path: ['days', index, `${segment}Minute`],
     })
   } else if (!parsedHour) {
     ctx.addIssue({
       code: 'custom',
       message: errorMessage,
-      path: [`days[${index}].${segment}Hour`],
+      path: ['days', index, `${segment}Hour`],
     })
   } else if (!parsedMinute) {
     ctx.addIssue({
       code: 'custom',
       message: '',
-      path: [`days[${index}].${segment}Minute`],
+      path: ['days', index, `${segment}Minute`],
     })
   }
 }
@@ -148,7 +148,7 @@ function addBeforeErrors(
     ctx.addIssue({
       code: 'custom',
       message: 'The return time must come after the release date and time',
-      path: [`days[${index}].returnHour`],
+      path: ['days', index, 'returnHour'],
     })
   }
 }
@@ -165,24 +165,24 @@ function addInvalidHHMMErrors(
     ctx.addIssue({
       code: 'custom',
       message: error,
-      path: [`days[${index}].${segment}Hour`],
+      path: ['days', index, `${segment}Hour`],
     })
     ctx.addIssue({
       code: 'custom',
       message: '',
-      path: [`days[${index}].${segment}Minute`],
+      path: ['days', index, `${segment}Minute`],
     })
   } else if (parsedHour?.error) {
     ctx.addIssue({
       code: 'custom',
       message: error,
-      path: [`days[${index}].${segment}Hour`],
+      path: ['days', index, `${segment}Hour`],
     })
   } else if (parsedMinute?.error) {
     ctx.addIssue({
       code: 'custom',
       message: error,
-      path: [`days[${index}].${segment}Minute`],
+      path: ['days', index, `${segment}Minute`],
     })
   }
 }

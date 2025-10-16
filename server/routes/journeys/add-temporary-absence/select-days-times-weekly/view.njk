@@ -64,7 +64,7 @@
     {% endset %}
 
     {{ govukCheckboxes({
-        id: "days[" + opts.i + "].isOvernight",
+        id: "days[" + opts.i + "][isOvernight]",
         name: "days[" + opts.i + "][isOvernight]",
         classes: 'govuk-!-static-margin-bottom-6 govuk-checkboxes--small',
         items: [
@@ -76,8 +76,7 @@
                     html: overnightHtml
                 }
             }
-        ],
-        validationErrors: validationErrors
+        ]
     }) }}
 {% endmacro %}
 
