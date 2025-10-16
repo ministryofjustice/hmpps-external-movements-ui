@@ -15,10 +15,12 @@ export class SearchLocationController {
       AddTapFlowControl.saveDataAndGetNextPage(req, {
         location: {
           id: req.body.uprn,
-          flat: (req.body.address.buildingNumber as unknown as string) || null,
-          property:
-            [req.body.address.buildingName, req.body.address.subBuildingName].filter(Boolean).join(', ') || null,
-          street: req.body.address.thoroughfareName || null,
+          flat: req.body.address.subBuildingName || null,
+          property: req.body.address.buildingName || null,
+          street:
+            req.body.address.thoroughfareName && req.body.address.buildingNumber
+              ? `${req.body.address.buildingNumber} ${req.body.address.thoroughfareName}`
+              : req.body.address.thoroughfareName || req.body.address.subBuildingName || null,
           area: req.body.address.dependentLocality || null,
           cityDescription: req.body.address.postTown || null,
           countyDescription: req.body.address.county || null,
