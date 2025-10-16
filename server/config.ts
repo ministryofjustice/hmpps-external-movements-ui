@@ -109,8 +109,6 @@ export default {
         deadline: Number(get('PERSONAL_RELATIONSHIPS_API_TIMEOUT_DEADLINE', 10000)),
       },
       agent: new AgentConfig(Number(get('PERSONAL_RELATIONSHIPS_API_TIMEOUT_RESPONSE', 10000))),
-      pageSize: 10,
-      referenceDataCacheTTL: Number(get('PERSONAL_RELATIONSHIPS_API_REFERENCE_DATA_CACHE_TTL', 60 * 60)),
     },
     prisonerSearchApi: {
       url: get('PRISONER_SEARCH_API_URL', 'http://localhost:8082', requiredInProduction),
