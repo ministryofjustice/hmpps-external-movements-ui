@@ -73,7 +73,7 @@ export const addressToLines = ({
 }: Address) => {
   let lineOne = [property, street].filter(s => s).join(', ')
   if (flat) {
-    lineOne = `${/flat/i.test(flat) ? '' : 'Flat '}${flat}, ${lineOne}`
+    lineOne = `${flat}, ${lineOne}`
   }
   const addressArray = [lineOne, cityDescription, countyDescription, postcode, countryDescription].filter(s => s)
   if (addressArray.length) return addressArray.join('\n')

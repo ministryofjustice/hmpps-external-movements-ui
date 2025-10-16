@@ -49,8 +49,10 @@ export class AddTapCheckAnswersController {
           {
             releaseAt: `${startDate}T${startTime}:00`,
             returnBy: `${returnDate}T${returnTime}:00`,
-            locationTypeCode: 'CORP',
-            locationId: location!.id,
+            location: {
+              ...(location!.id ? { id: location!.id } : {}),
+              description: location!.description!,
+            },
             transportCode: transport!.code,
             accompaniedByCode: accompanied && accompaniedBy ? accompaniedBy.code : 'U',
           },

@@ -11,7 +11,7 @@
 
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-      <div id="address-hint" class="govuk-hint">Start typing a postcode or address</div>
+      <div id="address-hint" class="govuk-hint">Enter the address, or start typing a postcode to search and select an address</div>
       <div id="address-input">
         {{ addressAutosuggest({
           classes: 'govuk-!-margin-bottom-5',
@@ -26,7 +26,5 @@
         preventDoubleClick: true
       }) }}
     </form>
-
-    <a href="enter-location" class="govuk-link govuk-link--no-visited-state">Enter the address manually</a>
   </div>
 {% endblock %}

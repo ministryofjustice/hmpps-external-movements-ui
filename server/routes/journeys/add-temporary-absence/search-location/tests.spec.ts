@@ -68,13 +68,13 @@ test.describe('/add-temporary-absence/search-location', () => {
 
     // verify validation error
     await testPage.clickContinue()
-    await testPage.link('Find and select an address').click()
+    await testPage.link('Enter or select an address').click()
     await expect(testPage.searchField()).toBeFocused()
 
     // // verify next page routing
     await testPage.searchField().fill('random')
     await testPage.selectAddress('Address, RS1 34T')
     await testPage.clickContinue()
-    expect(page.url()).toMatch(/\/add-temporary-absence\/confirm-location/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
   })
 })
