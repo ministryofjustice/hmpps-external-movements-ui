@@ -28,9 +28,9 @@ Parameters:
 
   {% if opts.validationErrors %}
     {% if addAnother %}
-      {% set timeError = opts.validationErrors[addAnother.id + '[' + addAnother.index + '].' + name] %}
-      {% set hourError = opts.validationErrors[addAnother.id + '[' + addAnother.index + '].' + name + 'Hour'] or '' %}
-      {% set minuteError = opts.validationErrors[addAnother.id + '[' + addAnother.index + '].' + name + 'Minute'] or '' %}
+      {% set timeError = opts.validationErrors[addAnother.id + '[' + addAnother.index + '][' + name + ']'] %}
+      {% set hourError = opts.validationErrors[addAnother.id + '[' + addAnother.index + '][' + name + 'Hour]'] or '' %}
+      {% set minuteError = opts.validationErrors[addAnother.id + '[' + addAnother.index + '][' + name + 'Minute]'] or '' %}
     {% else %}
       {% set timeError = opts.validationErrors[name] %}
       {% set hourError = opts.validationErrors[name + 'Hour'] or '' %}
@@ -52,10 +52,10 @@ Parameters:
     } if hourError or minuteError,
     items: [
       {
-        id: (addAnother.id + '[' + addAnother.index + '].' + name + 'Hour') if addAnother else (name + 'Hour'),
+        id: (addAnother.id + '[' + addAnother.index + '][' + name + 'Hour]') if addAnother else (name + 'Hour'),
         name: (addAnother.id + '[' + addAnother.index + '][' + name + 'Hour]') if addAnother else (name + 'Hour'),
         attributes: {
-          "data-id": addAnother.id + "[%index%]." + name + "Hour",
+          "data-id": addAnother.id + "[%index%][" + name + "Hour]",
           "data-name": addAnother.id + "[%index%][" + name + "Hour]"
         } if addAnother else undefined,
         label: "Hour",
@@ -63,10 +63,10 @@ Parameters:
         classes: 'govuk-input--width-2' + (' govuk-input--error' if hourError or timeError)
       },
       {
-        id: (addAnother.id + '[' + addAnother.index + '].' + name + 'Minute') if addAnother else (name + 'Minute'),
+        id: (addAnother.id + '[' + addAnother.index + '][' + name + 'Minute]') if addAnother else (name + 'Minute'),
         name: (addAnother.id + '[' + addAnother.index + '][' + name + 'Minute]') if addAnother else (name + 'Minute'),
         attributes: {
-          "data-id": addAnother.id + "[%index%]." + name + "Minute",
+          "data-id": addAnother.id + "[%index%][" + name + "Minute]",
           "data-name": addAnother.id + "[%index%][" + name + "Minute]"
         } if addAnother else undefined,
         label: "Minute",

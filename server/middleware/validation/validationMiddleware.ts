@@ -59,10 +59,7 @@ const pathArrayToString = (previous: string | number | symbol, next: string | nu
   if (!previous) {
     return next.toString()
   }
-  if (typeof next === 'number') {
-    return `${String(previous)}[${next.toString()}]`
-  }
-  return `${String(previous)}.${next.toString()}`
+  return `${String(previous)}[${next.toString()}]`
 }
 
 export const deduplicateFieldErrors = (error: z.ZodError<unknown>) => {
