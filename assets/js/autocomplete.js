@@ -1,5 +1,4 @@
 import accessibleAutocomplete from 'accessible-autocomplete'
-import _ from 'lodash'
 
 function AutoComplete(meta) {
   this.meta = meta
@@ -14,7 +13,19 @@ function AutoComplete(meta) {
       showAllValues: true,
       preserveNullOptions: true,
       templates: {
-        suggestion: option => _.escape(option), // escape html which may have been injected to the component
+        suggestion: option =>
+          option?.replace(
+            // escape html which may have been injected to the component
+            /[&<>'"]/g,
+            tag =>
+              ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;',
+              })[tag] || tag,
+          ),
       },
     })
 

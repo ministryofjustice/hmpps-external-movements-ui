@@ -1,12 +1,11 @@
 import { BaseRouter } from '../../../common/routes'
 import { EnterLocationController } from './controller'
-import { Services } from '../../../../services'
 import { validate } from '../../../../middleware/validation/validationMiddleware'
 import { schema } from './schema'
 
-export const EnterLocationRoutes = ({ personalRelationshipsService }: Services) => {
+export const EnterLocationRoutes = () => {
   const { router, get, post } = BaseRouter()
-  const controller = new EnterLocationController(personalRelationshipsService)
+  const controller = new EnterLocationController()
 
   get('/', controller.GET)
   post('/', validate(schema), controller.POST)

@@ -25,7 +25,8 @@
     "precommit:secrets": "gitleaks git --pre-commit --redact --staged --verbose --config .gitleaks/config.toml",
     "precommit:lint": "node_modules/.bin/lint-staged",
     "precommit:verify": "npm run typecheck && npm test",
-    "swagger-external-movements": "npx openapi-typescript https://external-movements-api-dev.hmpps.service.justice.gov.uk/v3/api-docs > ./server/@types/externalMovements/index.d.ts && eslint --fix \"./server/@types/externalMovements/index.d.ts\""
+    "swagger-external-movements": "npx openapi-typescript https://external-movements-api-dev.hmpps.service.justice.gov.uk/v3/api-docs > ./server/@types/externalMovements/index.d.ts && eslint --fix \"./server/@types/externalMovements/index.d.ts\"",
+    "download-address-data": "npm run build && node --env-file=.env dist/server/scripts/getAddressNamesForAutocomplete.js && eslint --fix \"./server/data/address/*\""
   },
   "engines": {
     "node": "^22",

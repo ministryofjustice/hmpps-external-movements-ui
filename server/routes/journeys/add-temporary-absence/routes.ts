@@ -63,7 +63,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/start-date', StartDateRoutes())
   router.use('/end-date', EndDateRoutes())
   router.use('/search-location', SearchLocationRoutes(services))
-  router.use('/enter-location', EnterLocationRoutes(services))
+  router.use('/enter-location', EnterLocationRoutes())
   router.use('/confirm-location', ConfirmLocationRoutes())
   router.use('/accompanied-or-unaccompanied', AccompaniedOrUnaccompaniedRoutes())
   router.use('/accompanied', AccompaniedRoutes(services))
