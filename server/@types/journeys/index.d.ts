@@ -10,7 +10,8 @@ export interface PrisonerDetails {
 }
 
 export type Address = {
-  id: string
+  id?: string | null
+  description?: string | null
   flat?: string | null
   property?: string | null
   street?: string | null
@@ -18,7 +19,7 @@ export type Address = {
   cityDescription?: string | null
   countyDescription?: string | null
   postcode?: string | null
-  countryDescription: string | null
+  countryDescription?: string | null
 }
 
 export type JourneyData = {

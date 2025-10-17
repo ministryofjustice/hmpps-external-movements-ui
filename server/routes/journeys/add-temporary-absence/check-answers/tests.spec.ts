@@ -60,7 +60,7 @@ test.describe('/add-temporary-absence/check-answers', () => {
         startTime: '10:00',
         returnDate: '2025-05-05',
         returnTime: '12:00',
-        location: { id: 'id', street: 'Random Street', countryDescription: 'UK' },
+        location: { id: 'id', description: 'Random Street, UK' },
         accompanied: true,
         accompaniedBy: { code: 'P', description: 'Police escort' },
         transport: { code: 'POL', description: 'Police vehicle' },
@@ -83,7 +83,7 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await testPage.verifyAnswer('End date', '5 May 2025')
     await testPage.verifyAnswer('End time', '12:00')
 
-    await testPage.verifyAnswer(/Location\s+$/, 'Random Street')
+    await testPage.verifyAnswer(/Location\s+$/, 'Random Street, UK')
     await testPage.verifyAnswer('Accompanied or unaccompanied', 'Accompanied')
     await testPage.verifyAnswer('Accompanied by', 'Police escort')
     await testPage.verifyAnswer('Transport', 'Police vehicle')
@@ -132,7 +132,7 @@ test.describe('/add-temporary-absence/check-answers', () => {
         startTime: '10:00',
         returnDate: '2025-05-05',
         returnTime: '12:00',
-        location: { id: 'id', street: 'Random Street', countryDescription: 'UK' },
+        location: { id: 'id', description: 'Random Street, UK' },
         accompanied: false,
         transport: { code: 'POL', description: 'Police vehicle' },
         requireApproval: true,
@@ -153,7 +153,7 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await testPage.verifyAnswer('End date', '5 May 2025')
     await testPage.verifyAnswer('End time', '12:00')
 
-    await testPage.verifyAnswer(/Location\s+$/, 'Random Street')
+    await testPage.verifyAnswer(/Location\s+$/, 'Random Street, UK')
     await testPage.verifyAnswer('Accompanied or unaccompanied', 'Unaccompanied')
     await expect(page.locator('dt', { hasText: 'Accompanied by' })).toHaveCount(0)
     await testPage.verifyAnswer('Transport', 'Police vehicle')
