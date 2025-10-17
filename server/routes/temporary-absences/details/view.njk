@@ -108,17 +108,8 @@
           },
           rows: [
             {
-              key: { text: "Location type" },
-              value: { text: result.location.type.description },
-              actions: { items: [{
-              href: "#",
-              text: "Change",
-              visuallyHiddenText: "location type"
-            }] }
-            },
-            {
               key: { text: "Location" },
-              value: { html: "1 Some Street<br/>Slough<br/>SL9 999<br/>Berkshire" },
+              value: { text: result.location.description },
               actions: { items: [{
               href: "#",
               text: "Change",
