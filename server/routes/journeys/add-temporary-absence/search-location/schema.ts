@@ -1,10 +1,10 @@
 import { z } from 'zod'
-import { OsPlacesAddressService } from '@ministryofjustice/hmpps-connect-dps-shared-items'
 import { createSchema } from '../../../../middleware/validation/validationMiddleware'
+import CustomOsPlacesAddressService from '../../../../services/apis/osPlacesAddressService'
 
 const ERROR_MSG = 'Enter or select an address'
 
-export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
+export const schemaFactory = (osPlacesAddressService: CustomOsPlacesAddressService) =>
   createSchema({
     'address-autosuggest-input': z.string({ message: ERROR_MSG }).min(1, { message: ERROR_MSG }),
     uprn: z.string().optional(),

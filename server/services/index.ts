@@ -1,5 +1,4 @@
 import { PermissionsService } from '@ministryofjustice/hmpps-prison-permissions-lib'
-import { OsPlacesAddressService } from '@ministryofjustice/hmpps-connect-dps-shared-items'
 import logger from '../../logger'
 import { dataAccess } from '../data'
 import AuditService from './auditService'
@@ -7,6 +6,7 @@ import ExternalMovementsService from './apis/externalMovementsService'
 import config from '../config'
 import PrisonerSearchApiService from './apis/prisonerSearchService'
 import PrisonApiService from './apis/prisonApiService'
+import CustomOsPlacesAddressService from './apis/osPlacesAddressService'
 
 export const services = () => {
   const { applicationInfo, hmppsAuditClient, osPlacesApiClient, telemetryClient, authenticationClient, cacheStore } =
@@ -18,7 +18,7 @@ export const services = () => {
     externalMovementsService: new ExternalMovementsService(authenticationClient),
     prisonerSearchService: new PrisonerSearchApiService(authenticationClient),
     prisonApiService: new PrisonApiService(authenticationClient),
-    osPlacesAddressService: new OsPlacesAddressService(logger, osPlacesApiClient),
+    osPlacesAddressService: new CustomOsPlacesAddressService(logger, osPlacesApiClient),
     prisonPermissionsService: PermissionsService.create({
       prisonerSearchConfig: config.apis.prisonerSearchApi,
       authenticationClient,
