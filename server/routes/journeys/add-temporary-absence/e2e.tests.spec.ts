@@ -29,7 +29,6 @@ import { AddTapCYAPage } from './check-answers/test.page'
 import { getApiBody } from '../../../../integration_tests/mockApis/wiremock'
 import { stubGetAddress, stubSearchAddresses } from '../../../../integration_tests/mockApis/osPlacesApi'
 import { SearchLocationPage } from './search-location/test.page'
-import { BaseTestPage } from '../../../../integration_tests/pages/baseTestPage'
 
 test.describe('/add-temporary-absence/e2e', () => {
   const prisonNumber = randomPrisonNumber()
@@ -258,8 +257,6 @@ test.describe('/add-temporary-absence/e2e', () => {
       await searchLocationPage.selectAddress('Address, RS1 34T')
       await searchLocationPage.clickContinue()
 
-      await new BaseTestPage(page).clickButton('Use this address')
-
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
       expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
 
@@ -351,10 +348,6 @@ test.describe('/add-temporary-absence/e2e', () => {
     await searchLocationPage.selectAddress('Address, RS1 34T')
     await searchLocationPage.clickContinue()
 
-    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/confirm-location/)
-
-    await new BaseTestPage(page).clickButton('Use this address')
-
     expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
 
     const accompaniedOrUnaccompaniedPage = new AccompaniedOrUnaccompaniedPage(page)
@@ -394,7 +387,7 @@ test.describe('/add-temporary-absence/e2e', () => {
     await checkAnswersPage.verifyAnswer('Start time', '12:30')
     await checkAnswersPage.verifyAnswer('End date', '11 October 2069')
     await checkAnswersPage.verifyAnswer('End time', '12:30')
-    await checkAnswersPage.verifyAnswer(/Location\s+$/, /Random Street\s*RS1 34T\s*England/)
+    await checkAnswersPage.verifyAnswer(/Location\s+$/, /Address, RS1 34T/)
     await checkAnswersPage.verifyAnswer('Accompanied or unaccompanied', 'Accompanied')
     await checkAnswersPage.verifyAnswer('Accompanied by', 'accompaniedBy A')
     await checkAnswersPage.verifyAnswer('Transport', 'Ambulance')
@@ -445,8 +438,10 @@ test.describe('/add-temporary-absence/e2e', () => {
         occurrences: [
           {
             accompaniedByCode: 'U',
-            locationId: '2001',
-            locationTypeCode: 'CORP',
+            location: {
+              id: '2001',
+              description: 'Address, RS1 34T',
+            },
             notes: 'Sample text',
             releaseAt: '2069-10-10T12:30:00',
             returnBy: '2069-10-11T12:30:00',

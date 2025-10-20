@@ -6,7 +6,7 @@ export class ConfirmLocationController {
     res.render('add-temporary-absence/confirm-location/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'search-location'),
       address:
-        req.journeyData.addTemporaryAbsence!.confirmLocationSubJourney!.location ??
+        req.journeyData.addTemporaryAbsence!.confirmLocationSubJourney?.location ??
         req.journeyData.addTemporaryAbsence!.location,
     })
   }

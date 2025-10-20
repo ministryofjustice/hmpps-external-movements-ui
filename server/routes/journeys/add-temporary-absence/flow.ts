@@ -16,8 +16,6 @@ export class AddTapFlowControl {
         return journey.startDateTimeSubJourney ? normalPreviousPage : 'check-answers'
       case 'accompanied-or-unaccompanied':
         return journey.accompaniedSubJourney ? normalPreviousPage : 'check-answers'
-      case 'search-location':
-        return journey.confirmLocationSubJourney ? normalPreviousPage : 'check-answers'
       default:
         return 'check-answers'
     }
@@ -89,8 +87,7 @@ export class AddTapFlowControl {
         journey.returnTime = data.returnTime
       }
       if (data.location) {
-        journey.confirmLocationSubJourney = { location: data.location }
-        return 'confirm-location'
+        journey.location = data.location
       }
       if (data.confirmLocationSubJourney) {
         if (journey.confirmLocationSubJourney) {
@@ -177,8 +174,8 @@ export class AddTapFlowControl {
       return 'search-location'
     }
     if (data.location) {
-      journey.confirmLocationSubJourney = { location: data.location }
-      return 'confirm-location'
+      journey.location = data.location
+      return 'accompanied-or-unaccompanied'
     }
     if (data.confirmLocationSubJourney) {
       if (journey.confirmLocationSubJourney) {

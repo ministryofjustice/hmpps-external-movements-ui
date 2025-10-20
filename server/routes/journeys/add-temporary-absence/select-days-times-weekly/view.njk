@@ -1,0 +1,129 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
+
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Enter absence dates and times - Add a temporary absence" %}
+
+{% macro dayEntry(opts) %}
+    {{ validatedTimeInput({
+        id: "release",
+        name: "release",
+        classes: 'govuk-!-static-margin-bottom-6',
+        fieldset: {
+            legend: {
+                html: 'Release time<span class="govuk-visually-hidden">on ' + opts.id + '</span>'
+            }
+        },
+        addAnother: {
+            id: 'days',
+            index: opts.i
+        },
+        validationErrors: validationErrors,
+        hour: opts.releaseHour,
+        minute: opts.releaseMinute
+    }) }}
+
+    {{ validatedTimeInput({
+        id: "return",
+        name: "return",
+        classes: 'govuk-!-static-margin-bottom-6',
+        fieldset: {
+            legend: {
+                html: 'Return time<span class="govuk-visually-hidden">on ' + opts.id + '</span>'
+            }
+        },
+        addAnother: {
+            id: 'days',
+            index: opts.i
+        },
+        validationErrors: validationErrors,
+        hour: opts.returnHour,
+        minute: opts.returnMinute
+    }) }}
+
+    {% set overnightHtml %}
+        {{ validatedTimeInput({
+            id: "overnight",
+            name: "overnight",
+            classes: 'govuk-!-static-margin-bottom-6',
+            fieldset: {
+                legend: {
+                    text: "Return time on " + opts.nextDay
+                }
+            },
+            addAnother: {
+                id: 'days',
+                index: opts.i
+            },
+            validationErrors: validationErrors,
+            hour: opts.overnightHour,
+            minute: opts.overnightMinute
+            }) }}
+    {% endset %}
+
+    {{ govukCheckboxes({
+        id: "days[" + opts.i + "][isOvernight]",
+        name: "days[" + opts.i + "][isOvernight]",
+        classes: 'govuk-!-static-margin-bottom-6 govuk-checkboxes--small',
+        items: [
+            {
+                value: "true",
+                text: "Is this an overnight absence?",
+                checked: opts.isOvernight,
+                conditional: {
+                    html: overnightHtml
+                }
+            }
+        ]
+    }) }}
+{% endmacro %}
+
+{% block innerContent %}
+    <span class="govuk-caption-l">Add a temporary absence</span>
+    <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {% set dayItems = [] %}
+        {% for day in dayData %}
+            {% set dayItems = (dayItems.push({
+                text: day.day | capitalize,
+                value: day.day,
+                checked: days | contains(day.day),
+                conditional: {
+                    html: dayEntry({
+                        i: day.index,
+                        id: day.day,
+                        nextDay: day.nextDay,
+                        releaseHour: day.releaseHour,
+                        releaseMinute: day.releaseMinute,
+                        returnHour: day.returnHour,
+                        returnMinute: day.returnMinute,
+                        overnightHour: day.overnightHour,
+                        overnightMinute: day.overnightMinute,
+                        isOvernight: day.isOvernight
+                    })
+                }
+            }), dayItems) %}
+        {% endfor %}
+        {{ govukCheckboxes({
+            name: "selectedDays",
+            errorMessage: validationErrors | findError('selectedDays'),
+            hint: {
+                text: "You can select more than one day. When entering times use the 24-hour clock. For example, 09:09 or 17:32."
+            },
+            fieldset: {
+                legend: {
+                    text: "Enter the days and times for these absences",
+                    isPageHeading: true,
+                    classes: "govuk-fieldset__legend--xl"
+                }
+            },
+            items: dayItems
+        }) }}
+        {{ govukButton({
+            text: "Continue",
+            preventDoubleClick: true
+        }) }}
+    </form>
+{% endblock %}

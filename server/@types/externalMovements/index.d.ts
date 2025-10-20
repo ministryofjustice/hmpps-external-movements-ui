@@ -4,6 +4,26 @@
  */
 
 export interface paths {
+  '/sync/temporary-absence-movement/{personIdentifier}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /** @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW */
+    put: operations['syncTemporaryAbsenceMovement']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/sync/temporary-absence-application/{personIdentifier}': {
     parameters: {
       query?: never
@@ -228,6 +248,16 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
+    Address: {
+      premise?: string
+      street?: string
+      area?: string
+      city?: string
+      county?: string
+      country?: string
+      postcode?: string
+      isEmpty: boolean
+    }
     NomisAudit: {
       /** Format: date-time */
       createDatetime: string
@@ -238,6 +268,34 @@ export interface components {
       /** Format: date-time */
       auditTimestamp?: string
       auditUserId?: string
+    }
+    TapLocation: {
+      id?: string
+      typeCode?: string
+      description?: string
+      address?: components['schemas']['Address']
+    }
+    TapMovementRequest: {
+      /** Format: uuid */
+      id?: string
+      /** Format: uuid */
+      occurrenceId?: string
+      legacyId: string
+      /** Format: date-time */
+      movementDateTime: string
+      movementReason: string
+      /** @enum {string} */
+      direction: 'IN' | 'OUT'
+      escort?: string
+      escortText?: string
+      prisonCode?: string
+      commentText?: string
+      location: components['schemas']['TapLocation']
+      audit: components['schemas']['NomisAudit']
+    }
+    SyncResponse: {
+      /** Format: uuid */
+      id: string
     }
     TapApplicationRequest: {
       /** Format: uuid */
@@ -260,10 +318,6 @@ export interface components {
       toDate: string
       audit: components['schemas']['NomisAudit']
     }
-    SyncResponse: {
-      /** Format: uuid */
-      id: string
-    }
     ScheduledTemporaryAbsenceRequest: {
       /** Format: uuid */
       id?: string
@@ -274,9 +328,7 @@ export interface components {
       startTime: string
       /** Format: date-time */
       returnTime: string
-      toAddressOwnerClass?: string
-      /** Format: int64 */
-      toAddressId?: number
+      location: components['schemas']['TapLocation']
       contactPersonName?: string
       escort?: string
       comment?: string
@@ -299,6 +351,7 @@ export interface components {
       fromDate: string
       /** Format: date */
       toDate: string
+      schedule?: components['schemas']['JsonNode']
     }
     CreateTapOccurrenceRequest: {
       /** Format: date-time */
@@ -307,9 +360,16 @@ export interface components {
       returnBy: string
       accompaniedByCode: string
       transportCode: string
-      locationTypeCode: string
-      locationId: string
+      location: components['schemas']['Location']
+      contactInformation?: string
       notes?: string
+      scheduleReference?: components['schemas']['JsonNode']
+    }
+    JsonNode: unknown
+    Location: {
+      description?: string
+      address?: components['schemas']['Address']
+      id?: string
     }
     ReferenceId: {
       /** Format: uuid */
@@ -335,9 +395,6 @@ export interface components {
       description: string
       hintText?: string
     }
-    Location: {
-      type: components['schemas']['CodedDescription']
-    }
     Person: {
       personIdentifier: string
       firstName: string
@@ -359,6 +416,8 @@ export interface components {
       transport: components['schemas']['CodedDescription']
       added: components['schemas']['AtAndBy']
       cancelled?: components['schemas']['AtAndBy']
+      contactInformation?: string
+      scheduleReference?: components['schemas']['JsonNode']
     }
     Occurrence: {
       /** Format: uuid */
@@ -388,6 +447,7 @@ export interface components {
       occurrences: components['schemas']['Occurrence'][]
       submitted: components['schemas']['AtAndBy']
       approved?: components['schemas']['AtAndBy']
+      schedule?: components['schemas']['JsonNode']
     }
     TapOccurrenceSearchRequest: {
       prisonCode: string
@@ -507,7 +567,6 @@ export interface components {
         | 'TRANSPORT'
         | 'TAP_AUTHORISATION_STATUS'
         | 'TAP_OCCURRENCE_STATUS'
-        | 'LOCATION_TYPE'
     }
     AbsenceCategorisations: {
       domain: components['schemas']['CodedDescription']
@@ -522,6 +581,32 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  syncTemporaryAbsenceMovement: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        personIdentifier: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TapMovementRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['SyncResponse']
+        }
+      }
+    }
+  }
   syncTemporaryAbsenceApplication: {
     parameters: {
       query?: never
@@ -700,7 +785,6 @@ export interface operations {
           | 'absence-sub-type'
           | 'absence-type'
           | 'accompanied-by'
-          | 'location-type'
           | 'tap-authorisation-status'
           | 'tap-occurrence-status'
           | 'transport'

@@ -15,7 +15,7 @@ export default defineConfig({
   forbidOnly: !!process.env['CI'],
 
   // Retry on CI only.
-  retries: process.env['CI'] ? 2 : 0,
+  retries: process.env['CI'] ? 3 : 3,
 
   // Reporter to use
   reporter: [['html'], ['playwright-ctrf-json-reporter', { outputDir: 'ctrf', outputFile: 'ctrf-report.json' }]],

@@ -32,7 +32,7 @@
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-quarter">
               {{ mojDatePicker({
-                id: "absences[" + loop.index0 + "].startDate",
+                id: "absences[" + loop.index0 + "][startDate]",
                 name: "absences[" + loop.index0 + "][startDate]",
                 label: {
                   text: 'Release date',
@@ -42,12 +42,12 @@
                   text: 'For example, 17/5/2024.'
                 },
                 value: absence.startDate,
-                errorMessage: validationErrors | findError("absences[" + loop.index0 + "].startDate"),
+                errorMessage: validationErrors | findError("absences[" + loop.index0 + "][startDate]"),
                 classes: 'hmpps-datepicker--fixed-width govuk-body',
                 minDate: startDate | parseDatePickerMinDate,
                 maxDate: endDate | parseDatePickerMaxDate,
                 attributes: {
-                  "data-id": "absences[%index%].startDate",
+                  "data-id": "absences[%index%][startDate]",
                   "data-name": "absences[%index%][startDate]"
                 }
               }) }}
@@ -73,7 +73,7 @@
             </div>
             <div class="govuk-grid-column-one-quarter">
               {{ mojDatePicker({
-                id: "absences[" + loop.index0 + "].returnDate",
+                id: "absences[" + loop.index0 + "][returnDate]",
                 name: "absences[" + loop.index0 + "][returnDate]",
                 label: {
                   text: 'Return date',
@@ -83,12 +83,12 @@
                   text: 'For example, 17/5/2024.'
                 },
                 value: absence.returnDate,
-                errorMessage: validationErrors | findError("absences[" + loop.index0 + "].returnDate"),
+                errorMessage: validationErrors | findError("absences[" + loop.index0 + "][returnDate]"),
                 classes: 'hmpps-datepicker--fixed-width govuk-body',
                 minDate: startDate | parseDatePickerMinDate,
                 maxDate: (endDate | parseDatePickerMaxDate) if isLastWeek else (endDate | addDaysMonths(1) | parseDatePickerMaxDate),
                 attributes: {
-                  "data-id": "absences[%index%].returnDate",
+                  "data-id": "absences[%index%][returnDate]",
                   "data-name": "absences[%index%][returnDate]"
                 }
               }) }}
