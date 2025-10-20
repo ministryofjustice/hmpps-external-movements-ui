@@ -28,8 +28,6 @@ export class CheckPatternController {
       backUrl: AddTapFlowControl.getBackUrl(req, 'repeating-pattern'),
       patternType: req.journeyData.addTemporaryAbsence!.patternType,
       periods,
-      freeFormPattern: req.journeyData.addTemporaryAbsence!.freeFormPattern,
-      weeklyPattern: req.journeyData.addTemporaryAbsence!.weeklyPattern,
     })
   }
 
@@ -38,10 +36,30 @@ export class CheckPatternController {
 
   private getAbsencesFromPeriod = (journey: AddTemporaryAbsenceJourney, fromDate: string, toDate: string) => {
     if (journey.patternType === 'FREEFORM') {
-      return journey.freeFormPattern!.filter(({ startDate }) => startDate >= fromDate && startDate <= toDate)
+      return journey.freeFormPattern!.filter(
+        ({ startDate, returnDate }) => startDate >= fromDate && returnDate <= toDate,
+      )
     }
 
-    // TODO: add support for other pattern types
+    if (journey.patternType === 'WEEKLY') {
+      const startDoW = new Date(fromDate).getDay() - 1
+      return journey
+        .weeklyPattern!.map(({ day, overnight, startTime, returnTime }) => {
+          const dayDiff = (day - startDoW + 7) % 7
+          const startDate = addDays(new Date(fromDate), dayDiff)
+          const returnDate = overnight ? addDays(startDate, 1) : startDate
+          return {
+            startDate: format(startDate, 'yyyy-MM-dd'),
+            returnDate: format(returnDate, 'yyyy-MM-dd'),
+            startTime,
+            returnTime,
+          }
+        })
+        .filter(({ startDate, returnDate }) => startDate >= fromDate && returnDate <= toDate)
+        .sort((a, b) => a.startDate.localeCompare(b.startDate))
+    }
+
+    // TODO: add support for rotating pattern
     return undefined
   }
 }

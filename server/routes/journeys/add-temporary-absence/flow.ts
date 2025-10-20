@@ -229,6 +229,11 @@ export class AddTapFlowControl {
     }
 
     // Normal flow
+    if (data.repeat !== undefined) {
+      journey.repeat = data.repeat
+      return data.repeat ? 'start-end-dates' : 'start-date'
+    }
+
     if (data.fromDate && data.toDate) {
       if (journey.fromDate !== data.fromDate || journey.toDate !== data.toDate) delete journey.isCheckPattern
 

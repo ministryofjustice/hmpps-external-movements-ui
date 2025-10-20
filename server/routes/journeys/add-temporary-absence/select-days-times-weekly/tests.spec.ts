@@ -59,7 +59,7 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
     await testPage.timeEntry('tuesday', 'return', 'Hour').fill('17')
     await testPage.timeEntry('tuesday', 'return', 'Minute').fill('30')
     await testPage.clickContinue()
-    expect(page.url()).toMatch(/\/add-temporary-absence\/check-absences-weekly/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/check-absences/)
 
     // verify input values are persisted
     await page.goBack()
