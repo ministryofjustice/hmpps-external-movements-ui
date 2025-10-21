@@ -20,7 +20,12 @@ export class CheckPatternController {
       return {
         startDate,
         endDate,
-        absences: this.getAbsencesFromPeriod(req.journeyData.addTemporaryAbsence!, startDate, endDate),
+        absences: this.getAbsencesFromPeriod(
+          req.journeyData.addTemporaryAbsence!,
+          startDate,
+          endDate,
+          idx === numberOfWeeks - 1,
+        ),
       }
     })
 
@@ -34,10 +39,15 @@ export class CheckPatternController {
   POST = (req: Request, res: Response) =>
     res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'location-type')
 
-  private getAbsencesFromPeriod = (journey: AddTemporaryAbsenceJourney, fromDate: string, toDate: string) => {
+  private getAbsencesFromPeriod = (
+    journey: AddTemporaryAbsenceJourney,
+    fromDate: string,
+    toDate: string,
+    isFinalWeek: boolean,
+  ) => {
     if (journey.patternType === 'FREEFORM') {
       return journey.freeFormPattern!.filter(
-        ({ startDate, returnDate }) => startDate >= fromDate && returnDate <= toDate,
+        ({ startDate, returnDate }) => startDate >= fromDate && (isFinalWeek ? returnDate : startDate) <= toDate,
       )
     }
 
@@ -55,7 +65,9 @@ export class CheckPatternController {
             returnTime,
           }
         })
-        .filter(({ startDate, returnDate }) => startDate >= fromDate && returnDate <= toDate)
+        .filter(
+          ({ startDate, returnDate }) => startDate >= fromDate && (isFinalWeek ? returnDate : startDate) <= toDate,
+        )
         .sort((a, b) => a.startDate.localeCompare(b.startDate))
     }
 
