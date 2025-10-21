@@ -46,10 +46,7 @@ const stubComponents = () => {
               navEnabled: true,
             },
             {
-              id: 'allocate-key-workers',
-            },
-            {
-              id: 'allocate-personal-officers',
+              id: 'external-movements',
             },
           ],
         },

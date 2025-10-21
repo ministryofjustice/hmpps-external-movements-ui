@@ -55,6 +55,19 @@ export declare global {
       breadcrumbs: Breadcrumbs
       historyBackUrl?: string
       history?: string[]
+      feComponents?: {
+        sharedData?: {
+          activeCaseLoad: CaseLoad
+          caseLoads: CaseLoad[]
+          services: {
+            id: string
+            heading: string
+            description: string
+            href: string
+            navEnabled: boolean
+          }[]
+        }
+      }
       auditEvent: {
         who: string
         correlationId: string
