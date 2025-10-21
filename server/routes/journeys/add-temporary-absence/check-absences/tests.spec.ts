@@ -25,7 +25,7 @@ test.describe('/add-temporary-absence/check-absences', () => {
     await signIn(page)
   })
 
-  // TODO: add tests for weekly pattern and repeating pattern
+  // TODO: add tests for rotating pattern
   test('should show freeform absences', async ({ page }) => {
     const journeyId = uuidV4()
     await page.goto(`/${journeyId}/add-temporary-absence/start/${prisonNumber}`)
@@ -65,5 +65,41 @@ test.describe('/add-temporary-absence/check-absences', () => {
       /select-days-and-times\/3/,
     )
     await testPage.verifyAnswer(/Tuesday, 16 January to(.+)?Wednesday, 17 January/, /Release: 23:00(.+)?Return: 04:30/)
+  })
+
+  test('should show weekly absences', async ({ page }) => {
+    const journeyId = uuidV4()
+    await page.goto(`/${journeyId}/add-temporary-absence/start/${prisonNumber}`)
+    await injectJourneyData(page, journeyId, {
+      addTemporaryAbsence: {
+        absenceType: {
+          code: 'PP',
+          description: 'Police production',
+        },
+        repeat: true,
+        fromDate: '2001-01-01',
+        toDate: '2001-01-17',
+        patternType: 'WEEKLY',
+        weeklyPattern: [
+          { day: 0, overnight: false, startTime: '10:00', returnTime: '17:30' },
+          { day: 2, overnight: true, startTime: '23:00', returnTime: '04:30' },
+        ],
+      },
+    })
+
+    await page.goto(`/${journeyId}/add-temporary-absence/check-absences`)
+
+    // verify page content
+    const testPage = await new CheckPatternPage(page).verifyContent()
+
+    await testPage.verifyAnswer('Monday, 1 January', /Release: 10:00(.+)?Return: 17:30/)
+    await testPage.verifyAnswer('Monday, 8 January', /Release: 10:00(.+)?Return: 17:30/)
+    await testPage.verifyAnswer('Monday, 15 January', /Release: 10:00(.+)?Return: 17:30/)
+
+    await testPage.verifyAnswer(/Wednesday, 3 January to(.+)?Thursday, 4 January/, /Release: 23:00(.+)?Return: 04:30/)
+    await testPage.verifyAnswer(/Wednesday, 10 January to(.+)?Thursday, 11 January/, /Release: 23:00(.+)?Return: 04:30/)
+    expect(await page.getByText(/Wednesday, 17 January to(.+)?Thursday, 18 January/)).toHaveCount(0)
+
+    await testPage.verifyLink('Go back to change this schedule', /select-days-times-weekly/)
   })
 })

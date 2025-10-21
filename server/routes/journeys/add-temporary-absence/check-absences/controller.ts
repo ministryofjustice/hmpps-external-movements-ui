@@ -20,7 +20,12 @@ export class CheckPatternController {
       return {
         startDate,
         endDate,
-        absences: this.getAbsencesFromPeriod(req.journeyData.addTemporaryAbsence!, startDate, endDate),
+        absences: this.getAbsencesFromPeriod(
+          req.journeyData.addTemporaryAbsence!,
+          startDate,
+          endDate,
+          idx === numberOfWeeks - 1,
+        ),
       }
     })
 
@@ -28,20 +33,45 @@ export class CheckPatternController {
       backUrl: AddTapFlowControl.getBackUrl(req, 'repeating-pattern'),
       patternType: req.journeyData.addTemporaryAbsence!.patternType,
       periods,
-      freeFormPattern: req.journeyData.addTemporaryAbsence!.freeFormPattern,
-      weeklyPattern: req.journeyData.addTemporaryAbsence!.weeklyPattern,
     })
   }
 
   POST = (req: Request, res: Response) =>
     res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'location-type')
 
-  private getAbsencesFromPeriod = (journey: AddTemporaryAbsenceJourney, fromDate: string, toDate: string) => {
+  private getAbsencesFromPeriod = (
+    journey: AddTemporaryAbsenceJourney,
+    fromDate: string,
+    toDate: string,
+    isFinalWeek: boolean,
+  ) => {
     if (journey.patternType === 'FREEFORM') {
-      return journey.freeFormPattern!.filter(({ startDate }) => startDate >= fromDate && startDate <= toDate)
+      return journey.freeFormPattern!.filter(
+        ({ startDate, returnDate }) => startDate >= fromDate && (isFinalWeek ? returnDate : startDate) <= toDate,
+      )
     }
 
-    // TODO: add support for other pattern types
+    if (journey.patternType === 'WEEKLY') {
+      const startDoW = new Date(fromDate).getDay() - 1
+      return journey
+        .weeklyPattern!.map(({ day, overnight, startTime, returnTime }) => {
+          const dayDiff = (day - startDoW + 7) % 7
+          const startDate = addDays(new Date(fromDate), dayDiff)
+          const returnDate = overnight ? addDays(startDate, 1) : startDate
+          return {
+            startDate: format(startDate, 'yyyy-MM-dd'),
+            returnDate: format(returnDate, 'yyyy-MM-dd'),
+            startTime,
+            returnTime,
+          }
+        })
+        .filter(
+          ({ startDate, returnDate }) => startDate >= fromDate && (isFinalWeek ? returnDate : startDate) <= toDate,
+        )
+        .sort((a, b) => a.startDate.localeCompare(b.startDate))
+    }
+
+    // TODO: add support for rotating pattern
     return undefined
   }
 }

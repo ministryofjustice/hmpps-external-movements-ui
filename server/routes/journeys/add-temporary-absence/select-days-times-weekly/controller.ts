@@ -38,6 +38,6 @@ export class SelectDaysTimesWeeklyController {
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     req.journeyData.addTemporaryAbsence!.weeklyPattern = req.body
-    res.redirect('check-absences-weekly')
+    res.redirect('check-absences')
   }
 }

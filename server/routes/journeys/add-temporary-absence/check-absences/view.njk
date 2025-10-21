@@ -10,7 +10,10 @@
 
     {% if patternType === 'FREEFORM' %}
       {% include './partials/freeform.njk' %}
+    {% elseif patternType === 'WEEKLY' %}
+      {% include './partials/weekly.njk' %}
     {% endif %}
+
 
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
