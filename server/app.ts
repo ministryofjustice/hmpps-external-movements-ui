@@ -83,7 +83,7 @@ export default function createApp(services: Services): express.Application {
     }),
   )
 
-  app.use(permissionsMiddleware)
+  app.get(/(.*)/, permissionsMiddleware)
   app.use(routes(services))
 
   if (config.sentry.dsn) Sentry.setupExpressErrorHandler(app)
