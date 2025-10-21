@@ -8,7 +8,7 @@ export class SelectDaysTimesWeeklyPage extends BaseTestPage {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/select-days-times-weekly/,
       title: 'Enter absence dates and times - Add a temporary absence - DPS',
-      caption: 'Add a temporary absence',
+      caption: 'Create a Temporary Absence',
       heading: 'Enter the days and times for these absences',
       backUrl: /repeating-pattern/,
     })

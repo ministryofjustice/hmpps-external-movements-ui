@@ -29,6 +29,8 @@ import { ConfirmLocationRoutes } from './confirm-location/routes'
 import { EnterLocationRoutes } from './enter-location/routes'
 import { SelectDaysTimesWeeklyRoutes } from './select-days-times-weekly/routes'
 
+import { EnterRotatingPatternRoutes } from './enter-rotating-pattern/routes'
+
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
 
@@ -79,6 +81,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/check-absences', CheckPatternRoutes())
   router.use('/select-days-times-weekly', SelectDaysTimesWeeklyRoutes())
 
+  router.use('/enter-rotating-pattern', EnterRotatingPatternRoutes())
   return router
 }
 
