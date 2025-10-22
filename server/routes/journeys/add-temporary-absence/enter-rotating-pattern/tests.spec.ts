@@ -27,7 +27,12 @@ test.describe('/add-temporary-absence/enter-rotating-pattern', () => {
 
   const startJourney = async (page: Page, journeyId: string) => {
     await page.goto(`/${journeyId}/add-temporary-absence/start/${prisonNumber}`)
-    await injectJourneyData(page, journeyId, {})
+    await injectJourneyData(page, journeyId, {
+      addTemporaryAbsence: {
+        fromDate: '2025-12-25',
+        toDate: '2025-12-31',
+      },
+    })
 
     await page.goto(`/${journeyId}/add-temporary-absence/enter-rotating-pattern`)
   }
@@ -38,6 +43,9 @@ test.describe('/add-temporary-absence/enter-rotating-pattern', () => {
 
     // verify page content
     const testPage = await new EnterRotatingPatternPage(page).verifyContent()
+    await expect(testPage.page.getByText('This pattern will start on')).toContainText(
+      '25 December 2025 and end on 31 December 2025',
+    )
 
     await expect(testPage.button('Continue')).toBeVisible()
 
@@ -46,7 +54,8 @@ test.describe('/add-temporary-absence/enter-rotating-pattern', () => {
     await validateInvalidNumberError(testPage)
     await validateSingleRowError(testPage)
 
-    await testPage.numberInput(0).fill('2')
+    await testPage.numberInput(0).fill('1')
+    await testPage.patternType(0).selectOption('Scheduled days')
     await testPage.numberInput(1).fill('2')
     await testPage.patternType(1).selectOption('Rest days')
 
@@ -57,6 +66,11 @@ test.describe('/add-temporary-absence/enter-rotating-pattern', () => {
     // verify input values are persisted
     await page.goBack()
     await page.reload()
+
+    await expect(testPage.numberInput(0)).toHaveValue('1')
+    await expect(testPage.patternType(0)).toHaveValue('Scheduled days')
+    await expect(testPage.numberInput(1)).toHaveValue('2')
+    await expect(testPage.patternType(1)).toHaveValue('Rest days')
   })
 })
 
