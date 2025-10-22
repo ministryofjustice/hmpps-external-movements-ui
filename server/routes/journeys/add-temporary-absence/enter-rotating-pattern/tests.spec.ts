@@ -61,7 +61,7 @@ test.describe('/add-temporary-absence/enter-rotating-pattern', () => {
 
     // verify next page routing
     await testPage.clickContinue()
-    expect(page.url()).toMatch(/\/add-temporary-absence\/check-absences/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/select-same-times/)
 
     // verify input values are persisted
     await page.goBack()

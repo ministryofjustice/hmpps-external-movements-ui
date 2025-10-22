@@ -23,6 +23,6 @@ export class EnterRotatingPatternController {
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     req.journeyData.addTemporaryAbsence!.rotatingPattern = req.body.items
-    res.redirect('check-absences')
+    res.redirect('select-same-times')
   }
 }
