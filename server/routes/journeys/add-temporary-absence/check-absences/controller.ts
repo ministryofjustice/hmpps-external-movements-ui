@@ -8,7 +8,8 @@ export class CheckPatternController {
     req.journeyData.addTemporaryAbsence!.isCheckPattern = true
 
     const numberOfWeeks = Math.ceil(
-      differenceInDays(req.journeyData.addTemporaryAbsence!.toDate!, req.journeyData.addTemporaryAbsence!.fromDate!) /
+      (differenceInDays(req.journeyData.addTemporaryAbsence!.toDate!, req.journeyData.addTemporaryAbsence!.fromDate!) +
+        2) /
         7,
     )
 
