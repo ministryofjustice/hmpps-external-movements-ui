@@ -9,7 +9,8 @@ export const schemaFactory = (osPlacesAddressService: CustomOsPlacesAddressServi
     'address-autosuggest-input': z.string({ message: ERROR_MSG }).min(1, { message: ERROR_MSG }),
     uprn: z.string().optional(),
   }).transform(async val => {
-    const address = val.uprn ? await osPlacesAddressService.getAddressByUprn(val.uprn) : null
+    const address =
+      val.uprn && val.uprn !== 'undefined' ? await osPlacesAddressService.getAddressByUprn(val.uprn) : null
 
     return {
       ...val,

@@ -43,7 +43,12 @@ export default class CustomOsPlacesAddressService {
         : 1
 
     // maximum number of properties in a postcode is 100
-    return (bestMatchResults.length ? bestMatchResults : rawResults).sort(buildingNumberSort).slice(0, 100)
+    return [
+      {
+        addressString: this.sanitiseUkPostcode(convertToTitleCase(searchQuery)),
+      },
+      ...(bestMatchResults.length ? bestMatchResults : rawResults).sort(buildingNumberSort).slice(0, 100),
+    ]
   }
 
   public async getAddressByUprn(uprn: string): Promise<OsAddress | null> {
