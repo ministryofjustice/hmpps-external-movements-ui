@@ -18,7 +18,7 @@ export class EnterRotatingPatternController {
         this.getDefaultItems(),
       startDate: req.journeyData.addTemporaryAbsence!.fromDate,
       endDate: req.journeyData.addTemporaryAbsence!.toDate,
-      backUrl: 'repeating-pattern',
+      backUrl: req.journeyData.isCheckAnswers ? 'check-answers' : 'repeating-pattern',
     })
   }
 

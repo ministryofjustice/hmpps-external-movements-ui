@@ -102,8 +102,10 @@
     </div>
 
     {{ govukButton({
-            text: "Continue",
-            preventDoubleClick: true
+        name: "save",
+        id: "save",
+        text: "Continue",
+        preventDoubleClick: true
     }) }}
   </form>
 {% endblock %}
