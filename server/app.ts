@@ -53,12 +53,8 @@ export default function createApp(services: Services): express.Application {
   app.get('/prisoner-image/:prisonNumber', new PrisonerImageRoutes(services.prisonApiService).GET)
 
   app.get('/api/addresses/find/:query', async (req: Request<{ query: string }>, res: Response) => {
-    try {
-      const results = await services.osPlacesAddressService.getAddressesMatchingQuery(req.params.query)
-      res.json({ status: 200, results })
-    } catch {
-      res.json({ status: 200, results: [] })
-    }
+    const results = await services.osPlacesAddressService.getAddressesMatchingQuery(req.params.query)
+    res.json({ status: 200, results })
   })
 
   app.get(

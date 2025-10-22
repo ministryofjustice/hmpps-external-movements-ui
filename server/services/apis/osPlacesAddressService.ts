@@ -19,14 +19,21 @@ export default class CustomOsPlacesAddressService {
   ) {}
 
   public async getAddressesMatchingQuery(searchQuery: string, sanitisePostcode: boolean = true): Promise<OsAddress[]> {
-    const response = await this.osPlacesApiClient.getAddressesByFreeTextQuery(
-      sanitisePostcode ? this.sanitiseUkPostcode(searchQuery) : searchQuery,
-    )
+    let rawResults: OsAddress[] = []
+    try {
+      const response = await this.osPlacesApiClient.getAddressesByFreeTextQuery(
+        sanitisePostcode ? this.sanitiseUkPostcode(searchQuery) : searchQuery,
+      )
 
-    const rawResults = this.handleResponse(response)
+      rawResults = this.handleResponse(response)
+    } catch (e) {
+      this.logger.warn('OS Places API error', e)
+    }
+
+    const exactMatchResults = this.getExactMatches(searchQuery, rawResults)
 
     const bestMatchResults =
-      this.getExactMatches(searchQuery, rawResults) ??
+      exactMatchResults ??
       new Fuse(rawResults, {
         shouldSort: true,
         threshold: 0.2,
@@ -41,6 +48,10 @@ export default class CustomOsPlacesAddressService {
       a?.addressString && b?.addressString && queryIsAPostCode
         ? a.addressString.localeCompare(b.addressString, undefined, { numeric: true, sensitivity: 'base' })
         : 1
+
+    if (exactMatchResults) {
+      return exactMatchResults.sort(buildingNumberSort)
+    }
 
     // maximum number of properties in a postcode is 100
     return [
