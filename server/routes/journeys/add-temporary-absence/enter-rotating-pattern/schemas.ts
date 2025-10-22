@@ -3,6 +3,8 @@ import { createSchema } from '../../../../middleware/validation/validationMiddle
 
 export const schema = createSchema({
   add: z.any().optional(),
+  save: z.any().optional(),
+  remove: z.any().optional(),
   items: z.array(
     z.object({
       count: z.string().optional(),
