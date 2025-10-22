@@ -8,9 +8,7 @@ export const schema = createSchema({
   items: z.array(
     z.object({
       count: z.string().optional(),
-      type: z.enum(['Scheduled days', 'Rest days', 'Scheduled nights'], {
-        message: 'Select the type of working pattern',
-      }),
+      type: z.string().optional(),
     }),
   ),
 }).transform((val, ctx) => {
@@ -39,9 +37,17 @@ export const schema = createSchema({
           path: ['items', i, 'count'],
         })
       }
+
+      if (!['Scheduled days', 'Rest days', 'Scheduled nights'].includes(item.type!)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Select the type of working pattern',
+          path: ['items', i, 'type'],
+        })
+      }
       return {
         count: Number(item.count),
-        type: item.type,
+        type: item.type!,
       }
     }),
   }

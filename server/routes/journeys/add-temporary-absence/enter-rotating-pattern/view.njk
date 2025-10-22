@@ -40,7 +40,8 @@
                 }
               }) }}
         </div>
-        {{ govukSelect({
+        <div class="govuk-grid-column-one-half">
+          {{ govukSelect({
               id: "items[" + loop.index0 + "][type]",
               name: "items[" + loop.index0 + "][type]",
               value: item.type,
@@ -50,6 +51,10 @@
               },
               errorMessage: validationErrors | findError("items[" + loop.index0 + "][type]"),
               items: [
+                {
+                  value: "",
+                  text: "Select the type of working pattern"
+                },
                 {
                   value: "Scheduled days",
                   text: "Scheduled days"
@@ -68,6 +73,7 @@
                   "data-name": "items[%index%][type]"
                 }
             }) }}
+        </div>
       </div>
 
       {% if items.length > 1 %}
