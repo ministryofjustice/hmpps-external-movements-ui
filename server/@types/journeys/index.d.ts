@@ -81,9 +81,29 @@ export type AddTemporaryAbsenceJourney = Partial<{
     returnTime: string
     locationId?: string
   }[]
+  rotatingPatternSubJourney: {
+    intervals: {
+      type: string
+      count: number
+      items?: {
+        startTime: string
+        returnTime: string
+        locationId?: string
+      }[]
+    }[]
+    isSameTime?: boolean
+  }
   rotatingPattern: {
-    number: number
-    type: string
-  }[]
+    intervals: {
+      type: string
+      count: number
+      items: {
+        startTime: string
+        returnTime: string
+        locationId?: string
+      }[]
+    }[]
+    isSameTime: boolean
+  }
   isCheckPattern: boolean
 }>

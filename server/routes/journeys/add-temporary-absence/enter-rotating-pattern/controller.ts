@@ -4,8 +4,8 @@ import { SchemaType } from './schemas'
 export class EnterRotatingPatternController {
   private getDefaultItems = () => {
     return [
-      { number: '', type: 'Scheduled days' },
-      { number: '', type: 'Rest days' },
+      { count: '', type: 'Scheduled days' },
+      { count: '', type: 'Rest days' },
     ]
   }
 
@@ -13,7 +13,8 @@ export class EnterRotatingPatternController {
     res.render('add-temporary-absence/enter-rotating-pattern/view', {
       items:
         res.locals['formResponses']?.['items'] ??
-        req.journeyData.addTemporaryAbsence!.rotatingPattern ??
+        req.journeyData.addTemporaryAbsence!.rotatingPatternSubJourney?.intervals ??
+        req.journeyData.addTemporaryAbsence!.rotatingPattern?.intervals ??
         this.getDefaultItems(),
       startDate: req.journeyData.addTemporaryAbsence!.fromDate,
       endDate: req.journeyData.addTemporaryAbsence!.toDate,
@@ -22,7 +23,12 @@ export class EnterRotatingPatternController {
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    req.journeyData.addTemporaryAbsence!.rotatingPattern = req.body.items
+    if (req.journeyData.addTemporaryAbsence!.rotatingPatternSubJourney) {
+      req.journeyData.addTemporaryAbsence!.rotatingPatternSubJourney.intervals = req.body.items
+    } else {
+      req.journeyData.addTemporaryAbsence!.rotatingPatternSubJourney = { intervals: req.body.items }
+    }
+
     res.redirect('select-same-times')
   }
 }

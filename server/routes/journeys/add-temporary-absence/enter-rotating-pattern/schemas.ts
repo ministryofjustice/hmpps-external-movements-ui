@@ -5,7 +5,7 @@ export const schema = createSchema({
   add: z.any().optional(),
   items: z.array(
     z.object({
-      number: z.string().optional(),
+      count: z.string().optional(),
       type: z.enum(['Scheduled days', 'Rest days', 'Scheduled nights'], {
         message: 'Select the type of working pattern',
       }),
@@ -29,16 +29,16 @@ export const schema = createSchema({
   return {
     ...val,
     items: val.items.map((item, i) => {
-      const number = Number(item.number)
+      const number = Number(item.count)
       if (!number || number < 1) {
         ctx.addIssue({
           code: 'custom',
-          message: `Enter a ${(item.number?.length || 0) > 0 ? 'valid ' : ''}number`,
-          path: ['items', i, 'number'],
+          message: `Enter a ${(item.count?.length || 0) > 0 ? 'valid ' : ''}number`,
+          path: ['items', i, 'count'],
         })
       }
       return {
-        number,
+        count: Number(item.count),
         type: item.type,
       }
     }),
