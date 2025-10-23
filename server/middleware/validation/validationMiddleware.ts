@@ -25,6 +25,13 @@ export const findError = (errors: fieldErrors, fieldName: string) => {
   }
 }
 
+export const findErrorMessage = (errors: fieldErrors, fieldName: string) => {
+  if (!errors?.[fieldName]) {
+    return null
+  }
+  return errors[fieldName]?.[0]
+}
+
 export const customErrorOrderBuilder = (errorSummaryList: { href: string }[], order: string[]) =>
   order.map(key => errorSummaryList.find(error => error.href === `#${key}`)).filter(Boolean)
 

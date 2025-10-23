@@ -255,7 +255,7 @@ export class AddTapFlowControl {
         case 'WEEKLY':
           return 'select-days-times-weekly'
         case 'ROTATING':
-          return 'select-first-date-rotating'
+          return 'enter-rotating-pattern'
         default:
           throw new Error(`Unknown pattern type ${data.patternType}`)
       }
