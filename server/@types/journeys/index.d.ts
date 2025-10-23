@@ -64,7 +64,6 @@ export type AddTemporaryAbsenceJourney = Partial<{
   transport: components['schemas']['CodedDescription']
   notes: string | null
   requireApproval: boolean
-
   fromDate: string
   toDate: string
   patternType: 'FREEFORM' | 'WEEKLY' | 'ROTATING'
@@ -82,5 +81,29 @@ export type AddTemporaryAbsenceJourney = Partial<{
     returnTime: string
     locationId?: string
   }[]
+  rotatingPatternSubJourney: {
+    intervals: {
+      type: string
+      count: number
+      items?: {
+        startTime: string
+        returnTime: string
+        locationId?: string
+      }[]
+    }[]
+    isSameTime?: boolean
+  }
+  rotatingPattern: {
+    intervals: {
+      type: string
+      count: number
+      items: {
+        startTime: string
+        returnTime: string
+        locationId?: string
+      }[]
+    }[]
+    isSameTime: boolean
+  }
   isCheckPattern: boolean
 }>

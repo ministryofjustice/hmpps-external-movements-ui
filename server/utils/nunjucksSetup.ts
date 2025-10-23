@@ -36,6 +36,7 @@ import {
   buildErrorSummaryList,
   customErrorOrderBuilder,
   findError,
+  findErrorMessage,
 } from '../middleware/validation/validationMiddleware'
 import { historyExtension } from '../middleware/history/historyExtension'
 
@@ -98,6 +99,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('parseDatePickerMaxDate', parseDatePickerMaxDate)
   njkEnv.addFilter('addDaysMonths', addDaysMonths)
   njkEnv.addFilter('findError', findError)
+  njkEnv.addFilter('findErrorMessage', findErrorMessage)
   njkEnv.addFilter('buildErrorSummaryList', buildErrorSummaryList)
   njkEnv.addFilter('customErrorOrderBuilder', customErrorOrderBuilder)
   njkEnv.addFilter('addSelectValue', addSelectValue)

@@ -142,21 +142,21 @@
   </div>
 {% endblock %}
 
-  {% block pageScripts %}
-    <script nonce="{{ cspNonce }}">
-      const setupAutoFillReturnDate = () => document.querySelectorAll('.moj-js-datepicker-input').forEach(el => {
-        const index = el.name.match(/absences\[(.+?)]\[startDate]/)?.[1]
-        if (index) {
-          const returnDateInput = document.querySelector(`input[name="absences[${index}][returnDate]"]`)
-          el.addEventListener('change', evt => {
-            if (!returnDateInput.value) returnDateInput.value = evt.target.value
-          })
-        }
-      })
-
-      window.onload = function () {
-        setupAutoFillReturnDate()
-        document.querySelector(".add-another-form").addEventListener('components-init', setupAutoFillReturnDate)
+{% block pageScripts %}
+  <script nonce="{{ cspNonce }}">
+    const setupAutoFillReturnDate = () => document.querySelectorAll('.moj-js-datepicker-input').forEach(el => {
+      const index = el.name.match(/absences\[(.+?)]\[startDate]/)?.[1]
+      if (index) {
+        const returnDateInput = document.querySelector(`input[name="absences[${index}][returnDate]"]`)
+        el.addEventListener('change', evt => {
+          if (!returnDateInput.value) returnDateInput.value = evt.target.value
+        })
       }
-    </script>
-  {% endblock %}
+    })
+
+    window.onload = function () {
+      setupAutoFillReturnDate()
+      document.querySelector(".add-another-form").addEventListener('components-init', setupAutoFillReturnDate)
+    }
+  </script>
+{% endblock %}
