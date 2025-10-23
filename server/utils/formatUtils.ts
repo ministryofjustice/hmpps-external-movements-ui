@@ -82,12 +82,15 @@ export const addressToLines = ({
 
 const STATUS_PRIORITY_MAP: { [key: string]: number } = {
   PENDING: 0,
-  APPROVED: 1,
-  DENIED: 2,
-  WITHDRAWN: 3,
-  SCHEDULED: 4,
-  CANCELLED: 5,
-  COMPLETED: 6,
+  APPROVED: 10,
+  IN_PROGRESS: 15,
+  DENIED: 20,
+  OVERDUE: 25,
+  EXPIRED: 27,
+  WITHDRAWN: 30,
+  SCHEDULED: 40,
+  CANCELLED: 50,
+  COMPLETED: 60,
 }
 
 export const statusPriority = (statusCode: string) => STATUS_PRIORITY_MAP[statusCode] ?? 999

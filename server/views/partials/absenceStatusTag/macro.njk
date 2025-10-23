@@ -1,4 +1,27 @@
 {% macro absenceStatusTag(absence) %}
-  {% set status = absence | occurrenceStatus %}
-  <strong class='govuk-tag{{ ' govuk-tag--grey' if status.code !== 'SCHEDULED' else '' }}'>{{ status.description }}</strong>
+  {% set status = absence.status %}
+  {% switch status.code %}
+  {% case 'PENDING' %}
+    {% set colour = " govuk-tag--grey" %}
+  {% case 'SCHEDULED' %}
+    {% set colour = " govuk-tag--green" %}
+  {% case 'IN_PROGRESS' %}
+    {% set colour = " govuk-tag--light-blue" %}
+  {% case 'COMPLETED' %}
+    {% set colour = " govuk-tag--blue" %}
+  {% case 'OVERDUE' %}
+    {% set colour = " govuk-tag--yellow" %}
+  {% case 'EXPIRED' %}
+    {% set colour = " govuk-tag--purple" %}
+  {% case 'CANCELLED' %}
+    {% set colour = " govuk-tag--orange" %}
+  {% case 'DENIED' %}
+    {% set colour = " govuk-tag--red" %}
+  {% case 'WITHDRAWN' %}
+    {% set colour = " govuk-tag--pink" %}
+  {% default %}
+    {% set colour = '' %}
+  {% endswitch %}
+
+  <strong class='govuk-tag{{ colour }}'>{{ status.description }}</strong>
 {% endmacro %}

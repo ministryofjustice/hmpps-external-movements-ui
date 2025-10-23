@@ -407,6 +407,7 @@ export interface components {
       /** Format: uuid */
       id: string
       authorisation: components['schemas']['Authorisation']
+      status: components['schemas']['CodedDescription']
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
@@ -423,6 +424,7 @@ export interface components {
     Occurrence: {
       /** Format: uuid */
       id: string
+      status: components['schemas']['CodedDescription']
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
@@ -431,7 +433,6 @@ export interface components {
       accompaniedBy: components['schemas']['CodedDescription']
       transport: components['schemas']['CodedDescription']
       notes?: string
-      isCancelled: boolean
     }
     TapAuthorisation: {
       /** Format: uuid */
@@ -482,6 +483,7 @@ export interface components {
       /** Format: uuid */
       id: string
       authorisation: components['schemas']['TapOccurrenceAuthorisation']
+      status: components['schemas']['CodedDescription']
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */

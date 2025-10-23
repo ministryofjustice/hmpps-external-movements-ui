@@ -4,16 +4,17 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
 {% from "partials/hiddenInputs/macro.njk" import hiddenInputs %}
+{% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
 
 {% set fullWidth = true %}
-{% set pageTitle = 'Temporary absence authorisation details' %}
+{% set pageTitle = 'Temporary absence details' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <div class="govuk-grid-row govuk-!-margin-bottom-2">
       <div class="govuk-grid-column-two-thirds">
         <span class="govuk-caption-l">Manage Temporary Absence</span>
-        <h1 class="govuk-heading-l">Temporary Absence authorisation details</h1>
+        <h1 class="govuk-heading-l">View {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence</h1>
       </div>
       <div class="govuk-summary-list govuk-summary-list__actions">
         {% if result.status.code === 'PENDING' %}
@@ -97,7 +98,7 @@
             },
             {
               key: { text: "Approval status" },
-              value: { text: result.status.description }
+              value: { html: absenceStatusTag(result) }
             }
           ] | removeNullish
         }) }}
