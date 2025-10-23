@@ -2,6 +2,8 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
+{% from "partials/hiddenInputs/macro.njk" import hiddenInputs %}
 
 {% set fullWidth = true %}
 {% set pageTitle = 'Temporary absence authorisation details' %}
@@ -85,6 +87,15 @@
               }] }
             },
             {
+              key: { text: "Comments" },
+              value: { text: result.notes or "Not provided" },
+              actions: { items: [{
+                href: "#",
+                text: "Change" if result.notes else "Add",
+                visuallyHiddenText: "comments"
+              }] }
+            },
+            {
               key: { text: "Approval status" },
               value: { text: result.status.description }
             }
@@ -103,10 +114,35 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-m">Absence occurrences</h2>
+        <h2 class="govuk-heading-m">View absence occurrences</h2>
       </div>
       <div class="govuk-summary-list govuk-summary-list__actions">
         <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}/occurrences">Add occurrence</a>
+      </div>
+    </div>
+
+    <div class="govuk-!-padding-0 govuk-!-margin-bottom-7">
+      <div class="moj-search govuk-!-width-two-thirds">
+        <form method="GET">
+          {{ hiddenInputs(query | getQueryEntries(['history'])) }}
+          {{ mojDatePicker({
+            id: "date",
+            name: "date",
+            label: {
+              text: 'Date filter (For example, 17/5/2024)'
+            },
+            value: date,
+            classes: 'hmpps-datepicker--fixed-width moj-search__input'
+          }) }}
+
+          {{ govukButton({
+            classes: "moj-search__button",
+            text: "Apply",
+            preventDoubleClick: true
+          }) }}
+
+          <a class="govuk-link govuk-link--no-visited-state govuk-body no-label-form-clear-link govuk-!-margin-left-5" href="?clear=true">Clear</a>
+        </form>
       </div>
     </div>
 
@@ -135,7 +171,7 @@
         },
         {
           classes: 'govuk-link govuk-link--no-visited-state',
-          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">View<span class="govuk-visually-hidden"> absence occurrence on ' + occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') + '</span></a>',
+          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">Make changes to this occurrence<span class="govuk-visually-hidden"> on ' + occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') + '</span></a>',
           format: "numeric"
         }
       ]), rows) %}
@@ -149,11 +185,11 @@
       classes: 'table-vertical-align-middle govuk-!-margin-top-4',
       head: [
         {
-          text: "Released at",
+          text: "Release date and time",
           attributes: { "aria-sort": "none" }
         },
         {
-          text: "Return by",
+          text: "Return date and time",
           attributes: { "aria-sort": "none" }
         },
         {

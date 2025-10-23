@@ -19,6 +19,7 @@ import {
   formatRefDataName,
   lastNameCommaFirstName,
   occurrenceStatus,
+  possessiveComma,
   statusPriority,
 } from './formatUtils'
 import {
@@ -90,6 +91,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
   njkEnv.addFilter('firstNameSpaceLastName', firstNameSpaceLastName)
   njkEnv.addFilter('lastNameCommaFirstName', lastNameCommaFirstName)
+  njkEnv.addFilter('possessiveComma', possessiveComma)
   njkEnv.addFilter('formatRefDataName', formatRefDataName)
   njkEnv.addFilter('getQueryEntries', getQueryEntries)
   njkEnv.addFilter('formatDate', formatDate)
