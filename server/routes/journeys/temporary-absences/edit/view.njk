@@ -41,7 +41,7 @@
               key: { text: "Release date and time" },
               value: { text: result.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') },
               actions: { items: [{
-              href: "#",
+              href: "edit/start-date",
               text: "Change",
               visuallyHiddenText: "release time"
             }] }
@@ -50,7 +50,7 @@
               key: { text: "Return date and time" },
               value: { text: result.returnBy | formatDate('cccc, d MMMM yyyy HH:mm') },
               actions: { items: [{
-              href: "#",
+              href: "edit/end-date",
               text: "Change",
               visuallyHiddenText: "return time"
             }] }
@@ -59,7 +59,7 @@
               key: { text: "Transport" },
               value: { text: result.transport.description },
               actions: { items: [{
-              href: "#",
+              href: "edit/transport",
               text: "Change",
               visuallyHiddenText: "transport type"
             }] }
@@ -68,7 +68,7 @@
               key: { text: "Address" },
               value: { text: result.location.description },
               actions: { items: [{
-              href: "#",
+              href: "edit/search-location",
               text: "Change",
               visuallyHiddenText: "location"
             }] }
@@ -77,7 +77,7 @@
               key: { text: "Comments" },
               value: { text: result.notes or "Not provided" },
               actions: { items: [{
-              href: "#",
+              href: "edit/comments",
               text: "Change" if result.notes else "Add",
               visuallyHiddenText: "comments"
             }] }

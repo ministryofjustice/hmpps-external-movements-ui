@@ -26,6 +26,7 @@ export type JourneyData = {
   instanceUnixEpoch: number
   prisonerDetails?: PrisonerDetails
   addTemporaryAbsence?: AddTemporaryAbsenceJourney
+  updateTapOccurrence?: UpdateTapOccurrenceJourney
   isCheckAnswers?: boolean
   journeyCompleted?: boolean
   b64History?: string | undefined
@@ -106,4 +107,18 @@ export type AddTemporaryAbsenceJourney = Partial<{
     isSameTime: boolean
   }
   isCheckPattern: boolean
+}>
+
+export type UpdateTapOccurrenceJourney = {
+  occurrence: components['schemas']['TapOccurrence']
+  authorisation: components['schemas']['TapAuthorisation']
+} & Partial<{
+  changeType: 'start-date' | 'end-date' | 'transport' | 'location' | 'notes'
+  startDate: string
+  startTime: string
+  returnDate: string
+  returnTime: string
+  location: Address
+  transport: components['schemas']['CodedDescription']
+  notes: string
 }>

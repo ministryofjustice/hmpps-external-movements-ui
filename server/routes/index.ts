@@ -10,6 +10,7 @@ import { JourneyRoutes } from './journeys/routes'
 import populateValidationErrors from '../middleware/validation/populateValidationErrors'
 import { BrowseTapAuthorisationsRoutes } from './temporary-absence-authorisations/routes'
 import { BrowseTapOccurrencesRoutes } from './temporary-absences/routes'
+import { FLASH_KEY__SUCCESS_BANNER } from '../utils/constants'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
@@ -29,18 +30,13 @@ export default function routes(services: Services): Router {
       },
       {
         matcher: /temporary-absence-authorisations\/(\w|-)+$/,
-        text: 'Absence authorisation',
+        text: 'Temporary absence',
         alias: 'temp-page-2',
       },
       {
         matcher: /temporary-absences$/,
         text: 'Browse temporary absences',
         alias: 'temp-page-3',
-      },
-      {
-        matcher: /temporary-absences\/(\w|-)+$/,
-        text: 'Temporary absence',
-        alias: 'temp-page-4',
       },
     ]),
   )
@@ -49,6 +45,8 @@ export default function routes(services: Services): Router {
 
   get('*any', (req, res, next) => {
     res.locals['query'] = req.query
+    const successBanner = req.flash(FLASH_KEY__SUCCESS_BANNER)
+    res.locals['successBanner'] = successBanner && successBanner[0] ? successBanner[0] : undefined
     next()
   })
 

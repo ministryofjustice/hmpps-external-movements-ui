@@ -3,6 +3,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "partials/miniProfile/macro.njk" import miniProfile %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
 {% block head %}
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet"/>
@@ -62,15 +63,22 @@
 {% endblock %}
 
 {% block content %}
-<div class="govuk-grid-row">
-  <div class="govuk-body {% if fullWidth %}govuk-grid-column-full{% else %}govuk-grid-column-two-thirds{% endif %}">
-    {% addHistory %}
-      {% block innerContent %}{% endblock %}
-    {% history %}
-      {{ history | dump | safe }}
-    {% endAddHistory %}
+  {% if successBanner %}
+    {{ govukNotificationBanner({
+      text: successBanner,
+      type: "success"
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-body {% if fullWidth %}govuk-grid-column-full{% else %}govuk-grid-column-two-thirds{% endif %}">
+      {% addHistory %}
+        {% block innerContent %}{% endblock %}
+      {% history %}
+        {{ history | dump | safe }}
+      {% endAddHistory %}
+    </div>
   </div>
-</div>
 {% endblock %}
 
 {% block footer %}
