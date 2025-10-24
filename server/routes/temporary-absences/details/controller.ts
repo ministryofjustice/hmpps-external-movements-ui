@@ -23,7 +23,7 @@ export class TapOccurrenceDetailsController {
       res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
     }
 
-    return res.render('temporary-absences/details/view', {
+    return res.render('temporary-absences/details/edit', {
       showBreadcrumbs: true,
       result,
     })

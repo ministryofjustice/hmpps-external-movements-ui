@@ -1,0 +1,91 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
+
+{% set fullWidth = true %}
+{% set pageTitle = 'Update temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row govuk-!-margin-bottom-2">
+      <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Manage Temporary Absence</span>
+        <h1 class="govuk-heading-l">Change {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} absence occurrence</h1>
+      </div>
+    </div>
+
+    {{ govukButton({
+      classes: "govuk-button--warning",
+      text: "Cancel this occurrence",
+      href: "/temporary-absences/" + result.id + "/cancel",
+      preventDoubleClick: true
+    }) }}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-row govuk-grid-column-two-thirds">
+        <div class="govuk-grid-column-two-thirds">
+          <h2 class="govuk-heading-m">Occurrence information</h2>
+        </div>
+
+        <div class="govuk-summary-card__actions">
+          {{ absenceStatusTag(result) }}
+        </div>
+      </div>
+
+      <div class="govuk-grid-column-two-thirds">
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: { text: "Release date and time" },
+              value: { text: result.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') },
+              actions: { items: [{
+              href: "#",
+              text: "Change",
+              visuallyHiddenText: "release time"
+            }] }
+            },
+            {
+              key: { text: "Return date and time" },
+              value: { text: result.returnBy | formatDate('cccc, d MMMM yyyy HH:mm') },
+              actions: { items: [{
+              href: "#",
+              text: "Change",
+              visuallyHiddenText: "return time"
+            }] }
+            },
+            {
+              key: { text: "Transport" },
+              value: { text: result.transport.description },
+              actions: { items: [{
+              href: "#",
+              text: "Change",
+              visuallyHiddenText: "transport type"
+            }] }
+            },
+            {
+              key: { text: "Address" },
+              value: { text: result.location.description },
+              actions: { items: [{
+              href: "#",
+              text: "Change",
+              visuallyHiddenText: "location"
+            }] }
+            },
+            {
+              key: { text: "Comments" },
+              value: { text: result.notes or "Not provided" },
+              actions: { items: [{
+              href: "#",
+              text: "Change" if result.notes else "Add",
+              visuallyHiddenText: "comments"
+            }] }
+            }
+          ]
+        }) }}
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

@@ -12,10 +12,10 @@ export interface paths {
       cookie?: never
     }
     get?: never
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
+     */
     put: operations['syncTemporaryAbsenceMovement']
     post?: never
     delete?: never
@@ -32,10 +32,10 @@ export interface paths {
       cookie?: never
     }
     get?: never
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
+     */
     put: operations['syncTemporaryAbsenceApplication']
     post?: never
     delete?: never
@@ -52,10 +52,10 @@ export interface paths {
       cookie?: never
     }
     get?: never
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
+     */
     put: operations['syncScheduledTemporaryAbsence']
     post?: never
     delete?: never
@@ -73,10 +73,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
     post: operations['createTapAuthorisation']
     delete?: never
     options?: never
@@ -91,10 +91,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
     get: operations['getTapOccurrence']
     put?: never
     post?: never
@@ -111,10 +111,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
     get: operations['getTapAuthorisation']
     put?: never
     post?: never
@@ -131,10 +131,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
     get: operations['findTapOccurrences']
     put?: never
     post?: never
@@ -151,10 +151,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
     get: operations['findTapAuthorisations']
     put?: never
     post?: never
@@ -171,10 +171,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
     get: operations['getDomain']
     put?: never
     post?: never
@@ -191,10 +191,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
     get: operations['getPrisonerOverview']
     put?: never
     post?: never
@@ -211,10 +211,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
     get: operations['getAbsenceCategorisationDomain']
     put?: never
     post?: never
@@ -231,10 +231,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI */
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
     get: operations['getAbsenceCategorisationOptions']
     put?: never
     post?: never
@@ -256,7 +256,6 @@ export interface components {
       county?: string
       country?: string
       postcode?: string
-      isEmpty: boolean
     }
     NomisAudit: {
       /** Format: date-time */
@@ -389,6 +388,7 @@ export interface components {
       absenceType?: components['schemas']['CodedDescription']
       absenceSubType?: components['schemas']['CodedDescription']
       absenceReason?: components['schemas']['CodedDescription']
+      notes?: string
     }
     CodedDescription: {
       code: string
@@ -407,6 +407,7 @@ export interface components {
       /** Format: uuid */
       id: string
       authorisation: components['schemas']['Authorisation']
+      status: components['schemas']['CodedDescription']
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
@@ -418,10 +419,12 @@ export interface components {
       cancelled?: components['schemas']['AtAndBy']
       contactInformation?: string
       scheduleReference?: components['schemas']['JsonNode']
+      notes?: string
     }
     Occurrence: {
       /** Format: uuid */
       id: string
+      status: components['schemas']['CodedDescription']
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
@@ -429,7 +432,7 @@ export interface components {
       location: components['schemas']['Location']
       accompaniedBy: components['schemas']['CodedDescription']
       transport: components['schemas']['CodedDescription']
-      isCancelled: boolean
+      notes?: string
     }
     TapAuthorisation: {
       /** Format: uuid */
@@ -448,6 +451,7 @@ export interface components {
       submitted: components['schemas']['AtAndBy']
       approved?: components['schemas']['AtAndBy']
       schedule?: components['schemas']['JsonNode']
+      notes?: string
     }
     TapOccurrenceSearchRequest: {
       prisonCode: string
@@ -479,6 +483,7 @@ export interface components {
       /** Format: uuid */
       id: string
       authorisation: components['schemas']['TapOccurrenceAuthorisation']
+      status: components['schemas']['CodedDescription']
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
