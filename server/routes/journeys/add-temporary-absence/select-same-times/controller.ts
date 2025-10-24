@@ -8,7 +8,7 @@ export class SelectSameTimesController {
         res.locals['formResponses']?.['sameTimes'] ??
         req.journeyData.addTemporaryAbsence?.rotatingPatternSubJourney?.isSameTime ??
         req.journeyData.addTemporaryAbsence?.rotatingPattern?.isSameTime,
-      backUrl: 'enter-rotating-pattern',
+      backUrl: req.journeyData.isCheckAnswers ? 'check-answers' : 'enter-rotating-pattern',
     })
   }
 
