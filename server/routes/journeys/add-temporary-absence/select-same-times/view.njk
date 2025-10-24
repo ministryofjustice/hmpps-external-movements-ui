@@ -1,0 +1,40 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Select if the times are the same each day or night - Add a temporary absence" %}
+
+{% block innerContent %}
+    <span class="govuk-caption-l">Create a Temporary Absense</span>
+    <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {{ govukRadios({
+            name: "sameTimes",
+            fieldset: {
+                legend: {
+                    text: "Will " + prisonerDetails | firstNameSpaceLastName | possessiveComma + " scheduled days or nights take place at the same times?",
+                    isPageHeading: true,
+                    classes: "govuk-fieldset__legend--l"
+                }
+            },
+            errorMessage: validationErrors | findError("sameTimes"),
+            items: [
+                {
+                    value: "Yes",
+                    text: "Yes",
+                    checked: sameTimes == true
+                },
+                {
+                    value: "No",
+                    text: "No",
+                    checked: sameTimes == false
+                }
+            ]
+        }) }}
+        {{ govukButton({
+            text: "Continue",
+            preventDoubleClick: true
+        }) }}
+    </form>
+{% endblock %}
