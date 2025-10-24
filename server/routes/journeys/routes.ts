@@ -3,6 +3,7 @@ import { Services } from '../../services'
 import setUpJourneyData from '../../middleware/journey/setUpJourneyData'
 import { mergeObjects } from '../../utils/utils'
 import { AddTemporaryAbsenceRoutes } from './add-temporary-absence/routes'
+import { ManageTemporaryAbsenceRoutes } from './temporary-absences/routes'
 
 export const JourneyRoutes = (services: Services) => {
   const router = Router({ mergeParams: true })
@@ -17,6 +18,7 @@ export const JourneyRoutes = (services: Services) => {
   })
 
   router.use('/add-temporary-absence', AddTemporaryAbsenceRoutes(services))
+  router.use('/temporary-absences', ManageTemporaryAbsenceRoutes(services))
 
   if (process.env.NODE_ENV === 'e2e-test') {
     router.get('/inject-journey-data', (req, res) => {
