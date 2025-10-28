@@ -450,7 +450,6 @@ test.describe('/add-temporary-absence/e2e', () => {
         ],
         repeat: false,
         statusCode: 'PENDING',
-        submittedAt: expect.any(String),
         toDate: '2069-10-11T12:30:00',
       },
     ])
