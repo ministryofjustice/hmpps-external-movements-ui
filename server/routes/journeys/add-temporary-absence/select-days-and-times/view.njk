@@ -44,8 +44,8 @@
                 value: absence.startDate,
                 errorMessage: validationErrors | findError("absences[" + loop.index0 + "][startDate]"),
                 classes: 'hmpps-datepicker--fixed-width govuk-body',
-                minDate: startDate | parseDatePickerMinDate,
-                maxDate: endDate | parseDatePickerMaxDate,
+                minDate: startDate | formatInputDate,
+                maxDate: endDate | formatInputDate,
                 attributes: {
                   "data-id": "absences[%index%][startDate]",
                   "data-name": "absences[%index%][startDate]"
@@ -85,8 +85,8 @@
                 value: absence.returnDate,
                 errorMessage: validationErrors | findError("absences[" + loop.index0 + "][returnDate]"),
                 classes: 'hmpps-datepicker--fixed-width govuk-body',
-                minDate: startDate | parseDatePickerMinDate,
-                maxDate: (endDate | parseDatePickerMaxDate) if isLastWeek else (endDate | addDaysMonths(1) | parseDatePickerMaxDate),
+                minDate: startDate | formatInputDate,
+                maxDate: (endDate | formatInputDate) if isLastWeek else (endDate | addDaysMonths(1) | formatInputDate),
                 attributes: {
                   "data-id": "absences[%index%][returnDate]",
                   "data-name": "absences[%index%][returnDate]"
