@@ -1,0 +1,159 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Change absence - Manage Temporary Absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Change {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} absence</h1>
+
+    <h2 class="govuk-heading-m">Absence information</h2>
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: {
+            text: "Absence type"
+          },
+          value: {
+            text: absenceType.description
+          },
+          actions: {
+            items: [
+                {
+                  href: "edit/absence-type",
+                  text: "Change",
+                  visuallyHiddenText: "absence type",
+                  classes: "govuk-link--no-visited-state"
+                }
+            ]
+          }
+        },
+        {
+          key: {
+          text: "Absence sub-type"
+        },
+          value: {
+          text: absenceSubType.description
+        },
+          actions: {
+          items: [
+            {
+              href: "edit/absence-subtype",
+              text: "Change",
+              visuallyHiddenText: "absence sub-type",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        } if absenceSubType,
+        {
+          key: {
+          text: "Absence reason"
+        },
+          value: {
+          text: reasonCategory.description
+        },
+          actions: {
+          items: [
+            {
+              href: "edit/reason-category",
+              text: "Change",
+              visuallyHiddenText: "absence reason",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        } if reasonCategory and not absenceReason,
+        {
+          key: {
+          text: "Absence reason"
+        },
+          value: {
+          text: absenceReason.description
+        },
+          actions: {
+          items: [
+            {
+              href: "edit/reason-category" if reasonCategory else  "edit/reason",
+              text: "Change",
+              visuallyHiddenText: "absence reason",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        } if absenceReason
+      ] | removeNullish
+    }) }}
+
+    <h2 class="govuk-heading-m">Absence dates</h2>
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: {
+          text: "Start date"
+        },
+          value: {
+          text: fromDate | formatDate
+        },
+          actions: {
+          items: [
+            {
+              href: "edit/start-end-dates#fromDate",
+              text: "Change",
+              visuallyHiddenText: "start date",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "End date"
+        },
+          value: {
+          text: toDate | formatDate
+        },
+          actions: {
+          items: [
+            {
+              href: "edit/start-end-dates#toDate",
+              text: "Change",
+              visuallyHiddenText: "end date",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        }
+      ]
+    }) }}
+
+    <h2 class="govuk-heading-m">Comments</h2>
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: {
+          text: "Relevant comments"
+        },
+          value: {
+          html: (notes or "Not provided") | escape | nl2br
+        },
+          actions: {
+          items: [
+            {
+              href: "edit/comments",
+              text: "Change" if notes or "Add",
+              visuallyHiddenText: "comments",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        }
+      ]
+    }) }}
+  </div>
+{% endblock %}
