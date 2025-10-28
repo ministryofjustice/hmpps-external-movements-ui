@@ -30,7 +30,7 @@ export const historyExtension: Extension & {
       matches.forEach(match => {
         newBody.push(body.substring(lastIndex, match.index))
         lastIndex = match.index
-        if (match[1]?.startsWith('http')) {
+        if (match[1]?.startsWith('http') || match[1]?.startsWith('#')) {
           newBody.push(match[0])
         } else {
           newBody.push(`href="${match[1]?.includes('?') ? `${match[1]}&` : `${match[1]}?`}history=${history}"`)

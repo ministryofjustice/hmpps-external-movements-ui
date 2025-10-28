@@ -3,6 +3,8 @@ import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
 import fs from 'fs'
+// @ts-expect-error no type for Moj frontend filters
+import MojFilter from '@ministryofjustice/frontend/moj/filters/all'
 import {
   addSelectValue,
   fromRefData,
@@ -86,6 +88,10 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addGlobal('todayStringGBFormat', todayStringGBFormat)
   njkEnv.addGlobal('yesterdayStringGBFormat', yesterdayStringGBFormat)
   njkEnv.addGlobal('inputDate', inputDate)
+
+  const { date, mojDate } = MojFilter()
+  njkEnv.addFilter('date', date)
+  njkEnv.addFilter('mojDate', mojDate)
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
