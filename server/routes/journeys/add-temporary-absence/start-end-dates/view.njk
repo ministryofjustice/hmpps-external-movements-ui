@@ -24,7 +24,7 @@
         value: fromDate,
         errorMessage: validationErrors | findError('fromDate'),
         classes: 'hmpps-datepicker--fixed-width govuk-body',
-        minDate: yesterdayStringGBFormat()
+        minDate: inputDate()
       }) }}
 
       {{ mojDatePicker({
@@ -40,7 +40,7 @@
         value: toDate,
         errorMessage: validationErrors | findError('toDate'),
         classes: 'hmpps-datepicker--fixed-width govuk-body',
-        minDate: yesterdayStringGBFormat()
+        minDate: inputDate()
       }) }}
 
       {{ govukButton({
