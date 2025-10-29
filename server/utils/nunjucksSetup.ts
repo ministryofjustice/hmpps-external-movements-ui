@@ -24,17 +24,7 @@ import {
   possessiveComma,
   statusPriority,
 } from './formatUtils'
-import {
-  formatDate,
-  formatInputDate,
-  formatTime,
-  inputDate,
-  addDaysMonths,
-  parseDatePickerMaxDate,
-  parseDatePickerMinDate,
-  todayStringGBFormat,
-  yesterdayStringGBFormat,
-} from './dateTimeUtils'
+import { formatDate, formatInputDate, formatTime, inputDate, addDaysMonths } from './dateTimeUtils'
 import {
   buildErrorSummaryList,
   customErrorOrderBuilder,
@@ -85,8 +75,6 @@ export default function nunjucksSetup(app: express.Express): void {
 
   njkEnv.addExtension('HistoryExtension', historyExtension)
 
-  njkEnv.addGlobal('todayStringGBFormat', todayStringGBFormat)
-  njkEnv.addGlobal('yesterdayStringGBFormat', yesterdayStringGBFormat)
   njkEnv.addGlobal('inputDate', inputDate)
 
   const { date, mojDate } = MojFilter()
@@ -103,8 +91,6 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatDate', formatDate)
   njkEnv.addFilter('formatTime', formatTime)
   njkEnv.addFilter('formatInputDate', formatInputDate)
-  njkEnv.addFilter('parseDatePickerMinDate', parseDatePickerMinDate)
-  njkEnv.addFilter('parseDatePickerMaxDate', parseDatePickerMaxDate)
   njkEnv.addFilter('addDaysMonths', addDaysMonths)
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('findErrorMessage', findErrorMessage)
