@@ -8,14 +8,14 @@ import { formatInputDate } from '../../../../../utils/dateTimeUtils'
 export class EditStartDateController {
   GET = async (req: Request, res: Response) => {
     const startDate =
-      res.locals['formResponses']?.['startDate'] ??
+      res.locals.formResponses?.['startDate'] ??
       format(req.journeyData.updateTapOccurrence!.occurrence.releaseAt, 'd/M/yyyy')
 
     const startTimeHour =
-      res.locals['formResponses']?.['startTimeHour'] ??
+      res.locals.formResponses?.['startTimeHour'] ??
       format(req.journeyData.updateTapOccurrence!.occurrence.releaseAt, 'HH')
     const startTimeMinute =
-      res.locals['formResponses']?.['startTimeMinute'] ??
+      res.locals.formResponses?.['startTimeMinute'] ??
       format(req.journeyData.updateTapOccurrence!.occurrence.releaseAt, 'mm')
 
     res.render('temporary-absences/edit/start-date/view', {

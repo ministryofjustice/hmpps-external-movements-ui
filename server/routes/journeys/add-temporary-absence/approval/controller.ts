@@ -7,7 +7,7 @@ export class AbsenceApprovalController {
     res.render('add-temporary-absence/approval/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'comments'),
       requireApproval:
-        res.locals['formResponses']?.['requireApproval'] ?? req.journeyData.addTemporaryAbsence!.requireApproval,
+        res.locals.formResponses?.['requireApproval'] ?? req.journeyData.addTemporaryAbsence!.requireApproval,
     })
   }
 

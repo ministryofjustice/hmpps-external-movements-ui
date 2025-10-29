@@ -15,14 +15,14 @@ export class EnterLocationController {
       cityOptions: getOptions(ADDRESS_REFERENCE_DATA.CITY),
       countyOptions: getOptions(ADDRESS_REFERENCE_DATA.COUNTY),
       countryOptions: getOptions(ADDRESS_REFERENCE_DATA.COUNTRY),
-      flat: res.locals['formResponses']?.['flat'] ?? address?.flat,
-      property: res.locals['formResponses']?.['property'] ?? address?.property,
-      street: res.locals['formResponses']?.['street'] ?? address?.street,
-      area: res.locals['formResponses']?.['area'] ?? address?.area,
-      city: res.locals['formResponses']?.['cityText'] ?? address?.cityDescription,
-      county: res.locals['formResponses']?.['countyText'] ?? address?.countyDescription,
-      postcode: res.locals['formResponses']?.['postcode'] ?? address?.postcode,
-      country: res.locals['formResponses']?.['countryText'] ?? address?.countryDescription,
+      flat: res.locals.formResponses?.['flat'] ?? address?.flat,
+      property: res.locals.formResponses?.['property'] ?? address?.property,
+      street: res.locals.formResponses?.['street'] ?? address?.street,
+      area: res.locals.formResponses?.['area'] ?? address?.area,
+      city: res.locals.formResponses?.['cityText'] ?? address?.cityDescription,
+      county: res.locals.formResponses?.['countyText'] ?? address?.countyDescription,
+      postcode: res.locals.formResponses?.['postcode'] ?? address?.postcode,
+      country: res.locals.formResponses?.['countryText'] ?? address?.countryDescription,
     })
   }
 

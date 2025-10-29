@@ -7,7 +7,7 @@ export class SingleOrRepeatingController {
   GET = async (req: Request, res: Response) => {
     res.render('add-temporary-absence/single-or-repeating/view', {
       backUrl: getAbsenceCategoryBackUrl(req, null),
-      repeat: res.locals['formResponses']?.['repeat'] ?? req.journeyData.addTemporaryAbsence!.repeat,
+      repeat: res.locals.formResponses?.['repeat'] ?? req.journeyData.addTemporaryAbsence!.repeat,
     })
   }
 

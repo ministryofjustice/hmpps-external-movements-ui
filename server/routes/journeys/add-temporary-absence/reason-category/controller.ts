@@ -20,7 +20,7 @@ export class ReasonCategoryController {
       options: (
         await getAbsenceCategorisationsForDomain(this.externalMovementsService, req, res, 'ABSENCE_REASON_CATEGORY')
       ).items.map(absenceCategorisationMapper),
-      reasonCategory: res.locals['formResponses']?.['reasonCategory'] ?? reasonCategory?.code,
+      reasonCategory: res.locals.formResponses?.['reasonCategory'] ?? reasonCategory?.code,
     })
   }
 

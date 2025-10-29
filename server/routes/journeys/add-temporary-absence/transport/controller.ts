@@ -13,7 +13,7 @@ export class TransportController {
         req,
         req.journeyData.addTemporaryAbsence!.accompanied ? 'accompanied' : 'accompanied-or-unaccompanied',
       ),
-      transport: res.locals['formResponses']?.['transport'] ?? req.journeyData.addTemporaryAbsence!.transport?.code,
+      transport: res.locals.formResponses?.['transport'] ?? req.journeyData.addTemporaryAbsence!.transport?.code,
     })
   }
 
