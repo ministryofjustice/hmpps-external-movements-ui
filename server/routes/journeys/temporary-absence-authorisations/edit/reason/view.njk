@@ -1,0 +1,31 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Select type of work - Manage Temporary Absences' if reasonCategory else 'Select absence reason - Manage Temporary Absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukRadios({
+        name: "reason",
+        errorMessage: validationErrors | findError('reason'),
+        fieldset: {
+          legend: {
+            text: ("What type of work will " + prisonerDetails | firstNameSpaceLastName + " be doing?") if reasonCategory else 'What is the reason for this absence?',
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--xl"
+          }
+        },
+        items: options | setCheckedValue(reason)
+      }) }}
+
+      {{ govukButton({
+        text: "Confirm and save",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

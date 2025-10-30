@@ -124,6 +124,66 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/sync/temporary-absence-occurrences/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
+     */
+    get: operations['findTapOccurrenceById']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/sync/temporary-absence-movements/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
+     */
+    get: operations['findTapMovementById']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/sync/temporary-absence-authorisations/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
+     */
+    get: operations['findTapAuthorisationById']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/search/temporary-absence-occurrences': {
     parameters: {
       query?: never
@@ -328,6 +388,7 @@ export interface components {
     CreateTapAuthorisationRequest: {
       absenceTypeCode: string
       absenceSubTypeCode?: string
+      absenceReasonCategoryCode?: string
       absenceReasonCode?: string
       occurrences: components['schemas']['CreateTapOccurrenceRequest'][]
       /** @enum {string} */
@@ -376,6 +437,7 @@ export interface components {
       status: components['schemas']['CodedDescription']
       absenceType?: components['schemas']['CodedDescription']
       absenceSubType?: components['schemas']['CodedDescription']
+      absenceReasonCategory?: components['schemas']['CodedDescription']
       absenceReason?: components['schemas']['CodedDescription']
       notes?: string
     }
@@ -430,6 +492,7 @@ export interface components {
       status: components['schemas']['CodedDescription']
       absenceType?: components['schemas']['CodedDescription']
       absenceSubType?: components['schemas']['CodedDescription']
+      absenceReasonCategory?: components['schemas']['CodedDescription']
       absenceReason?: components['schemas']['CodedDescription']
       repeat: boolean
       /** Format: date */
@@ -441,6 +504,22 @@ export interface components {
       approved?: components['schemas']['AtAndBy']
       schedule?: components['schemas']['JsonNode']
       notes?: string
+    }
+    TapMovement: {
+      /** Format: uuid */
+      id: string
+      /** Format: uuid */
+      occurrenceId?: string
+      /** Format: date-time */
+      occurredAt: string
+      /** @enum {string} */
+      direction: 'IN' | 'OUT'
+      absenceReasonCode: string
+      location: components['schemas']['Location']
+      accompaniedByCode: string
+      accompaniedByNotes?: string
+      notes?: string
+      recordedByPrisonCode: string
     }
     TapOccurrenceSearchRequest: {
       prisonCode: string
@@ -466,6 +545,7 @@ export interface components {
       status: components['schemas']['CodedDescription']
       absenceType?: components['schemas']['CodedDescription']
       absenceSubType?: components['schemas']['CodedDescription']
+      absenceReasonCategory?: components['schemas']['CodedDescription']
       absenceReason?: components['schemas']['CodedDescription']
     }
     TapOccurrenceResult: {
@@ -507,6 +587,7 @@ export interface components {
       status: components['schemas']['CodedDescription']
       absenceType?: components['schemas']['CodedDescription']
       absenceSubType?: components['schemas']['CodedDescription']
+      absenceReasonCategory?: components['schemas']['CodedDescription']
       absenceReason?: components['schemas']['CodedDescription']
       repeat: boolean
       /** Format: date */
@@ -702,6 +783,72 @@ export interface operations {
     }
   }
   getTapAuthorisation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['TapAuthorisation']
+        }
+      }
+    }
+  }
+  findTapOccurrenceById: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['TapOccurrence']
+        }
+      }
+    }
+  }
+  findTapMovementById: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['TapMovement']
+        }
+      }
+    }
+  }
+  findTapAuthorisationById: {
     parameters: {
       query?: never
       header?: never

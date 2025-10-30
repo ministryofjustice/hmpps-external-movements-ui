@@ -62,6 +62,10 @@
             } if result.absenceSubType,
             {
               key: { text: "Absence reason" },
+              value: { text: result.absenceReasonCategory.description }
+            } if result.absenceReasonCategory,
+            {
+              key: { text: "Work type" if result.absenceReasonCategory else "Absence reason" },
               value: { text: result.absenceReason.description }
             } if result.absenceReason,
             {
