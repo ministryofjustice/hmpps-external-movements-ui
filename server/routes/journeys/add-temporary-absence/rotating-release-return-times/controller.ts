@@ -115,7 +115,7 @@ export class RotatingReleaseReturnTimesController {
     const times = this.fromIntervals(
       rotatingPattern?.isSameTime ?? false,
       rotatingPattern?.intervals ?? [],
-      res.locals['formResponses']?.times,
+      res.locals.formResponses?.['times'] as Record<string, string>[],
     )
     res.render('add-temporary-absence/rotating-release-return-times/view', {
       times,
