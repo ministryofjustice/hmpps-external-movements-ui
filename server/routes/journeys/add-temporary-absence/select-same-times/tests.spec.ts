@@ -68,6 +68,6 @@ test.describe('/add-temporary-absence/select-same-times', () => {
     await testPage.rotatingPatternSubJourneyRadioNo().click()
 
     await testPage.clickContinue()
-    expect(page.url()).toMatch(/\/add-temporary-absence\/rotating-non-repeating-release-return-times/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/rotating-release-return-times/)
   })
 })
