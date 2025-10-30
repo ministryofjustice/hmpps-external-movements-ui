@@ -39,7 +39,6 @@ export class AddTapCheckAnswersController {
 
     try {
       const request: components['schemas']['CreateTapAuthorisationRequest'] = {
-        submittedAt: new Date().toISOString(),
         repeat: repeat!,
         statusCode: requireApproval ? 'PENDING' : 'APPROVED',
         absenceTypeCode: absenceType!.code,

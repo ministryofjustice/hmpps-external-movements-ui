@@ -248,15 +248,6 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
-    Address: {
-      premise?: string
-      street?: string
-      area?: string
-      city?: string
-      county?: string
-      country?: string
-      postcode?: string
-    }
     NomisAudit: {
       /** Format: date-time */
       createDatetime: string
@@ -269,10 +260,9 @@ export interface components {
       auditUserId?: string
     }
     TapLocation: {
-      id?: string
-      typeCode?: string
       description?: string
-      address?: components['schemas']['Address']
+      address?: string
+      postcode?: string
     }
     TapMovementRequest: {
       /** Format: uuid */
@@ -336,8 +326,6 @@ export interface components {
       audit: components['schemas']['NomisAudit']
     }
     CreateTapAuthorisationRequest: {
-      /** Format: date-time */
-      submittedAt: string
       absenceTypeCode: string
       absenceSubTypeCode?: string
       absenceReasonCode?: string
@@ -367,8 +355,9 @@ export interface components {
     JsonNode: unknown
     Location: {
       description?: string
-      address?: components['schemas']['Address']
-      id?: string
+      address?: string
+      postcode?: string
+      uprn?: string
     }
     ReferenceId: {
       /** Format: uuid */

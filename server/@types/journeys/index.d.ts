@@ -27,6 +27,7 @@ export type JourneyData = {
   prisonerDetails?: PrisonerDetails
   addTemporaryAbsence?: AddTemporaryAbsenceJourney
   updateTapOccurrence?: UpdateTapOccurrenceJourney
+  updateTapAuthorisation?: UpdateTapAuthorisationJourney
   isCheckAnswers?: boolean
   journeyCompleted?: boolean
   b64History?: string | undefined
@@ -115,4 +116,13 @@ export type UpdateTapOccurrenceJourney = {
   location: Address
   transport: components['schemas']['CodedDescription']
   notes: string
+}>
+
+export type UpdateTapAuthorisationJourney = {
+  authorisation: components['schemas']['TapAuthorisation']
+} & Partial<{
+  absenceType: components['schemas']['AbsenceCategorisation']
+  absenceSubType: components['schemas']['AbsenceCategorisation']
+  reasonCategory: components['schemas']['AbsenceCategorisation']
+  reason: components['schemas']['AbsenceCategorisation']
 }>

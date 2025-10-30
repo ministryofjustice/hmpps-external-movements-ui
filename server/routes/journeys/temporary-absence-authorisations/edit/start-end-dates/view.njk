@@ -3,12 +3,12 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
 
-{% set pageTitle = 'Enter absence start and end dates - Add a temporary absence' %}
+{% set pageTitle = 'Enter absence start and end dates - Manage Temporary Absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
-    <span class="govuk-caption-l">Create a Temporary Absence</span>
-    <h1 class="govuk-heading-l">Add absence period</h1>
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <h1 class="govuk-heading-l">Edit absence period</h1>
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
       {{ mojDatePicker({
@@ -23,8 +23,7 @@
         },
         value: fromDate,
         errorMessage: validationErrors | findError('fromDate'),
-        classes: 'hmpps-datepicker--fixed-width govuk-body',
-        minDate: inputDate()
+        classes: 'hmpps-datepicker--fixed-width govuk-body'
       }) }}
 
       {{ mojDatePicker({
@@ -39,12 +38,11 @@
         },
         value: toDate,
         errorMessage: validationErrors | findError('toDate'),
-        classes: 'hmpps-datepicker--fixed-width govuk-body',
-        minDate: inputDate()
+        classes: 'hmpps-datepicker--fixed-width govuk-body'
       }) }}
 
       {{ govukButton({
-        text: "Continue",
+        text: "Confirm and save",
         preventDoubleClick: true
       }) }}
     </form>
