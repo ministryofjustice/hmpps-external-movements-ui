@@ -13,7 +13,7 @@ export class EditTransportController {
       options: await this.externalMovementsService.getReferenceData({ res }, 'transport'),
       backUrl: '../edit',
       transport:
-        res.locals['formResponses']?.['transport'] ?? req.journeyData.updateTapOccurrence!.occurrence.transport.code,
+        res.locals.formResponses?.['transport'] ?? req.journeyData.updateTapOccurrence!.occurrence.transport.code,
     })
   }
 

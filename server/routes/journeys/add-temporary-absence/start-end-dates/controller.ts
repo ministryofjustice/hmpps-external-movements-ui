@@ -6,10 +6,9 @@ import { AddTapFlowControl } from '../flow'
 export class StartEndDatesController {
   GET = async (req: Request, res: Response) => {
     const fromDate =
-      res.locals['formResponses']?.['fromDate'] ?? formatInputDate(req.journeyData.addTemporaryAbsence!.fromDate)
+      res.locals.formResponses?.['fromDate'] ?? formatInputDate(req.journeyData.addTemporaryAbsence!.fromDate)
 
-    const toDate =
-      res.locals['formResponses']?.['toDate'] ?? formatInputDate(req.journeyData.addTemporaryAbsence!.toDate)
+    const toDate = res.locals.formResponses?.['toDate'] ?? formatInputDate(req.journeyData.addTemporaryAbsence!.toDate)
 
     res.render('add-temporary-absence/start-end-dates/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'single-or-repeating'),

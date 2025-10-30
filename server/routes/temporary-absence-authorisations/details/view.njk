@@ -29,12 +29,14 @@
             preventDoubleClick: true
           }) }}
         {% endif %}
-        {{ govukButton({
-          classes: "govuk-button--warning",
-          text: "Cancel this absence",
-          href: "/temporary-absence-authorisations/" + result.id + "/cancel",
-          preventDoubleClick: true
-        }) }}
+        {% if result.status.code !== 'CANCELLED' %}
+          {{ govukButton({
+            classes: "govuk-button--warning",
+            text: "Cancel this absence",
+            href: "/temporary-absence-authorisations/" + result.id + "/cancel",
+            preventDoubleClick: true
+          }) }}
+        {% endif %}
       </div>
 
       {% set viewAbsenceHtml %}

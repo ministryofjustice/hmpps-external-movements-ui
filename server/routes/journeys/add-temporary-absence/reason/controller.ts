@@ -21,7 +21,7 @@ export class AbsenceReasonController {
         await getAbsenceCategorisationsForDomain(this.externalMovementsService, req, res, 'ABSENCE_REASON')
       ).items.map(absenceCategorisationMapper),
       reasonCategory,
-      reason: res.locals['formResponses']?.['reason'] ?? reason?.code,
+      reason: res.locals.formResponses?.['reason'] ?? reason?.code,
     })
   }
 

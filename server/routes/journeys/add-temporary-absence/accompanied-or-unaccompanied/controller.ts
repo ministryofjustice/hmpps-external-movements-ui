@@ -7,7 +7,7 @@ export class AccompaniedOrUnaccompaniedController {
     res.render('add-temporary-absence/accompanied-or-unaccompanied/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'search-location'),
       accompanied:
-        res.locals['formResponses']?.['accompanied'] ??
+        res.locals.formResponses?.['accompanied'] ??
         req.journeyData.addTemporaryAbsence!.accompaniedSubJourney?.accompanied ??
         req.journeyData.addTemporaryAbsence!.accompanied,
     })

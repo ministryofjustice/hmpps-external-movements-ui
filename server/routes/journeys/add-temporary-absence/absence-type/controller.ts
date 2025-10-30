@@ -13,7 +13,7 @@ export class AbsenceTypeController {
     res.render('add-temporary-absence/absence-type/view', {
       backUrl: `${res.locals.prisonerProfileUrl}/prisoner/${req.journeyData.prisonerDetails!.prisonerNumber}`,
       options: (await this.externalMovementsService.getAllAbsenceTypes({ res })).items.map(absenceCategorisationMapper),
-      absenceType: res.locals['formResponses']?.['absenceType'] ?? absenceType?.code,
+      absenceType: res.locals.formResponses?.['absenceType'] ?? absenceType?.code,
     })
   }
 

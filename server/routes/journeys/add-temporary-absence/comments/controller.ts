@@ -6,7 +6,7 @@ export class AbsenceCommentsController {
   GET = async (req: Request, res: Response) => {
     res.render('add-temporary-absence/comments/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'transport'),
-      notes: res.locals['formResponses']?.['notes'] ?? req.journeyData.addTemporaryAbsence!.notes,
+      notes: res.locals.formResponses?.['notes'] ?? req.journeyData.addTemporaryAbsence!.notes,
     })
   }
 
