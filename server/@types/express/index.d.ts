@@ -83,6 +83,7 @@ export declare global {
         }
       }
       prisonerDetails?: PrisonerDetails
+      formResponses?: Record<string, unknown>
     }
   }
 }

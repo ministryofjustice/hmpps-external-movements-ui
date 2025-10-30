@@ -6,7 +6,7 @@ export class RepeatingPatternController {
   GET = async (req: Request, res: Response) => {
     res.render('add-temporary-absence/repeating-pattern/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'start-end-dates'),
-      patternType: res.locals['formResponses']?.['patternType'] ?? req.journeyData.addTemporaryAbsence!.patternType,
+      patternType: res.locals.formResponses?.['patternType'] ?? req.journeyData.addTemporaryAbsence!.patternType,
     })
   }
 
