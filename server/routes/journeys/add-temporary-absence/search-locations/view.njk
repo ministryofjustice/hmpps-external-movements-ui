@@ -1,0 +1,55 @@
+{% extends "partials/layout.njk" %}
+{% from "dps/components/address-autosuggest/macro.njk" import addressAutosuggest %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Search for a location - Add a temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <h1 class="govuk-heading-l"><label for="address-autosuggest-input">Search for a location where this absence will take place</label></h1>
+
+    <form method="post" class="govuk-!-width-full">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      <div class="horizontal-form govuk-!-margin-bottom-5 govuk-!-width-full">
+        <div class="govuk-form-group govuk-!-width-three-quarters">
+          <div id="address-hint" class="govuk-hint">Enter an address or postcode</div>
+          <div id="address-input" class="govuk-!-width-full">
+            {{ addressAutosuggest({
+              classes: "govuk-!-width-full",
+              inputValue: inputValue,
+              errorMessage: validationErrors | findError('address-autosuggest-input'),
+              findUrl: '/api/addresses/find'
+            }) }}
+          </div>
+        </div>
+
+        {{ govukButton({
+          name: "add",
+          classes: "govuk-button--secondary moj-search__button",
+          text: "Add location",
+          preventDoubleClick: true
+        }) }}
+      </div>
+
+      {% if locations.length %}
+        <h2 class="govuk-heading-m">You have added {{ locations.length }} {{ "location" if locations.length === 1 else "locations" }}</h2>
+
+        <div class="govuk-!-margin-bottom-6">
+          {% for location in locations %}
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-three-quarters">{{ location.description }}</div>
+              <div class="govuk-summary-card__actions"><a href="search-locations/remove/{{ loop.index }}" class="govuk-link govuk-link--no-visited-state">Remove<span class="govuk-visually-hidden"> location {{ loop.index }}</span></a></div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {{ govukButton({
+        name: "save",
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

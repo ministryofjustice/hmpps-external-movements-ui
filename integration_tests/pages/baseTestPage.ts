@@ -36,6 +36,10 @@ export class BaseTestPage {
     return this
   }
 
+  async clickLink(name: string | RegExp) {
+    await this.link(name).click()
+  }
+
   async clickButton(name: string | RegExp) {
     await this.button(name).click()
   }
