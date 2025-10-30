@@ -38,7 +38,7 @@ export class CheckPatternController {
   }
 
   POST = (req: Request, res: Response) =>
-    res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'location-type')
+    res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'search-locations')
 
   private getAbsencesFromPeriod = (
     journey: AddTemporaryAbsenceJourney,

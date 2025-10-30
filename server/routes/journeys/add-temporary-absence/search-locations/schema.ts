@@ -7,24 +7,36 @@ const ERROR_MSG = 'Enter and select an address or postcode'
 
 export const schemaFactory = (osPlacesAddressService: CustomOsPlacesAddressService) => async (req: Request) =>
   createSchema({
-    'address-autosuggest-input': z.string({ message: ERROR_MSG }).min(1, { message: ERROR_MSG }),
+    'address-autosuggest-input': z.string(),
     uprn: z.string().optional(),
+    add: z.string().optional(),
+    save: z.string().optional(),
   }).transform(async (val, ctx) => {
-    const address = val.uprn ? await osPlacesAddressService.getAddressByUprn(val.uprn) : null
-
-    if (
-      req.journeyData.addTemporaryAbsence!.location?.id &&
-      req.journeyData.addTemporaryAbsence!.location?.description === val['address-autosuggest-input']
-    ) {
-      return {
-        ...val,
-        uprn: req.journeyData.addTemporaryAbsence!.location.id,
-        addressString: req.journeyData.addTemporaryAbsence!.location.description,
+    if (val.save !== undefined) {
+      if (req.journeyData.addTemporaryAbsence!.locations?.length) {
+        return {
+          ...val,
+          uprn: '',
+          addressString: '',
+        }
       }
+      ctx.addIssue({ code: 'custom', message: ERROR_MSG, path: ['address-autosuggest-input'] })
+      return z.NEVER
     }
+
+    const address = val.uprn ? await osPlacesAddressService.getAddressByUprn(val.uprn) : null
 
     if (!address) {
       ctx.addIssue({ code: 'custom', message: ERROR_MSG, path: ['address-autosuggest-input'] })
+      return z.NEVER
+    }
+
+    if (req.journeyData.addTemporaryAbsence!.locations?.find(itm => itm.id === val.uprn)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Enter and select an address that has not been already added',
+        path: ['address-autosuggest-input'],
+      })
       return z.NEVER
     }
 
