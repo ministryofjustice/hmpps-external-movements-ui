@@ -17,6 +17,6 @@ export class SelectSameTimesController {
       req.journeyData.addTemporaryAbsence.rotatingPatternSubJourney.isSameTime = req.body.isSameTime
     }
 
-    res.redirect(req.body.isSameTime ? 'rotating-release-return-times' : 'rotating-non-repeating-release-return-times')
+    res.redirect('rotating-release-return-times')
   }
 }
