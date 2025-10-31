@@ -50,8 +50,8 @@ export const schema = createSchema({
       const overnightHour = day.overnightHour ? parseHour(day.overnightHour) : undefined
       const overnightMinute = day.overnightMinute ? parseMinute(day.overnightMinute) : undefined
 
-      addInvalidHHMMErrors('release', releaseHour, releaseMinute, ['days', i], ctx)
-      addEmptyHHMMErrors('release', releaseHour, releaseMinute, ['days', i], ctx)
+      addInvalidHHMMErrors(ctx, 'release', releaseHour, releaseMinute, ['days', i])
+      addEmptyHHMMErrors(ctx, 'release', releaseHour, releaseMinute, ['days', i])
 
       const previousDayIndex = i === 0 ? 6 : i - 1
       if (data.selectedDays?.includes(weekDays[previousDayIndex]!) && data.days[previousDayIndex]) {
@@ -81,14 +81,14 @@ export const schema = createSchema({
       const isOvernight = day.isOvernight === 'true'
 
       if (isOvernight) {
-        addInvalidHHMMErrors('overnight', overnightHour, overnightMinute, ['days', i], ctx)
-        addEmptyHHMMErrors('overnight', overnightHour, overnightMinute, ['days', i], ctx)
+        addInvalidHHMMErrors(ctx, 'overnight', overnightHour, overnightMinute, ['days', i])
+        addEmptyHHMMErrors(ctx, 'overnight', overnightHour, overnightMinute, ['days', i])
       } else {
-        addInvalidHHMMErrors('return', returnHour, returnMinute, ['days', i], ctx)
-        addEmptyHHMMErrors('return', returnHour, returnMinute, ['days', i], ctx)
+        addInvalidHHMMErrors(ctx, 'return', returnHour, returnMinute, ['days', i])
+        addEmptyHHMMErrors(ctx, 'return', returnHour, returnMinute, ['days', i])
 
         if (releaseHour && releaseMinute && returnHour && returnMinute) {
-          addBeforeErrors(releaseHour!, releaseMinute!, returnHour!, returnMinute!, ['days', i], ctx)
+          addBeforeErrors(ctx, releaseHour!, releaseMinute!, returnHour!, returnMinute!, ['days', i])
         }
       }
 

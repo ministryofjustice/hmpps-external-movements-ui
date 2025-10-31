@@ -16,11 +16,11 @@ export const parseHour = (value: string) => parseNumber(value, 0, 23, 2)
 export const parseMinute = (value: string) => parseNumber(value, 0, 59, 2)
 
 export function addEmptyHHMMErrors(
+  ctx: z.core.$RefinementCtx,
   segment: 'release' | 'return' | 'overnight',
   parsedHour: z.ZodSafeParseResult<string> | undefined,
   parsedMinute: z.ZodSafeParseResult<string> | undefined,
-  path: (string | number)[],
-  ctx: z.core.$RefinementCtx,
+  path: (string | number)[] = [],
 ) {
   const errorMessage = `Enter a${segment[0] === 'o' ? 'n' : ''} ${segment} time`
   if (!parsedHour && !parsedMinute) {
@@ -51,11 +51,11 @@ export function addEmptyHHMMErrors(
 }
 
 export function addInvalidHHMMErrors(
+  ctx: z.core.$RefinementCtx,
   segment: 'release' | 'return' | 'overnight',
   parsedHour: z.ZodSafeParseResult<string> | undefined,
   parsedMinute: z.ZodSafeParseResult<string> | undefined,
-  path: (string | number)[],
-  ctx: z.core.$RefinementCtx,
+  path: (string | number)[] = [],
 ) {
   const error = `Enter a valid ${segment.toLowerCase()} time`
   if (parsedHour?.error && parsedMinute?.error) {
@@ -85,12 +85,13 @@ export function addInvalidHHMMErrors(
 }
 
 export function addBeforeErrors(
+  ctx: z.core.$RefinementCtx,
   parsedStartHour: z.ZodSafeParseResult<string>,
   parsedStartMinute: z.ZodSafeParseResult<string>,
   parsedEndHour: z.ZodSafeParseResult<string>,
   parsedEndMinute: z.ZodSafeParseResult<string>,
-  path: (string | number)[],
-  ctx: z.core.$RefinementCtx,
+  path: (string | number)[] = [],
+  errorMessage: string = 'The return time must come after the release date and time',
 ) {
   const startTime = Number(parsedStartHour!.data) * 60 + Number(parsedStartMinute!.data)
   const endTime = Number(parsedEndHour!.data) * 60 + Number(parsedEndMinute!.data)
@@ -98,7 +99,7 @@ export function addBeforeErrors(
   if (endTime < startTime) {
     ctx.addIssue({
       code: 'custom',
-      message: 'The return time must come after the release date and time',
+      message: errorMessage,
       path: [...path, 'returnHour'],
     })
   }

@@ -8,6 +8,8 @@ import {
   parseMinute,
 } from '../../../../utils/validations/validateTime'
 
+const ERROR_BEFORE_RELEASE = 'The return time must come after the release time'
+
 export const schema = createSchema({
   times: z.array(
     z
@@ -24,14 +26,14 @@ export const schema = createSchema({
         const returnHour = item.returnHour ? parseHour(item.returnHour) : undefined
         const returnMinute = item.returnMinute ? parseMinute(item.returnMinute) : undefined
 
-        addInvalidHHMMErrors('release', releaseHour, releaseMinute, [], ctx)
-        addEmptyHHMMErrors('release', releaseHour, releaseMinute, [], ctx)
+        addInvalidHHMMErrors(ctx, 'release', releaseHour, releaseMinute)
+        addEmptyHHMMErrors(ctx, 'release', releaseHour, releaseMinute)
 
-        addInvalidHHMMErrors('return', returnHour, returnMinute, [], ctx)
-        addEmptyHHMMErrors('return', returnHour, returnMinute, [], ctx)
+        addInvalidHHMMErrors(ctx, 'return', returnHour, returnMinute)
+        addEmptyHHMMErrors(ctx, 'return', returnHour, returnMinute)
 
         if (item.type === 'Scheduled days' && releaseHour && releaseMinute && returnHour && returnMinute) {
-          addBeforeErrors(releaseHour, releaseMinute, returnHour, returnMinute, [], ctx)
+          addBeforeErrors(ctx, releaseHour, releaseMinute, returnHour, returnMinute, [], ERROR_BEFORE_RELEASE)
         }
 
         return {
