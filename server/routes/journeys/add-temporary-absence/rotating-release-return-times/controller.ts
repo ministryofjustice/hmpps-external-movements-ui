@@ -68,7 +68,11 @@ export class RotatingReleaseReturnTimesController {
     return times
   }
 
-  private mapOntoIntervals = (isSameTime: boolean, intervals: RotatingPatternInterval[], times: SchemaType) => {
+  private mapOntoIntervals = (
+    isSameTime: boolean,
+    intervals: RotatingPatternInterval[],
+    times: SchemaType['times'],
+  ) => {
     if (isSameTime) {
       // If same time we'll only have one entry for day and night and need to replicate across intervals
       const dayReleaseTime = times.find(o => o.type === 'Scheduled days')!.releaseTime
@@ -125,7 +129,7 @@ export class RotatingReleaseReturnTimesController {
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     const rotatingPattern = req.journeyData.addTemporaryAbsence?.rotatingPatternSubJourney
-    this.mapOntoIntervals(rotatingPattern?.isSameTime ?? false, rotatingPattern!.intervals, req.body)
+    this.mapOntoIntervals(rotatingPattern?.isSameTime ?? false, rotatingPattern!.intervals, req.body.times)
     req.journeyData.addTemporaryAbsence!.rotatingPattern = req.journeyData.addTemporaryAbsence!
       .rotatingPatternSubJourney as Required<AddTemporaryAbsenceJourney>['rotatingPattern']
     res.redirect('check-absences')

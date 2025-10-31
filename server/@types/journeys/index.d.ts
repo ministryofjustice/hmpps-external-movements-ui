@@ -74,7 +74,6 @@ export type AddTemporaryAbsenceJourney = Partial<{
     startTime: string
     returnDate: string
     returnTime: string
-    locationId?: string
   }[]
   weeklyPattern: {
     day: number
@@ -100,7 +99,6 @@ export type RotatingPatternInterval = {
   items?: {
     startTime: string
     returnTime: string
-    locationId?: string
   }[]
 }
 
