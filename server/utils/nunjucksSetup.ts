@@ -24,7 +24,7 @@ import {
   possessiveComma,
   statusPriority,
 } from './formatUtils'
-import { formatDate, formatInputDate, formatTime, inputDate, addDaysMonths } from './dateTimeUtils'
+import { formatDate, formatInputDate, formatTime, inputDate, addDaysMonths, absenceTimeRange } from './dateTimeUtils'
 import {
   buildErrorSummaryList,
   customErrorOrderBuilder,
@@ -92,6 +92,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatTime', formatTime)
   njkEnv.addFilter('formatInputDate', formatInputDate)
   njkEnv.addFilter('addDaysMonths', addDaysMonths)
+  njkEnv.addFilter('absenceTimeRange', absenceTimeRange)
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('findErrorMessage', findErrorMessage)
   njkEnv.addFilter('buildErrorSummaryList', buildErrorSummaryList)

@@ -1,0 +1,42 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Match absences and locations - Add a temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <h1 class="govuk-heading-l">Select where these absences will take place</h1>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {% set options = [{ value: '', text: 'Select location' }] %}
+      {% for location in locations %}
+        {% set options = (options.push(
+          {
+            value: loop.index0,
+            text: location.description
+          }
+        ), options) %}
+      {% endfor %}
+
+      {% for occurrence in occurrences %}
+        {{ govukSelect({
+          name: "locations[" + loop.index0 + "]",
+          id: "locations[" + loop.index0 + "]",
+          errorMessage: validationErrors | findError("locations[" + loop.index0 + "]"),
+          label: {
+            text: occurrence | absenceTimeRange,
+            classes: "govuk-fieldset__legend--m"
+          },
+          items: options | setSelectedValue(occurrence.locationIdx)
+        }) }}
+      {% endfor %}
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

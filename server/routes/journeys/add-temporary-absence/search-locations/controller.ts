@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { AddTapFlowControl } from '../flow'
 import { SchemaType } from './schema'
+import { getOccurrencesToMatch } from '../utils'
 
 export class SearchLocationsController {
   GET = async (req: Request, res: Response) => {
@@ -20,6 +21,13 @@ export class SearchLocationsController {
       })
 
       res.redirect('search-locations')
+    } else if (req.journeyData.addTemporaryAbsence!.locations?.length === 1) {
+      req.journeyData.addTemporaryAbsence!.occurrences = getOccurrencesToMatch(req).map(({ releaseAt, returnBy }) => ({
+        releaseAt,
+        returnBy,
+        locationIdx: 0,
+      }))
+      res.redirect('accompanied-or-unaccompanied')
     } else {
       res.redirect('match-absences-and-locations')
     }
@@ -29,6 +37,7 @@ export class SearchLocationsController {
     const itm = Number(req.params.itm)
     if (!Number.isNaN(itm)) {
       req.journeyData.addTemporaryAbsence!.locations?.splice(itm - 1, 1)
+      delete req.journeyData.addTemporaryAbsence!.occurrences
     }
     res.redirect('../../search-locations')
   }
