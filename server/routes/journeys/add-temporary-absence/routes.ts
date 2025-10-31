@@ -30,6 +30,7 @@ import { EnterLocationRoutes } from './enter-location/routes'
 import { SelectDaysTimesWeeklyRoutes } from './select-days-times-weekly/routes'
 import { EnterRotatingPatternRoutes } from './enter-rotating-pattern/routes'
 import { SelectSameTimesRoutes } from './select-same-times/routes'
+import { SearchLocationsRoutes } from './search-locations/routes'
 
 import { RotatingReleaseReturnTimesRoutes } from './rotating-release-return-times/routes'
 
@@ -84,6 +85,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/select-days-times-weekly', SelectDaysTimesWeeklyRoutes())
   router.use('/enter-rotating-pattern', EnterRotatingPatternRoutes())
   router.use('/select-same-times', SelectSameTimesRoutes())
+  router.use('/search-locations', SearchLocationsRoutes(services))
 
   router.use('/rotating-release-return-times', RotatingReleaseReturnTimesRoutes())
   return router

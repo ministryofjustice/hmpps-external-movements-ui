@@ -54,7 +54,7 @@
           text: "Absence reason"
         },
           value: {
-          text: reasonCategory.description
+          text: absenceReasonCategory.description
         },
           actions: {
           items: [
@@ -66,10 +66,10 @@
             }
           ]
         }
-        } if reasonCategory and not absenceReason,
+        } if absenceReasonCategory,
         {
           key: {
-          text: "Absence reason"
+          text: "Work type" if absenceReasonCategory else "Absence reason"
         },
           value: {
           text: absenceReason.description
@@ -77,9 +77,9 @@
           actions: {
           items: [
             {
-              href: "edit/reason-category" if reasonCategory else  "edit/reason",
+              href: "edit/reason",
               text: "Change",
-              visuallyHiddenText: "absence reason",
+              visuallyHiddenText: "work type" if absenceReasonCategory else "absence reason",
               classes: "govuk-link--no-visited-state"
             }
           ]
