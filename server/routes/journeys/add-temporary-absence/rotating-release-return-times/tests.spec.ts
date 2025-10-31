@@ -83,6 +83,20 @@ test.describe('/add-temporary-absence/rotating-release-return-times', () => {
       await expect(testPage.timeEntry(i, 'return', 'Hour')).toBeFocused()
     }
 
+    // Validation empty minute messages
+    for (let i = 0; i < 6; i += 1) {
+      await testPage.timeEntry(i, 'release', 'Hour').fill('1')
+      await testPage.timeEntry(i, 'release', 'Minute').fill('')
+
+      await testPage.timeEntry(i, 'return', 'Hour').fill('1')
+      await testPage.timeEntry(i, 'return', 'Minute').fill('')
+    }
+
+    await testPage.clickContinue()
+
+    await expect(testPage.errorEmptyReleaseTime()).toHaveCount(6)
+    await expect(testPage.errorEmptyReturnTime()).toHaveCount(6)
+
     // Validation invalid messages
     for (let i = 0; i < 6; i += 1) {
       await testPage.timeEntry(i, 'release', 'Hour').fill('24')
@@ -287,5 +301,43 @@ test.describe('/add-temporary-absence/rotating-release-return-times', () => {
       await expect(testPage.timeEntry(i, 'return', 'Hour')).toHaveValue('02')
       await expect(testPage.timeEntry(i, 'return', 'Minute')).toHaveValue('41')
     }
+  })
+
+  test('should handle different schedule cases', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    await injectJourneyData(page, journeyId, {
+      addTemporaryAbsence: {
+        rotatingPatternSubJourney: {
+          intervals: [
+            { count: 1, type: 'Scheduled days' },
+            { count: 2, type: 'Rest days' },
+          ],
+        },
+      },
+    })
+
+    await page.goto(`/${journeyId}/add-temporary-absence/rotating-release-return-times`)
+
+    const testPage = new RotatingReleaseReturnTimesPage(page)
+    await expect(testPage.page.getByRole('heading').nth(1)).toContainText('Working day 1')
+    await expect(testPage.page.getByRole('heading')).toHaveCount(2)
+
+    await injectJourneyData(page, journeyId, {
+      addTemporaryAbsence: {
+        rotatingPatternSubJourney: {
+          intervals: [
+            { count: 1, type: 'Scheduled nights' },
+            { count: 2, type: 'Rest days' },
+          ],
+        },
+      },
+    })
+
+    await page.goto(`/${journeyId}/add-temporary-absence/rotating-release-return-times`)
+
+    await expect(testPage.page.getByRole('heading').nth(1)).toContainText('Working night 1')
+    await expect(testPage.page.getByRole('heading')).toHaveCount(2)
   })
 })

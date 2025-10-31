@@ -14,7 +14,7 @@
             <div class="govuk-grid-row">
                 <h2 class="govuk-heading-m govuk-!-margin-left-3">{{item.title}}</h2>
                 <input type="hidden" name="times[{{loop.index0}}][type]" value="{{item.type}}"/>
-                <div class="govuk-grid-column-one-quarter">
+                <div class="govuk-grid-column-one-third">
                     {{ validatedTimeInput({
                         id: "release",
                         name: "release",
@@ -33,7 +33,7 @@
                         minute: item.releaseMinute
                     }) }}
                 </div>
-                <div class="govuk-grid-column-one-quarter">
+                <div class="govuk-grid-column-one-third">
                     {{ validatedTimeInput({
                         id: "return",
                         name: "return",

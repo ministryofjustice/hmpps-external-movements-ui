@@ -44,7 +44,7 @@ export function addEmptyHHMMErrors(
   } else if (!parsedMinute) {
     ctx.addIssue({
       code: 'custom',
-      message: '',
+      message: errorMessage,
       path: [...path, `${segment}Minute`],
     })
   }

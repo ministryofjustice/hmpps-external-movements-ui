@@ -20,23 +20,27 @@ export class RotatingReleaseReturnTimesController {
       const nightStartTime = intervals.find(o => o.type === 'Scheduled nights')?.items?.[0]?.startTime
       const nightReturnTime = intervals.find(o => o.type === 'Scheduled nights')?.items?.[0]?.returnTime
 
-      times.push({
-        title: 'Working days',
-        type: 'Scheduled days',
-        releaseHour: formResponses?.[times.length]?.['releaseHour'] ?? dayStartTime?.split(':')[0],
-        releaseMinute: formResponses?.[times.length]?.['releaseMinute'] ?? dayStartTime?.split(':')[1],
-        returnHour: formResponses?.[times.length]?.['returnHour'] ?? dayReturnTime?.split(':')[0],
-        returnMinute: formResponses?.[times.length]?.['returnMinute'] ?? dayReturnTime?.split(':')[1],
-      })
+      if (intervals.find(o => o.type === 'Scheduled days')) {
+        times.push({
+          title: 'Working days',
+          type: 'Scheduled days',
+          releaseHour: formResponses?.[times.length]?.['releaseHour'] ?? dayStartTime?.split(':')[0],
+          releaseMinute: formResponses?.[times.length]?.['releaseMinute'] ?? dayStartTime?.split(':')[1],
+          returnHour: formResponses?.[times.length]?.['returnHour'] ?? dayReturnTime?.split(':')[0],
+          returnMinute: formResponses?.[times.length]?.['returnMinute'] ?? dayReturnTime?.split(':')[1],
+        })
+      }
 
-      times.push({
-        title: 'Working nights',
-        type: 'Scheduled nights',
-        releaseHour: formResponses?.[times.length]?.['releaseHour'] ?? nightStartTime?.split(':')[0],
-        releaseMinute: formResponses?.[times.length]?.['releaseMinute'] ?? nightStartTime?.split(':')[1],
-        returnHour: formResponses?.[times.length]?.['returnHour'] ?? nightReturnTime?.split(':')[0],
-        returnMinute: formResponses?.[times.length]?.['returnMinute'] ?? nightReturnTime?.split(':')[1],
-      })
+      if (intervals.find(o => o.type === 'Scheduled nights')) {
+        times.push({
+          title: 'Working nights',
+          type: 'Scheduled nights',
+          releaseHour: formResponses?.[times.length]?.['releaseHour'] ?? nightStartTime?.split(':')[0],
+          releaseMinute: formResponses?.[times.length]?.['releaseMinute'] ?? nightStartTime?.split(':')[1],
+          returnHour: formResponses?.[times.length]?.['returnHour'] ?? nightReturnTime?.split(':')[0],
+          returnMinute: formResponses?.[times.length]?.['returnMinute'] ?? nightReturnTime?.split(':')[1],
+        })
+      }
 
       return times
     }
