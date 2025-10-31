@@ -104,6 +104,30 @@ test.describe('/add-temporary-absence/rotating-release-return-times', () => {
       await expect(testPage.timeEntry(i, 'return', 'Hour')).toBeFocused()
     }
 
+    // Validation return after release (day only)
+    for (let i = 0; i < 6; i += 1) {
+      await testPage.timeEntry(i, 'release', 'Hour').fill('2')
+      await testPage.timeEntry(i, 'release', 'Minute').fill('2')
+
+      await testPage.timeEntry(i, 'return', 'Hour').fill('1')
+      await testPage.timeEntry(i, 'return', 'Minute').fill('1')
+    }
+
+    await testPage.clickContinue()
+
+    await expect(
+      testPage.page.getByRole('link', { name: 'The return time must come after the release date and time' }),
+    ).toHaveCount(4)
+
+    for (let i = 0; i < 4; i += 1) {
+      await testPage.page
+        .getByRole('link', { name: 'The return time must come after the release date and time' })
+        .nth(i)
+        .click()
+      // There are two night entries after the first day - so skip these in the assert
+      await expect(testPage.timeEntry(i === 0 ? 0 : i + 2, 'return', 'Hour')).toBeFocused()
+    }
+
     // Verify data is interpretted correctly
     for (let i = 0; i < 6; i += 1) {
       await testPage.timeEntry(i, 'release', 'Hour').fill(String(i + 1))
@@ -199,6 +223,23 @@ test.describe('/add-temporary-absence/rotating-release-return-times', () => {
       await testPage.page.getByRole('link', { name: 'Enter a valid return time' }).nth(i).click()
       await expect(testPage.timeEntry(i, 'return', 'Hour')).toBeFocused()
     }
+
+    // Validation return after release (day only)
+    for (let i = 0; i < 2; i += 1) {
+      await testPage.timeEntry(i, 'release', 'Hour').fill('2')
+      await testPage.timeEntry(i, 'release', 'Minute').fill('2')
+
+      await testPage.timeEntry(i, 'return', 'Hour').fill('1')
+      await testPage.timeEntry(i, 'return', 'Minute').fill('1')
+    }
+
+    await testPage.clickContinue()
+
+    await expect(
+      testPage.page.getByRole('link', { name: 'The return time must come after the release date and time' }),
+    ).toHaveCount(1)
+    await testPage.page.getByRole('link', { name: 'The return time must come after the release date and time' }).click()
+    await expect(testPage.timeEntry(0, 'return', 'Hour')).toBeFocused()
 
     // Verify data is interpretted correctly
     for (let i = 0; i < 2; i += 1) {
