@@ -109,6 +109,16 @@ export type AddTemporaryAbsenceJourney = Partial<{
     isSameTime: boolean
   }
   isCheckPattern: boolean
+  occurrencesToMatch: {
+    releaseAt: string
+    returnBy: string
+    locationIdx?: number
+  }[]
+  occurrences: {
+    releaseAt: string
+    returnBy: string
+    locationIdx: number
+  }[]
 }>
 
 export type UpdateTapOccurrenceJourney = {

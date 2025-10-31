@@ -116,6 +116,27 @@ test.describe('/add-temporary-absence/search-locations', () => {
 
     // verify next page routing
     await testPage.clickContinue()
+    expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
+  })
+
+  test('should proceed to match-absences-and-locations if there are multiple locations', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    // verify page content
+    const testPage = await new SearchLocationsPage(page).verifyContent()
+
+    // add multiple locations
+    await testPage.searchField().fill('random')
+    await testPage.selectAddress('Address, RS1 34T')
+    await testPage.clickButton('Add location')
+
+    await testPage.searchField().fill('random')
+    await testPage.selectAddress('Address 2, RS1 34T')
+    await testPage.clickButton('Add location')
+
+    // verify next page routing
+    await testPage.clickContinue()
     expect(page.url()).toMatch(/\/add-temporary-absence\/match-absences-and-locations/)
   })
 })

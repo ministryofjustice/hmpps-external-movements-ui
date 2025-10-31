@@ -31,6 +31,7 @@ import { SelectDaysTimesWeeklyRoutes } from './select-days-times-weekly/routes'
 import { EnterRotatingPatternRoutes } from './enter-rotating-pattern/routes'
 import { SelectSameTimesRoutes } from './select-same-times/routes'
 import { SearchLocationsRoutes } from './search-locations/routes'
+import { MatchAbsencesAndLocationsRoute } from './match-absences-and-locations/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -84,6 +85,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/enter-rotating-pattern', EnterRotatingPatternRoutes())
   router.use('/select-same-times', SelectSameTimesRoutes())
   router.use('/search-locations', SearchLocationsRoutes(services))
+  router.use('/match-absences-and-locations', MatchAbsencesAndLocationsRoute())
 
   return router
 }
@@ -149,7 +151,8 @@ const guard = {
   'enter-location': (req: Request) => (get(req, '', 'returnDate') ? undefined : '/end-date'),
   'confirm-location': (req: Request) =>
     get(req, 'confirmLocationSubJourney', 'location') ? undefined : '/search-location',
-  'accompanied-or-unaccompanied': (req: Request) => (get(req, '', 'location') ? undefined : '/search-location'),
+  'accompanied-or-unaccompanied': (req: Request) =>
+    get(req, '', 'repeat') || get(req, '', 'location') ? undefined : '/search-location',
   accompanied: (req: Request) =>
     get(req, 'accompaniedSubJourney', 'accompanied') ? undefined : '/accompanied-or-unaccompanied',
   transport: (req: Request) => {

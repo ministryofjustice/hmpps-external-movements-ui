@@ -261,6 +261,39 @@ export class AddTapFlowControl {
       }
     }
 
+    if (data.occurrences) {
+      journey.occurrences = data.occurrences
+      return 'accompanied-or-unaccompanied'
+    }
+    if (data.accompanied !== undefined) {
+      if (data.accompanied) {
+        journey.accompaniedSubJourney = { accompanied: data.accompanied }
+        return 'accompanied'
+      }
+      journey.accompanied = data.accompanied
+      return 'transport'
+    }
+    if (data.accompaniedBy) {
+      if (journey.accompaniedSubJourney) {
+        journey.accompanied = journey.accompaniedSubJourney.accompanied
+        delete journey.accompaniedSubJourney
+      }
+      journey.accompaniedBy = data.accompaniedBy
+      return 'transport'
+    }
+    if (data.transport) {
+      journey.transport = data.transport
+      return 'comments'
+    }
+    if (data.notes !== undefined) {
+      journey.notes = data.notes
+      return 'approval'
+    }
+    if (data.requireApproval !== undefined) {
+      journey.requireApproval = data.requireApproval
+      return 'check-answers'
+    }
+
     logger.warn('No valid data sent for AddTapFlowControl.saveDataAndGetNextPageForRepeatingTap')
     return ''
   }
