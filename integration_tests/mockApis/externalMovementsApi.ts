@@ -21,6 +21,26 @@ export const stubExternalMovementsPing = (httpStatus = 200) =>
     },
   })
 
+export const stubGetOverview = (caseloadId: string) =>
+  successStub({
+    method: 'GET',
+    urlPattern: `/external-movements-api/prisons/${caseloadId}/external-movements/overview`,
+    response: {
+      configuration: {
+        tapEnabled: true,
+        courtMovementsEnabled: true,
+        transfersEnabled: true,
+        releasesEnabled: true,
+      },
+      tapOverview: {
+        leavingToday: 5,
+        returningToday: 5,
+        leavingNextSevenDays: 25,
+        approvalsRequired: 3,
+      },
+    },
+  })
+
 export const stubGetAllAbsenceTypes = () =>
   successStub({
     method: 'GET',

@@ -12,7 +12,7 @@ import { AddAbsenceConfirmationPage } from './test.page'
 test.describe('/add-temporary-absence/confirmation', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
@@ -20,7 +20,9 @@ test.describe('/add-temporary-absence/confirmation', () => {
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 

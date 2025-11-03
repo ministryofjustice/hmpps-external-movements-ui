@@ -13,7 +13,7 @@ import { AccompaniedPage } from './test.page'
 test.describe('/add-temporary-absence/accompanied', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
@@ -21,7 +21,9 @@ test.describe('/add-temporary-absence/accompanied', () => {
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetReferenceData('accompanied-by'),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 

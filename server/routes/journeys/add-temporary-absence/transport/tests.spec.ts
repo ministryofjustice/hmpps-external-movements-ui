@@ -16,7 +16,7 @@ import { TransportPage } from './test.page'
 test.describe('/add-temporary-absence/transport', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
@@ -25,7 +25,9 @@ test.describe('/add-temporary-absence/transport', () => {
       stubGetAllAbsenceTypes(),
       stubGetReferenceData('transport'),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 

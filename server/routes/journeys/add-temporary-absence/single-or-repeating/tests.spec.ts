@@ -13,7 +13,7 @@ import { SingleOrRepeatingPage } from './test.page'
 test.describe('/add-temporary-absence/single-or-repeating', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
@@ -21,7 +21,9 @@ test.describe('/add-temporary-absence/single-or-repeating', () => {
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 

@@ -14,7 +14,7 @@ import { stubGetAddress, stubSearchAddresses } from '../../../../../integration_
 test.describe('/add-temporary-absence/search-location', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     const address = {
       addressString: 'Address',
       buildingName: '',
@@ -38,7 +38,9 @@ test.describe('/add-temporary-absence/search-location', () => {
       stubSearchAddresses('SW1H%209AJ', [address]), // query used by the module to check OS Places API availability
       stubGetAddress('1001', address),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 
