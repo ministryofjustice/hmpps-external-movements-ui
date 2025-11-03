@@ -38,6 +38,8 @@ export class AddTapCheckAnswersController {
       requireApproval,
       locations,
       occurrences,
+      fromDate,
+      toDate,
     } = req.journeyData.addTemporaryAbsence!
 
     try {
@@ -45,8 +47,8 @@ export class AddTapCheckAnswersController {
         repeat: repeat!,
         statusCode: requireApproval ? 'PENDING' : 'APPROVED',
         absenceTypeCode: absenceType!.code,
-        fromDate: `${startDate}T${startTime}:00`,
-        toDate: `${returnDate}T${returnTime}:00`,
+        fromDate: repeat ? fromDate! : startDate!,
+        toDate: repeat ? toDate! : returnDate!,
         occurrences: repeat
           ? occurrences!.map(({ releaseAt, returnBy, locationIdx }) => ({
               releaseAt,

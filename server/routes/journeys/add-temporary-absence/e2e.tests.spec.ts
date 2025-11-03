@@ -435,7 +435,7 @@ test.describe('/add-temporary-absence/e2e', () => {
       {
         absenceSubTypeCode: 'CRL',
         absenceTypeCode: 'SR',
-        fromDate: '2069-10-10T12:30:00',
+        fromDate: '2069-10-10',
         notes: 'Sample text',
         occurrences: [
           {
@@ -452,7 +452,7 @@ test.describe('/add-temporary-absence/e2e', () => {
         ],
         repeat: false,
         statusCode: 'PENDING',
-        toDate: '2069-10-11T12:30:00',
+        toDate: '2069-10-11',
       },
     ])
   })
