@@ -4,6 +4,30 @@
  */
 
 export interface paths {
+  '/temporary-absence-occurrences/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
+    get: operations['getTapOccurrence']
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
+    put: operations['applyActions']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/sync/temporary-absence-movement/{personIdentifier}': {
     parameters: {
       query?: never
@@ -78,26 +102,6 @@ export interface paths {
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     post: operations['createTapAuthorisation']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/temporary-absence-occurrences/{id}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
-     */
-    get: operations['getTapOccurrence']
-    put?: never
-    post?: never
     delete?: never
     options?: never
     head?: never
@@ -308,6 +312,18 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
+    Action: {
+      type: string
+      reason?: string
+    }
+    RescheduleOccurrence: {
+      type: 'RescheduleOccurrence'
+    } & (Omit<WithRequired<components['schemas']['Action'], 'type'>, 'type'> & {
+      /** Format: date-time */
+      releaseAt?: string
+      /** Format: date-time */
+      returnBy?: string
+    })
     NomisAudit: {
       /** Format: date-time */
       createDatetime: string
@@ -392,7 +408,7 @@ export interface components {
       absenceReasonCode?: string
       occurrences: components['schemas']['CreateTapOccurrenceRequest'][]
       /** @enum {string} */
-      statusCode: 'PENDING' | 'APPROVED' | 'WITHDRAWN' | 'DENIED'
+      statusCode: 'PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED'
       notes?: string
       repeat: boolean
       /** Format: date */
@@ -505,7 +521,32 @@ export interface components {
       schedule?: components['schemas']['JsonNode']
       notes?: string
     }
-    TapMovement: {
+    SyncReadTapOccurrence: {
+      /** Format: uuid */
+      id: string
+      authorisation: components['schemas']['SyncReadTapOccurrenceAuthorisation']
+      statusCode: string
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
+      location: components['schemas']['Location']
+      accompaniedByCode: string
+      transportCode: string
+      notes?: string
+    }
+    SyncReadTapOccurrenceAuthorisation: {
+      /** Format: uuid */
+      id: string
+      statusCode: string
+      absenceTypeCode?: string
+      absenceSubTypeCode?: string
+      absenceReasonCode: string
+      repeat: boolean
+      /** Format: date-time */
+      submittedAt: string
+    }
+    SyncReadTapMovement: {
       /** Format: uuid */
       id: string
       /** Format: uuid */
@@ -520,6 +561,38 @@ export interface components {
       accompaniedByNotes?: string
       notes?: string
       recordedByPrisonCode: string
+    }
+    SyncReadTapAuthorisation: {
+      /** Format: uuid */
+      id: string
+      personIdentifier: string
+      prisonCode: string
+      statusCode: string
+      absenceTypeCode?: string
+      absenceSubTypeCode?: string
+      absenceReasonCode: string
+      repeat: boolean
+      /** Format: date */
+      fromDate: string
+      /** Format: date */
+      toDate: string
+      /** Format: date-time */
+      submittedAt: string
+      notes?: string
+      occurrences: components['schemas']['SyncReadTapAuthorisationOccurrence'][]
+    }
+    SyncReadTapAuthorisationOccurrence: {
+      /** Format: uuid */
+      id: string
+      statusCode: string
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
+      location: components['schemas']['Location']
+      accompaniedByCode: string
+      transportCode: string
+      notes?: string
     }
     TapOccurrenceSearchRequest: {
       prisonCode: string
@@ -572,7 +645,7 @@ export interface components {
       fromDate: string
       /** Format: date */
       toDate: string
-      status: ('PENDING' | 'APPROVED' | 'WITHDRAWN' | 'DENIED')[]
+      status: ('PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED')[]
       query?: string
       /** Format: int32 */
       page: number
@@ -656,6 +729,52 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  getTapOccurrence: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['TapOccurrence']
+        }
+      }
+    }
+  }
+  applyActions: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RescheduleOccurrence']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   syncTemporaryAbsenceMovement: {
     parameters: {
       query?: never
@@ -760,28 +879,6 @@ export interface operations {
       }
     }
   }
-  getTapOccurrence: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['TapOccurrence']
-        }
-      }
-    }
-  }
   getTapAuthorisation: {
     parameters: {
       query?: never
@@ -821,7 +918,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['TapOccurrence']
+          '*/*': components['schemas']['SyncReadTapOccurrence']
         }
       }
     }
@@ -843,7 +940,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['TapMovement']
+          '*/*': components['schemas']['SyncReadTapMovement']
         }
       }
     }
@@ -865,7 +962,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['TapAuthorisation']
+          '*/*': components['schemas']['SyncReadTapAuthorisation']
         }
       }
     }
@@ -1014,4 +1111,7 @@ export interface operations {
       }
     }
   }
+}
+type WithRequired<T, K extends keyof T> = T & {
+  [P in K]-?: T[P]
 }
