@@ -441,7 +441,7 @@ test.describe('/add-temporary-absence/e2e', () => {
           {
             accompaniedByCode: 'U',
             location: {
-              id: '2001',
+              uprn: '2001',
               description: 'Address, RS1 34T',
             },
             notes: 'Sample text',

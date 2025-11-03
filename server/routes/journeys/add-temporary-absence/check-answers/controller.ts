@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
 import { components } from '../../../../@types/externalMovements'
+import { Address } from '../../../../@types/journeys'
 
 export class AddTapCheckAnswersController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -35,6 +36,8 @@ export class AddTapCheckAnswersController {
       location,
       repeat,
       requireApproval,
+      locations,
+      occurrences,
     } = req.journeyData.addTemporaryAbsence!
 
     try {
@@ -44,18 +47,23 @@ export class AddTapCheckAnswersController {
         absenceTypeCode: absenceType!.code,
         fromDate: `${startDate}T${startTime}:00`,
         toDate: `${returnDate}T${returnTime}:00`,
-        occurrences: [
-          {
-            releaseAt: `${startDate}T${startTime}:00`,
-            returnBy: `${returnDate}T${returnTime}:00`,
-            location: {
-              ...(location!.id ? { id: location!.id } : {}),
-              description: location!.description!,
-            },
-            transportCode: transport!.code,
-            accompaniedByCode: accompanied && accompaniedBy ? accompaniedBy.code : 'U',
-          },
-        ],
+        occurrences: repeat
+          ? occurrences!.map(({ releaseAt, returnBy, locationIdx }) => ({
+              releaseAt,
+              returnBy,
+              location: parseAddress(locations![locationIdx]!),
+              transportCode: transport!.code,
+              accompaniedByCode: accompanied && accompaniedBy ? accompaniedBy.code : 'U',
+            }))
+          : [
+              {
+                releaseAt: `${startDate}T${startTime}:00`,
+                returnBy: `${returnDate}T${returnTime}:00`,
+                location: parseAddress(location!),
+                transportCode: transport!.code,
+                accompaniedByCode: accompanied && accompaniedBy ? accompaniedBy.code : 'U',
+              },
+            ],
       }
 
       if (absenceSubType) request.absenceSubTypeCode = absenceSubType.code
@@ -67,7 +75,9 @@ export class AddTapCheckAnswersController {
 
       if (notes) {
         request.notes = notes
-        request.occurrences[0]!.notes = notes
+        for (const occurrence of request.occurrences) {
+          occurrence.notes = notes
+        }
       }
 
       await this.externalMovementsService.createTap({ res }, req.journeyData.prisonerDetails!.prisonerNumber, request)
@@ -81,3 +91,9 @@ export class AddTapCheckAnswersController {
 
   POST = (_req: Request, res: Response) => res.redirect('confirmation')
 }
+
+const parseAddress = (location: Address) => ({
+  description: location.description!,
+  ...(location.id ? { uprn: location.id } : {}),
+  ...(location.postcode ? { postcode: location.postcode } : {}),
+})
