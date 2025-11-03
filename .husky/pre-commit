@@ -1,4 +1,5 @@
 #!/bin/bash
+sh ./grep-check.sh
 NODE_ENV=dev \
 npm run precommit:secrets \
 && npm run precommit:lint \

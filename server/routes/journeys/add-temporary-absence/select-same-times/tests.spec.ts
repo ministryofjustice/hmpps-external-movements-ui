@@ -1,6 +1,5 @@
 import { v4 as uuidV4 } from 'uuid'
 import { expect, test, Page } from '@playwright/test'
-import { resetStubs } from '../../../../../integration_tests/mockApis/wiremock'
 import auth from '../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../../integration_tests/steps/signIn'
@@ -13,15 +12,16 @@ import { SelectSameTimesPage } from './test.page'
 test.describe('/add-temporary-absence/select-same-times', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
-    await resetStubs()
+  test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 

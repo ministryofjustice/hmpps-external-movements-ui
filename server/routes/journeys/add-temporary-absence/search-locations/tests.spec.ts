@@ -14,7 +14,7 @@ import { stubGetAddress, stubSearchAddresses } from '../../../../../integration_
 test.describe('/add-temporary-absence/search-locations', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     const address = {
       addressString: 'Address',
       buildingName: '',
@@ -52,7 +52,9 @@ test.describe('/add-temporary-absence/search-locations', () => {
       stubGetAddress('1001', address),
       stubGetAddress('1002', address2),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 

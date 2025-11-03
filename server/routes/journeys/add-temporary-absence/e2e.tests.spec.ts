@@ -33,7 +33,7 @@ import { SearchLocationPage } from './search-location/test.page'
 test.describe('/add-temporary-absence/e2e', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     const address = {
       addressString: 'Address',
       buildingName: '',
@@ -65,7 +65,9 @@ test.describe('/add-temporary-absence/e2e', () => {
       stubGetAddress('2001', address),
       stubPostCreateTap(prisonNumber),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 

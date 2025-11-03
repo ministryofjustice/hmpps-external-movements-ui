@@ -16,7 +16,7 @@ import { AbsenceSubTypePage } from './test.page'
 test.describe('/add-temporary-absence/absence-subtype', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
@@ -25,7 +25,9 @@ test.describe('/add-temporary-absence/absence-subtype', () => {
       stubGetAllAbsenceTypes(),
       stubGetAbsenceCategory('ABSENCE_TYPE', 'SR'),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 
