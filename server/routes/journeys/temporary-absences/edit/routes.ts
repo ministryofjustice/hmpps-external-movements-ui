@@ -12,8 +12,8 @@ export const EditTapOccurrenceRoutes = (services: Services) => {
 
   get('/', controller.GET)
 
-  router.use('/start-date', EditStartDateRoutes())
-  router.use('/end-date', EditEndDateRoutes())
+  router.use('/start-date', EditStartDateRoutes(services))
+  router.use('/end-date', EditEndDateRoutes(services))
   router.use('/transport', EditTransportRoutes(services))
   router.use('/comments', EditAbsenceCommentsRoutes())
 
