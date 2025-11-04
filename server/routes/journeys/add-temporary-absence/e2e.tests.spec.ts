@@ -435,13 +435,13 @@ test.describe('/add-temporary-absence/e2e', () => {
       {
         absenceSubTypeCode: 'CRL',
         absenceTypeCode: 'SR',
-        fromDate: '2069-10-10T12:30:00',
+        fromDate: '2069-10-10',
         notes: 'Sample text',
         occurrences: [
           {
             accompaniedByCode: 'U',
             location: {
-              id: '2001',
+              uprn: '2001',
               description: 'Address, RS1 34T',
             },
             notes: 'Sample text',
@@ -452,7 +452,7 @@ test.describe('/add-temporary-absence/e2e', () => {
         ],
         repeat: false,
         statusCode: 'PENDING',
-        toDate: '2069-10-11T12:30:00',
+        toDate: '2069-10-11',
       },
     ])
   })
