@@ -21,7 +21,7 @@ export class AbsenceSubTypeController {
         await getAbsenceCategorisationsForDomain(this.externalMovementsService, req, res, 'ABSENCE_SUB_TYPE')
       ).items.map(absenceCategorisationMapper),
       absenceType,
-      absenceSubType: res.locals['formResponses']?.['absenceSubType'] ?? absenceSubType?.code,
+      absenceSubType: res.locals.formResponses?.['absenceSubType'] ?? absenceSubType?.code,
     })
   }
 

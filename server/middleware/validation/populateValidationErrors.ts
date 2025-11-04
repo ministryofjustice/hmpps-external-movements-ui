@@ -9,7 +9,7 @@ export default function populateValidationErrors(): RequestHandler {
       res.locals['validationErrors'] = JSON.parse(validationErrors)
     }
     if (formResponses) {
-      res.locals['formResponses'] = JSON.parse(formResponses)
+      res.locals.formResponses = JSON.parse(formResponses)
     }
     next()
   }

@@ -7,11 +7,11 @@ import { firstNameSpaceLastName } from '../../../../../utils/formatUtils'
 export class EditStartEndDatesController {
   GET = async (req: Request, res: Response) => {
     const fromDate =
-      res.locals['formResponses']?.['fromDate'] ??
+      res.locals.formResponses?.['fromDate'] ??
       formatInputDate(req.journeyData.updateTapAuthorisation!.authorisation.fromDate)
 
     const toDate =
-      res.locals['formResponses']?.['toDate'] ??
+      res.locals.formResponses?.['toDate'] ??
       formatInputDate(req.journeyData.updateTapAuthorisation!.authorisation.toDate)
 
     res.render('temporary-absence-authorisations/edit/start-end-dates/view', {

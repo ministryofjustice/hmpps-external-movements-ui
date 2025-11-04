@@ -58,6 +58,7 @@ export type AddTemporaryAbsenceJourney = Partial<{
     location: Address
   }
   location: Address
+  locations: Address[]
   accompaniedSubJourney: {
     accompanied: boolean
   }
@@ -74,7 +75,6 @@ export type AddTemporaryAbsenceJourney = Partial<{
     startTime: string
     returnDate: string
     returnTime: string
-    locationId?: string
   }[]
   weeklyPattern: {
     day: number
@@ -84,31 +84,34 @@ export type AddTemporaryAbsenceJourney = Partial<{
     locationId?: string
   }[]
   rotatingPatternSubJourney: {
-    intervals: {
-      type: string
-      count: number
-      items?: {
-        startTime: string
-        returnTime: string
-        locationId?: string
-      }[]
-    }[]
+    intervals: RotatingPatternInterval[]
     isSameTime?: boolean
   }
   rotatingPattern: {
-    intervals: {
-      type: string
-      count: number
-      items: {
-        startTime: string
-        returnTime: string
-        locationId?: string
-      }[]
-    }[]
+    intervals: RotatingPatternInterval[]
     isSameTime: boolean
   }
   isCheckPattern: boolean
+  occurrencesToMatch: {
+    releaseAt: string
+    returnBy: string
+    locationIdx?: number
+  }[]
+  occurrences: {
+    releaseAt: string
+    returnBy: string
+    locationIdx: number
+  }[]
 }>
+
+export type RotatingPatternInterval = {
+  type: string
+  count: number
+  items?: {
+    startTime: string
+    returnTime: string
+  }[]
+}
 
 export type UpdateTapOccurrenceJourney = {
   occurrence: components['schemas']['TapOccurrence']

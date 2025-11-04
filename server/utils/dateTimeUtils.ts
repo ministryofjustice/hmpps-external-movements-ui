@@ -1,11 +1,5 @@
 import { format, isValid, parseISO } from 'date-fns'
 
-const DATE_FORMAT_GB = new Intl.DateTimeFormat('en-GB', {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-})
-
 export const formatInputDate = (value?: string) => value && format(new Date(Date.parse(value)), 'd/L/yyyy')
 
 export const formatDate = (date?: string | Date, fmt = 'd MMMM yyyy') => {
@@ -17,16 +11,6 @@ export const formatDate = (date?: string | Date, fmt = 'd MMMM yyyy') => {
 
 export const formatTime = (date?: string) => {
   return date?.substring(9, 14) || ''
-}
-
-// dd/MM/yyyy format for Date Picker's minDate / maxDate value
-export const todayStringGBFormat = () => DATE_FORMAT_GB.format(new Date())
-
-// dd/MM/yyyy format for Date Picker's minDate / maxDate value
-export const yesterdayStringGBFormat = () => {
-  const currentDate = new Date()
-  currentDate.setDate(currentDate.getDate() - 1)
-  return DATE_FORMAT_GB.format(currentDate)
 }
 
 export const addDaysMonths = (dateString: string, plusDays: number = 0, plusMonth: number = 0) => {
@@ -43,10 +27,9 @@ export const inputDate = (plusDays: number = 0, plusMonth: number = 0) => {
   return format(date, 'd/M/yyyy')
 }
 
-export const parseDatePickerMinDate = (date: string) => {
-  const currentDate = new Date(date)
-  currentDate.setDate(currentDate.getDate() - 1)
-  return DATE_FORMAT_GB.format(currentDate)
+export const absenceTimeRange = ({ releaseAt, returnBy }: { releaseAt: string; returnBy: string }) => {
+  if (releaseAt.substring(0, 10) === returnBy.substring(0, 10)) {
+    return `${format(releaseAt, 'cccc, d MMMM')} (${format(releaseAt, 'HH:mm')} to ${format(returnBy, 'HH:mm')})`
+  }
+  return `${format(releaseAt, 'cccc, d MMMM')} to ${format(returnBy, 'cccc, d MMMM')} (${format(releaseAt, 'HH:mm')} to ${format(returnBy, 'HH:mm')})`
 }
-
-export const parseDatePickerMaxDate = (date: string) => DATE_FORMAT_GB.format(new Date(date))

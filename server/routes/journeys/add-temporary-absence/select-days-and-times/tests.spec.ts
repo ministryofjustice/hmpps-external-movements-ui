@@ -13,7 +13,7 @@ import { FreeformSelectDaysPage } from './test.page'
 test.describe('/add-temporary-absence/select-days-and-time', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
@@ -21,7 +21,9 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 
@@ -232,7 +234,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
 test.describe('/add-temporary-absence/select-days-and-time edge case', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
@@ -240,7 +242,9 @@ test.describe('/add-temporary-absence/select-days-and-time edge case', () => {
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 

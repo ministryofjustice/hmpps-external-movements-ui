@@ -12,7 +12,7 @@ export class EnterRotatingPatternController {
   GET = async (req: Request, res: Response) => {
     res.render('add-temporary-absence/enter-rotating-pattern/view', {
       items:
-        res.locals['formResponses']?.['items'] ??
+        res.locals.formResponses?.['items'] ??
         req.journeyData.addTemporaryAbsence!.rotatingPatternSubJourney?.intervals ??
         req.journeyData.addTemporaryAbsence!.rotatingPattern?.intervals ??
         this.getDefaultItems(),

@@ -16,7 +16,7 @@ import { ReasonCategoryPage } from './test.page'
 test.describe('/add-temporary-absence/reason-category', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
@@ -25,7 +25,9 @@ test.describe('/add-temporary-absence/reason-category', () => {
       stubGetAllAbsenceTypes(),
       stubGetAbsenceCategory('ABSENCE_SUB_TYPE', 'RDR'),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 

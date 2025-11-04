@@ -20,7 +20,7 @@ export class FreeformSelectDaysController {
       isLastWeek: nextIdx === undefined,
       isOptional,
       absences:
-        res.locals['formResponses']?.['absences'] ??
+        res.locals.formResponses?.['absences'] ??
         this.getAbsencesFromJourney(req.journeyData.addTemporaryAbsence!, startDate, endDate),
     })
   }

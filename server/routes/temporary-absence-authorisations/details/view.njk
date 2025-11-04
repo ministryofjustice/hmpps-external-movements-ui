@@ -29,12 +29,14 @@
             preventDoubleClick: true
           }) }}
         {% endif %}
-        {{ govukButton({
-          classes: "govuk-button--warning",
-          text: "Cancel this absence",
-          href: "/temporary-absence-authorisations/" + result.id + "/cancel",
-          preventDoubleClick: true
-        }) }}
+        {% if result.status.code !== 'CANCELLED' %}
+          {{ govukButton({
+            classes: "govuk-button--warning",
+            text: "Cancel this absence",
+            href: "/temporary-absence-authorisations/" + result.id + "/cancel",
+            preventDoubleClick: true
+          }) }}
+        {% endif %}
       </div>
 
       {% set viewAbsenceHtml %}
@@ -60,6 +62,10 @@
             } if result.absenceSubType,
             {
               key: { text: "Absence reason" },
+              value: { text: result.absenceReasonCategory.description }
+            } if result.absenceReasonCategory,
+            {
+              key: { text: "Work type" if result.absenceReasonCategory else "Absence reason" },
               value: { text: result.absenceReason.description }
             } if result.absenceReason,
             {

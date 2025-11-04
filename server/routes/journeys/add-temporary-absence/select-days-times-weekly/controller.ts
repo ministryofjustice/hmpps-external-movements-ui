@@ -11,25 +11,36 @@ export class SelectDaysTimesWeeklyController {
       const overnightTime = day?.overnight ? day?.returnTime : ''
       const isOvernight = day?.overnight
 
+      const days = res.locals.formResponses?.['days'] as
+        | {
+            releaseHour: string
+            releaseMinute: string
+            returnHour: string
+            returnMinute: string
+            overnightHour: string
+            overnightMinute: string
+            isOvernight: string
+          }[]
+        | null
+
       return {
         index: dayIndex,
         day: weekDays[dayIndex],
         nextDay: weekDays[(dayIndex + 1) % 7],
-        releaseHour: res.locals['formResponses']?.days[dayIndex].releaseHour ?? startTime?.split(':')[0] ?? '',
-        releaseMinute: res.locals['formResponses']?.days[dayIndex].releaseMinute ?? startTime?.split(':')[1] ?? '',
-        returnHour: res.locals['formResponses']?.days[dayIndex].returnHour ?? returnTime?.split(':')[0] ?? '',
-        returnMinute: res.locals['formResponses']?.days[dayIndex].returnMinute ?? returnTime?.split(':')[1] ?? '',
-        overnightHour: res.locals['formResponses']?.days[dayIndex].overnightHour ?? overnightTime?.split(':')[0] ?? '',
-        overnightMinute:
-          res.locals['formResponses']?.days[dayIndex].overnightMinute ?? overnightTime?.split(':')[1] ?? '',
-        isOvernight: res.locals['formResponses']?.days[dayIndex].isOvernight ?? isOvernight ?? '',
+        releaseHour: days?.[dayIndex]?.releaseHour ?? startTime?.split(':')[0] ?? '',
+        releaseMinute: days?.[dayIndex]?.releaseMinute ?? startTime?.split(':')[1] ?? '',
+        returnHour: days?.[dayIndex]?.returnHour ?? returnTime?.split(':')[0] ?? '',
+        returnMinute: days?.[dayIndex]?.returnMinute ?? returnTime?.split(':')[1] ?? '',
+        overnightHour: days?.[dayIndex]?.overnightHour ?? overnightTime?.split(':')[0] ?? '',
+        overnightMinute: days?.[dayIndex]?.overnightMinute ?? overnightTime?.split(':')[1] ?? '',
+        isOvernight: days?.[dayIndex]?.isOvernight ?? isOvernight ?? '',
       }
     }
 
     res.render('add-temporary-absence/select-days-times-weekly/view', {
       backUrl: 'repeating-pattern',
       days:
-        res.locals['formResponses']?.['selectedDays'] ??
+        res.locals.formResponses?.['selectedDays'] ??
         req.journeyData.addTemporaryAbsence?.weeklyPattern?.map(o => weekDays[o.day]) ??
         [],
       dayData: [...Array(7).keys()].map(i => getDayTimes(i)),

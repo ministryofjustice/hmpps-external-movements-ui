@@ -1,6 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
 {% set pageTitle = 'Check your answers - Add a temporary absence' %}
 
@@ -66,10 +67,10 @@
             }
           ]
         }
-        } if reasonCategory and not reason,
+        } if reasonCategory,
         {
           key: {
-          text: "Absence reason"
+          text: "Work type" if reasonCategory else "Absence reason"
         },
           value: {
           text: reason.description
@@ -77,9 +78,9 @@
           actions: {
           items: [
             {
-              href: "reason-category" if reasonCategory else  "reason",
+              href: "reason",
               text: "Change",
-              visuallyHiddenText: "absence reason",
+              visuallyHiddenText: "work type" if reasonCategory else "absence reason",
               classes: "govuk-link--no-visited-state"
             }
           ]
@@ -107,102 +108,192 @@
     }) }}
 
     <h2 class="govuk-heading-m">Absence dates and times</h2>
-    {{ govukSummaryList({
-      classes: "govuk-!-margin-bottom-7",
-      rows: [
-        {
-          key: {
-          text: "Start date"
-        },
-          value: {
-          text: startDate | formatDate
-        },
-          actions: {
-          items: [
-            {
-              href: "start-date#startDate",
-              text: "Change",
-              visuallyHiddenText: "start date",
-              classes: "govuk-link--no-visited-state"
-            }
-          ]
-        }
-        },
-        {
-          key: {
-          text: "Start time"
-        },
-          value: {
-          text: startTime
-        },
-          actions: {
-          items: [
-            {
-              href: "start-date#startTimeHour",
-              text: "Change",
-              visuallyHiddenText: "start time",
-              classes: "govuk-link--no-visited-state"
-            }
-          ]
-        }
-        },
-        {
-          key: {
-          text: "End date"
-        },
-          value: {
-          text: returnDate | formatDate
-        },
-          actions: {
-          items: [
-            {
-              href: "end-date#returnDate",
-              text: "Change",
-              visuallyHiddenText: "end date",
-              classes: "govuk-link--no-visited-state"
-            }
-          ]
-        }
-        },
-        {
-          key: {
-          text: "End time"
-        },
-          value: {
-          text: returnTime
-        },
-          actions: {
-          items: [
-            {
-              href: "end-date#returnTimeHour",
-              text: "Change",
-              visuallyHiddenText: "end time",
-              classes: "govuk-link--no-visited-state"
-            }
-          ]
-        }
-        }
-      ]
-    }) }}
-
+    {% if repeat %}
+      {{ govukSummaryList({
+        classes: "govuk-!-margin-bottom-7",
+        rows: [
+          {
+            key: {
+            text: "Repeating schedule type"
+          },
+            value: {
+            text: patternType
+          },
+            actions: {
+            items: [
+              {
+                href: "repeating-pattern",
+                text: "Change",
+                visuallyHiddenText: "repeating pattern",
+                classes: "govuk-link--no-visited-state"
+              }
+            ]
+          }
+          },
+          {
+            key: {
+            text: "Start date"
+          },
+            value: {
+            text: fromDate | formatDate
+          },
+            actions: {
+            items: [
+              {
+                href: "start-end-dates#fromDate",
+                text: "Change",
+                visuallyHiddenText: "start date",
+                classes: "govuk-link--no-visited-state"
+              }
+            ]
+          }
+          },
+          {
+            key: {
+            text: "End date"
+          },
+            value: {
+            text: toDate | formatDate
+          },
+            actions: {
+            items: [
+              {
+                href: "start-end-dates#toDate",
+                text: "Change",
+                visuallyHiddenText: "end date",
+                classes: "govuk-link--no-visited-state"
+              }
+            ]
+          }
+          },
+          {
+            key: {
+            text: "Number of absence occurrences"
+          },
+            value: {
+            text: occurrences.length
+          },
+            actions: {
+            items: [
+              {
+                href: "check-absences",
+                text: "Change",
+                visuallyHiddenText: "absences",
+                classes: "govuk-link--no-visited-state"
+              }
+            ]
+          }
+          }
+        ]
+      }) }}
+    {% else %}
+      {{ govukSummaryList({
+        classes: "govuk-!-margin-bottom-7",
+        rows: [
+          {
+            key: {
+            text: "Start date"
+          },
+            value: {
+            text: startDate | formatDate
+          },
+            actions: {
+            items: [
+              {
+                href: "start-date#startDate",
+                text: "Change",
+                visuallyHiddenText: "start date",
+                classes: "govuk-link--no-visited-state"
+              }
+            ]
+          }
+          },
+          {
+            key: {
+            text: "Start time"
+          },
+            value: {
+            text: startTime
+          },
+            actions: {
+            items: [
+              {
+                href: "start-date#startTimeHour",
+                text: "Change",
+                visuallyHiddenText: "start time",
+                classes: "govuk-link--no-visited-state"
+              }
+            ]
+          }
+          },
+          {
+            key: {
+            text: "End date"
+          },
+            value: {
+            text: returnDate | formatDate
+          },
+            actions: {
+            items: [
+              {
+                href: "end-date#returnDate",
+                text: "Change",
+                visuallyHiddenText: "end date",
+                classes: "govuk-link--no-visited-state"
+              }
+            ]
+          }
+          },
+          {
+            key: {
+            text: "End time"
+          },
+            value: {
+            text: returnTime
+          },
+            actions: {
+            items: [
+              {
+                href: "end-date#returnTimeHour",
+                text: "Change",
+                visuallyHiddenText: "end time",
+                classes: "govuk-link--no-visited-state"
+              }
+            ]
+          }
+          }
+        ]
+      }) }}
+    {% endif %}
 
     <h2 class="govuk-heading-m">Location and transport</h2>
+
+    {% if repeat %}
+      {% set locationRows = [] %}
+
+      {% for loc in locations %}
+        {% set locationRows = (locationRows.push(loc.description), locationRows) %}
+      {% endfor %}
+
+      {% set locationValue = { html: locationRows | join('<br/><br/>') } %}
+    {% else %}
+      {% set locationValue = { text: location.description } %}
+    {% endif %}
+
     {{ govukSummaryList({
       classes: "govuk-!-margin-bottom-7",
       rows: [
         {
           key: {
-          text: "Location"
+          text: "Locations" if repeat else "Location"
         },
-          value: {
-          text: location.description
-        },
+          value: locationValue,
           actions: {
           items: [
             {
-              href: "search-location",
+              href: "search-locations" if repeat else "search-location",
               text: "Change",
-              visuallyHiddenText: "location",
+              visuallyHiddenText: "locations" if repeat else "location",
               classes: "govuk-link--no-visited-state"
             }
           ]
@@ -307,6 +398,16 @@
         }
       ]
     }) }}
+
+    {% if repeat %}
+      {{ govukInsetText({
+        text: "These details can still be changed after you have saved this absence. You can also add additional occurrences to this absence or remove them."
+      }) }}
+    {% else %}
+      {{ govukInsetText({
+        text: "These details can still be changed after you have saved this absence."
+      }) }}
+    {% endif %}
 
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />

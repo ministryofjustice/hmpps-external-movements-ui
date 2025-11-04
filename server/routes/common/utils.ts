@@ -23,7 +23,7 @@ export const absenceCategorisationMapper = ({
   hintText,
 }: components['schemas']['AbsenceCategorisation']) => ({
   value: code,
-  text: description.replace(/Paid work - |Unpaid work - /, ''),
+  text: description,
   hint: hintText ? { text: hintText } : undefined,
 })
 
@@ -83,7 +83,13 @@ export const getAbsenceCategoryBackUrl = (
     return 'absence-subtype'
   }
   if (reasonCategory && (reasonCategory?.nextDomain ?? null) === domain) {
-    // no short-cut back to CYA for unchanged reason category, because Paid work and Unpaid work category page always need to go back and forth to reason page
+    if (
+      req.journeyData.isCheckAnswers &&
+      req.journeyData.addTemporaryAbsence!.categorySubJourney?.reasonCategory?.code ===
+        req.journeyData.addTemporaryAbsence!.reasonCategory?.code
+    ) {
+      return 'check-answers'
+    }
     return 'reason-category'
   }
   if (reason && (reason?.nextDomain ?? null) === domain) {

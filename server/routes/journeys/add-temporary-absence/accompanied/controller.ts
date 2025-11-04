@@ -7,12 +7,10 @@ export class AccompaniedController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
-    const accompaniedBy =
-      res.locals['formResponses']?.['accompaniedBy'] || req.journeyData.addTemporaryAbsence?.accompaniedBy
-
     res.render('add-temporary-absence/accompanied/view', {
       accompaniedByOptions: await this.externalMovementsService.getReferenceData({ res }, 'accompanied-by'),
-      accompaniedBy: accompaniedBy?.code,
+      accompaniedBy:
+        res.locals.formResponses?.['accompaniedBy'] || req.journeyData.addTemporaryAbsence?.accompaniedBy?.code,
       backUrl: AddTapFlowControl.getBackUrl(req, 'accompanied-or-unaccompanied'),
     })
   }

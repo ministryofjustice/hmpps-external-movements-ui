@@ -17,7 +17,7 @@ import { AddTapCYAPage } from './test.page'
 test.describe('/add-temporary-absence/check-answers', () => {
   const prisonNumber = randomPrisonNumber()
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
@@ -26,7 +26,9 @@ test.describe('/add-temporary-absence/check-answers', () => {
       stubGetAllAbsenceTypes(),
       stubPostCreateTap(prisonNumber),
     ])
+  })
 
+  test.beforeEach(async ({ page }) => {
     await signIn(page)
   })
 
@@ -76,7 +78,8 @@ test.describe('/add-temporary-absence/check-answers', () => {
 
     await testPage.verifyAnswer('Absence type', 'Standard ROTL (Release on Temporary Licence)')
     await testPage.verifyAnswer('Absence sub-type', 'RDR (Resettlement Day Release)')
-    await testPage.verifyAnswer('Absence reason', 'Paid work - Manufacturing')
+    await testPage.verifyAnswer('Absence reason', 'Paid work')
+    await testPage.verifyAnswer('Work type', 'Manufacturing')
 
     await testPage.verifyAnswer('Start date', '5 May 2025')
     await testPage.verifyAnswer('Start time', '10:00')
@@ -94,6 +97,7 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await testPage.verifyLink('Change absence type', /absence-type/)
     await testPage.verifyLink('Change absence sub-type', /absence-subtype/)
     await testPage.verifyLink('Change absence reason', /reason-category/)
+    await testPage.verifyLink('Change work type', /reason$/)
 
     await testPage.verifyLink('Change start date', /start-date#startDate/)
     await testPage.verifyLink('Change start time', /start-date#startTimeHour/)

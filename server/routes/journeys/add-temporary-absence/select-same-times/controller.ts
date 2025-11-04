@@ -5,7 +5,7 @@ export class SelectSameTimesController {
   GET = async (req: Request, res: Response) => {
     res.render('add-temporary-absence/select-same-times/view', {
       sameTimes:
-        res.locals['formResponses']?.['sameTimes'] ??
+        res.locals.formResponses?.['sameTimes'] ??
         req.journeyData.addTemporaryAbsence?.rotatingPatternSubJourney?.isSameTime ??
         req.journeyData.addTemporaryAbsence?.rotatingPattern?.isSameTime,
       backUrl: req.journeyData.isCheckAnswers ? 'check-answers' : 'enter-rotating-pattern',
@@ -17,6 +17,6 @@ export class SelectSameTimesController {
       req.journeyData.addTemporaryAbsence.rotatingPatternSubJourney.isSameTime = req.body.isSameTime
     }
 
-    res.redirect(req.body.isSameTime ? 'rotating-release-return-times' : 'rotating-non-repeating-release-return-times')
+    res.redirect('rotating-release-return-times')
   }
 }

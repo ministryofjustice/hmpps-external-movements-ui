@@ -1,21 +1,24 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { format } from 'date-fns'
 import { SchemaType } from './schema'
 import { FLASH_KEY__SUCCESS_BANNER } from '../../../../../utils/constants'
 import { firstNameSpaceLastName } from '../../../../../utils/formatUtils'
 import { formatInputDate } from '../../../../../utils/dateTimeUtils'
+import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
 
 export class EditEndDateController {
+  constructor(private readonly externalMovementsService: ExternalMovementsService) {}
+
   GET = async (req: Request, res: Response) => {
     const returnDate =
-      res.locals['formResponses']?.['returnDate'] ??
+      res.locals.formResponses?.['returnDate'] ??
       format(req.journeyData.updateTapOccurrence!.occurrence.returnBy, 'd/M/yyyy')
 
     const returnTimeHour =
-      res.locals['formResponses']?.['returnTimeHour'] ??
+      res.locals.formResponses?.['returnTimeHour'] ??
       format(req.journeyData.updateTapOccurrence!.occurrence.returnBy, 'HH')
     const returnTimeMinute =
-      res.locals['formResponses']?.['returnTimeMinute'] ??
+      res.locals.formResponses?.['returnTimeMinute'] ??
       format(req.journeyData.updateTapOccurrence!.occurrence.returnBy, 'mm')
 
     res.render('temporary-absences/edit/end-date/view', {
@@ -30,23 +33,42 @@ export class EditEndDateController {
     })
   }
 
-  POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
+  POST = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
     const journey = req.journeyData.updateTapOccurrence!
     journey.returnDate = req.body.returnDate
     journey.returnTime = `${req.body.returnTimeHour}:${req.body.returnTimeMinute}`
 
     if (journey.authorisation.repeat) {
       if (journey.changeType !== 'start-date') journey.changeType = 'end-date'
-      res.redirect('apply-change')
-    } else {
-      // TODO: send API call to apply change
+      return res.redirect('apply-change')
+    }
+
+    try {
+      const request =
+        journey.changeType === 'start-date'
+          ? {
+              type: 'RescheduleOccurrence',
+              releaseAt: `${journey.startDate}T${journey.startTime}:00`,
+              returnBy: `${journey.returnDate}T${journey.returnTime}:00`,
+            }
+          : {
+              type: 'RescheduleOccurrence',
+              returnBy: `${journey.returnDate}T${journey.returnTime}:00`,
+            }
+
+      await this.externalMovementsService.updateTapOccurrence({ res }, journey.occurrence.id, request)
+      req.journeyData.journeyCompleted = true
+      delete req.journeyData.updateTapOccurrence
+
       req.flash(
         FLASH_KEY__SUCCESS_BANNER,
         `You’ve updated the temporary absence ${journey.changeType === 'start-date' ? 'release/return' : 'release'} date and time for ${firstNameSpaceLastName(req.journeyData.prisonerDetails!)}.`,
       )
-      res.redirect(
+      return res.redirect(
         `/temporary-absence-authorisations/${journey.authorisation.id}?date=${formatInputDate(journey.occurrence.releaseAt)}`,
       )
+    } catch (e) {
+      return next(e)
     }
   }
 }

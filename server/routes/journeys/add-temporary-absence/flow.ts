@@ -50,7 +50,7 @@ export class AddTapFlowControl {
         return getUrlForNextDomain(data.absenceSubType.nextDomain)
       }
       if (data.reasonCategory) {
-        // No short-cut back to CYA on unchanged answer, because Paid Work and Unpaid Work needs to proceed to reason page
+        if (data.reasonCategory.code === journey.reasonCategory?.code) return 'check-answers'
         updateCategorySubJourney(req, 'ABSENCE_REASON_CATEGORY', data.reasonCategory)
         if (!data.reasonCategory.nextDomain) {
           saveCategorySubJourney(req)
@@ -259,6 +259,39 @@ export class AddTapFlowControl {
         default:
           throw new Error(`Unknown pattern type ${data.patternType}`)
       }
+    }
+
+    if (data.occurrences) {
+      journey.occurrences = data.occurrences
+      return 'accompanied-or-unaccompanied'
+    }
+    if (data.accompanied !== undefined) {
+      if (data.accompanied) {
+        journey.accompaniedSubJourney = { accompanied: data.accompanied }
+        return 'accompanied'
+      }
+      journey.accompanied = data.accompanied
+      return 'transport'
+    }
+    if (data.accompaniedBy) {
+      if (journey.accompaniedSubJourney) {
+        journey.accompanied = journey.accompaniedSubJourney.accompanied
+        delete journey.accompaniedSubJourney
+      }
+      journey.accompaniedBy = data.accompaniedBy
+      return 'transport'
+    }
+    if (data.transport) {
+      journey.transport = data.transport
+      return 'comments'
+    }
+    if (data.notes !== undefined) {
+      journey.notes = data.notes
+      return 'approval'
+    }
+    if (data.requireApproval !== undefined) {
+      journey.requireApproval = data.requireApproval
+      return 'check-answers'
     }
 
     logger.warn('No valid data sent for AddTapFlowControl.saveDataAndGetNextPageForRepeatingTap')
