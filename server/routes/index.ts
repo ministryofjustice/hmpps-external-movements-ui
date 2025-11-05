@@ -24,6 +24,11 @@ export default function routes(services: Services): Router {
         alias: Page.HOME_PAGE,
       },
       {
+        matcher: /search-prisoner/,
+        text: 'Search Prisoner',
+        alias: Page.SEARCH_PRISONER,
+      },
+      {
         matcher: /temporary-absence-authorisations$/,
         text: 'Browse absence authorisations',
         alias: 'temp-page-1',
@@ -32,6 +37,11 @@ export default function routes(services: Services): Router {
         matcher: /temporary-absence-authorisations\/(\w|-)+$/,
         text: 'Temporary absence',
         alias: 'temp-page-2',
+      },
+      {
+        matcher: /temporary-absence-authorisations\/(\w|-)+\/occurrence\/(\w|-)+$/,
+        text: 'Temporary absence',
+        alias: 'temp-page-3',
       },
       {
         matcher: /temporary-absences$/,

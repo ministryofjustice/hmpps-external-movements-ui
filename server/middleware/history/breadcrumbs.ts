@@ -36,6 +36,10 @@ export class Breadcrumbs {
   fromAlias(alias: string) {
     return this.breadcrumbs.find(o => o.alias === alias)
   }
+
+  last() {
+    return this.breadcrumbs[this.breadcrumbs.length - 1]
+  }
 }
 
 export default function breadcrumbs(): RequestHandler {
