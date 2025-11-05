@@ -9,7 +9,7 @@ export default defineConfig({
   outputDir: 'test_results/playwright',
 
   fullyParallel: true,
-  workers: process.env['CI'] ? 3 : (parseInt(process.env['PARALLEL_WORKERS']!, 10) ?? 8),
+  workers: process.env['CI'] ? 3 : Number(process.env['PARALLEL_WORKERS']!) || 8,
 
   // Fail the build on CI if you accidentally left test.only in the source code.
   forbidOnly: !!process.env['CI'],
