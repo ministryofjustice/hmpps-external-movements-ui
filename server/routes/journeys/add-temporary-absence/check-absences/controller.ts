@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { addDays, differenceInDays, format } from 'date-fns'
 import { AddTapFlowControl } from '../flow'
 import { AddTemporaryAbsenceJourney } from '../../../../@types/journeys'
+import { getOccurrencesToMatch } from '../utils'
 
 export class CheckPatternController {
   GET = async (req: Request, res: Response) => {
@@ -12,6 +13,16 @@ export class CheckPatternController {
         2) /
         7,
     )
+    const occurrences = getOccurrencesToMatch(req).map(({ releaseAt, returnBy }) => {
+      const releaseDate = new Date(releaseAt)
+      const returnDate = new Date(returnBy)
+      return {
+        startDate: format(releaseDate, 'yyyy-MM-dd'),
+        returnDate: format(returnDate, 'yyyy-MM-dd'),
+        startTime: format(releaseDate, 'HH:mm'),
+        returnTime: format(returnDate, 'HH:mm'),
+      }
+    })
 
     const periods = Array.from(new Array(numberOfWeeks).keys()).map(idx => {
       const startDate = format(addDays(req.journeyData.addTemporaryAbsence!.fromDate!, idx * 7), 'yyyy-MM-dd')
@@ -21,17 +32,24 @@ export class CheckPatternController {
       return {
         startDate,
         endDate,
-        absences: this.getAbsencesFromPeriod(
-          req.journeyData.addTemporaryAbsence!,
-          startDate,
-          endDate,
-          idx === numberOfWeeks - 1,
-        ),
+        absences:
+          req.journeyData.addTemporaryAbsence?.patternType === 'ROTATING'
+            ? occurrences.filter(o => o.startDate >= startDate && o.returnDate <= endDate)
+            : this.getAbsencesFromPeriod(
+                req.journeyData.addTemporaryAbsence!,
+                startDate,
+                endDate,
+                idx === numberOfWeeks - 1,
+              ),
       }
     })
 
     res.render('add-temporary-absence/check-absences/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'repeating-pattern'),
+      changeUrl:
+        req.journeyData.addTemporaryAbsence?.patternType === 'ROTATING'
+          ? 'enter-rotating-pattern'
+          : 'select-days-times-weekly',
       patternType: req.journeyData.addTemporaryAbsence!.patternType,
       periods,
     })
@@ -71,8 +89,6 @@ export class CheckPatternController {
         )
         .sort((a, b) => a.startDate.localeCompare(b.startDate))
     }
-
-    // TODO: add support for rotating pattern
     return undefined
   }
 }

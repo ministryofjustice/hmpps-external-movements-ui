@@ -79,18 +79,25 @@ export class RotatingReleaseReturnTimesController {
   ) => {
     if (isSameTime) {
       // If same time we'll only have one entry for day and night and need to replicate across intervals
-      const dayReleaseTime = times.find(o => o.type === 'Scheduled days')!.releaseTime
-      const nightReleaseTime = times.find(o => o.type === 'Scheduled nights')!.releaseTime
-      const dayReturnTime = times.find(o => o.type === 'Scheduled days')!.returnTime
-      const nightReturnTime = times.find(o => o.type === 'Scheduled nights')!.returnTime
+      const dayReleaseTime = times.find(o => o.type === 'Scheduled days')?.releaseTime
+      const nightReleaseTime = times.find(o => o.type === 'Scheduled nights')?.releaseTime
+      const dayReturnTime = times.find(o => o.type === 'Scheduled days')?.returnTime
+      const nightReturnTime = times.find(o => o.type === 'Scheduled nights')?.returnTime
 
       for (const interval of intervals.filter(o => this.timeTypes.includes(o.type))) {
         interval.items = []
         for (let i = 0; i < interval.count; i += 1) {
-          interval.items.push({
-            startTime: interval.type === 'Scheduled days' ? dayReleaseTime : nightReleaseTime,
-            returnTime: interval.type === 'Scheduled days' ? dayReturnTime : nightReturnTime,
-          })
+          if (interval.type === 'Scheduled days' && dayReleaseTime && dayReturnTime) {
+            interval.items.push({
+              startTime: dayReleaseTime,
+              returnTime: dayReturnTime,
+            })
+          } else if (interval.type === 'Scheduled nights' && nightReleaseTime && nightReturnTime) {
+            interval.items.push({
+              startTime: nightReleaseTime,
+              returnTime: nightReturnTime,
+            })
+          }
         }
       }
 
