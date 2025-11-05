@@ -10,8 +10,13 @@ export class AbsenceTypeController {
   GET = async (req: Request, res: Response) => {
     const { absenceType } = getCategoryFromJourney(req.journeyData.addTemporaryAbsence!)
 
+    const entryPath = res.locals.history?.slice(-4)[0]
+
     res.render('add-temporary-absence/absence-type/view', {
-      backUrl: `${res.locals.prisonerProfileUrl}/prisoner/${req.journeyData.prisonerDetails!.prisonerNumber}`,
+      backUrl:
+        entryPath?.startsWith('/temporary-absence') || entryPath?.startsWith('/search-prisoner')
+          ? entryPath
+          : `${res.locals.prisonerProfileUrl}/prisoner/${req.journeyData.prisonerDetails!.prisonerNumber}`,
       options: (await this.externalMovementsService.getAllAbsenceTypes({ res })).items.map(absenceCategorisationMapper),
       absenceType: res.locals.formResponses?.['absenceType'] ?? absenceType?.code,
     })

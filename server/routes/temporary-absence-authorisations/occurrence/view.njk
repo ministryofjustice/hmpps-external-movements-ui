@@ -35,6 +35,7 @@
             }) }}
           {% endif %}
         </div>
+
         {% set viewAbsenceHtml %}
           {{ govukSummaryList({
             card: {
@@ -143,79 +144,141 @@
       </div>
     </div>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-m">View absence occurrences</h2>
+    {% set viewOccurrenceHtml %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          {{ govukSummaryList({
+            card: {
+              classes: "govuk-!-margin-bottom-2",
+              title: {
+                text: "Absence details"
+              },
+              actions: { items: [{
+                href: "/temporary-absences/start-edit/" + occurrence.id ,
+                text: "Make changes"
+              }] }
+            },
+            rows: [
+              {
+                key: { text: "Release date and time" },
+                value: { text: occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') }
+              },
+              {
+                key: { text: "Return date and time" },
+                value: { text: occurrence.returnBy | formatDate('cccc, d MMMM yyyy HH:mm') }
+              },
+              {
+                key: { text: "Transport" },
+                value: { text: occurrence.transport.description }
+              },
+              {
+                key: { text: "Address" },
+                value: { text: occurrence.location.description }
+              },
+              {
+                key: { text: "Comments" },
+                value: { text: occurrence.notes or "Not provided" }
+              }
+            ]
+          }) }}
+        </div>
       </div>
-      <div class="govuk-summary-list govuk-summary-list__actions">
-        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}/occurrences">Add occurrence</a>
+    {% endset -%}
+
+    {% set viewOthersHtml %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <h2 class="govuk-heading-m">View absence occurrences</h2>
+        </div>
+        <div class="govuk-summary-list govuk-summary-list__actions">
+          <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}/occurrences">Add occurrence</a>
+        </div>
       </div>
-    </div>
 
-    {% set rows = [] %}
-    {% for occurrence in result.occurrences %}
-      {% set rows = (rows.push([
-        {
-          text: occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm'),
-          attributes: { "data-sort-value": occurrence.releaseAt }
-        },
-        {
-          text: occurrence.returnBy | formatDate('cccc, d MMMM yyyy HH:mm'),
-          attributes: { "data-sort-value": occurrence.returnBy }
-        },
-        {
-          text: occurrence.location.description,
-          attributes: { "data-sort-value": occurrence.location.description }
-        },
-        {
-          text: occurrence.accompaniedBy.description,
-          attributes: { "data-sort-value": occurrence.accompaniedBy.description }
-        },
-        {
-          text: occurrence.transport.description,
-          attributes: { "data-sort-value": occurrence.transport.description }
-        },
-        {
-          classes: 'govuk-link govuk-link--no-visited-state',
-          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/start-edit/' + occurrence.id + '">Make changes to this occurrence<span class="govuk-visually-hidden"> on ' + occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') + '</span></a>',
-          format: "numeric"
-        }
-      ]), rows) %}
-    {% endfor %}
+      {% set rows = [] %}
+      {% for itm in result.occurrences %}
+        {% set rows = (rows.push([
+          {
+            text: itm.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm'),
+            attributes: { "data-sort-value": itm.releaseAt }
+          },
+          {
+            text: itm.returnBy | formatDate('cccc, d MMMM yyyy HH:mm'),
+            attributes: { "data-sort-value": itm.returnBy }
+          },
+          {
+            text: itm.location.description,
+            attributes: { "data-sort-value": itm.location.description }
+          },
+          {
+            text: itm.accompaniedBy.description,
+            attributes: { "data-sort-value": itm.accompaniedBy.description }
+          },
+          {
+            text: itm.transport.description,
+            attributes: { "data-sort-value": itm.transport.description }
+          },
+          {
+            classes: 'govuk-link govuk-link--no-visited-state',
+            html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/' + result.id + '/occurrence/' + itm.id + '">View<span class="govuk-visually-hidden"> this occurrence on ' + itm.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') + '</span></a>',
+            format: "numeric"
+          }
+        ]), rows) %}
+      {% endfor %}
 
-    {{ govukTable({
-      attributes: {
-        "data-module": "moj-sortable-table"
-      },
-      firstCellIsHeader: false,
-      classes: 'table-vertical-align-middle govuk-!-margin-top-4',
-      head: [
-        {
-          text: "Release date and time",
-          attributes: { "aria-sort": "none" }
+      {{ govukTable({
+        attributes: {
+          "data-module": "moj-sortable-table"
         },
+        firstCellIsHeader: false,
+        classes: 'table-vertical-align-middle govuk-!-margin-top-4',
+        head: [
+          {
+            text: "Release date and time",
+            attributes: { "aria-sort": "none" }
+          },
+          {
+            text: "Return date and time",
+            attributes: { "aria-sort": "none" }
+          },
+          {
+            text: 'Location',
+            attributes: { "aria-sort": "none" }
+          },
+          {
+            text: 'Accompanied by',
+            attributes: { "aria-sort": "none" }
+          },
+          {
+            text: 'Transport',
+            attributes: { "aria-sort": "none" }
+          },
+          {
+            text: "Action",
+            format: "numeric"
+          }
+        ],
+        rows: rows
+      }) }}
+    {% endset -%}
+
+    {{ govukTabs({
+      items: [
         {
-          text: "Return date and time",
-          attributes: { "aria-sort": "none" }
-        },
-        {
-          text: 'Location',
-          attributes: { "aria-sort": "none" }
-        },
-        {
-          text: 'Accompanied by',
-          attributes: { "aria-sort": "none" }
-        },
-        {
-          text: 'Transport',
-          attributes: { "aria-sort": "none" }
-        },
-        {
-          text: "Action",
-          format: "numeric"
+          label: "Details",
+          id: "view-occurrence",
+          panel: {
+          html: viewOccurrenceHtml
         }
-      ],
-      rows: rows
+        },
+        {
+          label: "Absences in the same series",
+          id: "other-occurrences",
+          panel: {
+          html: viewOthersHtml
+        }
+        }
+      ]
     }) }}
   </div>
 {% endblock %}

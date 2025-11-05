@@ -117,7 +117,7 @@
             text: "Repeating schedule type"
           },
             value: {
-            text: patternType
+            text: ({ FREEFORM: 'Does not repeat in a pattern', WEEKLY: 'Repeats weekly', ROTATING: 'Repeats in a rotating pattern' })[patternType]
           },
             actions: {
             items: [

@@ -2,15 +2,16 @@ import { Request, Response } from 'express'
 import { components } from '../../../@types/externalMovements'
 import { ManageTapAuthorisationBaseClass } from '../utils'
 
-export class TapAuthorisationDetailsController extends ManageTapAuthorisationBaseClass {
+export class TapOccurrenceDetailsController extends ManageTapAuthorisationBaseClass {
   handleGet = async (
     authorisation: components['schemas']['TapAuthorisation'],
-    _req: Request<{ id: string }>,
+    req: Request<{ id: string; occurrenceId: string }>,
     res: Response,
   ) => {
-    res.render('temporary-absence-authorisations/details/view', {
+    res.render('temporary-absence-authorisations/occurrence/view', {
       showBreadcrumbs: true,
       result: authorisation,
+      occurrence: authorisation.occurrences.find(({ id }) => req.params.occurrenceId === id),
     })
   }
 }
