@@ -20,7 +20,7 @@ export default function routes(services: Services): Router {
     historyMiddleware(() => [
       {
         matcher: /^\/$/,
-        text: 'External Movements',
+        text: 'External movements',
         alias: Page.HOME_PAGE,
       },
       {
