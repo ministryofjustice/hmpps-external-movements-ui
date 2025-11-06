@@ -20,12 +20,17 @@ export default function routes(services: Services): Router {
     historyMiddleware(() => [
       {
         matcher: /^\/$/,
-        text: 'Reception and External Movements',
+        text: 'External Movements',
         alias: Page.HOME_PAGE,
       },
       {
+        matcher: /^\/temporary-absences-home$/,
+        text: 'Temporary absences',
+        alias: Page.TAP_HOME_PAGE,
+      },
+      {
         matcher: /search-prisoner/,
-        text: 'Search Prisoner',
+        text: 'Search prisoner',
         alias: Page.SEARCH_PRISONER,
       },
       {
@@ -62,6 +67,12 @@ export default function routes(services: Services): Router {
 
   get('/', Page.HOME_PAGE, async (_req, res) => {
     res.render('view', {
+      showBreadcrumbs: true,
+    })
+  })
+
+  get('/temporary-absences-home', Page.TAP_HOME_PAGE, async (_req, res) => {
+    res.render('view-tap', {
       showBreadcrumbs: true,
       ...(await services.externalMovementsService.getTapOverview({ res })),
     })

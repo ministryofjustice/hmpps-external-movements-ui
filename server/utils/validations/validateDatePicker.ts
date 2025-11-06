@@ -1,6 +1,16 @@
 import { z } from 'zod'
 import { isValid, parseISO, startOfDay, isBefore } from 'date-fns'
 
+export const transformOptionalDate = z
+  .string()
+  .optional()
+  .transform(val => {
+    if (!val) return undefined
+    const parts = val.split(/[-/]/)
+    if (parts[2]?.length !== 4 || !parts[1]?.length || !parts[0]?.length) return undefined
+    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`
+  })
+
 export const validateDateBase = (missingDateErrorMsg: string, invalidDateErrorMsg: string) => {
   return z
     .string({ message: missingDateErrorMsg })
