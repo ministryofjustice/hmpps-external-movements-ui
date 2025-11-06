@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { addDays, differenceInDays, format } from 'date-fns'
 import { AddTapFlowControl } from '../flow'
-import { AddTemporaryAbsenceJourney } from '../../../../@types/journeys'
+import { getOccurrencesToMatch } from '../utils'
 
 export class CheckPatternController {
   GET = async (req: Request, res: Response) => {
@@ -12,20 +12,29 @@ export class CheckPatternController {
         2) /
         7,
     )
+    const occurrences = getOccurrencesToMatch(req).map(({ releaseAt, returnBy }) => {
+      return {
+        startDate: format(releaseAt, 'yyyy-MM-dd'),
+        returnDate: format(returnBy, 'yyyy-MM-dd'),
+        startTime: format(releaseAt, 'HH:mm'),
+        returnTime: format(returnBy, 'HH:mm'),
+      }
+    })
 
     const periods = Array.from(new Array(numberOfWeeks).keys()).map(idx => {
       const startDate = format(addDays(req.journeyData.addTemporaryAbsence!.fromDate!, idx * 7), 'yyyy-MM-dd')
       let endDate = format(addDays(req.journeyData.addTemporaryAbsence!.fromDate!, idx * 7 + 6), 'yyyy-MM-dd')
       if (endDate > req.journeyData.addTemporaryAbsence!.toDate!) endDate = req.journeyData.addTemporaryAbsence!.toDate!
+      const overnightNewWeekDay = format(addDays(endDate, 1), 'yyyy-MM-dd')
+      const isOvernight = (o: { startDate: string; returnDate: string }) => o.returnDate !== o.startDate
 
       return {
         startDate,
         endDate,
-        absences: this.getAbsencesFromPeriod(
-          req.journeyData.addTemporaryAbsence!,
-          startDate,
-          endDate,
-          idx === numberOfWeeks - 1,
+        absences: occurrences.filter(
+          o =>
+            o.startDate >= startDate &&
+            (o.returnDate <= endDate || (isOvernight(o) && o.returnDate === overnightNewWeekDay)),
         ),
       }
     })
@@ -39,40 +48,4 @@ export class CheckPatternController {
 
   POST = (req: Request, res: Response) =>
     res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'search-locations')
-
-  private getAbsencesFromPeriod = (
-    journey: AddTemporaryAbsenceJourney,
-    fromDate: string,
-    toDate: string,
-    isFinalWeek: boolean,
-  ) => {
-    if (journey.patternType === 'FREEFORM') {
-      return journey.freeFormPattern!.filter(
-        ({ startDate, returnDate }) => startDate >= fromDate && (isFinalWeek ? returnDate : startDate) <= toDate,
-      )
-    }
-
-    if (journey.patternType === 'WEEKLY') {
-      const startDoW = new Date(fromDate).getDay() - 1
-      return journey
-        .weeklyPattern!.map(({ day, overnight, startTime, returnTime }) => {
-          const dayDiff = (day - startDoW + 7) % 7
-          const startDate = addDays(new Date(fromDate), dayDiff)
-          const returnDate = overnight ? addDays(startDate, 1) : startDate
-          return {
-            startDate: format(startDate, 'yyyy-MM-dd'),
-            returnDate: format(returnDate, 'yyyy-MM-dd'),
-            startTime,
-            returnTime,
-          }
-        })
-        .filter(
-          ({ startDate, returnDate }) => startDate >= fromDate && (isFinalWeek ? returnDate : startDate) <= toDate,
-        )
-        .sort((a, b) => a.startDate.localeCompare(b.startDate))
-    }
-
-    // TODO: add support for rotating pattern
-    return undefined
-  }
 }
