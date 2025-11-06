@@ -1,7 +1,8 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = 'Check absences - Add a temporary absence' %}
+{% set patternTypeTitle = 'rotating pattern' if patternType === 'ROTATING' else '' %}
+{% set pageTitle = 'Check ' + patternTypeTitle + ' absences - Add a temporary absence' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
@@ -10,10 +11,9 @@
 
     {% if patternType === 'FREEFORM' %}
       {% include './partials/freeform.njk' %}
-    {% elseif patternType === 'WEEKLY' %}
-      {% include './partials/weekly.njk' %}
+    {% else %}
+      {% include './partials/weekly-or-rotating.njk' %}
     {% endif %}
-
 
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
