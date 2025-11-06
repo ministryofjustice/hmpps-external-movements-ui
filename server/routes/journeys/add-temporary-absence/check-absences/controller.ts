@@ -13,13 +13,11 @@ export class CheckPatternController {
         7,
     )
     const occurrences = getOccurrencesToMatch(req).map(({ releaseAt, returnBy }) => {
-      const releaseDate = new Date(releaseAt)
-      const returnDate = new Date(returnBy)
       return {
-        startDate: format(releaseDate, 'yyyy-MM-dd'),
-        returnDate: format(returnDate, 'yyyy-MM-dd'),
-        startTime: format(releaseDate, 'HH:mm'),
-        returnTime: format(returnDate, 'HH:mm'),
+        startDate: format(releaseAt, 'yyyy-MM-dd'),
+        returnDate: format(returnBy, 'yyyy-MM-dd'),
+        startTime: format(releaseAt, 'HH:mm'),
+        returnTime: format(returnBy, 'HH:mm'),
       }
     })
 
@@ -27,20 +25,22 @@ export class CheckPatternController {
       const startDate = format(addDays(req.journeyData.addTemporaryAbsence!.fromDate!, idx * 7), 'yyyy-MM-dd')
       let endDate = format(addDays(req.journeyData.addTemporaryAbsence!.fromDate!, idx * 7 + 6), 'yyyy-MM-dd')
       if (endDate > req.journeyData.addTemporaryAbsence!.toDate!) endDate = req.journeyData.addTemporaryAbsence!.toDate!
+      const overnightNewWeekDay = format(addDays(endDate, 1), 'yyyy-MM-dd')
+      const isOvernight = (o: { startDate: string; returnDate: string }) => o.returnDate !== o.startDate
 
       return {
         startDate,
         endDate,
-        absences: occurrences.filter(o => o.startDate >= startDate && o.returnDate <= endDate),
+        absences: occurrences.filter(
+          o =>
+            o.startDate >= startDate &&
+            (o.returnDate <= endDate || (isOvernight(o) && o.returnDate === overnightNewWeekDay)),
+        ),
       }
     })
 
     res.render('add-temporary-absence/check-absences/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'repeating-pattern'),
-      changeUrl:
-        req.journeyData.addTemporaryAbsence?.patternType === 'ROTATING'
-          ? 'enter-rotating-pattern'
-          : 'select-days-times-weekly',
       patternType: req.journeyData.addTemporaryAbsence!.patternType,
       periods,
     })
