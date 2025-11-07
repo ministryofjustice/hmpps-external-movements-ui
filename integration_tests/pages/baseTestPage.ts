@@ -14,7 +14,7 @@ export class BaseTestPage {
   }: {
     pageUrl: RegExp
     title: string
-    heading: string
+    heading: string | RegExp
     caption?: string
     backUrl?: RegExp
   }) {
