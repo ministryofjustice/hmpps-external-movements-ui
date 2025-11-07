@@ -7,6 +7,7 @@ import {
   testRefData,
   testWorkReasons,
 } from '../data/testData'
+import { components } from '../../server/@types/externalMovements'
 
 export const stubExternalMovementsPing = (httpStatus = 200) =>
   stubFor({
@@ -39,6 +40,13 @@ export const stubGetOverview = (caseloadId: string) =>
         approvalsRequired: 3,
       },
     },
+  })
+
+export const stubGetTapAuthorisation = (response: components['schemas']['TapAuthorisation']) =>
+  successStub({
+    method: 'GET',
+    urlPattern: `/external-movements-api/temporary-absence-authorisations/${response.id}`,
+    response,
   })
 
 export const stubGetAllAbsenceTypes = () =>
