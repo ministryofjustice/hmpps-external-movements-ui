@@ -51,6 +51,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       repeat: false,
       fromDate: '2001-01-01',
       toDate: '2001-01-01',
+      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       occurrences: [
         {
           id: 'occurrence-id',
@@ -112,6 +113,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       repeat: false,
       fromDate: '2001-01-01',
       toDate: '2001-01-01',
+      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       occurrences: [
         {
           id: 'occurrence-id',
