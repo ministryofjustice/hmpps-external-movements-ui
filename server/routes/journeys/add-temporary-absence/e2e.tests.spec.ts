@@ -437,17 +437,16 @@ test.describe('/add-temporary-absence/e2e', () => {
         absenceTypeCode: 'SR',
         fromDate: '2069-10-10',
         notes: 'Sample text',
+        accompaniedByCode: 'U',
+        transportCode: 'AMB',
         occurrences: [
           {
-            accompaniedByCode: 'U',
             location: {
               uprn: '2001',
               description: 'Address, RS1 34T',
             },
-            notes: 'Sample text',
             releaseAt: '2069-10-10T12:30:00',
             returnBy: '2069-10-11T12:30:00',
-            transportCode: 'AMB',
           },
         ],
         repeat: false,

@@ -49,37 +49,29 @@ export class AddTapCheckAnswersController {
         absenceTypeCode: absenceType!.code,
         fromDate: repeat ? fromDate! : startDate!,
         toDate: repeat ? toDate! : returnDate!,
+        accompaniedByCode: accompanied && accompaniedBy ? accompaniedBy.code : 'U',
+        transportCode: transport!.code,
         occurrences: repeat
           ? occurrences!.map(({ releaseAt, returnBy, locationIdx }) => ({
               releaseAt,
               returnBy,
               location: parseAddress(locations![locationIdx]!),
-              transportCode: transport!.code,
-              accompaniedByCode: accompanied && accompaniedBy ? accompaniedBy.code : 'U',
             }))
           : [
               {
                 releaseAt: `${startDate}T${startTime}:00`,
                 returnBy: `${returnDate}T${returnTime}:00`,
                 location: parseAddress(location!),
-                transportCode: transport!.code,
-                accompaniedByCode: accompanied && accompaniedBy ? accompaniedBy.code : 'U',
               },
             ],
       }
 
       if (absenceSubType) request.absenceSubTypeCode = absenceSubType.code
-      if (reason) {
-        request.absenceReasonCode = reason.code
-      } else if (reasonCategory) {
-        request.absenceReasonCode = reasonCategory.code
-      }
+      if (reasonCategory) request.absenceReasonCategoryCode = reasonCategory.code
+      if (reason) request.absenceReasonCode = reason.code
 
       if (notes) {
         request.notes = notes
-        for (const occurrence of request.occurrences) {
-          occurrence.notes = notes
-        }
       }
 
       await this.externalMovementsService.createTap({ res }, req.journeyData.prisonerDetails!.prisonerNumber, request)
