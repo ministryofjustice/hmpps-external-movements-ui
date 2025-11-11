@@ -4,7 +4,7 @@ import { successStub } from './wiremock'
 export const stubSearchAddresses = (query: string, addresses: OsAddress[]) =>
   successStub({
     method: 'GET',
-    url: `/os-places-api/find?query=${query}&lr=EN&key=apikey`,
+    url: `/os-places-api/find?query=${query}&key=apikey&lr=EN&fq=LOGICAL_STATUS_CODE%3A1&fq=LPI_LOGICAL_STATUS_CODE%3A1&dataset=LPI`,
     response: {
       results: addresses.map(parseAddress),
     },
@@ -13,7 +13,7 @@ export const stubSearchAddresses = (query: string, addresses: OsAddress[]) =>
 export const stubGetAddress = (uprn: string, address: OsAddress) =>
   successStub({
     method: 'GET',
-    url: `/os-places-api/uprn?uprn=${uprn}&key=apikey`,
+    url: `/os-places-api/uprn?uprn=${uprn}&key=apikey&dataset=DPA%2CLPI`,
     response: {
       results: [parseAddress(address)],
     },

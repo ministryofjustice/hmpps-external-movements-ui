@@ -1,11 +1,11 @@
 import { z } from 'zod'
 import { Request } from 'express'
+import { OsPlacesAddressService } from '@ministryofjustice/hmpps-connect-dps-shared-items'
 import { createSchema } from '../../../../middleware/validation/validationMiddleware'
-import CustomOsPlacesAddressService from '../../../../services/apis/osPlacesAddressService'
 
 const ERROR_MSG = 'Enter and select an address or postcode'
 
-export const schemaFactory = (osPlacesAddressService: CustomOsPlacesAddressService) => async (req: Request) =>
+export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) => async (req: Request) =>
   createSchema({
     'address-autosuggest-input': z.string(),
     uprn: z.string().optional(),

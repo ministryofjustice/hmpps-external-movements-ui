@@ -56,8 +56,10 @@ export default function createApp(services: Services): express.Application {
     try {
       const results = await services.osPlacesAddressService.getAddressesMatchingQuery(req.params.query)
       res.json({ status: 200, results })
-    } catch {
-      res.json({ status: 200, results: [] })
+    } catch (e) {
+      const error = e as { status?: number; message: string }
+      const status: number = 'status' in error && typeof error.status === 'number' ? error.status : 500
+      res.status(status).json({ status, error: error.message })
     }
   })
 
