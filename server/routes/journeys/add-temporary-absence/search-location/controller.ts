@@ -6,6 +6,7 @@ export class SearchLocationController {
   GET = async (req: Request, res: Response) => {
     res.render('add-temporary-absence/search-location/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'end-date'),
+      uprn: req.journeyData.addTemporaryAbsence!.location?.id,
       inputValue:
         res.locals.formResponses?.['address-autosuggest-input'] ??
         req.journeyData.addTemporaryAbsence!.location?.description,
