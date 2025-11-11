@@ -16,6 +16,7 @@
         {{ addressAutosuggest({
           classes: 'govuk-!-margin-bottom-5',
           inputValue: inputValue,
+          uprn: uprn,
           errorMessage: validationErrors | findError('address-autosuggest-input'),
           findUrl: '/api/addresses/find'
         }) }}

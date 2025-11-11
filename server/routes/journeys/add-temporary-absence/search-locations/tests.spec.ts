@@ -48,6 +48,7 @@ test.describe('/add-temporary-absence/search-locations', () => {
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
       stubSearchAddresses('random', [address, address2]),
+      stubSearchAddresses('xxx', []),
       stubSearchAddresses('SW1H%209AJ', [address]), // query used by the module to check OS Places API availability
       stubGetAddress('1001', address),
       stubGetAddress('1002', address2),
