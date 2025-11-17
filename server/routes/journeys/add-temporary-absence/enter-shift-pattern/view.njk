@@ -1,0 +1,283 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
+
+{% extends "partials/layout.njk" %}
+
+{% set fullWidth = true %}
+
+{% set pageTitle = "Enter shift pattern - Add a temporary absence" %}
+
+{% block innerContent %}
+  <span class="govuk-caption-l">Create a Temporary Absence</span>
+  <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Enter the shift pattern for this absence</h1>
+  <p class="govuk-hint">You can add as many rows as you need to cover the entire period of this pattern.</p>
+  {{ govukInsetText({
+        text: "This pattern will start on " + startDate | formatDate + " and end on "+ endDate | formatDate + "."
+    }) }}
+  <form method="post" data-module="moj-add-another" class="add-another-form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    {% for item in items %}
+      {% call govukFieldset({
+          classes: "moj-add-another__item"
+        }) %}
+      <div class="govuk-grid-row shift-row">
+        <div class="govuk-grid-column-one-half unset-width">
+          {{ govukSelect({
+            id: "items[" + loop.index0 + "][type]",
+            name: "items[" + loop.index0 + "][type]",
+            value: item.type,
+            label: {
+              text: 'Working pattern type',
+              classes: "govuk-label--m margin-bottom-7-5"
+            },
+            errorMessage: validationErrors | findError("items[" + loop.index0 + "][type]"),
+            items: [
+              {
+                value: "",
+                text: "Select the type of working pattern"
+              },
+              {
+                value: "DAY",
+                text: "Scheduled days"
+              },
+              {
+                value: "REST",
+                text: "Rest days"
+              },
+              {
+                value: "NIGHT",
+                text: "Scheduled nights"
+              }
+            ],
+            attributes: {
+              "data-id": "items[%index%][type]",
+              "data-name": "items[%index%][type]"
+            }
+          }) }}
+        </div>
+        <div class="govuk-grid-column-one-quarter unset-width">
+          {{ govukInput({
+                id: "items[" + loop.index0 + "][count]",
+                name: "items[" + loop.index0 + "][count]",
+                value: item.count,
+                label: {
+                  text: 'Number of days',
+                  classes: "govuk-label--m margin-bottom-7-5"
+                },
+                errorMessage: validationErrors | findError("items[" + loop.index0 + "][count]"),
+                classes: 'govuk-input--width-3',
+                attributes: {
+                  "data-id": "items[%index%][count]",
+                  "data-name": "items[%index%][count]"
+                }
+              }) }}
+        </div>
+        <div class="govuk-grid-column-one-quarter unset-width start-time-group">
+          {{ validatedTimeInput({
+            addAnother: {
+              id: 'items',
+              index: loop.index0
+            },
+            id: "startTime",
+            name: "startTime",
+            fieldset: {
+              legend: {
+                text: 'Start time',
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            validationErrors: validationErrors,
+            hour: item.startTimeHour,
+            minute: item.startTimeMinute
+          }) }}
+        </div>
+        <div class="govuk-grid-column-one-quarter unset-width return-time-group">
+          {{ validatedTimeInput({
+            addAnother: {
+              id: 'items',
+              index: loop.index0
+            },
+            id: "returnTime",
+            name: "returnTime",
+            fieldset: {
+              legend: {
+                text: 'Return time',
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            validationErrors: validationErrors,
+            hour: item.returnTimeHour,
+            minute: item.returnTimeMinute
+          }) }}
+        </div>
+      </div>
+
+      {% if items.length > 1 %}
+        {{ govukButton({
+              name: "remove",
+              value: loop.index0,
+              text: "Remove",
+              classes: "govuk-button--secondary moj-add-another__remove-button"
+            }) }}
+      {% endif %}
+      {% endcall %}
+    {% endfor %}
+
+    {% if validationErrors | findError("add") %}
+      <p id="items-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ validationErrors | findErrorMessage("add") }}
+      </p>
+    {% endif %}
+
+    {{ govukWarningText({
+        text: "Make sure you add any rest days that come at the end of the schedule before the next schedule starts.",
+        iconFallbackText: "Warning"
+    }) }}
+
+    <div class="moj-button-action">
+      {{ govukButton({
+          name: "add",
+          id: "add",
+          text: "Add another row",
+          classes: "govuk-button--secondary moj-add-another__add-button govuk-!-margin-bottom-4"
+        }) }}
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="shift-preview govuk-grid-column-two-thirds"></div>
+    </div>
+
+    {{ govukButton({
+        name: "save",
+        id: "save",
+        text: "Continue",
+        preventDoubleClick: true
+    }) }}
+  </form>
+{% endblock %}
+
+{% block pageScripts %}
+  <script nonce="{{ cspNonce }}">
+    const DOW_NAMES = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+
+    let selectListeners = []
+    let inputListeners = []
+    const dateFrom = '{{ startDate }}'
+    const dateTo = '{{ endDate }}'
+
+    function* iterateShiftPattern(pattern) {
+      if (!pattern.find(({count}) => { const number = Number(count); return count && !Number.isNaN(number) && number })) {
+        // always yield null if there is no valid shift to iterate
+        for (;;) { yield null }
+      }
+      for (;;) {
+        for (const interval of pattern) {
+          const count = Number(interval.count)
+          if (interval.count && !Number.isNaN(count) && count > 0) {
+            for (let i = 0; i < count; i += 1) {
+              if (interval.type !== 'DAY' && interval.type !== 'NIGHT') {
+                yield null
+              } else {
+                yield interval
+              }
+            }
+          }
+        }
+      }
+    }
+
+    const parseHourMinute = (hour, minute) => {
+      if (!hour && !minute) return ''
+
+      const hourNumber = Number(hour)
+      const parsedHour = hour && !Number.isNaN(hourNumber) && hourNumber >= 0 && hourNumber < 24 ? String(hourNumber).padStart(2, '0') : ''
+      const minuteNumber = Number(minute)
+      const parsedMinute = minute && !Number.isNaN(minuteNumber) && minuteNumber >= 0 && minuteNumber < 60 ? String(minuteNumber).padStart(2, '0') : ''
+      return `${parsedHour}:${parsedMinute}`
+    }
+
+    const updatePreview = () => {
+      const shiftPattern = []
+      document.querySelectorAll('.shift-row').forEach(el => {
+        const type = el.querySelector('select').value
+        const inputs = el.querySelectorAll('input')
+        const count = inputs[0].value
+        const startTime = parseHourMinute(inputs[1].value, inputs[2].value)
+        const returnTime = parseHourMinute(inputs[3].value, inputs[4].value)
+        shiftPattern.push({type, count, startTime, returnTime})
+      })
+
+      const previewContainer = document.querySelector('.shift-preview')
+      previewContainer.innerHTML = ''
+      const heading = document.createElement('h2')
+      heading.setAttribute('class', 'govuk-heading-m govuk-!-margin-top-6')
+      heading.innerHTML = 'Schedule preview'
+      const table = document.createElement('table')
+      table.setAttribute('class', 'govuk-table govuk-!-margin-bottom-6')
+      table.innerHTML = '<thead class="govuk-table__head"><tr class="govuk-table__row"><th class="govuk-table__header">Day</th><th class="govuk-table__header">Date</th><th class="govuk-table__header">Time In</th><th class="govuk-table__header">Time Out</th></tr></thead>'
+      const tbody = document.createElement('tbody')
+      tbody.setAttribute('class', 'govuk-table__body')
+
+      let currentDay = new Date(dateFrom)
+      const shiftTime = iterateShiftPattern(shiftPattern)
+      while (currentDay.toISOString().substring(0,10) <= dateTo) {
+        const row = document.createElement('tr')
+        row.setAttribute('class', 'govuk-table__row')
+        const time = shiftTime.next().value
+        const date = time ? currentDay.toISOString().substring(0,10) : ''
+        const startTime = time?.startTime ?? ''
+        const returnTime = time?.returnTime ?? ''
+        row.innerHTML = `<th scope="row" class="govuk-table__header">${DOW_NAMES[currentDay.getDay()]}</th><td class="govuk-table__cell">${date}</td><td class="govuk-table__cell">${startTime}</td><td class="govuk-table__cell">${returnTime}</td>`
+        tbody.appendChild(row)
+        currentDay.setDate(currentDay.getDate() + 1)
+      }
+      table.appendChild(tbody)
+
+      previewContainer.appendChild(heading)
+      previewContainer.appendChild(table)
+    }
+
+    const setupToggleStartReturnTimeAndPreview = () => {
+      selectListeners.forEach(([typeSelect, listener]) => {
+        typeSelect.removeEventListener('change', listener)
+      })
+      selectListeners = []
+
+      inputListeners.forEach(([input, listener]) => {
+        input.removeEventListener('input', listener)
+      })
+      inputListeners = []
+
+      document.querySelectorAll('.shift-row').forEach(el => {
+        const typeSelect = el.querySelector('select')
+        const startTime = el.querySelector('.start-time-group')
+        const returnTime = el.querySelector('.return-time-group')
+        startTime.style.display = typeSelect.value === 'REST' ? 'none' : 'block'
+        returnTime.style.display = typeSelect.value === 'REST' ? 'none' : 'block'
+        const listener = evt => {
+          startTime.style.display = evt.target.value === 'REST' ? 'none' : 'block'
+          returnTime.style.display = evt.target.value === 'REST' ? 'none' : 'block'
+          updatePreview()
+        }
+        typeSelect.addEventListener('change', listener)
+        selectListeners.push([typeSelect, listener])
+
+        el.querySelectorAll('input').forEach(input => {
+          input.addEventListener('input', updatePreview)
+          inputListeners.push([input, updatePreview])
+        })
+      })
+    }
+
+    window.onload = function () {
+      updatePreview()
+      setupToggleStartReturnTimeAndPreview()
+      document.querySelector(".add-another-form").addEventListener('components-init', setupToggleStartReturnTimeAndPreview)
+    }
+  </script>
+{% endblock %}

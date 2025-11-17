@@ -69,7 +69,7 @@ export type AddTemporaryAbsenceJourney = Partial<{
   requireApproval: boolean
   fromDate: string
   toDate: string
-  patternType: 'FREEFORM' | 'WEEKLY' | 'ROTATING'
+  patternType: 'FREEFORM' | 'WEEKLY' | 'ROTATING' | 'SHIFT'
   freeFormPattern: {
     startDate: string
     startTime: string
@@ -91,6 +91,7 @@ export type AddTemporaryAbsenceJourney = Partial<{
     intervals: RotatingPatternInterval[]
     isSameTime: boolean
   }
+  shiftPattern: ShiftPatternInterval[]
   isCheckPattern: boolean
   occurrencesToMatch: {
     releaseAt: string
@@ -112,6 +113,20 @@ export type RotatingPatternInterval = {
     returnTime: string
   }[]
 }
+
+export type ShiftPatternInterval =
+  | {
+      type: 'DAY' | 'NIGHT'
+      count: number
+      startTime: string
+      returnTime: string
+    }
+  | {
+      type: 'REST'
+      count: number
+      startTime?: undefined
+      returnTime?: undefined
+    }
 
 export type UpdateTapOccurrenceJourney = {
   occurrence: components['schemas']['TapOccurrence']

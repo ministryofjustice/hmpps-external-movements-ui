@@ -34,6 +34,7 @@ import { SearchLocationsRoutes } from './search-locations/routes'
 import { MatchAbsencesAndLocationsRoute } from './match-absences-and-locations/routes'
 
 import { RotatingReleaseReturnTimesRoutes } from './rotating-release-return-times/routes'
+import { EnterShiftPatternRoutes } from './enter-shift-pattern/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -90,6 +91,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/match-absences-and-locations', MatchAbsencesAndLocationsRoute())
 
   router.use('/rotating-release-return-times', RotatingReleaseReturnTimesRoutes())
+  router.use('/enter-shift-pattern', EnterShiftPatternRoutes())
   return router
 }
 

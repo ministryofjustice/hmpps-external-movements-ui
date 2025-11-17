@@ -1,6 +1,6 @@
 import { Request } from 'express'
 import { addDays, differenceInDays, format } from 'date-fns'
-import { RotatingPatternInterval } from '../../../@types/journeys'
+import { RotatingPatternInterval, ShiftPatternInterval } from '../../../@types/journeys'
 
 export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, ResBody, ReqBody, Q>) => {
   const journey = req.journeyData.addTemporaryAbsence!
@@ -72,6 +72,26 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
     }
   }
 
+  if (journey.patternType === 'SHIFT') {
+    let currentDay = new Date(journey.fromDate!)
+    const rotatingTime = iterateShiftPattern(journey.shiftPattern!)
+
+    while (format(currentDay, 'yyyy-MM-dd') <= journey.toDate!) {
+      const time = rotatingTime.next().value
+      if (time) {
+        const startDate = format(currentDay, 'yyyy-MM-dd')
+        const returnDate = time.startTime >= time.returnTime ? format(addDays(currentDay, 1), 'yyyy-MM-dd') : startDate
+        if (returnDate <= journey.toDate!) {
+          occurrencesToMatch.push({
+            releaseAt: `${startDate}T${time.startTime}:00`,
+            returnBy: `${returnDate}T${time.returnTime}:00`,
+          })
+        }
+      }
+      currentDay = addDays(currentDay, 1)
+    }
+  }
+
   return occurrencesToMatch
 }
 
@@ -85,6 +105,20 @@ function* iterateRotatingPattern(pattern: RotatingPatternInterval[]) {
       } else {
         for (let i = 0; i < interval.count; i += 1) {
           yield null
+        }
+      }
+    }
+  }
+}
+
+function* iterateShiftPattern(pattern: ShiftPatternInterval[]) {
+  for (;;) {
+    for (const interval of pattern) {
+      for (let i = 0; i < interval.count; i += 1) {
+        if (interval.type === 'REST') {
+          yield null
+        } else {
+          yield interval
         }
       }
     }
