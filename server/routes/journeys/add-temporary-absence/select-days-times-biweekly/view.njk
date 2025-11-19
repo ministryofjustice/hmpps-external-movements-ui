@@ -1,0 +1,234 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "partials/shift-preview/macro.njk" import shiftPreview %}
+
+{% extends "partials/layout.njk" %}
+
+{% set fullWidth = true %}
+{% set pageTitle = "Enter absence dates and times - Add a temporary absence" %}
+
+{% macro dayEntry(opts) %}
+    {{ validatedTimeInput({
+        id: "release",
+        name: "release",
+        classes: 'govuk-!-static-margin-bottom-6',
+        fieldset: {
+            legend: {
+                html: 'Release time<span class="govuk-visually-hidden">on ' + opts.id + '</span>'
+            }
+        },
+        addAnother: {
+            id: 'days',
+            index: opts.i
+        },
+        validationErrors: validationErrors,
+        hour: opts.releaseHour,
+        minute: opts.releaseMinute
+    }) }}
+
+    {{ validatedTimeInput({
+        id: "return",
+        name: "return",
+        classes: 'govuk-!-static-margin-bottom-6',
+        fieldset: {
+            legend: {
+                html: 'Return time<span class="govuk-visually-hidden">on ' + opts.id + '</span>'
+            }
+        },
+        addAnother: {
+            id: 'days',
+            index: opts.i
+        },
+        validationErrors: validationErrors,
+        hour: opts.returnHour,
+        minute: opts.returnMinute
+    }) }}
+
+    {% set overnightHtml %}
+        {{ validatedTimeInput({
+            id: "overnight",
+            name: "overnight",
+            classes: 'govuk-!-static-margin-bottom-6',
+            fieldset: {
+                legend: {
+                    text: "Return time on " + opts.nextDay
+                }
+            },
+            addAnother: {
+                id: 'days',
+                index: opts.i
+            },
+            validationErrors: validationErrors,
+            hour: opts.overnightHour,
+            minute: opts.overnightMinute
+            }) }}
+    {% endset %}
+
+    {{ govukCheckboxes({
+        id: "days[" + opts.i + "][isOvernight]",
+        name: "days[" + opts.i + "][isOvernight]",
+        classes: 'govuk-!-static-margin-bottom-6 govuk-checkboxes--small',
+        items: [
+            {
+                value: "true",
+                text: "Is this an overnight absence?",
+                checked: opts.isOvernight,
+                conditional: {
+                    html: overnightHtml
+                }
+            }
+        ]
+    }) }}
+{% endmacro %}
+
+{% block innerContent %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-7">{{ "Week 1" if week === 'FIRST' else 'Week 2' }} : Enter the days and times for these absences</h1>
+    {{ govukInsetText({
+      html: "<span>This pattern will start on " + startDate | formatDate + " and end on "+ endDate | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="start-end-dates">Go back if you need to change these dates.</a>'
+    }) }}
+  </div>
+</div>
+    <form class="schedule-form" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {% set dayItems = [] %}
+        {% for day in dayData %}
+            {% set dayItems = (dayItems.push({
+                text: day.day | capitalize,
+                value: day.day,
+                checked: days | contains(day.day),
+                conditional: {
+                    html: dayEntry({
+                        i: day.index,
+                        id: day.day,
+                        nextDay: day.nextDay,
+                        releaseHour: day.releaseHour,
+                        releaseMinute: day.releaseMinute,
+                        returnHour: day.returnHour,
+                        returnMinute: day.returnMinute,
+                        overnightHour: day.overnightHour,
+                        overnightMinute: day.overnightMinute,
+                        isOvernight: day.isOvernight
+                    })
+                }
+            }), dayItems) %}
+        {% endfor %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+        {{ govukCheckboxes({
+            name: "selectedDays",
+            errorMessage: validationErrors | findError('selectedDays'),
+            hint: {
+                text: "You can select more than one day. When entering times use the 24-hour clock. For example, 09:09 or 17:32."
+            },
+            items: dayItems
+        }) }}
+        </div>
+      </div>
+
+      {{ shiftPreview() }}
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+{% endblock %}
+
+{% block pageScripts %}
+  <script nonce="{{ cspNonce }}">
+    const dateFrom = '{{ startDate }}'
+    const dateTo = '{{ endDate }}'
+    const week = '{{ week }}'
+    const biweeklyPattern = {{ biweeklyPattern | dump | safe }}
+
+    function* iterateBiweeklyPattern(firstWeek, secondWeek) {
+      const weekOne = Array.from(new Array(7).keys()).map(dayOfWeek => firstWeek.find(({ day }) => day === dayOfWeek)).map(itm => {
+        return itm? { ...itm, type: itm.overnight ? 'NIGHT' : 'DAY' } : null
+      })
+      const weekTwo = Array.from(new Array(7).keys()).map(dayOfWeek => secondWeek.find(({ day }) => day === dayOfWeek)).map(itm => {
+        return itm? { ...itm, type: itm.overnight ? 'NIGHT' : 'DAY' } : null
+      })
+
+      const numberOfDaysToSkip = (new Date(dateFrom).getDay() + 6) % 7
+      for (const day of weekOne.slice(numberOfDaysToSkip)) yield day
+
+      for (;;) {
+        for (const day of weekTwo) yield day
+        for (const day of weekOne) yield day
+      }
+    }
+
+    const parseHourMinute = (hour, minute) => {
+      if (!hour && !minute) return ''
+
+      const hourNumber = Number(hour)
+      const parsedHour = hour && !Number.isNaN(hourNumber) && hourNumber >= 0 && hourNumber < 24 ? String(hourNumber).padStart(2, '0') : ''
+      const minuteNumber = Number(minute)
+      const parsedMinute = minute && !Number.isNaN(minuteNumber) && minuteNumber >= 0 && minuteNumber < 60 ? String(minuteNumber).padStart(2, '0') : ''
+      return `${parsedHour}:${parsedMinute}`
+    }
+
+    const setupToggleStartReturnTimeAndPreview = (updatePreview) => {
+      selectListeners.forEach(([typeSelect, listener]) => {
+        typeSelect.removeEventListener('change', listener)
+      })
+      selectListeners = []
+
+      inputListeners.forEach(([input, listener]) => {
+        input.removeEventListener('input', listener)
+      })
+      inputListeners = []
+
+      document.querySelectorAll('.shift-row').forEach(el => {
+        const typeSelect = el.querySelector('select')
+        const startTime = el.querySelector('.start-time-group')
+        const returnTime = el.querySelector('.return-time-group')
+        startTime.style.display = typeSelect.value === 'REST' ? 'none' : 'block'
+        returnTime.style.display = typeSelect.value === 'REST' ? 'none' : 'block'
+        const listener = evt => {
+          startTime.style.display = evt.target.value === 'REST' ? 'none' : 'block'
+          returnTime.style.display = evt.target.value === 'REST' ? 'none' : 'block'
+          updatePreview()
+        }
+        typeSelect.addEventListener('change', listener)
+        selectListeners.push([typeSelect, listener])
+
+        el.querySelectorAll('input').forEach(input => {
+          input.addEventListener('input', updatePreview)
+          inputListeners.push([input, updatePreview])
+        })
+      })
+    }
+
+    window.onload = function () {
+      const updatePreview = window.getUpdatePreviewHandler(dateFrom, dateTo, () => {
+        const selectedDays = Array.from(document.querySelector('.schedule-form').querySelectorAll('input[name^=selectedDays]')).map((itm, idx) => itm.checked? idx : null).filter(itm => itm !== null)
+        const dayDetails = document.querySelector('.schedule-form').querySelectorAll('input[name^=days]')
+
+        const weekPattern = selectedDays.map(day => ({
+          day,
+          overnight: dayDetails[day * 7 + 4].checked,
+          startTime: parseHourMinute(dayDetails[day * 7].value, dayDetails[day * 7 + 1].value),
+          returnTime: dayDetails[day * 7 + 4].checked? parseHourMinute(dayDetails[day * 7 + 5].value, dayDetails[day * 7 + 6].value) : parseHourMinute(dayDetails[day * 7 + 2].value, dayDetails[day * 7 + 3].value),
+        }))
+
+        if (week === 'FIRST') {
+          return () => iterateBiweeklyPattern(weekPattern, biweeklyPattern.weekB)
+        } else {
+          return () => iterateBiweeklyPattern(biweeklyPattern.weekA, weekPattern)
+        }
+      })
+
+      document.querySelector('.schedule-form').querySelectorAll('input').forEach(el => {
+        el.addEventListener('input', updatePreview)
+      })
+
+      updatePreview()
+    }
+  </script>
+{% endblock %}

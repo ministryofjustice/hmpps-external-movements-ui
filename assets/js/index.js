@@ -4,6 +4,9 @@ import * as connectDps from '@ministryofjustice/hmpps-connect-dps-shared-items/d
 import Card from './card'
 import { nodeListForEach } from './utils'
 import AutoComplete from './autocomplete'
+import { initShiftPreviewToggle } from './shift-preview'
+import { initAddAnotherForm } from './add-another-form-enhanced'
+import { initPreventDoubleClickHyperlink } from './prevent-double-click-hyperlink'
 
 govukFrontend.initAll()
 mojFrontend.initAll()
@@ -19,24 +22,6 @@ nodeListForEach($autoCompleteElements, function ($autoCompleteElements) {
   new AutoComplete($autoCompleteElements)
 })
 
-Array.from(document.querySelectorAll('a')).forEach(link => {
-  link.addEventListener('click', evt => {
-    link.classList.add('disable-link')
-    setTimeout(() => link.classList.remove('disable-link'), 1000)
-  })
-})
-
-const anotherForm = document.querySelector('.add-another-form')
-if (anotherForm) {
-  new MutationObserver(_mutations => {
-    document.querySelectorAll(`[data-module="moj-date-picker"]`).forEach(el => {
-      el.removeAttribute('data-moj-date-picker-init')
-      const wrapper = el.querySelector('.moj-datepicker__wrapper')
-      wrapper.replaceWith(wrapper.querySelector('.moj-js-datepicker-input'))
-      new mojFrontend.DatePicker(el)
-    })
-    anotherForm.dispatchEvent(new Event('components-init'))
-  }).observe(anotherForm, {
-    childList: true,
-  })
-}
+initAddAnotherForm()
+initShiftPreviewToggle()
+initPreventDoubleClickHyperlink()

@@ -1,6 +1,6 @@
 import { Request } from 'express'
 import { addDays, differenceInDays, format } from 'date-fns'
-import { RotatingPatternInterval, ShiftPatternInterval } from '../../../@types/journeys'
+import { DayOfWeekTimeSlot, RotatingPatternInterval, ShiftPatternInterval } from '../../../@types/journeys'
 
 export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, ResBody, ReqBody, Q>) => {
   const journey = req.journeyData.addTemporaryAbsence!
@@ -92,6 +92,30 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
     }
   }
 
+  if (journey.patternType === 'BIWEEKLY') {
+    let currentDay = new Date(journey.fromDate!)
+    const rotatingTime = iterateBiweeklyPattern(
+      journey.biweeklyPattern!.weekA,
+      journey.biweeklyPattern!.weekB,
+      journey.fromDate!,
+    )
+
+    while (format(currentDay, 'yyyy-MM-dd') <= journey.toDate!) {
+      const time = rotatingTime.next().value
+      if (time) {
+        const startDate = format(currentDay, 'yyyy-MM-dd')
+        const returnDate = time.startTime >= time.returnTime ? format(addDays(currentDay, 1), 'yyyy-MM-dd') : startDate
+        if (returnDate <= journey.toDate!) {
+          occurrencesToMatch.push({
+            releaseAt: `${startDate}T${time.startTime}:00`,
+            returnBy: `${returnDate}T${time.returnTime}:00`,
+          })
+        }
+      }
+      currentDay = addDays(currentDay, 1)
+    }
+  }
+
   return occurrencesToMatch
 }
 
@@ -122,5 +146,18 @@ function* iterateShiftPattern(pattern: ShiftPatternInterval[]) {
         }
       }
     }
+  }
+}
+
+function* iterateBiweeklyPattern(firstWeek: DayOfWeekTimeSlot[], secondWeek: DayOfWeekTimeSlot[], startDate: string) {
+  const weekOne = Array.from(new Array(7).keys()).map(dayOfWeek => firstWeek.find(({ day }) => day === dayOfWeek))
+  const weekTwo = Array.from(new Array(7).keys()).map(dayOfWeek => secondWeek.find(({ day }) => day === dayOfWeek))
+
+  const numberOfDaysToSkip = (new Date(startDate).getDay() + 6) % 7
+  for (const day of weekOne.slice(numberOfDaysToSkip)) yield day
+
+  for (;;) {
+    for (const day of weekTwo) yield day
+    for (const day of weekOne) yield day
   }
 }
