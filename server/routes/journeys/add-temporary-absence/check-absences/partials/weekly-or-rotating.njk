@@ -24,4 +24,17 @@
   }) }}
 {% endfor %}
 
-<p><a class="govuk-link govuk-link--no-visited-state" href="{{'enter-rotating-pattern' if patternType === 'ROTATING' else ('select-days-times-weekly' if patternType === 'WEEKLY' else 'enter-shift-pattern')}}">Go back to change this schedule</a></p>
+  {% switch patternType %}
+  {% case 'SHIFT' %}
+    {% set changeLink = "enter-shift-pattern" %}
+  {% case 'ROTATING' %}
+    {% set changeLink = "enter-rotating-pattern" %}
+  {% case 'WEEKLY' %}
+    {% set changeLink = "select-days-times-weekly" %}
+  {% case 'BIWEEKLY' %}
+    {% set changeLink = "select-days-times-biweekly" %}
+  {% default %}
+    {% set changeLink = '' %}
+  {% endswitch %}
+
+<p><a class="govuk-link govuk-link--no-visited-state" href="{{ changeLink }}">Go back to change this schedule</a></p>

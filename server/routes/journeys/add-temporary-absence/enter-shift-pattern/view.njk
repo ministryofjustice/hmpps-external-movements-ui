@@ -5,6 +5,7 @@
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
+{% from "partials/shift-preview/macro.njk" import shiftPreview %}
 
 {% extends "partials/layout.njk" %}
 
@@ -13,12 +14,16 @@
 {% set pageTitle = "Enter shift pattern - Add a temporary absence" %}
 
 {% block innerContent %}
-  <span class="govuk-caption-l">Create a Temporary Absence</span>
-  <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Enter the shift pattern for this absence</h1>
-  <p class="govuk-hint">You can add as many rows as you need to cover the entire period of this pattern.</p>
-  {{ govukInsetText({
-        text: "This pattern will start on " + startDate | formatDate + " and end on "+ endDate | formatDate + "."
-    }) }}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-caption-l">Create a Temporary Absence</span>
+      <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Enter the shift pattern for this absence</h1>
+      <p class="govuk-hint">You can add as many rows as you need to cover the entire period of this pattern.</p>
+      {{ govukInsetText({
+        html: "<span>This pattern will start on " + startDate | formatDate + " and end on "+ endDate | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="start-end-dates">Go back if you need to change these dates.</a>'
+      }) }}
+    </div>
+  </div>
   <form method="post" data-module="moj-add-another" class="add-another-form">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
     {% for item in items %}
@@ -148,28 +153,19 @@
         }) }}
     </div>
 
-    <div class="shift-preview govuk-grid-row govuk-!-display-none">
-      <div class="govuk-grid-column-full"><h2 class="govuk-heading-m govuk-!-margin-top-5">Schedule preview</h2></div>
-      <div class="govuk-grid-column-full govuk-!-margin-bottom-4">
-        <button class="govuk-body-s mc-toggle-button"><span class="mc-toggle-text"></span></button>
-      </div>
-      <div class="govuk-grid-column-two-thirds preview-table govuk-!-display-none"></div>
-      <div class="govuk-grid-column-full preview-calendar govuk-!-display-none"></div>
-    </div>
     {{ govukButton({
         name: "save",
         id: "save",
         text: "Continue",
         preventDoubleClick: true
     }) }}
+
+    {{ shiftPreview() }}
   </form>
 {% endblock %}
 
 {% block pageScripts %}
   <script nonce="{{ cspNonce }}">
-    const DOW_NAMES = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
-    const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
     let selectListeners = []
     let inputListeners = []
     const dateFrom = '{{ startDate }}'
@@ -196,69 +192,6 @@
       }
     }
 
-    function* iterateCalendarDays() {
-      const currentDay = new Date(dateFrom)
-      let currentMonth = currentDay.getMonth()
-
-      let padStartLength = (currentDay.getDay() + 6) % 7
-
-      if (padStartLength) {
-        for (let i = padStartLength; i > 0; i--) {
-          const day = new Date(dateFrom)
-          day.setDate(day.getDate() - i)
-          yield {
-            month: currentMonth,
-            date: day.getMonth() === currentMonth ? day.getDate() : '',
-            inRange: false,
-          }
-        }
-      }
-
-      while (currentDay.toISOString().substring(0,10) <= dateTo) {
-        if (currentDay.getMonth() !== currentMonth) {
-          let padStartLength = (currentDay.getDay() + 6) % 7
-          for (let i = 0; i < 7 - padStartLength; i++) {
-            yield {
-              month: currentMonth,
-              date: '',
-              inRange: false,
-            }
-          }
-
-          for (let i = 0; i < padStartLength; i++) {
-            yield {
-              month: currentDay.getMonth(),
-              date: '',
-              inRange: false,
-            }
-          }
-        }
-        currentMonth = currentDay.getMonth()
-        yield {
-          month: currentDay.getMonth(),
-          date: currentDay.getDate(),
-          inRange: true,
-        }
-        currentDay.setDate(currentDay.getDate() + 1)
-      }
-
-      const lastDate = new Date(dateTo)
-      const padEndLength = (7 - lastDate.getDay()) % 7
-      if (padEndLength) {
-        for (let i = 1; i <= padEndLength; i++) {
-          const day = new Date(dateTo)
-          day.setDate(day.getDate() + i)
-          yield {
-            month: day.getMonth(),
-            date: day.getMonth() === lastDate.getMonth() ? day.getDate() : '',
-            inRange: false,
-          }
-        }
-      }
-
-
-    }
-
     const parseHourMinute = (hour, minute) => {
       if (!hour && !minute) return ''
 
@@ -269,103 +202,7 @@
       return `${parsedHour}:${parsedMinute}`
     }
 
-    const updatePreview = () => {
-      const shiftPattern = []
-      document.querySelectorAll('.shift-row').forEach(el => {
-        const type = el.querySelector('select').value
-        const inputs = el.querySelectorAll('input')
-        const count = inputs[0].value
-        const startTime = parseHourMinute(inputs[1].value, inputs[2].value)
-        const returnTime = parseHourMinute(inputs[3].value, inputs[4].value)
-        shiftPattern.push({type, count, startTime, returnTime})
-      })
-
-      const previewTableContainer = document.querySelector('.preview-table')
-      previewTableContainer.innerHTML = ''
-      const table = document.createElement('table')
-      table.setAttribute('class', 'govuk-table govuk-!-margin-bottom-6')
-      table.innerHTML = '<thead class="govuk-table__head"><tr class="govuk-table__row"><th class="govuk-table__header">Day</th><th class="govuk-table__header">Date</th><th class="govuk-table__header">Time In</th><th class="govuk-table__header">Time Out</th></tr></thead>'
-      const tbody = document.createElement('tbody')
-      tbody.setAttribute('class', 'govuk-table__body')
-
-      let currentDay = new Date(dateFrom)
-      let shiftTime = iterateShiftPattern(shiftPattern)
-      while (currentDay.toISOString().substring(0,10) <= dateTo) {
-        const row = document.createElement('tr')
-        row.setAttribute('class', 'govuk-table__row')
-        const time = shiftTime.next().value
-        const date = time ? currentDay.toISOString().substring(0,10) : ''
-        const startTime = time?.startTime ?? ''
-        const returnTime = time?.returnTime ?? ''
-        row.innerHTML = `<th scope="row" class="govuk-table__header">${DOW_NAMES[currentDay.getDay()]}</th><td class="govuk-table__cell">${date}</td><td class="govuk-table__cell">${startTime}</td><td class="govuk-table__cell">${returnTime}</td>`
-        tbody.appendChild(row)
-        currentDay.setDate(currentDay.getDate() + 1)
-      }
-      table.appendChild(tbody)
-      previewTableContainer.appendChild(table)
-
-      const calendar = document.querySelector('.preview-calendar')
-      calendar.innerHTML = ''
-
-      let month = undefined
-      let monthTable = undefined
-      let monthTbody = undefined
-      let weekRow = []
-
-      shiftTime = iterateShiftPattern(shiftPattern)
-
-      for (const day of iterateCalendarDays()) {
-        if (day.month !== month) {
-          if (month !== undefined && monthTable && monthTbody) {
-            const monthHeading = document.createElement('h3')
-            monthHeading.setAttribute('class', 'govuk-heading-s')
-            monthHeading.innerHTML = MONTH_NAMES[month]
-            calendar.appendChild(monthHeading)
-            if (weekRow.length) {
-              const row = document.createElement('tr')
-              row.innerHTML = weekRow.join('')
-              monthTbody.appendChild(row)
-            }
-            monthTable.appendChild(monthTbody)
-            calendar.appendChild(monthTable)
-          }
-          month = day.month
-          monthTable = document.createElement('table')
-          monthTable.innerHTML = '<thead><tr><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th></tr></thead>'
-          monthTbody = document.createElement('tbody')
-          weekRow = []
-        }
-        const time = day.inRange ? shiftTime.next().value : undefined
-        if (time) {
-          weekRow.push(`<td><div>${day.date}</div><div class="middle">${ ({ DAY: 'Day shift', NIGHT: 'Night shift'})[time.type] ?? ''}</div><div class="middle">${time.startTime} - ${time.returnTime}</div></td>`)
-        } else {
-          weekRow.push(`<td>${day.date}</td>`)
-        }
-
-        if (weekRow.length === 7) {
-          const row = document.createElement('tr')
-          row.innerHTML = weekRow.join('')
-          monthTbody.appendChild(row)
-          weekRow = []
-        }
-      }
-
-      if (month !== undefined && monthTable && monthTbody) {
-        const monthHeading = document.createElement('h3')
-        monthHeading.setAttribute('class', 'govuk-heading-s')
-        monthHeading.innerHTML = MONTH_NAMES[month]
-        calendar.appendChild(monthHeading)
-        if (weekRow.length) {
-          const row = document.createElement('tr')
-          row.innerHTML = weekRow.join('')
-          monthTbody.appendChild(row)
-        }
-        monthTable.appendChild(monthTbody)
-        calendar.appendChild(monthTable)
-      }
-    }
-
-    const setupToggleStartReturnTimeAndPreview = () => {
+    const setupToggleStartReturnTimeAndPreview = (updatePreview) => {
       selectListeners.forEach(([typeSelect, listener]) => {
         typeSelect.removeEventListener('change', listener)
       })
@@ -397,31 +234,23 @@
       })
     }
 
-
-    let previewType
-    const setPreviewType = (type) => {
-      previewType = type
-      if (previewType === 'CALENDAR') {
-        document.querySelector('.mc-toggle-text').innerHTML = 'Change to table view'
-        document.querySelector('.preview-table').classList.add('govuk-!-display-none')
-        document.querySelector('.preview-calendar').classList.remove('govuk-!-display-none')
-      } else {
-        document.querySelector('.mc-toggle-text').innerHTML = 'Change to calendar view'
-        document.querySelector('.preview-table').classList.remove('govuk-!-display-none')
-        document.querySelector('.preview-calendar').classList.add('govuk-!-display-none')
-      }
-    }
-
     window.onload = function () {
-      setPreviewType('CALENDAR')
-      document.querySelector('.mc-toggle-button').addEventListener('click', evt => {
-        evt.preventDefault()
-        setPreviewType(previewType === 'CALENDAR' ? 'TABLE' : 'CALENDAR')
+      const updatePreview = window.getUpdatePreviewHandler(dateFrom, dateTo, () => {
+        const shiftPattern = []
+        document.querySelectorAll('.shift-row').forEach(el => {
+          const type = el.querySelector('select').value
+          const inputs = el.querySelectorAll('input')
+          const count = inputs[0].value
+          const startTime = parseHourMinute(inputs[1].value, inputs[2].value)
+          const returnTime = parseHourMinute(inputs[3].value, inputs[4].value)
+          shiftPattern.push({type, count, startTime, returnTime})
+        })
+        return () => iterateShiftPattern(shiftPattern)
       })
-      document.querySelector('.shift-preview').classList.remove('govuk-!-display-none')
+
       updatePreview()
-      setupToggleStartReturnTimeAndPreview()
-      document.querySelector(".add-another-form").addEventListener('components-init', setupToggleStartReturnTimeAndPreview)
+      setupToggleStartReturnTimeAndPreview(updatePreview)
+      document.querySelector(".add-another-form").addEventListener('components-init', () => setupToggleStartReturnTimeAndPreview(updatePreview))
     }
   </script>
 {% endblock %}

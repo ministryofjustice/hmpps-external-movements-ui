@@ -254,6 +254,8 @@ export class AddTapFlowControl {
           return 'select-days-and-times'
         case 'WEEKLY':
           return 'select-days-times-weekly'
+        case 'BIWEEKLY':
+          return 'select-days-times-biweekly'
         case 'ROTATING':
           return 'enter-rotating-pattern'
         case 'SHIFT':

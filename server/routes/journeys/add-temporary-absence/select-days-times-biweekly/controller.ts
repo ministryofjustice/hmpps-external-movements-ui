@@ -1,0 +1,65 @@
+import { Request, Response } from 'express'
+import { SchemaType } from '../select-days-times-weekly/schemas'
+
+export class SelectDaysTimesBiWeeklyController {
+  GET = (week: 'FIRST' | 'SECOND') => async (req: Request, res: Response) => {
+    req.journeyData.addTemporaryAbsence!.biweeklyPattern ??= { weekA: [], weekB: [] }
+    const { biweeklyPattern, fromDate, toDate } = req.journeyData.addTemporaryAbsence!
+
+    const pattern = week === 'FIRST' ? biweeklyPattern!.weekA : biweeklyPattern!.weekB
+
+    const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    const getDayTimes = (dayIndex: number) => {
+      const day = pattern?.find(o => o.day === dayIndex)
+      const startTime = day?.startTime
+      const returnTime = day?.overnight ? '' : day?.returnTime
+      const overnightTime = day?.overnight ? day?.returnTime : ''
+      const isOvernight = day?.overnight
+
+      const days = res.locals.formResponses?.['days'] as
+        | {
+            releaseHour: string
+            releaseMinute: string
+            returnHour: string
+            returnMinute: string
+            overnightHour: string
+            overnightMinute: string
+            isOvernight: string
+          }[]
+        | null
+
+      return {
+        index: dayIndex,
+        day: weekDays[dayIndex],
+        nextDay: weekDays[(dayIndex + 1) % 7],
+        releaseHour: days?.[dayIndex]?.releaseHour ?? startTime?.split(':')[0] ?? '',
+        releaseMinute: days?.[dayIndex]?.releaseMinute ?? startTime?.split(':')[1] ?? '',
+        returnHour: days?.[dayIndex]?.returnHour ?? returnTime?.split(':')[0] ?? '',
+        returnMinute: days?.[dayIndex]?.returnMinute ?? returnTime?.split(':')[1] ?? '',
+        overnightHour: days?.[dayIndex]?.overnightHour ?? overnightTime?.split(':')[0] ?? '',
+        overnightMinute: days?.[dayIndex]?.overnightMinute ?? overnightTime?.split(':')[1] ?? '',
+        isOvernight: days?.[dayIndex]?.isOvernight ?? isOvernight ?? '',
+      }
+    }
+
+    res.render('add-temporary-absence/select-days-times-biweekly/view', {
+      backUrl: week === 'FIRST' ? 'repeating-pattern' : 'select-days-times-biweekly',
+      days: res.locals.formResponses?.['selectedDays'] ?? pattern?.map(o => weekDays[o.day]) ?? [],
+      dayData: [...Array(7).keys()].map(i => getDayTimes(i)),
+      week,
+      startDate: fromDate,
+      endDate: toDate,
+      biweeklyPattern,
+    })
+  }
+
+  POST = (week: 'FIRST' | 'SECOND') => async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
+    if (week === 'FIRST') {
+      req.journeyData.addTemporaryAbsence!.biweeklyPattern!.weekA = req.body
+      res.redirect('select-days-times-biweekly-continued')
+    } else {
+      req.journeyData.addTemporaryAbsence!.biweeklyPattern!.weekB = req.body
+      res.redirect('check-absences')
+    }
+  }
+}
