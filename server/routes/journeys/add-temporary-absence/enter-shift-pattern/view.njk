@@ -153,14 +153,14 @@
         }) }}
     </div>
 
-    {{ shiftPreview() }}
-
     {{ govukButton({
         name: "save",
         id: "save",
         text: "Continue",
         preventDoubleClick: true
     }) }}
+
+    {{ shiftPreview() }}
   </form>
 {% endblock %}
 
