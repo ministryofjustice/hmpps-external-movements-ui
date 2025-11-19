@@ -250,7 +250,7 @@
 
       updatePreview()
       setupToggleStartReturnTimeAndPreview(updatePreview)
-      document.querySelector(".add-another-form").addEventListener('components-init', setupToggleStartReturnTimeAndPreview)
+      document.querySelector(".add-another-form").addEventListener('components-init', () => setupToggleStartReturnTimeAndPreview(updatePreview))
     }
   </script>
 {% endblock %}

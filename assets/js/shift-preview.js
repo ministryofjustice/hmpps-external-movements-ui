@@ -63,19 +63,21 @@ function* iterateCalendarDays(dateFrom, dateTo) {
   while (currentDay.toISOString().substring(0, 10) <= dateTo) {
     if (currentDay.getMonth() !== currentMonth) {
       let padStartLength = (currentDay.getDay() + 6) % 7
-      for (let i = 0; i < 7 - padStartLength; i++) {
-        yield {
-          month: currentMonth,
-          date: '',
-          inRange: false,
+      if (padStartLength) {
+        for (let i = 0; i < 7 - padStartLength; i++) {
+          yield {
+            month: currentMonth,
+            date: '',
+            inRange: false,
+          }
         }
-      }
 
-      for (let i = 0; i < padStartLength; i++) {
-        yield {
-          month: currentDay.getMonth(),
-          date: '',
-          inRange: false,
+        for (let i = 0; i < padStartLength; i++) {
+          yield {
+            month: currentDay.getMonth(),
+            date: '',
+            inRange: false,
+          }
         }
       }
     }
