@@ -29,8 +29,8 @@
     "download-address-data": "npm run build && node --env-file=.env dist/server/scripts/getAddressNamesForAutocomplete.js && eslint --fix \"./server/data/address/*\""
   },
   "engines": {
-    "node": "^22",
-    "npm": "^10"
+    "node": "^24",
+    "npm": "^11"
   },
   "jest": {
     "transform": {
@@ -78,17 +78,16 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.920.0",
+    "@aws-sdk/client-sqs": "^3.932.0",
     "@axe-core/playwright": "^4.11.0",
     "@ministryofjustice/frontend": "^7.1.0",
     "@ministryofjustice/hmpps-auth-clients": "^1.0.0",
-    "@ministryofjustice/hmpps-connect-dps-components": "^5.1.1",
+    "@ministryofjustice/hmpps-connect-dps-components": "^5.2.0",
     "@ministryofjustice/hmpps-connect-dps-shared-items": "^3.1.1",
     "@ministryofjustice/hmpps-monitoring": "^1.0.0",
-    "@ministryofjustice/hmpps-prison-permissions-lib": "^0.4.0",
+    "@ministryofjustice/hmpps-prison-permissions-lib": "^0.5.0",
     "@ministryofjustice/hmpps-rest-client": "^1.0.0",
-    "@playwright/test": "^1.56.1",
-    "@sentry/node": "^10.22.0",
+    "@sentry/node": "^10.25.0",
     "applicationinsights": "^2.9.7",
     "body-parser": "^2.2.0",
     "bunyan": "^1.8.15",
@@ -115,10 +114,11 @@
   },
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.4",
-    "@ministryofjustice/eslint-config-hmpps": "^1.0.0",
+    "@ministryofjustice/eslint-config-hmpps": "^1.0.1",
     "@ministryofjustice/hmpps-precommit-hooks": "^1.0.2",
+    "@playwright/test": "^1.56.1",
     "@testing-library/jest-dom": "^6.9.1",
-    "@tsconfig/node22": "^22.0.2",
+    "@tsconfig/node22": "^22.0.3",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.8.1",
@@ -127,7 +127,7 @@
     "@types/http-errors": "^2.0.5",
     "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^22.18.13",
+    "@types/node": "^22.19.1",
     "@types/nunjucks": "^3.2.6",
     "@types/passport": "^1.0.17",
     "@types/passport-oauth2": "^1.8.0",
@@ -138,7 +138,7 @@
     "aws-sdk-client-mock": "^4.1.0",
     "chokidar": "^3.6.0",
     "concurrently": "^9.2.1",
-    "esbuild": "^0.25.11",
+    "esbuild": "^0.27.0",
     "esbuild-plugin-clean": "^1.0.1",
     "esbuild-plugin-copy": "^2.1.1",
     "esbuild-plugin-manifest": "^1.0.5",
@@ -152,9 +152,10 @@
     "mocha-junit-reporter": "^2.2.1",
     "nock": "^14.0.10",
     "openapi-typescript": "^7.10.1",
-    "playwright-ctrf-json-reporter": "^0.0.25",
+    "playwright-ctrf-json-reporter": "^0.0.26",
     "prettier": "^3.6.2",
     "prettier-plugin-jinja-template": "^2.1.0",
+    "sass-embedded": "^1.93.3",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.5",
     "typescript": "^5.9.3"
