@@ -12,14 +12,11 @@ export interface PrisonerDetails {
 export type Address = {
   id?: string | null
   description?: string | null
-  flat?: string | null
-  property?: string | null
-  street?: string | null
-  area?: string | null
-  cityDescription?: string | null
-  countyDescription?: string | null
+  line1?: string | null
+  line2?: string | null
+  city?: string | null
+  county?: string | null
   postcode?: string | null
-  countryDescription?: string | null
 }
 
 export type JourneyData = {

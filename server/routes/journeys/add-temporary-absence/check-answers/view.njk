@@ -277,7 +277,7 @@
 
       {% set locationValue = { html: locationRows | join('<br/><br/>') } %}
     {% else %}
-      {% set locationValue = { text: location.description } %}
+      {% set locationValue = { text: location.description or location | joinAddress } %}
     {% endif %}
 
     {{ govukSummaryList({

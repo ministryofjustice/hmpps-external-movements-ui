@@ -1,5 +1,5 @@
-import { Address } from '../@types/journeys'
 import { components } from '../@types/externalMovements'
+import { Address } from '../@types/journeys'
 
 const uniformWhitespace = (word: string): string => (word ? word.trim().replace(/\s+/g, ' ') : '')
 
@@ -62,24 +62,6 @@ export const formatRefDataName = (val: string) => {
   return [lowercaseExceptAcronym(firstWord ?? ''), ...otherWords].join(' ')
 }
 
-export const addressToLines = ({
-  flat,
-  property,
-  street,
-  cityDescription,
-  countyDescription,
-  postcode,
-  countryDescription,
-}: Address) => {
-  let lineOne = [property, street].filter(s => s).join(', ')
-  if (flat) {
-    lineOne = `${flat}, ${lineOne}`
-  }
-  const addressArray = [lineOne, cityDescription, countyDescription, postcode, countryDescription].filter(s => s)
-  if (addressArray.length) return addressArray.join('\n')
-  return ''
-}
-
 const STATUS_PRIORITY_MAP: { [key: string]: number } = {
   PENDING: 0,
   APPROVED: 10,
@@ -125,4 +107,8 @@ export const initialiseName = (fullName?: string): string | null => {
 
   const array = fullName.split(' ')
   return `${array[0]?.[0]}. ${array.reverse()[0]}`
+}
+
+export const joinAddress = ({ line1, line2, city, county, postcode }: Address) => {
+  return [line1, line2, city, county].filter(itm => !!itm?.trim()).join(', ') + (postcode ? ` ${postcode}` : '')
 }

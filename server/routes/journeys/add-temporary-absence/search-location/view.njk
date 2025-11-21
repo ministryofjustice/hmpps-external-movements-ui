@@ -1,6 +1,8 @@
 {% extends "partials/layout.njk" %}
 {% from "dps/components/address-autosuggest/macro.njk" import addressAutosuggest %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set pageTitle = 'Search for a location - Add a temporary absence' %}
 
@@ -8,6 +10,12 @@
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Create a Temporary Absence</span>
     <h1 class="govuk-heading-l"><label for="address-autosuggest-input">Search for a location where this absence will take place</label></h1>
+
+    <p>Enter a location manually if it:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>does not appear in the search results</li>
+      <li>is not a specific address but a whole area (for example, York)</li>
+    </ul>
 
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -21,6 +29,55 @@
           findUrl: '/api/addresses/find'
         }) }}
       </div>
+
+      {% set manualInputHtml %}
+        {{ govukInput({
+          id: "line1",
+          name: "line1",
+          label: { text: "Address line 1 (optional)" },
+          classes: 'govuk-!-width-two-thirds',
+          errorMessage: validationErrors | findError('line1'),
+          value: line1
+        }) }}
+        {{ govukInput({
+          id: "line2",
+          name: "line2",
+          label: { text: "Address line 2 (optional)" },
+          classes: 'govuk-!-width-two-thirds',
+          errorMessage: validationErrors | findError('line2'),
+          value: line2
+        }) }}
+        {{ govukInput({
+          id: "city",
+          name: "city",
+          label: { text: "Town or city" },
+          classes: 'govuk-!-width-one-half',
+          errorMessage: validationErrors | findError('city'),
+          value: city
+        }) }}
+        {{ govukInput({
+          id: "county",
+          name: "county",
+          label: { text: "County (optional)" },
+          classes: 'govuk-!-width-one-half',
+          errorMessage: validationErrors | findError('county'),
+          value: county
+        }) }}
+        {{ govukInput({
+          id: "postcode",
+          name: "postcode",
+          label: { text: "Postcode (optional)" },
+          classes: 'govuk-!-width-one-third',
+          errorMessage: validationErrors | findError('postcode'),
+          value: postcode
+        }) }}
+      {% endset %}
+
+      {{ govukDetails({
+        summaryText: "Enter a location manually",
+        open: line1 or line2 or city or county or postcode,
+        html: manualInputHtml
+      }) }}
 
       {{ govukButton({
         text: "Continue",
