@@ -89,3 +89,13 @@
   box-shadow: 0 -2px #fd0,0 4px #0b0c0c;
   text-decoration: none
 }
+
+.overnightReturnTimeLabel {
+  display: none;
+}
+
+.overnightCheckbox:has(> .govuk-checkboxes input:checked) ~ .govuk-form-group {
+  .overnightReturnTimeLabel {
+    display: inline!important;
+  }
+}
