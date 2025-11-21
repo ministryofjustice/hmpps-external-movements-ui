@@ -1,121 +1,112 @@
-# hmpps-external-movements-ui
+# HMPPS External Movements UI
 
 [![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/hmpps-external-movements-ui/badge?style=flat)](https://github-community.service.justice.gov.uk/repository-standards/hmpps-external-movements-ui)
 [![Docker Repository on ghcr](https://img.shields.io/badge/ghcr.io-repository-2496ED.svg?logo=docker)](https://ghcr.io/ministryofjustice/hmpps-external-movements-ui)
 
-### Auth Code flow
+A frontend application for HMPPS prison staff to manage and track external prisoner movements.
 
-These are used to allow authenticated users to access the application. After the user is redirected from auth back to
-the application, the typescript app will use the returned auth code to request a JWT token for that user containing the
-user's roles. The JWT token will be verified and then stored in the user's session.
+## Overview
 
-These credentials are configured using the following env variables:
+This service allows prison staff to:
+- Record and manage external prisoner movements
+- Track prisoner movements in and out of prisons
+- View movement history and audit logs
 
-- AUTH_CODE_CLIENT_ID
-- AUTH_CODE_CLIENT_SECRET
+## Getting Started
 
-### Client Credentials flow
+### Installation
 
-These are used by the application to request tokens to make calls to APIs. These are system accounts that will have
-their own sets of roles.
+```bash
+npm ci
+```
+### Configuration
+Create a copy of the `.env.example` file:
+```bash
+cp .env.example .env
+```
 
-Most API calls that occur as part of the request/response cycle will be on behalf of a user.
-To make a call on behalf of a user, a username should be passed when requesting a system token. The username will then
-become part of the JWT and can be used downstream for auditing purposes.
+Update the environment variables in `.env` to match your environment.
 
-These tokens are cached until expiration.
+### Running Locally
+Using Docker compose:
 
-These credentials are configured using the following env variables:
+```bash
+docker compose pull
+docker compose up
+```
 
-- CLIENT_CREDS_CLIENT_ID
-- CLIENT_CREDS_CLIENT_SECRET
+Or run the application directly:
 
-### Dependencies
+```bash
+npm run start:dev
+```
 
-### HMPPS Auth
+The application will be available at http://localhost:3000
 
-To allow authenticated users to access your application you need to point it to a running instance of `hmpps-auth`.
-By default the application is configured to run against an instance running in docker that can be started
-via `docker-compose`.
+## Development
 
-**NB:** It's common for developers to run against the instance of auth running in the development/T3 environment for
-local development.
-Most APIs don't have images with cached data that you can run with docker: setting up realistic stubbed data in sync
-across a variety of services is very difficult.
+### Build
 
-### REDIS
+```bash
+npm run build
+```
 
-When deployed to an environment with multiple pods we run applications with an instance of REDIS/Elasticache to provide
-a distributed cache of sessions.
-The template app is, by default, configured not to use REDIS when running locally.
+### Run Tests
 
-## Running the app via docker-compose
-
-The easiest way to run the app is to use docker compose to create the service and all dependencies.
-
-`docker compose pull`
-
-`docker compose up`
-
-### Running the app for development
-
-To start the main services excluding the example typescript template app:
-
-`docker compose up --scale=app=0`
-
-Create an environment file by copying `.env.example` -> `.env`
-Environment variables set in here will be available when running `start:dev`
-
-Install dependencies using `npm install`, ensuring you are using `node v22`
-
-Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder
-to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json`
-and the github pipeline build config.
-
-And then, to build the assets and start the app with esbuild:
-
-`npm run start:dev`
-
-### Logging in with a test user
-
-Once the application is running you should then be able to login with:
-
-username: AUTH_USER
-password: password123456
-
-To request specific users and roles then raise a PR
-to [update the seed data](https://github.com/ministryofjustice/hmpps-auth/blob/main/src/main/resources/db/dev/data/auth/V900_3__users.sql)
-for the in-memory DB used by Auth
-
-### Run linter
-
-* `npm run lint` runs `eslint`.
-* `npm run typecheck` runs the TypeScript compiler `tsc`.
-
-### Run unit tests
-
+#### Unit Tests
 `npm run test`
 
-### Running integration tests
-
+#### Integration Tests
 For local running, start a wiremock instance by:
 
-`docker compose -f docker-compose-test.yml up`
+```bash
+docker compose -f docker-compose-test.yml up
+```
 
 Then run the server in test mode by:
-
-`npm run start-feature` (or `npm run start-feature:dev` to run with auto-restart on changes)
-
-And then either, run tests in headless mode with:
-
-`npm run int-test`
+```bash
+npm run start-feature:dev
+npm run int-test
+```
 
 Or run tests with the Playwright UI:
-
 `npm run int-test-ui`
 
 By default, playwright will run in 8 parallel workers. This can be changed by setting the `PARALLEL_WORKERS` environment variable in your shell (ie, `~/.zshrc` or `~/.zprofile`).
 
-## Change log
+### Code Quality
+```bash
+npm run lint
 
-A changelog for the service is available [here](./CHANGELOG.md)
+npm run lint-fix
+```
+
+### Syncing API Types With Swagger
+
+Run `npm run swagger-external-movements` to pull the latest typedefs from the api backend.
+
+## Deployment
+This application is deployed to the Cloud Platform using Helm charts located in helm_deploy/. Environment configurations:
+- Dev: [values-dev.yaml](helm_deploy/values-dev.yaml)
+- Pre-production: [values-preprod.yaml](helm_deploy/values-preprod.yaml)
+- Production: [values-prod.yaml](helm_deploy/values-prod.yaml)
+
+## Project Structure
+```
+├── server/              # Server-side code
+│   ├── routes/          # Route controllers and views
+│   ├── services/        # Business logic
+│   ├── data/            # Data access layer
+│   ├── middleware/      # Express middleware
+│   └── views/           # Nunjucks templates
+├── assets/              # Frontend assets (JS, SCSS, images)
+├── integration_tests/   # Playwright integration tests
+├── esbuild/             # Build configuration
+└── helm_deploy/         # Kubernetes deployment configs
+```
+
+## License
+MIT License — see [LICENSE](LICENSE) for more details.
+
+## Support
+For issues or questions, contact the HMPPS Digital team.

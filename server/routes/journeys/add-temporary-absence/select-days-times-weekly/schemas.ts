@@ -22,8 +22,6 @@ export const schema = createSchema({
       returnHour: z.string().optional(),
       returnMinute: z.string().optional(),
       isOvernight: z.string().optional(),
-      overnightHour: z.string().optional(),
-      overnightMinute: z.string().optional(),
     }),
   ),
   selectedDays: z.union([z.string(), z.array(z.string())]).optional(),
@@ -47,17 +45,14 @@ export const schema = createSchema({
       const returnHour = day.returnHour ? parseHour(day.returnHour) : undefined
       const returnMinute = day.returnMinute ? parseMinute(day.returnMinute) : undefined
 
-      const overnightHour = day.overnightHour ? parseHour(day.overnightHour) : undefined
-      const overnightMinute = day.overnightMinute ? parseMinute(day.overnightMinute) : undefined
-
       addInvalidHHMMErrors(ctx, 'release', releaseHour, releaseMinute, ['days', i])
       addEmptyHHMMErrors(ctx, 'release', releaseHour, releaseMinute, ['days', i])
 
       const previousDayIndex = i === 0 ? 6 : i - 1
       if (data.selectedDays?.includes(weekDays[previousDayIndex]!) && data.days[previousDayIndex]) {
         // If the previous day was filled out - we need to check that the previous day's overnight time is not after the current day's release time
-        const previousDayOvernightHour = data.days[previousDayIndex]['overnightHour']
-        const previousDayOvernightMinute = data.days[previousDayIndex]['overnightMinute']
+        const previousDayOvernightHour = data.days[previousDayIndex]['returnHour']
+        const previousDayOvernightMinute = data.days[previousDayIndex]['returnMinute']
 
         if (previousDayOvernightHour && previousDayOvernightMinute && releaseHour && releaseMinute) {
           const previousDayReleaseTime = Number(previousDayOvernightHour) * 60 + Number(previousDayOvernightMinute)
@@ -80,25 +75,18 @@ export const schema = createSchema({
 
       const isOvernight = day.isOvernight === 'true'
 
-      if (isOvernight) {
-        addInvalidHHMMErrors(ctx, 'overnight', overnightHour, overnightMinute, ['days', i])
-        addEmptyHHMMErrors(ctx, 'overnight', overnightHour, overnightMinute, ['days', i])
-      } else {
-        addInvalidHHMMErrors(ctx, 'return', returnHour, returnMinute, ['days', i])
-        addEmptyHHMMErrors(ctx, 'return', returnHour, returnMinute, ['days', i])
+      addInvalidHHMMErrors(ctx, 'return', returnHour, returnMinute, ['days', i])
+      addEmptyHHMMErrors(ctx, 'return', returnHour, returnMinute, ['days', i])
 
-        if (releaseHour && releaseMinute && returnHour && returnMinute) {
-          addBeforeErrors(ctx, releaseHour!, releaseMinute!, returnHour!, returnMinute!, ['days', i])
-        }
+      if (!isOvernight && releaseHour && releaseMinute && returnHour && returnMinute) {
+        addBeforeErrors(ctx, releaseHour!, releaseMinute!, returnHour!, returnMinute!, ['days', i])
       }
 
       return {
         day: i,
         overnight: isOvernight,
         startTime: `${releaseHour?.data}:${releaseMinute?.data}`,
-        returnTime: isOvernight
-          ? `${overnightHour?.data}:${overnightMinute?.data}`
-          : `${returnHour?.data}:${returnMinute?.data}`,
+        returnTime: `${returnHour?.data}:${returnMinute?.data}`,
       } as Required<AddTemporaryAbsenceJourney>['weeklyPattern']['0']
     })
     .filter(o => o?.day !== undefined) as Required<AddTemporaryAbsenceJourney>['weeklyPattern']

@@ -49,7 +49,7 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
     // verify validation errors
     await validateEmptyErrorMessage(testPage)
     await validateInvalidHourMinuteErrorMessage(testPage)
-    await testPage.checkbox('Is this an overnight absence?').first().uncheck()
+    await testPage.checkbox('The prisoner will return after 23:59').first().uncheck()
     await validateReturnTimeAfterReleaseTimeErrorMessage(testPage)
     await validateOvernightTimeAfterReleaseTimeErrorMessage(testPage)
 
@@ -70,18 +70,14 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
 
     await expect(testPage.timeEntry('monday', 'release', 'Hour')).toHaveValue('10')
     await expect(testPage.timeEntry('monday', 'release', 'Minute')).toHaveValue('30')
-    await expect(testPage.timeEntry('monday', 'return', 'Hour')).toHaveValue('')
-    await expect(testPage.timeEntry('monday', 'return', 'Minute')).toHaveValue('')
-    await expect(testPage.timeEntry('monday', 'overnight', 'Hour')).toHaveValue('09')
-    await expect(testPage.timeEntry('monday', 'overnight', 'Minute')).toHaveValue('30')
+    await expect(testPage.timeEntry('monday', 'return', 'Hour')).toHaveValue('09')
+    await expect(testPage.timeEntry('monday', 'return', 'Minute')).toHaveValue('30')
     await expect(testPage.isOvernight('monday')).toBeChecked()
 
     await expect(testPage.timeEntry('tuesday', 'release', 'Hour')).toHaveValue('14')
     await expect(testPage.timeEntry('tuesday', 'release', 'Minute')).toHaveValue('30')
     await expect(testPage.timeEntry('tuesday', 'return', 'Hour')).toHaveValue('17')
     await expect(testPage.timeEntry('tuesday', 'return', 'Minute')).toHaveValue('30')
-    await expect(testPage.timeEntry('tuesday', 'overnight', 'Hour')).toHaveValue('')
-    await expect(testPage.timeEntry('tuesday', 'overnight', 'Minute')).toHaveValue('')
     await expect(testPage.isOvernight('tuesday')).not.toBeChecked()
   })
 
@@ -98,29 +94,16 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
 
     await testPage.link('Enter a return time').click()
     await expect(testPage.timeEntry('monday', 'return', 'Hour')).toBeFocused()
-
-    await testPage.checkbox('Is this an overnight absence?').first().check()
-    await testPage.clickContinue()
-
-    await testPage.link('Enter an overnight time').click()
-    await expect(testPage.timeEntry('monday', 'overnight', 'Hour')).toBeFocused()
   }
 
   const validateInvalidHourMinuteErrorMessage = async (testPage: SelectDaysTimesWeeklyPage) => {
     await testPage.timeEntry('monday', 'release', 'Hour').fill('24')
     await testPage.timeEntry('monday', 'release', 'Minute').fill('60')
-    await testPage.timeEntry('monday', 'overnight', 'Hour').fill('24')
-    await testPage.timeEntry('monday', 'overnight', 'Minute').fill('60')
-    await testPage.clickContinue()
-
-    await expect(testPage.link('Enter a valid release time')).toBeVisible()
-    await expect(testPage.link('Enter a valid overnight time')).toBeVisible()
-
-    await testPage.checkbox('Is this an overnight absence?').first().uncheck()
     await testPage.timeEntry('monday', 'return', 'Hour').fill('24')
     await testPage.timeEntry('monday', 'return', 'Minute').fill('60')
     await testPage.clickContinue()
 
+    await expect(testPage.link('Enter a valid release time')).toBeVisible()
     await expect(testPage.link('Enter a valid return time')).toBeVisible()
   }
 
@@ -135,12 +118,12 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
   }
 
   const validateOvernightTimeAfterReleaseTimeErrorMessage = async (testPage: SelectDaysTimesWeeklyPage) => {
-    await testPage.checkbox('Is this an overnight absence?').first().check()
+    await testPage.checkbox('The prisoner will return after 23:59').first().check()
     await testPage.timeEntry('monday', 'release', 'Hour').fill('10')
     await testPage.timeEntry('monday', 'release', 'Minute').fill('30')
 
-    await testPage.timeEntry('monday', 'overnight', 'Hour').fill('09')
-    await testPage.timeEntry('monday', 'overnight', 'Minute').fill('30')
+    await testPage.timeEntry('monday', 'return', 'Hour').fill('09')
+    await testPage.timeEntry('monday', 'return', 'Minute').fill('30')
 
     await testPage.checkbox('Tuesday').check()
     await testPage.timeEntry('tuesday', 'release', 'Hour').fill('02')

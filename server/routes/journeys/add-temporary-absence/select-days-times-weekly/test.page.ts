@@ -14,7 +14,7 @@ export class SelectDaysTimesWeeklyPage extends BaseTestPage {
     })
   }
 
-  timeEntry(day: Day, segment: 'release' | 'return' | 'overnight', cronoUnit: 'Hour' | 'Minute') {
+  timeEntry(day: Day, segment: 'release' | 'return', cronoUnit: 'Hour' | 'Minute') {
     return this.page.locator(`[id="days[${weekDays.indexOf(day)}][${segment}${cronoUnit}]"]`)
   }
 
