@@ -15,6 +15,30 @@ export class SearchLocationPage extends BaseTestPage {
     return this.page.getByRole('combobox', { name: 'Search for a location where this absence will take place' }).first()
   }
 
+  async toggleEnterManually() {
+    await this.page.locator('span', { hasText: 'Enter a location manually' }).click()
+  }
+
+  line1Field() {
+    return this.textbox('Address line 1 (optional')
+  }
+
+  line2Field() {
+    return this.textbox('Address line 2 (optional')
+  }
+
+  cityField() {
+    return this.textbox('Town or city')
+  }
+
+  countyField() {
+    return this.textbox('County (optional')
+  }
+
+  postcodeField() {
+    return this.textbox('Postcode (optional')
+  }
+
   async selectAddress(addressText: string) {
     await this.page.getByText(addressText).first().click()
   }

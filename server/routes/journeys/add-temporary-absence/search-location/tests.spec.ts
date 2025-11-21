@@ -58,7 +58,7 @@ test.describe('/add-temporary-absence/search-location', () => {
     await page.goto(`/${journeyId}/add-temporary-absence/search-location`)
   }
 
-  test('should try all cases', async ({ page }) => {
+  test('should search and select an address', async ({ page }) => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId)
 
@@ -73,10 +73,49 @@ test.describe('/add-temporary-absence/search-location', () => {
     await testPage.link('Enter and select an address or postcode').click()
     await expect(testPage.searchField()).toBeFocused()
 
-    // // verify next page routing
+    // verify next page routing
     await testPage.searchField().fill('random')
     await testPage.selectAddress('Address, RS1 34T')
     await testPage.clickContinue()
     expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
+
+    // verify input values are persisted
+    await page.goBack()
+    await page.reload()
+    await expect(testPage.searchField()).toHaveValue('Address, RS1 34T')
+  })
+
+  test('should manually enter an address', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    // verify page content
+    const testPage = await new SearchLocationPage(page).verifyContent()
+
+    await testPage.toggleEnterManually()
+    await expect(testPage.searchField()).toBeVisible()
+    await expect(testPage.line1Field()).toBeVisible()
+    await expect(testPage.line2Field()).toBeVisible()
+    await expect(testPage.cityField()).toBeVisible()
+    await expect(testPage.countyField()).toBeVisible()
+    await expect(testPage.postcodeField()).toBeVisible()
+    await expect(testPage.button('Continue')).toBeVisible()
+
+    // verify validation error
+    await testPage.line1Field().fill('1 Manual Street')
+    await testPage.clickContinue()
+    await testPage.link('Enter town or city').click()
+    await expect(testPage.cityField()).toBeFocused()
+
+    // verify next page routing
+    await testPage.cityField().fill('Manual City')
+    await testPage.clickContinue()
+    expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
+
+    // verify input values are persisted
+    await page.goBack()
+    await page.reload()
+    await expect(testPage.line1Field()).toHaveValue('1 Manual Street')
+    await expect(testPage.cityField()).toHaveValue('Manual City')
   })
 })

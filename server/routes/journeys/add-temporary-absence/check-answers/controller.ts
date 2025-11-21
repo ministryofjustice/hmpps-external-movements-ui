@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
 import { components } from '../../../../@types/externalMovements'
 import { Address } from '../../../../@types/journeys'
+import { joinAddress } from '../../../../utils/formatUtils'
 
 export class AddTapCheckAnswersController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -87,7 +88,7 @@ export class AddTapCheckAnswersController {
 }
 
 const parseAddress = (location: Address) => ({
-  description: location.description!,
+  description: location.description ?? joinAddress(location),
   ...(location.id ? { uprn: location.id } : {}),
   ...(location.postcode ? { postcode: location.postcode } : {}),
 })

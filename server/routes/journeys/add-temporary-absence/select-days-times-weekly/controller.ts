@@ -7,8 +7,7 @@ export class SelectDaysTimesWeeklyController {
     const getDayTimes = (dayIndex: number) => {
       const day = req.journeyData.addTemporaryAbsence?.weeklyPattern?.find(o => o.day === dayIndex)
       const startTime = day?.startTime
-      const returnTime = day?.overnight ? '' : day?.returnTime
-      const overnightTime = day?.overnight ? day?.returnTime : ''
+      const returnTime = day?.returnTime
       const isOvernight = day?.overnight
 
       const days = res.locals.formResponses?.['days'] as
@@ -17,8 +16,6 @@ export class SelectDaysTimesWeeklyController {
             releaseMinute: string
             returnHour: string
             returnMinute: string
-            overnightHour: string
-            overnightMinute: string
             isOvernight: string
           }[]
         | null
@@ -31,8 +28,6 @@ export class SelectDaysTimesWeeklyController {
         releaseMinute: days?.[dayIndex]?.releaseMinute ?? startTime?.split(':')[1] ?? '',
         returnHour: days?.[dayIndex]?.returnHour ?? returnTime?.split(':')[0] ?? '',
         returnMinute: days?.[dayIndex]?.returnMinute ?? returnTime?.split(':')[1] ?? '',
-        overnightHour: days?.[dayIndex]?.overnightHour ?? overnightTime?.split(':')[0] ?? '',
-        overnightMinute: days?.[dayIndex]?.overnightMinute ?? overnightTime?.split(':')[1] ?? '',
         isOvernight: days?.[dayIndex]?.isOvernight ?? isOvernight ?? '',
       }
     }
@@ -44,6 +39,8 @@ export class SelectDaysTimesWeeklyController {
         req.journeyData.addTemporaryAbsence?.weeklyPattern?.map(o => weekDays[o.day]) ??
         [],
       dayData: [...Array(7).keys()].map(i => getDayTimes(i)),
+      startDate: req.journeyData.addTemporaryAbsence!.fromDate,
+      endDate: req.journeyData.addTemporaryAbsence!.toDate,
     })
   }
 

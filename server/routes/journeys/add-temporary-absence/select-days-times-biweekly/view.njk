@@ -9,6 +9,8 @@
 {% set fullWidth = true %}
 {% set pageTitle = "Enter absence dates and times - Add a temporary absence" %}
 
+{% set overnightReturnLabel = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday'] %}
+
 {% macro dayEntry(opts) %}
     {{ validatedTimeInput({
         id: "release",
@@ -16,7 +18,7 @@
         classes: 'govuk-!-static-margin-bottom-6',
         fieldset: {
             legend: {
-                html: 'Release time<span class="govuk-visually-hidden">on ' + opts.id + '</span>'
+                html: 'Start time<span class="govuk-visually-hidden"> on ' + opts.id + '</span>'
             }
         },
         addAnother: {
@@ -28,66 +30,44 @@
         minute: opts.releaseMinute
     }) }}
 
-    {{ validatedTimeInput({
-        id: "return",
-        name: "return",
-        classes: 'govuk-!-static-margin-bottom-6',
-        fieldset: {
-            legend: {
-                html: 'Return time<span class="govuk-visually-hidden">on ' + opts.id + '</span>'
-            }
-        },
-        addAnother: {
-            id: 'days',
-            index: opts.i
-        },
-        validationErrors: validationErrors,
-        hour: opts.returnHour,
-        minute: opts.returnMinute
-    }) }}
+  {{ govukCheckboxes({
+    id: "days[" + opts.i + "][isOvernight]",
+    name: "days[" + opts.i + "][isOvernight]",
+    classes: 'govuk-!-static-margin-bottom-6 govuk-checkboxes--small',
+    items: [
+      {
+        value: "true",
+        text: "The prisoner will return after 23:59",
+        checked: opts.isOvernight
+      }
+    ],
+    formGroup: { classes: 'overnightCheckbox' }
+  }) }}
 
-    {% set overnightHtml %}
-        {{ validatedTimeInput({
-            id: "overnight",
-            name: "overnight",
-            classes: 'govuk-!-static-margin-bottom-6',
-            fieldset: {
-                legend: {
-                    text: "Return time on " + opts.nextDay
-                }
-            },
-            addAnother: {
-                id: 'days',
-                index: opts.i
-            },
-            validationErrors: validationErrors,
-            hour: opts.overnightHour,
-            minute: opts.overnightMinute
-            }) }}
-    {% endset %}
-
-    {{ govukCheckboxes({
-        id: "days[" + opts.i + "][isOvernight]",
-        name: "days[" + opts.i + "][isOvernight]",
-        classes: 'govuk-!-static-margin-bottom-6 govuk-checkboxes--small',
-        items: [
-            {
-                value: "true",
-                text: "Is this an overnight absence?",
-                checked: opts.isOvernight,
-                conditional: {
-                    html: overnightHtml
-                }
-            }
-        ]
-    }) }}
+  {{ validatedTimeInput({
+    id: "return",
+    name: "return",
+    classes: 'govuk-!-static-margin-bottom-6',
+    fieldset: {
+      legend: {
+        html: 'Return time<span class="overnightReturnTimeLabel"> on ' + overnightReturnLabel[opts.i] + '</span>'
+      }
+    },
+    addAnother: {
+      id: 'days',
+      index: opts.i
+    },
+    validationErrors: validationErrors,
+    hour: opts.returnHour,
+    minute: opts.returnMinute
+  }) }}
 {% endmacro %}
 
 {% block innerContent %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-l">Create a Temporary Absence</span>
-    <h1 class="govuk-heading-l govuk-!-margin-bottom-7">{{ "Week 1" if week === 'FIRST' else 'Week 2' }} : Enter the days and times for these absences</h1>
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-7"><label for="selectedDays">{{ "Week 1" if week === 'FIRST' else 'Week 2' }} : Enter the days and times for these absences</label></h1>
     {{ govukInsetText({
       html: "<span>This pattern will start on " + startDate | formatDate + " and end on "+ endDate | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="start-end-dates">Go back if you need to change these dates.</a>'
     }) }}
@@ -212,9 +192,9 @@
 
         const weekPattern = selectedDays.map(day => ({
           day,
-          overnight: dayDetails[day * 7 + 4].checked,
-          startTime: parseHourMinute(dayDetails[day * 7].value, dayDetails[day * 7 + 1].value),
-          returnTime: dayDetails[day * 7 + 4].checked? parseHourMinute(dayDetails[day * 7 + 5].value, dayDetails[day * 7 + 6].value) : parseHourMinute(dayDetails[day * 7 + 2].value, dayDetails[day * 7 + 3].value),
+          overnight: dayDetails[day * 5 + 2].checked,
+          startTime: parseHourMinute(dayDetails[day * 5].value, dayDetails[day * 5 + 1].value),
+          returnTime: parseHourMinute(dayDetails[day * 5 + 3].value, dayDetails[day * 5 + 4].value),
         }))
 
         if (week === 'FIRST') {

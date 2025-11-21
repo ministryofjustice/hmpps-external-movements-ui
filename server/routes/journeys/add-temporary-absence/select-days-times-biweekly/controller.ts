@@ -12,8 +12,7 @@ export class SelectDaysTimesBiWeeklyController {
     const getDayTimes = (dayIndex: number) => {
       const day = pattern?.find(o => o.day === dayIndex)
       const startTime = day?.startTime
-      const returnTime = day?.overnight ? '' : day?.returnTime
-      const overnightTime = day?.overnight ? day?.returnTime : ''
+      const returnTime = day?.returnTime
       const isOvernight = day?.overnight
 
       const days = res.locals.formResponses?.['days'] as
@@ -22,8 +21,6 @@ export class SelectDaysTimesBiWeeklyController {
             releaseMinute: string
             returnHour: string
             returnMinute: string
-            overnightHour: string
-            overnightMinute: string
             isOvernight: string
           }[]
         | null
@@ -36,8 +33,6 @@ export class SelectDaysTimesBiWeeklyController {
         releaseMinute: days?.[dayIndex]?.releaseMinute ?? startTime?.split(':')[1] ?? '',
         returnHour: days?.[dayIndex]?.returnHour ?? returnTime?.split(':')[0] ?? '',
         returnMinute: days?.[dayIndex]?.returnMinute ?? returnTime?.split(':')[1] ?? '',
-        overnightHour: days?.[dayIndex]?.overnightHour ?? overnightTime?.split(':')[0] ?? '',
-        overnightMinute: days?.[dayIndex]?.overnightMinute ?? overnightTime?.split(':')[1] ?? '',
         isOvernight: days?.[dayIndex]?.isOvernight ?? isOvernight ?? '',
       }
     }
