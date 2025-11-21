@@ -50,6 +50,7 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
           }))
       })
       .flat()
+      .sort((a, b) => a.releaseAt.localeCompare(b.releaseAt))
   }
 
   if (journey.patternType === 'ROTATING') {
