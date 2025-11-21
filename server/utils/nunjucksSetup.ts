@@ -16,9 +16,9 @@ import {
 import config from '../config'
 import logger from '../../logger'
 import {
-  addressToLines,
   firstNameSpaceLastName,
   formatRefDataName,
+  joinAddress,
   lastNameCommaFirstName,
   occurrenceStatus,
   possessiveComma,
@@ -101,10 +101,10 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('setSelectedValue', setSelectedValue)
   njkEnv.addFilter('setCheckedValue', setCheckedValue)
   njkEnv.addFilter('removeNullish', arr => arr.filter(Boolean))
-  njkEnv.addFilter('addressToLines', addressToLines)
   njkEnv.addFilter('fromRefData', fromRefData)
   njkEnv.addFilter('statusPriority', statusPriority)
   njkEnv.addFilter('occurrenceStatus', occurrenceStatus)
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('contains', (arr, value) => arr.includes(value))
+  njkEnv.addFilter('joinAddress', joinAddress)
 }
