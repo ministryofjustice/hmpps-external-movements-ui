@@ -12,7 +12,7 @@ export class FreeformSelectDaysPage extends BaseTestPage {
   }
 
   releaseDateField(idx: number) {
-    return this.textbox('Release date').nth(idx)
+    return this.textbox('Start date').nth(idx)
   }
 
   returnDateField(idx: number) {

@@ -17,6 +17,9 @@ export class FreeformSelectDaysController {
       backUrl,
       startDate,
       endDate,
+      fromDate: req.journeyData.addTemporaryAbsence!.fromDate,
+      toDate: req.journeyData.addTemporaryAbsence!.toDate,
+      freeFormPattern: req.journeyData.addTemporaryAbsence!.freeFormPattern ?? [],
       isLastWeek: nextIdx === undefined,
       isOptional,
       absences:
