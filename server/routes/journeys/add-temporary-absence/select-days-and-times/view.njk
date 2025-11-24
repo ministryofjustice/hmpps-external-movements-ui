@@ -148,6 +148,7 @@
 {% block pageScripts %}
   <script nonce="{{ cspNonce }}">
     let inputListeners = []
+    let changeListeners = []
     const dateFrom = '{{ fromDate }}'
     const dateTo = '{{ toDate }}'
 
@@ -187,9 +188,20 @@
       })
       inputListeners = []
 
+      changeListeners.forEach(([input, listener]) => {
+        input.removeEventListener('input', listener)
+        input.removeEventListener('change', listener)
+      })
+      changeListeners = []
+
       document.querySelector('.add-another-form').querySelectorAll('input[name^=absences]').forEach(input => {
+        if (input.name.includes('Date')) {
+          const handler = () => setTimeout(updatePreview, 100)
+          input.addEventListener('change', handler) // selecting a date on Datepicker component only trigger change but not input
+          changeListeners.push([input, handler])
+        }
+
         input.addEventListener('input', updatePreview)
-        input.addEventListener('change', updatePreview) // selecting a date on Datepicker component only trigger change but not input
         inputListeners.push([input, updatePreview])
       })
     }
