@@ -14,7 +14,7 @@
         errorMessage: validationErrors | findError('patternType'),
         fieldset: {
           legend: {
-            text: 'Will these absences take place in a repeating pattern?',
+            text: 'How will the occurrences of this absence repeat?',
             isPageHeading: true,
             classes: "govuk-fieldset__legend--xl"
           }
@@ -22,16 +22,16 @@
         items: [
           {
             value: 'FREEFORM',
-            text: "No",
+            text: "Does not repeat in a regular pattern",
             hint: {
-              text: "These absences will not take place in a repeatable pattern."
+              text: "Enter the individual dates and times for each absence occurrence."
             }
           },
           {
             value: 'WEEKLY',
-            text: "Yes, repeats weekly",
+            text: "Repeats weekly",
             hint: {
-            text: "These absences take place at the same days and times each week."
+            text: "Enter the days and times for absences that will take place at the same days and times each week."
           }
           },
           {
@@ -42,15 +42,11 @@
           }
           },
           {
-            value: 'ROTATING',
-            text: "Yes, repeats on a rotating pattern",
-            hint: {
-              text: "These absences take place on a repeating pattern. For example, 4 days on, 4 days off."
-            }
-          },
-          {
             value: 'SHIFT',
-            text: "Shift pattern with preview for testing"
+            text: "Repeats in a custom pattern",
+            hint: {
+              text: "Enter the days and times for a shift-type pattern. For example, 3 days on, 3 days off."
+            }
           }
         ] | setCheckedValue(patternType)
       }) }}
