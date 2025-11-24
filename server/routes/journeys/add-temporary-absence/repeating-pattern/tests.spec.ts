@@ -93,7 +93,7 @@ test.describe('/add-temporary-absence/repeating-pattern', () => {
     await expect(testPage.weeklyRadio()).toBeChecked()
   })
 
-  test('should try routing to enter-rotating-pattern', async ({ page }) => {
+  test('should try routing to enter-shift-pattern', async ({ page }) => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId)
 
@@ -103,7 +103,7 @@ test.describe('/add-temporary-absence/repeating-pattern', () => {
     // verify next page routing
     await testPage.rotatingRadio().click()
     await testPage.clickContinue()
-    expect(page.url()).toMatch(/\/add-temporary-absence\/enter-rotating-pattern/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/enter-shift-pattern/)
 
     // verify input values are persisted
     await page.goBack()
