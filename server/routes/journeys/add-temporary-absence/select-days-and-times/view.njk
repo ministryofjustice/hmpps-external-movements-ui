@@ -3,6 +3,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "partials/shift-preview/macro.njk" import shiftPreview %}
 
 {% set fullWidth = true %}
 {% set pageTitle = 'Enter absence dates - Add a temporary absence' %}
@@ -35,7 +36,7 @@
                 id: "absences[" + loop.index0 + "][startDate]",
                 name: "absences[" + loop.index0 + "][startDate]",
                 label: {
-                  text: 'Release date',
+                  text: 'Start date',
                   classes: "govuk-fieldset__legend--m"
                 },
                 hint: {
@@ -62,7 +63,7 @@
                 name: "startTime",
                 fieldset: {
                   legend: {
-                    text: 'Release time',
+                    text: 'Start time',
                     classes: "govuk-fieldset__legend--m"
                   }
                 },
@@ -139,11 +140,37 @@
         preventDoubleClick: true
       }) }}
     </form>
+
+    {{ shiftPreview() }}
   </div>
 {% endblock %}
 
 {% block pageScripts %}
   <script nonce="{{ cspNonce }}">
+    let inputListeners = []
+    let changeListeners = []
+    const dateFrom = '{{ fromDate }}'
+    const dateTo = '{{ toDate }}'
+
+    const weekFrom = '{{ startDate }}'
+    const weekTo = '{{ endDate }}'
+
+    const freeFormPattern = {{ freeFormPattern | dump | safe }}
+
+    function* iterateFreeformPattern(pattern) {
+      const mappedPattern = pattern.map(itm => ({
+        ...itm,
+        type: itm.returnDate > itm.startDate ? 'NIGHT' : 'DAY',
+      }))
+
+      const currentDay = new Date(dateFrom)
+      while (currentDay.toISOString().substring(0, 10) <= dateTo) {
+        yield mappedPattern.find(({startDate}) => currentDay.toISOString().startsWith(startDate))
+        currentDay.setDate(currentDay.getDate() + 1)
+      }
+      for (;;) yield null
+    }
+
     const setupAutoFillReturnDate = () => document.querySelectorAll('.moj-js-datepicker-input').forEach(el => {
       const index = el.name.match(/absences\[(.+?)]\[startDate]/)?.[1]
       if (index) {
@@ -154,9 +181,81 @@
       }
     })
 
+    const setupDynamicPreview = (updatePreview) => {
+      inputListeners.forEach(([input, listener]) => {
+        input.removeEventListener('input', listener)
+        input.removeEventListener('change', listener)
+      })
+      inputListeners = []
+
+      changeListeners.forEach(([input, listener]) => {
+        input.removeEventListener('input', listener)
+        input.removeEventListener('change', listener)
+      })
+      changeListeners = []
+
+      document.querySelector('.add-another-form').querySelectorAll('input[name^=absences]').forEach(input => {
+        if (input.name.includes('Date')) {
+          const handler = () => setTimeout(updatePreview, 100)
+          input.addEventListener('change', handler) // selecting a date on Datepicker component only trigger change but not input
+          changeListeners.push([input, handler])
+        }
+
+        input.addEventListener('input', updatePreview)
+        inputListeners.push([input, updatePreview])
+      })
+    }
+
+    const parseDate = (date) => {
+      const parsedDate = new Date(date.split('/').reverse().join('-'))
+      if (isNaN(parsedDate)) return null
+      return parsedDate.toISOString().substring(0, 10)
+    }
+
+    const parseHourMinute = (hour, minute) => {
+      if (!hour && !minute) return ''
+
+      const hourNumber = Number(hour)
+      const parsedHour = hour && !Number.isNaN(hourNumber) && hourNumber >= 0 && hourNumber < 24 ? String(hourNumber).padStart(2, '0') : ''
+      const minuteNumber = Number(minute)
+      const parsedMinute = minute && !Number.isNaN(minuteNumber) && minuteNumber >= 0 && minuteNumber < 60 ? String(minuteNumber).padStart(2, '0') : ''
+      return `${parsedHour}:${parsedMinute}`
+    }
+
     window.onload = function () {
+      const updatePreview = window.getUpdatePreviewHandler(dateFrom, dateTo, () => {
+        const inputs = Array.from(document.querySelector('.add-another-form').querySelectorAll('input[name^=absences]'))
+        const rowCount = inputs.length / 6
+        const currentWeek = Array.from(new Array(rowCount).keys()).map(idx => {
+          const startDate = parseDate(inputs[idx * 6].value)
+          const returnDate = parseDate(inputs[idx * 6 + 3].value)
+          if (startDate && returnDate) {
+            return {
+              startDate,
+              returnDate,
+              startTime: parseHourMinute(inputs[idx * 6 + 1].value, inputs[idx * 6 + 2].value),
+              returnTime: parseHourMinute(inputs[idx * 6 + 4].value, inputs[idx * 6 + 5].value),
+            }
+          }
+          return null
+        }).filter(itm => Boolean(itm))
+
+        const combinedPattern = [
+          ...freeFormPattern.filter(({startDate}) => startDate < weekFrom || startDate > weekTo),
+          ...currentWeek,
+        ]
+
+        return () => iterateFreeformPattern(combinedPattern)
+      })
+      updatePreview()
+
+      setupDynamicPreview(updatePreview)
       setupAutoFillReturnDate()
-      document.querySelector(".add-another-form").addEventListener('components-init', setupAutoFillReturnDate)
+
+      document.querySelector(".add-another-form").addEventListener('components-init', () => {
+        setupAutoFillReturnDate()
+        setupDynamicPreview(updatePreview)
+      })
     }
   </script>
 {% endblock %}
