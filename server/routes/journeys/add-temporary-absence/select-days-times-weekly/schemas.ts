@@ -51,8 +51,10 @@ export const schema = createSchema({
       const previousDayIndex = i === 0 ? 6 : i - 1
       if (data.selectedDays?.includes(weekDays[previousDayIndex]!) && data.days[previousDayIndex]) {
         // If the previous day was filled out - we need to check that the previous day's overnight time is not after the current day's release time
-        const previousDayOvernightHour = data.days[previousDayIndex]['returnHour']
-        const previousDayOvernightMinute = data.days[previousDayIndex]['returnMinute']
+        const previousDayOvernightHour =
+          data.days[previousDayIndex]['isOvernight'] && data.days[previousDayIndex]['returnHour']
+        const previousDayOvernightMinute =
+          data.days[previousDayIndex]['isOvernight'] && data.days[previousDayIndex]['returnMinute']
 
         if (previousDayOvernightHour && previousDayOvernightMinute && releaseHour && releaseMinute) {
           const previousDayReleaseTime = Number(previousDayOvernightHour) * 60 + Number(previousDayOvernightMinute)
