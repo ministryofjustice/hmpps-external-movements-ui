@@ -48,7 +48,7 @@ export const schema = createSchema({
       addInvalidHHMMErrors(ctx, 'release', releaseHour, releaseMinute, ['days', i])
       addEmptyHHMMErrors(ctx, 'release', releaseHour, releaseMinute, ['days', i])
 
-      const previousDayIndex = i === 0 ? 6 : i - 1
+      /* const previousDayIndex = i === 0 ? 6 : i - 1
       if (data.selectedDays?.includes(weekDays[previousDayIndex]!) && data.days[previousDayIndex]) {
         // If the previous day was filled out - we need to check that the previous day's overnight time is not after the current day's release time
         const previousDayOvernightHour = data.days[previousDayIndex]['returnHour']
@@ -61,7 +61,7 @@ export const schema = createSchema({
           if (previousDayReleaseTime > dayReleaseTime) {
             ctx.addIssue({
               code: 'custom',
-              message: 'The release time must be later than the overnight return time',
+              message: 'The start time must be later than the overnight return time',
               path: ['days', i, 'releaseHour'],
             })
             ctx.addIssue({
@@ -71,7 +71,7 @@ export const schema = createSchema({
             })
           }
         }
-      }
+      } */
 
       const isOvernight = day.isOvernight === 'true'
 

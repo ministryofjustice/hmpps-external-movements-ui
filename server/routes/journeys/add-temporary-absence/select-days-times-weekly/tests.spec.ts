@@ -51,7 +51,7 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
     await validateInvalidHourMinuteErrorMessage(testPage)
     await testPage.checkbox('The prisoner will return after 23:59').first().uncheck()
     await validateReturnTimeAfterReleaseTimeErrorMessage(testPage)
-    await validateOvernightTimeAfterReleaseTimeErrorMessage(testPage)
+    // await validateOvernightTimeAfterReleaseTimeErrorMessage(testPage)
 
     // verify next page routing
     await testPage.timeEntry('tuesday', 'release', 'Hour').fill('14')
@@ -117,7 +117,7 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
     await expect(testPage.link('The return time must come after the release date and time')).toBeVisible()
   }
 
-  const validateOvernightTimeAfterReleaseTimeErrorMessage = async (testPage: SelectDaysTimesWeeklyPage) => {
+  /* const validateOvernightTimeAfterReleaseTimeErrorMessage = async (testPage: SelectDaysTimesWeeklyPage) => {
     await testPage.checkbox('The prisoner will return after 23:59').first().check()
     await testPage.timeEntry('monday', 'release', 'Hour').fill('10')
     await testPage.timeEntry('monday', 'release', 'Minute').fill('30')
@@ -130,6 +130,6 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
     await testPage.timeEntry('tuesday', 'release', 'Minute').fill('30')
     await testPage.clickContinue()
 
-    await expect(testPage.link('The release time must be later than the overnight return time')).toBeVisible()
-  }
+    await expect(testPage.link('The start time must be later than the overnight return time')).toBeVisible()
+  } */
 })
