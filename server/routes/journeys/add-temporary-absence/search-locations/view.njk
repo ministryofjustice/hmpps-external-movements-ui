@@ -1,6 +1,8 @@
 {% extends "partials/layout.njk" %}
 {% from "dps/components/address-autosuggest/macro.njk" import addressAutosuggest %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set pageTitle = 'Search for a location - Add a temporary absence' %}
 
@@ -8,6 +10,13 @@
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Create a Temporary Absence</span>
     <h1 class="govuk-heading-l"><label for="address-autosuggest-input">Search for a location where this absence will take place</label></h1>
+
+    <p>You can add multiple locations if this absence will happen in multiple places.</p>
+    <p>Enter a location manually if it:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>does not appear in the search results</li>
+      <li>is not a specific address but a whole area (for example, York)</li>
+    </ul>
 
     <form method="post" class="govuk-!-width-full">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -33,24 +42,78 @@
         }) }}
       </div>
 
+      {% set manualInputHtml %}
+        {{ govukInput({
+          id: "line1",
+          name: "line1",
+          label: { text: "Address line 1 (optional)" },
+          classes: 'govuk-!-width-two-thirds',
+          errorMessage: validationErrors | findError('line1'),
+          value: line1
+        }) }}
+        {{ govukInput({
+          id: "line2",
+          name: "line2",
+          label: { text: "Address line 2 (optional)" },
+          classes: 'govuk-!-width-two-thirds',
+          errorMessage: validationErrors | findError('line2'),
+          value: line2
+        }) }}
+        {{ govukInput({
+          id: "city",
+          name: "city",
+          label: { text: "Town or city" },
+          classes: 'govuk-!-width-one-half',
+          errorMessage: validationErrors | findError('city'),
+          value: city
+        }) }}
+        {{ govukInput({
+          id: "county",
+          name: "county",
+          label: { text: "County (optional)" },
+          classes: 'govuk-!-width-one-half',
+          errorMessage: validationErrors | findError('county'),
+          value: county
+        }) }}
+        {{ govukInput({
+          id: "postcode",
+          name: "postcode",
+          label: { text: "Postcode (optional)" },
+          classes: 'govuk-!-width-one-third',
+          errorMessage: validationErrors | findError('postcode'),
+          value: postcode
+        }) }}
+        {{ govukButton({
+          name: "addManual",
+          text: "Add location",
+          preventDoubleClick: true
+        }) }}
+      {% endset %}
+
+      {{ govukDetails({
+        summaryText: "Enter a location manually",
+        open: line1 or line2 or city or county or postcode,
+        html: manualInputHtml
+      }) }}
+
       {% if locations.length %}
         <h2 class="govuk-heading-m">You have added {{ locations.length }} {{ "location" if locations.length === 1 else "locations" }}</h2>
 
         <div class="govuk-!-margin-bottom-6">
           {% for location in locations %}
             <div class="govuk-grid-row">
-              <div class="govuk-grid-column-three-quarters">{{ location.description }}</div>
+              <div class="govuk-grid-column-three-quarters">{{ location.description or location | joinAddress }}</div>
               <div class="govuk-summary-card__actions"><a href="search-locations/remove/{{ loop.index }}" class="govuk-link govuk-link--no-visited-state">Remove<span class="govuk-visually-hidden"> location {{ loop.index }}</span></a></div>
             </div>
           {% endfor %}
         </div>
-      {% endif %}
 
-      {{ govukButton({
-        name: "save",
-        text: "Continue",
-        preventDoubleClick: true
-      }) }}
+        {{ govukButton({
+          name: "save",
+          text: "Continue",
+          preventDoubleClick: true
+        }) }}
+      {% endif %}
     </form>
   </div>
 {% endblock %}
