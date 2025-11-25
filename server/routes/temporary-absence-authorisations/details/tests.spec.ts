@@ -52,6 +52,8 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       fromDate: '2001-01-01',
       toDate: '2001-01-01',
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      transport: { code: 'CAR', description: 'Car' },
+      locations: [{ uprn: '1001', description: 'Random Street, UK' }],
       occurrences: [
         {
           id: 'occurrence-id',
@@ -63,11 +65,6 @@ test.describe('/temporary-absence-authorisations/:id', () => {
           transport: { code: 'CAR', description: 'Car' },
         },
       ],
-      submitted: {
-        at: '1999-12-25T09:00:00.000',
-        by: 'STAFFNAME',
-        displayName: 'Staff Name',
-      },
     })
     await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
 
@@ -114,6 +111,8 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       fromDate: '2001-01-01',
       toDate: '2001-01-01',
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      transport: { code: 'CAR', description: 'Car' },
+      locations: [{ uprn: '1001', description: 'Random Street, UK' }],
       occurrences: [
         {
           id: 'occurrence-id',
@@ -125,11 +124,6 @@ test.describe('/temporary-absence-authorisations/:id', () => {
           transport: { code: 'CAR', description: 'Car' },
         },
       ],
-      submitted: {
-        at: '1999-12-25T09:00:00.000',
-        by: 'STAFFNAME',
-        displayName: 'Staff Name',
-      },
     })
     await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
 

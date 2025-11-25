@@ -28,6 +28,30 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/temporary-absence-authorisations/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
+    get: operations['getTapAuthorisation']
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
+    put: operations['applyActions_1']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/sync/temporary-absence-movements/{personIdentifier}': {
     parameters: {
       query?: never
@@ -41,27 +65,6 @@ export interface paths {
      *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
      */
     put: operations['syncTemporaryAbsenceMovement']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/sync/temporary-absence-movement/{personIdentifier}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    /**
-     * @deprecated
-     * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
-     */
-    put: operations['syncTapMovement']
     post?: never
     delete?: never
     options?: never
@@ -109,48 +112,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/sync/temporary-absence-application/{personIdentifier}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    /**
-     * @deprecated
-     * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
-     */
-    put: operations['syncTemporaryAbsenceApplication']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/sync/scheduled-temporary-absence/{parentId}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    /**
-     * @deprecated
-     * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
-     */
-    put: operations['syncScheduledTemporaryAbsence']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/temporary-absence-authorisations/{personIdentifier}': {
     parameters: {
       query?: never
@@ -171,7 +132,7 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/temporary-absence-authorisations/{id}': {
+  '/temporary-absence-occurrences/{id}/history': {
     parameters: {
       query?: never
       header?: never
@@ -182,7 +143,7 @@ export interface paths {
      * @description Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
-    get: operations['getTapAuthorisation']
+    get: operations['getTapOccurrenceHistory']
     put?: never
     post?: never
     delete?: never
@@ -387,24 +348,128 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
-    Action: {
-      type: string
-      reason?: string
-    }
-    RescheduleOccurrence: {
-      type: 'RescheduleOccurrence'
-    } & (Omit<WithRequired<components['schemas']['Action'], 'type'>, 'type'> & {
-      /** Format: date-time */
-      releaseAt?: string
-      /** Format: date-time */
-      returnBy?: string
+    AmendOccurrenceNotes: {
+      type: 'AmendOccurrenceNotes'
+    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
+      notes: string
     })
+    CancelOccurrence: {
+      type: 'CancelOccurrence'
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
+    ChangeOccurrenceAccompaniment: {
+      type: 'ChangeOccurrenceAccompaniment'
+    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
+      accompaniedByCode: string
+    })
+    ChangeOccurrenceContactInformation: {
+      type: 'ChangeOccurrenceContactInformation'
+    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
+      information: string
+    })
+    ChangeOccurrenceLocation: {
+      type: 'ChangeOccurrenceLocation'
+    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
+      location: components['schemas']['Location']
+    })
+    ChangeOccurrenceTransport: {
+      type: 'ChangeOccurrenceTransport'
+    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
+      transportCode: string
+    })
+    ExpireOccurrence: {
+      type: 'ExpireOccurrence'
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
     Location: {
       description?: string
       address?: string
       postcode?: string
       uprn?: string
     }
+    MarkOccurrenceOverdue: {
+      type: 'MarkOccurrenceOverdue'
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
+    OccurrenceAction: {
+      reason?: string
+      type: string
+    }
+    ReasonPath: {
+      path: components['schemas']['ReferenceDataKey'][]
+    }
+    RecategoriseOccurrence: {
+      type: 'RecategoriseOccurrence'
+    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
+      absenceTypeCode?: string
+      absenceSubTypeCode?: string
+      absenceReasonCategoryCode?: string
+      absenceReasonCode?: string
+      reasonPath: components['schemas']['ReasonPath']
+    })
+    ReferenceDataKey: {
+      /** @enum {string} */
+      domain:
+        | 'ABSENCE_TYPE'
+        | 'ABSENCE_SUB_TYPE'
+        | 'ABSENCE_REASON_CATEGORY'
+        | 'ABSENCE_REASON'
+        | 'ACCOMPANIED_BY'
+        | 'TRANSPORT'
+        | 'TAP_AUTHORISATION_STATUS'
+        | 'TAP_OCCURRENCE_STATUS'
+      code: string
+    }
+    RescheduleOccurrence: {
+      type: 'RescheduleOccurrence'
+    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
+      /** Format: date-time */
+      releaseAt?: string
+      /** Format: date-time */
+      returnBy?: string
+    })
+    ScheduleOccurrence: {
+      type: 'ScheduleOccurrence'
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
+    AmendAuthorisationNotes: {
+      type: 'AmendAuthorisationNotes'
+    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
+      notes: string
+    })
+    ApproveAuthorisation: {
+      type: 'ApproveAuthorisation'
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
+    AuthorisationAction: {
+      reason?: string
+      type: string
+    }
+    CancelAuthorisation: {
+      type: 'CancelAuthorisation'
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
+    ChangePrisonPerson: {
+      type: 'ChangePrisonPerson'
+    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
+      personIdentifier: string
+      prisonCode: string
+    })
+    DenyAuthorisation: {
+      type: 'DenyAuthorisation'
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
+    RecategoriseAuthorisation: {
+      type: 'RecategoriseAuthorisation'
+    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
+      absenceTypeCode?: string
+      absenceSubTypeCode?: string
+      absenceReasonCategoryCode?: string
+      absenceReasonCode?: string
+      reasonPath: components['schemas']['ReasonPath']
+    })
+    RescheduleAuthorisation: {
+      type: 'RescheduleAuthorisation'
+    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
+      /** Format: date */
+      from: string
+      /** Format: date */
+      to: string
+      repeat: boolean
+    })
     SyncAtAndBy: {
       /** Format: date-time */
       at: string
@@ -438,40 +503,6 @@ export interface components {
       /** Format: uuid */
       id: string
     }
-    NomisAudit: {
-      /** Format: date-time */
-      createDatetime: string
-      createUsername: string
-      modifyUserId?: string
-      /** Format: date-time */
-      modifyDatetime?: string
-      /** Format: date-time */
-      auditTimestamp?: string
-      auditUserId?: string
-    }
-    TapLocation: {
-      description?: string
-      address?: string
-      postcode?: string
-    }
-    TapMovementRequest: {
-      /** Format: uuid */
-      id?: string
-      /** Format: uuid */
-      occurrenceId?: string
-      legacyId: string
-      /** Format: date-time */
-      movementDateTime: string
-      movementReason: string
-      /** @enum {string} */
-      direction: 'IN' | 'OUT'
-      escort?: string
-      escortText?: string
-      prisonCode?: string
-      commentText?: string
-      location: components['schemas']['TapLocation']
-      audit: components['schemas']['NomisAudit']
-    }
     SyncWriteTapAuthorisation: {
       /** Format: uuid */
       id?: string
@@ -481,6 +512,7 @@ export interface components {
       absenceSubTypeCode?: string
       absenceReasonCode: string
       accompaniedByCode: string
+      transportCode: string
       repeat: boolean
       /** Format: date */
       fromDate: string
@@ -495,7 +527,7 @@ export interface components {
     SyncWriteTapOccurrence: {
       /** Format: uuid */
       id?: string
-      statusCode: string
+      isCancelled: boolean
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
@@ -506,52 +538,12 @@ export interface components {
       absenceReasonCode: string
       accompaniedByCode: string
       transportCode: string
+      contactInformation?: string
       notes?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
       /** Format: int64 */
       legacyId: number
-    }
-    TapApplicationRequest: {
-      /** Format: uuid */
-      id?: string
-      /** Format: int64 */
-      movementApplicationId: number
-      eventSubType: string
-      /** Format: date */
-      applicationDate: string
-      applicationStatus: string
-      escort?: string
-      comment?: string
-      prisonId?: string
-      contactPersonName?: string
-      applicationType: string
-      temporaryAbsenceType?: string
-      temporaryAbsenceSubType?: string
-      /** Format: date */
-      fromDate: string
-      /** Format: date */
-      toDate: string
-      audit: components['schemas']['NomisAudit']
-    }
-    ScheduledTemporaryAbsenceRequest: {
-      /** Format: uuid */
-      id?: string
-      /** Format: int64 */
-      eventId: number
-      eventStatus: string
-      eventSubType: string
-      /** Format: date-time */
-      startTime: string
-      /** Format: date-time */
-      returnTime: string
-      location: components['schemas']['TapLocation']
-      contactPersonName?: string
-      escort?: string
-      comment?: string
-      transportType?: string
-      /** @description Audit data associated with the records */
-      audit: components['schemas']['NomisAudit']
     }
     CreateTapAuthorisationRequest: {
       absenceTypeCode: string
@@ -573,31 +565,17 @@ export interface components {
       schedule?: components['schemas']['JsonNode']
     }
     CreateTapOccurrenceRequest: {
-      absenceTypeCode?: string
-      absenceSubTypeCode?: string
-      absenceReasonCategoryCode?: string
-      absenceReasonCode?: string
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
       returnBy: string
-      accompaniedByCode?: string
-      transportCode?: string
       location: components['schemas']['Location']
-      contactInformation?: string
-      notes?: string
       scheduleReference?: components['schemas']['JsonNode']
     }
     JsonNode: unknown
     ReferenceId: {
       /** Format: uuid */
       id: string
-    }
-    AtAndBy: {
-      /** Format: date-time */
-      at: string
-      by: string
-      displayName: string
     }
     Authorisation: {
       /** Format: uuid */
@@ -641,11 +619,29 @@ export interface components {
       location: components['schemas']['Location']
       accompaniedBy: components['schemas']['CodedDescription']
       transport: components['schemas']['CodedDescription']
-      added: components['schemas']['AtAndBy']
-      cancelled?: components['schemas']['AtAndBy']
       contactInformation?: string
       scheduleReference?: components['schemas']['JsonNode']
       notes?: string
+    }
+    AuditHistory: {
+      content: components['schemas']['AuditedAction'][]
+    }
+    AuditedAction: {
+      user: components['schemas']['User']
+      /** Format: date-time */
+      occurredAt: string
+      domainEvents: string[]
+      reason?: string
+      changes: components['schemas']['Change'][]
+    }
+    Change: {
+      propertyName: string
+      previous?: unknown
+      change?: unknown
+    }
+    User: {
+      username: string
+      name: string
     }
     Occurrence: {
       /** Format: uuid */
@@ -674,14 +670,14 @@ export interface components {
       absenceReasonCategory?: components['schemas']['CodedDescription']
       absenceReason?: components['schemas']['CodedDescription']
       accompaniedBy: components['schemas']['CodedDescription']
+      transport: components['schemas']['CodedDescription']
       repeat: boolean
       /** Format: date */
       fromDate: string
       /** Format: date */
       toDate: string
       occurrences: components['schemas']['Occurrence'][]
-      submitted: components['schemas']['AtAndBy']
-      approved?: components['schemas']['AtAndBy']
+      locations: components['schemas']['Location'][]
       schedule?: components['schemas']['JsonNode']
       notes?: string
     }
@@ -700,6 +696,7 @@ export interface components {
       absenceReasonCode: string
       accompaniedByCode: string
       transportCode: string
+      contactInformation?: string
       notes?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
@@ -799,6 +796,10 @@ export interface components {
       id: string
       authorisation: components['schemas']['TapOccurrenceAuthorisation']
       status: components['schemas']['CodedDescription']
+      absenceType?: components['schemas']['CodedDescription']
+      absenceSubType?: components['schemas']['CodedDescription']
+      absenceReasonCategory?: components['schemas']['CodedDescription']
+      absenceReason?: components['schemas']['CodedDescription']
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
@@ -843,8 +844,6 @@ export interface components {
       locations: components['schemas']['Location'][]
       /** Format: int32 */
       occurrenceCount: number
-      /** Format: date-time */
-      submittedAt: string
     }
     TapAuthorisationSearchResponse: {
       content: components['schemas']['TapAuthorisationResult'][]
@@ -935,7 +934,71 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['RescheduleOccurrence']
+        'application/json':
+          | components['schemas']['AmendOccurrenceNotes']
+          | components['schemas']['CancelOccurrence']
+          | components['schemas']['ChangeOccurrenceAccompaniment']
+          | components['schemas']['ChangeOccurrenceContactInformation']
+          | components['schemas']['ChangeOccurrenceLocation']
+          | components['schemas']['ChangeOccurrenceTransport']
+          | components['schemas']['ExpireOccurrence']
+          | components['schemas']['MarkOccurrenceOverdue']
+          | components['schemas']['RecategoriseOccurrence']
+          | components['schemas']['RescheduleOccurrence']
+          | components['schemas']['ScheduleOccurrence']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  getTapAuthorisation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['TapAuthorisation']
+        }
+      }
+    }
+  }
+  applyActions_1: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json':
+          | components['schemas']['AmendAuthorisationNotes']
+          | components['schemas']['ApproveAuthorisation']
+          | components['schemas']['CancelAuthorisation']
+          | components['schemas']['ChangePrisonPerson']
+          | components['schemas']['DenyAuthorisation']
+          | components['schemas']['RecategoriseAuthorisation']
+          | components['schemas']['RescheduleAuthorisation']
       }
     }
     responses: {
@@ -960,32 +1023,6 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['SyncWriteTapMovement']
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['SyncResponse']
-        }
-      }
-    }
-  }
-  syncTapMovement: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        personIdentifier: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['TapMovementRequest']
       }
     }
     responses: {
@@ -1052,58 +1089,6 @@ export interface operations {
       }
     }
   }
-  syncTemporaryAbsenceApplication: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        personIdentifier: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['TapApplicationRequest']
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['SyncResponse']
-        }
-      }
-    }
-  }
-  syncScheduledTemporaryAbsence: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        parentId: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ScheduledTemporaryAbsenceRequest']
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['SyncResponse']
-        }
-      }
-    }
-  }
   createTapAuthorisation: {
     parameters: {
       query?: never
@@ -1130,7 +1115,7 @@ export interface operations {
       }
     }
   }
-  getTapAuthorisation: {
+  getTapOccurrenceHistory: {
     parameters: {
       query?: never
       header?: never
@@ -1147,7 +1132,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['TapAuthorisation']
+          '*/*': components['schemas']['AuditHistory']
         }
       }
     }
@@ -1422,7 +1407,4 @@ export interface operations {
       }
     }
   }
-}
-type WithRequired<T, K extends keyof T> = T & {
-  [P in K]-?: T[P]
 }
