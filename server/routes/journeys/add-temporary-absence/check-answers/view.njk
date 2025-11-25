@@ -117,7 +117,7 @@
             text: "Repeating schedule type"
           },
             value: {
-            text: ({ FREEFORM: 'Does not repeat in a pattern', WEEKLY: 'Repeats weekly', ROTATING: 'Repeats in a rotating pattern' })[patternType]
+            text: ({ FREEFORM: 'Does not repeat in a regular pattern', WEEKLY: 'Repeats weekly', BIWEEKLY: 'Repeats every 2 weeks', SHIFT: 'Repeats in a custom pattern' })[patternType]
           },
             actions: {
             items: [
@@ -272,7 +272,7 @@
       {% set locationRows = [] %}
 
       {% for loc in locations %}
-        {% set locationRows = (locationRows.push(loc.description), locationRows) %}
+        {% set locationRows = (locationRows.push(loc.description or loc | joinAddress), locationRows) %}
       {% endfor %}
 
       {% set locationValue = { html: locationRows | join('<br/><br/>') } %}
