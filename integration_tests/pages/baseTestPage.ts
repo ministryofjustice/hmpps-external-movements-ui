@@ -40,8 +40,12 @@ export class BaseTestPage {
     await this.link(name).click()
   }
 
-  async clickButton(name: string | RegExp) {
-    await this.button(name).click()
+  async clickButton(name: string | RegExp, nth?: number) {
+    if (nth === undefined) {
+      await this.button(name).click()
+    } else {
+      await this.button(name).nth(nth).click()
+    }
   }
 
   async clickContinue() {

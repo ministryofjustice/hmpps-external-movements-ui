@@ -81,65 +81,81 @@ test.describe('/add-temporary-absence/search-locations', () => {
     const testPage = await new SearchLocationsPage(page).verifyContent()
 
     await expect(testPage.searchField()).toBeVisible()
-    await expect(testPage.button('Continue')).toBeVisible()
+    await expect(testPage.button('Continue')).toHaveCount(0)
+    await expect(testPage.button('Add location')).toHaveCount(1)
+
+    await testPage.toggleEnterManually()
+    await expect(testPage.searchField()).toBeVisible()
+    await expect(testPage.line1Field()).toBeVisible()
+    await expect(testPage.line2Field()).toBeVisible()
+    await expect(testPage.cityField()).toBeVisible()
+    await expect(testPage.countyField()).toBeVisible()
+    await expect(testPage.postcodeField()).toBeVisible()
+    await expect(testPage.button('Add location')).toHaveCount(2)
 
     // verify validation error
-    await testPage.clickContinue()
-    await testPage.link('Enter and select an address or postcode').click()
-    await expect(testPage.searchField()).toBeFocused()
+    await testPage.line1Field().fill('1 Manual Street')
+    await testPage.clickButton('Add location', 1)
+    await testPage.link('Enter town or city').click()
+    await expect(testPage.cityField()).toBeFocused()
 
     await testPage.searchField().fill('xxx')
-    await testPage.clickButton('Add location')
+    await testPage.clickButton('Add location', 0)
     await testPage.link('Enter and select an address or postcode').click()
     await expect(testPage.searchField()).toBeFocused()
 
     // add multiple locations
     await testPage.searchField().fill('random')
     await testPage.selectAddress('Address, RS1 34T')
-    await testPage.clickButton('Add location')
+    await testPage.clickButton('Add location', 0)
+
+    await expect(testPage.button('Continue')).toBeVisible()
 
     await testPage.searchField().fill('random')
     await testPage.selectAddress('Address 2, RS1 34T')
     await testPage.clickButton('Add location')
 
+    await testPage.toggleEnterManually()
+    await testPage.line1Field().fill('1 Manual Street')
+    await testPage.cityField().fill('Manual City')
+    await testPage.clickButton('Add location', 1)
+
     await expect(page.getByText('Address, RS1 34T')).toBeVisible()
     await expect(page.getByText('Address 2, RS1 34T')).toBeVisible()
+    await expect(page.getByText('1 Manual Street, Manual City')).toBeVisible()
 
     // validation error on duplicate address
     await testPage.searchField().fill('random')
     await testPage.selectAddress('Address, RS1 34T')
     await testPage.clickButton('Add location')
-    await testPage.link('    Enter and select an address that has not been already added').click()
+    await testPage.link('Enter and select an address that has not been already added').click()
     await expect(testPage.searchField()).toBeFocused()
 
     // remove an address
     await testPage.clickLink('Remove location 2')
     await expect(page.getByText('Address, RS1 34T')).toBeVisible()
     await expect(page.getByText('Address 2, RS1 34T')).toHaveCount(0)
+    await expect(page.getByText('1 Manual Street, Manual City')).toBeVisible()
 
     // verify next page routing
     await testPage.clickContinue()
-    expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/match-absences-and-locations/)
   })
 
-  test('should proceed to match-absences-and-locations if there are multiple locations', async ({ page }) => {
+  test('should proceed to accompanied-or-unaccompanied if there is a single location', async ({ page }) => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId)
 
     // verify page content
     const testPage = await new SearchLocationsPage(page).verifyContent()
 
-    // add multiple locations
+    // add one location
     await testPage.searchField().fill('random')
     await testPage.selectAddress('Address, RS1 34T')
     await testPage.clickButton('Add location')
 
-    await testPage.searchField().fill('random')
-    await testPage.selectAddress('Address 2, RS1 34T')
-    await testPage.clickButton('Add location')
-
     // verify next page routing
     await testPage.clickContinue()
-    expect(page.url()).toMatch(/\/add-temporary-absence\/match-absences-and-locations/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
   })
 })

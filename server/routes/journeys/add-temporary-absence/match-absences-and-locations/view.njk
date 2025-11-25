@@ -15,7 +15,7 @@
         {% set options = (options.push(
           {
             value: loop.index0,
-            text: location.description
+            text: location.description or location | joinAddress
           }
         ), options) %}
       {% endfor %}
