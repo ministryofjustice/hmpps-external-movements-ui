@@ -81,13 +81,9 @@ test.describe('/add-temporary-absence/search-locations', () => {
     const testPage = await new SearchLocationsPage(page).verifyContent()
 
     await expect(testPage.searchField()).toBeVisible()
-    await expect(testPage.button('Continue')).toBeVisible()
+    await expect(testPage.button('Continue')).toHaveCount(0)
 
     // verify validation error
-    await testPage.clickContinue()
-    await testPage.link('Enter and select an address or postcode').click()
-    await expect(testPage.searchField()).toBeFocused()
-
     await testPage.searchField().fill('xxx')
     await testPage.clickButton('Add location')
     await testPage.link('Enter and select an address or postcode').click()
@@ -97,6 +93,8 @@ test.describe('/add-temporary-absence/search-locations', () => {
     await testPage.searchField().fill('random')
     await testPage.selectAddress('Address, RS1 34T')
     await testPage.clickButton('Add location')
+
+    await expect(testPage.button('Continue')).toBeVisible()
 
     await testPage.searchField().fill('random')
     await testPage.selectAddress('Address 2, RS1 34T')
