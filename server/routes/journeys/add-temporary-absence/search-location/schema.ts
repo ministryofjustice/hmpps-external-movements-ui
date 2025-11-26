@@ -13,8 +13,9 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
     city: z.string().optional(),
     county: z.string().optional(),
     postcode: z.string().optional(),
-  }).transform(async ({ uprn, line1, line2, city, county, postcode }, ctx) => {
-    const address = uprn ? await osPlacesAddressService.getAddressByUprn(uprn) : null
+  }).transform(async ({ uprn, line1, line2, city, county, postcode, ...val }, ctx) => {
+    const address =
+      val['address-autosuggest-input'] && uprn ? await osPlacesAddressService.getAddressByUprn(uprn) : null
 
     if (address) {
       return {
