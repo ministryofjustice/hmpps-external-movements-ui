@@ -79,8 +79,12 @@
               },
               {
                 key: { text: "Accompanied or unaccompanied" },
-                value: { text: occurrence.accompaniedBy.description }
+                value: { text: occurrence.accompaniedBy.description if occurrence.accompaniedBy.code === 'U' else 'Accompanied' }
               },
+              {
+                key: { text: "Accompanied by" },
+                value: { text: occurrence.accompaniedBy.description }
+              } if occurrence.accompaniedBy.code !== 'U',
               {
                 key: { text: "Transport" },
                 value: { text: occurrence.transport.description },

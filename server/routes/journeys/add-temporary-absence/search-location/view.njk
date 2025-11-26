@@ -37,7 +37,8 @@
           label: { text: "Address line 1 (optional)" },
           classes: 'govuk-!-width-two-thirds',
           errorMessage: validationErrors | findError('line1'),
-          value: line1
+          value: line1,
+          attributes: { autocomplete: "address-line1" }
         }) }}
         {{ govukInput({
           id: "line2",
@@ -45,7 +46,8 @@
           label: { text: "Address line 2 (optional)" },
           classes: 'govuk-!-width-two-thirds',
           errorMessage: validationErrors | findError('line2'),
-          value: line2
+          value: line2,
+          attributes: { autocomplete: "address-line2" }
         }) }}
         {{ govukInput({
           id: "city",
@@ -53,7 +55,8 @@
           label: { text: "Town or city" },
           classes: 'govuk-!-width-one-half',
           errorMessage: validationErrors | findError('city'),
-          value: city
+          value: city,
+          attributes: { autocomplete: "address-level2" }
         }) }}
         {{ govukInput({
           id: "county",
@@ -61,7 +64,8 @@
           label: { text: "County (optional)" },
           classes: 'govuk-!-width-one-half',
           errorMessage: validationErrors | findError('county'),
-          value: county
+          value: county,
+          attributes: { autocomplete: "address-level1" }
         }) }}
         {{ govukInput({
           id: "postcode",
@@ -69,7 +73,8 @@
           label: { text: "Postcode (optional)" },
           classes: 'govuk-!-width-one-third',
           errorMessage: validationErrors | findError('postcode'),
-          value: postcode
+          value: postcode,
+          attributes: { autocomplete: "postal-code" }
         }) }}
       {% endset %}
 

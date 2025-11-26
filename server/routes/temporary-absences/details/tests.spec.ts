@@ -77,6 +77,7 @@ test.describe('/temporary-absences/:id', () => {
 
     await testPage.verifyAnswer('Comments', 'Not provided')
     await testPage.verifyAnswer('Accompanied or unaccompanied', 'Unaccompanied')
+    await testPage.verifyAnswerNotVisible('Accompanied by')
     await testPage.verifyAnswer('Transport', 'Car')
     await testPage.verifyAnswer('Address', 'Random Street, UK')
 
@@ -108,7 +109,7 @@ test.describe('/temporary-absences/:id', () => {
       releaseAt: '2001-01-01T10:00:00',
       returnBy: '2001-01-01T17:30:00',
       location: { uprn: '1001', description: 'Random Street, UK' },
-      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      accompaniedBy: { code: 'OTH', description: 'Others' },
       transport: { code: 'CAR', description: 'Car' },
     })
     await page.goto(`/temporary-absences/${occurrenceId}`)
@@ -125,7 +126,8 @@ test.describe('/temporary-absences/:id', () => {
     await testPage.verifyAnswerNotVisible('Work type')
 
     await testPage.verifyAnswer('Comments', 'Not provided')
-    await testPage.verifyAnswer('Accompanied or unaccompanied', 'Unaccompanied')
+    await testPage.verifyAnswer('Accompanied or unaccompanied', 'Accompanied')
+    await testPage.verifyAnswer('Accompanied by', 'Others')
     await testPage.verifyAnswer('Transport', 'Car')
     await testPage.verifyAnswer('Address', 'Random Street, UK')
 
