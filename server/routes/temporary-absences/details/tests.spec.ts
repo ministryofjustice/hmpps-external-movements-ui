@@ -25,7 +25,7 @@ test.describe('/temporary-absences/:id', () => {
     await signIn(page)
   })
 
-  test('should show temporary absence details for single PENDING absence', async ({ page }) => {
+  test('should show temporary absence details for single SCHEDULED absence', async ({ page }) => {
     const occurrenceId = uuidV4()
     await stubGetTapOccurrence({
       id: occurrenceId,
@@ -38,7 +38,7 @@ test.describe('/temporary-absences/:id', () => {
           dateOfBirth: '1990-01-01',
           cellLocation: '2-1-005',
         },
-        status: { code: 'PENDING', description: 'To be reviewed' },
+        status: { code: 'APPROVED', description: 'Approved' },
         absenceType: {
           code: 'RR',
           description: 'Restricted ROTL (Release on Temporary Licence)',
@@ -53,7 +53,7 @@ test.describe('/temporary-absences/:id', () => {
         repeat: false,
         accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       },
-      status: { code: 'PENDING', description: 'To be reviewed' },
+      status: { code: 'SCHEDULED', description: 'Scheduled' },
       releaseAt: '2001-01-01T10:00:00',
       returnBy: '2001-01-01T17:30:00',
       location: { uprn: '1001', description: 'Random Street, UK' },
@@ -65,7 +65,7 @@ test.describe('/temporary-absences/:id', () => {
     // verify page content
     const testPage = await new TapOccurrenceDetailsPage(page).verifyContent()
 
-    await testPage.verifyAnswer('Status', /To be reviewed/)
+    await testPage.verifyAnswer('Status', /Scheduled/)
     await testPage.verifyAnswer('Start date and time', 'Monday, 1 January 2001 10:00')
     await testPage.verifyAnswer('Return date and time', 'Monday, 1 January 2001 17:30')
 
