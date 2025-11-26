@@ -1,0 +1,167 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
+{% from "partials/hiddenInputs/macro.njk" import hiddenInputs %}
+{% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
+
+{% set fullWidth = true %}
+{% set pageTitle = 'Manage temporary absence occurrence - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row govuk-!-margin-bottom-2">
+      <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Manage Temporary Absences</span>
+        <h1 class="govuk-heading-l">View {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence occurrence</h1>
+
+        <div class="govuk-button-group">
+          {% if occurrence.status.code === 'SCHEDULED' %}
+            {{ govukButton({
+              classes: "govuk-button--warning",
+              text: "Cancel this occurrence",
+              href: "#",
+              preventDoubleClick: true
+            }) }}
+          {% endif %}
+        </div>
+
+        {% set viewAbsenceHtml %}
+          {{ govukSummaryList({
+            card: {
+              classes: "govuk-!-margin-bottom-2",
+              title: {
+                text: "Absence information"
+              }
+            },
+            rows: [
+              {
+                key: { text: "Approval status" },
+                value: { html: absenceStatusTag(occurrence) }
+              },
+              {
+                key: { text: "Start date and time" },
+                value: { text: occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') },
+                actions: { items: [{ href: "#", text: "Change", visuallyHiddenText: "start date and time" }] }
+              },
+              {
+                key: { text: "Return date and time" },
+                value: { text: occurrence.returnBy | formatDate('cccc, d MMMM yyyy HH:mm') },
+                actions: { items: [{ href: "#", text: "Change", visuallyHiddenText: "return date and time" }] }
+              },
+              {
+                key: { text: "Absence type" },
+                value: { text: result.absenceType.description }
+              },
+              {
+                key: { text: "Absence sub-type" },
+                value: { text: result.absenceSubType.description }
+              } if result.absenceSubType,
+              {
+                key: { text: "Absence reason" },
+                value: { text: result.absenceReasonCategory.description }
+              } if result.absenceReasonCategory,
+              {
+                key: { text: "Work type" if result.absenceReasonCategory else "Absence reason" },
+                value: { text: result.absenceReason.description }
+              } if result.absenceReason,
+              {
+                key: { text: "Single or repeating absence" },
+                value: { text: 'Repeating' if result.repeat else 'Single' }
+              },
+              {
+                key: { text: "Comments" },
+                value: { text: occurrence.notes or "Not provided" },
+                actions: { items: [{ href: "#", text: "Change", visuallyHiddenText: "comments" }] }
+              },
+              {
+                key: { text: "Accompanied or unaccompanied" },
+                value: { text: occurrence.accompaniedBy.description }
+              },
+              {
+                key: { text: "Transport" },
+                value: { text: occurrence.transport.description },
+                actions: { items: [{ href: "#", text: "Change", visuallyHiddenText: "transport" }] }
+              },
+              {
+                key: { text: "Address" },
+                value: { text: occurrence.location.description },
+                actions: { items: [{ href: "#", text: "Change", visuallyHiddenText: "address" }] }
+              }
+            ] | removeNullish
+          }) }}
+        {% endset -%}
+
+        {% set absenceHistoryHtml %}
+          {{ mojTimeline({
+            items: [
+              {
+                label: {
+                text:  "Absence created"
+              },
+                text: "Temporary absence saved for " + prisonerDetails | firstNameSpaceLastName + ".",
+                datetime: {
+                timestamp: result.submitted.at,
+                type: "datetime"
+              },
+                byline: {
+                text: result.submitted.displayName | initialiseName + ' (' + result.submitted.by + ')'
+              }
+              },
+              {
+                label: {
+                text:  "Absence approved"
+              },
+                text: "Temporary absence approved for " + prisonerDetails | firstNameSpaceLastName + ".",
+                datetime: {
+                timestamp: result.approved.at,
+                type: "datetime"
+              },
+                byline: {
+                text: result.approved.displayName | initialiseName + ' (' + result.approved.by + ')'
+              }
+              } if result.approved else undefined
+            ] | removeNullish | reverse
+          }) }}
+        {% endset -%}
+
+        {{ govukTabs({
+          items: [
+            {
+              label: "Manage occurrence",
+              id: "view-absence",
+              panel: {
+              html: viewAbsenceHtml
+            }
+            },
+            {
+              label: "Occurrence history",
+              id: "absence-history",
+              panel: {
+              html: absenceHistoryHtml
+            }
+            }
+          ]
+        }) }}
+      </div>
+
+      <div class="govuk-grid-column-one-quarter align-right">
+        <h2 class="govuk-heading-m">Related tasks</h2>
+        <p><a class="govuk-link govuk-link--no-visited-state" href="/add-temporary-absence/start/{{ prisonerDetails.prisonerNumber }}">Create a new absence for {{ prisonerDetails | firstNameSpaceLastName }}</a></p>
+      </div>
+    </div>
+
+    {% if result.repeat %}
+      <p>
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}">View all occurrences of this absence</a>
+      </p>
+      <p>
+        <a class="govuk-link govuk-link--no-visited-state" href="#">Add occurrence</a>
+      </p>
+    {% endif %}
+
+  </div>
+{% endblock %}
