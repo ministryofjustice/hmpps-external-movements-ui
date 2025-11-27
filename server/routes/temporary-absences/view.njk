@@ -6,54 +6,39 @@
 {% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
+{% from "partials/simplePagination/macro.njk" import simplePagination %}
 
 {% set fullWidth = true %}
 {% set pageTitle = 'Browse temporary absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
-    <div class="govuk-!-static-margin-bottom-6">
-      <h1 class="govuk-heading-l">Temporary Absences</h1>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Manage Temporary Absences</span>
+        <h1 class="govuk-heading-l">Manage temporary absence occurrences in {{ user.activeCaseLoad.description }}</h1>
+      </div>
     </div>
 
     <div class="block-background govuk-!-padding-6 govuk-!-margin-bottom-7 search-form">
-        <h2 class="govuk-heading-m">Filter by</h2>
         <form method="GET">
           {{ hiddenInputs(query | getQueryEntries(['history'])) }}
-          <div class="horizontal-form govuk-!-margin-bottom-2">
+          <input type="hidden" name="page" value="1"/>
+          <div class="horizontal-form govuk-!-margin-bottom-4">
             {{ govukInput({
               name: 'searchTerm',
               classes: "moj-search__input",
               label: {
-                text: "Prison number"
+                text: "Name or prison number"
               },
               value: searchTerm
-            }) }}
-
-            {{ govukSelect({
-              label: {
-                text: "Filter date by"
-              },
-              id: "direction",
-              name: "direction",
-              items: [
-                {
-                  value: 'OUT',
-                  text: "Release date"
-                },
-                {
-                  value: 'IN',
-                  text: "Return date"
-                }
-              ] | setSelectedValue(direction or 'OUT'),
-              errorMessage: validationErrors | findError('direction')
             }) }}
 
             {{ mojDatePicker({
               id: "fromDate",
               name: "fromDate",
               label: {
-                text: 'From'
+                text: 'Start date from'
               },
               value: fromDate,
               errorMessage: validationErrors | findError('fromDate'),
@@ -64,18 +49,16 @@
               id: "toDate",
               name: "toDate",
               label: {
-                text: 'To'
+                text: 'End date to'
               },
               value: toDate,
               errorMessage: validationErrors | findError('toDate'),
               classes: 'hmpps-datepicker--fixed-width govuk-body moj-search__input'
             }) }}
 
-          </div>
-          <div class="horizontal-form">
             {{ govukSelect({
               label: {
-                text: "Status"
+                text: "Absence status"
               },
               id: "status",
               name: "status",
@@ -85,27 +68,39 @@
                   text: "All"
                 },
                 {
-                  value: 'PENDING',
-                  text: "Pending"
-                },
-                {
                   value: 'SCHEDULED',
                   text: "Scheduled"
+                },
+                {
+                  value: 'IN_PROGRESS',
+                  text: "In progress"
+                },
+                {
+                  value: 'COMPLETED',
+                  text: "Completed"
+                },
+                {
+                  value: 'OVERDUE',
+                  text: "Overdue"
+                },
+                {
+                  value: 'EXPIRED',
+                  text: "Expired"
                 },
                 {
                   value: 'CANCELLED',
                   text: "Cancelled"
                 },
                 {
-                  value: 'COMPLETED',
-                  text: "Completed"
+                  value: 'DENIED',
+                  text: "Denied"
                 }
               ] | setSelectedValue(status or ''),
               errorMessage: validationErrors | findError('status')
             }) }}
-
+          </div>
+          <div class="horizontal-form">
             {{ govukButton({
-              classes: "moj-search__button",
               text: "Apply filters",
               preventDoubleClick: true
             }) }}
@@ -163,52 +158,53 @@
         ]), rows) %}
       {% endfor %}
 
+      {{ simplePagination(paginationParams) }}
+
       {{ govukTable({
-        attributes: {
-          "data-module": "moj-sortable-table"
-        },
         firstCellIsHeader: false,
-        classes: 'table-vertical-align-middle govuk-!-margin-top-6',
+        classes: 'table-vertical-align-middle govuk-!-margin-top-6 sortable-table',
         head: [
           {
             text: "Name and prison number",
-            attributes: { "aria-sort": "none" }
+            key: 'prisonNumber'
           },
           {
-            text: "Release at",
-            attributes: { "aria-sort": "none" }
+            text: "Start date and time",
+            key: 'releaseAt'
           },
           {
-            text: "Return by",
-            attributes: { "aria-sort": "none" }
+            text: "End date and time",
+            key: 'returnBy'
           },
           {
             text: 'Absence type',
-            attributes: { "aria-sort": "none" }
+            key: 'absenceType'
           },
           {
             text: 'Location',
-            attributes: { "aria-sort": "none" }
+            key: 'location'
           },
           {
             text: 'Accompanied by',
-            attributes: { "aria-sort": "none" }
+            key: 'accompaniedBy'
           },
           {
             text: 'Transport',
-            attributes: { "aria-sort": "none" }
+            key: 'transport'
           },
           {
             text: 'Status',
-            attributes: { "aria-sort": "none" }
+            key: 'status'
           },
           {
-            text: "Action",
+            text: "",
             format: "numeric"
           }
-        ],
+        ] | convertToSortableColumns(sort or 'releaseAt,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
         rows: rows
       }) }}
+
+      {{ simplePagination(paginationParams) }}
     {% endif %}
   </div>
 {% endblock %}

@@ -32,6 +32,7 @@ import {
   findErrorMessage,
 } from '../middleware/validation/validationMiddleware'
 import { historyExtension } from '../middleware/history/historyExtension'
+import { convertToSortableColumns } from './convertToSortableColumns'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -107,4 +108,5 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('contains', (arr, value) => arr.includes(value))
   njkEnv.addFilter('joinAddress', joinAddress)
+  njkEnv.addFilter('convertToSortableColumns', convertToSortableColumns)
 }

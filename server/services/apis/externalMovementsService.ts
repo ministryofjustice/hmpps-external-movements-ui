@@ -88,13 +88,24 @@ export default class ExternalMovementsService {
     })
   }
 
-  searchTapOccurrences(context: ApiRequestContext, fromDate: string, toDate: string, query: string | null) {
+  searchTapOccurrences(
+    context: ApiRequestContext,
+    fromDate: string,
+    toDate: string,
+    status: string[],
+    query: string | null,
+    sort: string,
+    page: number,
+    pageSize: number,
+  ) {
     const searchParams: string[] = [
       `prisonCode=${context.res.locals.user.getActiveCaseloadId()}`,
       `fromDate=${fromDate}`,
       `toDate=${toDate}`,
-      'page=1',
-      'size=2147483647',
+      ...status.map(val => `status=${val}`),
+      `sort=${sort}`,
+      `page=${page}`,
+      `size=${pageSize}`,
     ]
     if (query) searchParams.push(`query=${encodeURIComponent(query)}`)
 
