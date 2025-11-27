@@ -6,6 +6,7 @@ import { schema } from './schema'
 import { TapAuthorisationDetailsController } from './details/controller'
 import { TapApprovalRoutes } from './approval/routes'
 import { TapCancelRoutes } from './cancel/routes'
+import { schema as detailsSchema } from './details/schema'
 
 export const BrowseTapAuthorisationsRoutes = (services: Services) => {
   const { externalMovementsService } = services
@@ -13,7 +14,11 @@ export const BrowseTapAuthorisationsRoutes = (services: Services) => {
   const controller = new BrowseTapAuthorisationsController(externalMovementsService)
 
   get('/', validateOnGET(schema, 'searchTerm', 'fromDate', 'toDate', 'status'), controller.GET)
-  get('/:id', new TapAuthorisationDetailsController(externalMovementsService).GET)
+  get(
+    '/:id',
+    validateOnGET(detailsSchema, 'dateFrom', 'dateTo'),
+    new TapAuthorisationDetailsController(externalMovementsService).GET,
+  )
 
   router.use('/:id/approval', TapApprovalRoutes(services))
   router.use('/:id/cancel', TapCancelRoutes(services))

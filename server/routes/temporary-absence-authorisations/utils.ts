@@ -4,12 +4,14 @@ import ExternalMovementsService from '../../services/apis/externalMovementsServi
 import { components } from '../../@types/externalMovements'
 import { getApiUserErrorMessage } from '../../utils/utils'
 
-const getAuthorisationAndPopulatePrisonerDetails = async (
+export const getAuthorisationAndPopulatePrisonerDetails = async (
   externalMovementsService: ExternalMovementsService,
   req: Request<{ id: string }>,
   res: Response,
+  fromDate?: string | null,
+  toDate?: string | null,
 ) => {
-  const result = await externalMovementsService.getTapAuthorisation({ res }, req.params.id)
+  const result = await externalMovementsService.getTapAuthorisation({ res }, req.params.id, fromDate, toDate)
   res.locals.prisonerDetails = {
     prisonerNumber: result.person.personIdentifier,
     lastName: result.person.lastName,

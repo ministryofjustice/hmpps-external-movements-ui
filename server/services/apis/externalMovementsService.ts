@@ -4,6 +4,7 @@ import CustomRestClient, { ApiRequestContext } from '../../data/customRestClient
 import config from '../../config'
 import logger from '../../../logger'
 import { components } from '../../@types/externalMovements'
+import { parseQueryParams } from '../../utils/utils'
 
 export default class ExternalMovementsService {
   private externalMovementsApiClient: CustomRestClient
@@ -82,9 +83,9 @@ export default class ExternalMovementsService {
     })
   }
 
-  async getTapAuthorisation(context: ApiRequestContext, id: string) {
+  async getTapAuthorisation(context: ApiRequestContext, id: string, fromDate?: string | null, toDate?: string | null) {
     return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapAuthorisation']>({
-      path: `/temporary-absence-authorisations/${id}`,
+      path: `/temporary-absence-authorisations/${id}${parseQueryParams({ fromDate, toDate })}`,
     })
   }
 

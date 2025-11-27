@@ -5,9 +5,9 @@ export class TapAuthorisationDetailsPage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
       pageUrl: /\/temporary-absence-authorisations\/(\w|-)+/,
-      title: 'View temporary absence - View temporary absences - DPS',
+      title: 'Manage temporary absence - Manage temporary absences - DPS',
       caption: 'Manage Temporary Absences',
-      heading: /View .+ temporary absence/,
+      heading: /Manage .+ temporary absence/,
     })
   }
 

@@ -44,12 +44,12 @@
               },
               {
                 key: { text: "Start date and time" },
-                value: { text: occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') },
+                value: { text: occurrence.releaseAt | formatDate("cccc, d MMMM yyyy 'at' HH:mm") },
                 actions: { items: [{ href: "#", text: "Change", visuallyHiddenText: "start date and time" }] }
               },
               {
                 key: { text: "Return date and time" },
-                value: { text: occurrence.returnBy | formatDate('cccc, d MMMM yyyy HH:mm') },
+                value: { text: occurrence.returnBy | formatDate("cccc, d MMMM yyyy 'at' HH:mm") },
                 actions: { items: [{ href: "#", text: "Change", visuallyHiddenText: "return date and time" }] }
               },
               {
