@@ -152,6 +152,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/temporary-absence-authorisations/{id}/history': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
+    get: operations['getTapAuthorisationHistory']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/sync/temporary-absence-occurrences/{id}': {
     parameters: {
       query?: never
@@ -766,9 +786,10 @@ export interface components {
     TapOccurrenceSearchRequest: {
       prisonCode: string
       /** Format: date */
-      fromDate: string
+      fromDate?: string
       /** Format: date */
-      toDate: string
+      toDate?: string
+      status: ('PENDING' | 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'OVERDUE' | 'EXPIRED' | 'CANCELLED' | 'DENIED')[]
       query?: string
       /** Format: int32 */
       page: number
@@ -816,9 +837,9 @@ export interface components {
     TapAuthorisationSearchRequest: {
       prisonCode: string
       /** Format: date */
-      fromDate: string
+      fromDate?: string
       /** Format: date */
-      toDate: string
+      toDate?: string
       status: ('PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED')[]
       query?: string
       /** Format: int32 */
@@ -960,7 +981,10 @@ export interface operations {
   }
   getTapAuthorisation: {
     parameters: {
-      query?: never
+      query?: {
+        fromDate?: string
+        toDate?: string
+      }
       header?: never
       path: {
         id: string
@@ -1116,6 +1140,28 @@ export interface operations {
     }
   }
   getTapOccurrenceHistory: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['AuditHistory']
+        }
+      }
+    }
+  }
+  getTapAuthorisationHistory: {
     parameters: {
       query?: never
       header?: never

@@ -39,7 +39,7 @@
           rows: [
             {
               key: { text: "Release date and time" },
-              value: { text: result.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') },
+              value: { text: result.releaseAt | formatDate("cccc, d MMMM yyyy 'at' HH:mm") },
               actions: { items: [{
               href: "edit/start-date",
               text: "Change",
@@ -48,7 +48,7 @@
             },
             {
               key: { text: "Return date and time" },
-              value: { text: result.returnBy | formatDate('cccc, d MMMM yyyy HH:mm') },
+              value: { text: result.returnBy | formatDate("cccc, d MMMM yyyy 'at' HH:mm") },
               actions: { items: [{
               href: "edit/end-date",
               text: "Change",

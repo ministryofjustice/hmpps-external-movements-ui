@@ -82,15 +82,13 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await testPage.verifyAnswer('Single or repeating absence', 'Single')
     await testPage.verifyAnswer('Comments', 'Not provided')
 
-    await testPage.verifyTableRow(1, [
-      'Monday, 1 January 2001 10:00',
-      'Monday, 1 January 2001 17:30',
-      'Random Street, UK',
-      'Unaccompanied',
-      'Car',
-    ])
+    await testPage.verifyAnswer('Accompanied or unaccompanied', 'Unaccompanied')
+    await testPage.verifyAnswer('Transport', 'Car')
+    await testPage.verifyAnswer('Location', 'Random Street, UK')
 
-    await expect(testPage.button('Approve this absence')).toBeVisible()
+    await testPage.verifyTableRow(1, ['Monday, 1 January at 10:00', 'Monday, 1 January at 17:30', /To be reviewed/])
+
+    await expect(testPage.button('Review this absence')).toBeVisible()
     await expect(testPage.button('Cancel this absence')).toHaveCount(0)
   })
 
@@ -141,15 +139,13 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await testPage.verifyAnswer('Single or repeating absence', 'Single')
     await testPage.verifyAnswer('Comments', 'Not provided')
 
-    await testPage.verifyTableRow(1, [
-      'Monday, 1 January 2001 10:00',
-      'Monday, 1 January 2001 17:30',
-      'Random Street, UK',
-      'Unaccompanied',
-      'Car',
-    ])
+    await testPage.verifyAnswer('Accompanied or unaccompanied', 'Unaccompanied')
+    await testPage.verifyAnswer('Transport', 'Car')
+    await testPage.verifyAnswer('Location', 'Random Street, UK')
 
-    await expect(testPage.button('Approve this absence')).toHaveCount(0)
+    await testPage.verifyTableRow(1, ['Monday, 1 January at 10:00', 'Monday, 1 January at 17:30', /To be reviewed/])
+
+    await expect(testPage.button('Review this absence')).toHaveCount(0)
     await expect(testPage.button('Cancel this absence')).toBeVisible()
   })
 })

@@ -32,6 +32,9 @@ export const historyExtension: Extension & {
         lastIndex = match.index
         if (match[1]?.startsWith('http') || match[1]?.startsWith('#')) {
           newBody.push(match[0])
+        } else if (match[1]?.includes('#')) {
+          const [url, hashtag] = match[1].split('#')
+          newBody.push(`href="${url?.includes('?') ? `${url}&` : `${url}?`}history=${history}#${hashtag}"`)
         } else {
           newBody.push(`href="${match[1]?.includes('?') ? `${match[1]}&` : `${match[1]}?`}history=${history}"`)
         }

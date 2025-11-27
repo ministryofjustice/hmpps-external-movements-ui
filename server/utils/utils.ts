@@ -105,3 +105,11 @@ export const getApiUserErrorMessage = (error: HTTPError) => {
     return 'API error'
   }
 }
+
+export const parseQueryParams = (queries: { [key: string]: string | number | null | undefined }) => {
+  const searchParams = Object.entries(queries)
+    .filter(([_, val]) => val !== null && val !== undefined)
+    .map(([key, val]) => `${key}=${encodeURIComponent(val!)}`)
+
+  return searchParams.length ? `?${searchParams.join('&')}` : ''
+}
