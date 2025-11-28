@@ -1,20 +1,22 @@
 {% macro absenceStatusTag(absence) %}
   {% set status = absence.status %}
   {% switch status.code %}
+  {% case 'APPROVED' %}
+    {% set colour = " govuk-tag--green" %}
   {% case 'PENDING' %}
     {% set colour = " govuk-tag--grey" %}
   {% case 'SCHEDULED' %}
-    {% set colour = " govuk-tag--green" %}
+    {% set colour = " govuk-tag--yellow" %}
   {% case 'IN_PROGRESS' %}
     {% set colour = " govuk-tag--light-blue" %}
   {% case 'COMPLETED' %}
-    {% set colour = " govuk-tag--blue" %}
+    {% set colour = " govuk-tag--green" %}
   {% case 'OVERDUE' %}
     {% set colour = " govuk-tag--yellow" %}
   {% case 'EXPIRED' %}
     {% set colour = " govuk-tag--purple" %}
   {% case 'CANCELLED' %}
-    {% set colour = " govuk-tag--orange" %}
+    {% set colour = " govuk-tag--red" %}
   {% case 'DENIED' %}
     {% set colour = " govuk-tag--red" %}
   {% case 'WITHDRAWN' %}

@@ -1,4 +1,3 @@
-import { expect } from '@playwright/test'
 import { BaseTestPage } from '../../../../integration_tests/pages/baseTestPage'
 
 export class TapOccurrenceDetailsPage extends BaseTestPage {
@@ -9,16 +8,5 @@ export class TapOccurrenceDetailsPage extends BaseTestPage {
       caption: 'Manage Temporary Absences',
       heading: /View .+ temporary absence occurrence/,
     })
-  }
-
-  async verifyAnswer(heading: string | RegExp, value: string | RegExp) {
-    const rowHeading = this.page.locator('dt', { hasText: heading })
-    await expect(rowHeading).toBeVisible()
-    await expect(rowHeading.locator('//following-sibling::dd').first()).toContainText(value)
-  }
-
-  async verifyAnswerNotVisible(heading: string | RegExp) {
-    const rowHeading = this.page.locator('dt', { hasText: heading })
-    await expect(rowHeading).not.toBeVisible()
   }
 }

@@ -6,6 +6,7 @@ import { nodeListForEach } from './utils'
 import { initShiftPreviewToggle } from './shift-preview'
 import { initAddAnotherForm } from './add-another-form-enhanced'
 import { initPreventDoubleClickHyperlink } from './prevent-double-click-hyperlink'
+import { initSortableTable } from './sortable-table'
 
 govukFrontend.initAll()
 mojFrontend.initAll()
@@ -19,3 +20,4 @@ nodeListForEach($cards, function ($card) {
 initAddAnotherForm()
 initShiftPreviewToggle()
 initPreventDoubleClickHyperlink()
+initSortableTable()
