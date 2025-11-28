@@ -66,8 +66,8 @@ test.describe('/temporary-absences/:id', () => {
     const testPage = await new TapOccurrenceDetailsPage(page).verifyContent()
 
     await testPage.verifyAnswer('Status', /Scheduled/)
-    await testPage.verifyAnswer('Start date and time', 'Monday, 1 January 2001 10:00')
-    await testPage.verifyAnswer('Return date and time', 'Monday, 1 January 2001 17:30')
+    await testPage.verifyAnswer('Start date and time', 'Monday, 1 January 2001 at 10:00')
+    await testPage.verifyAnswer('Return date and time', 'Monday, 1 January 2001 at 17:30')
 
     await testPage.verifyAnswer('Absence type', 'Restricted ROTL (Release on Temporary Licence)')
     await testPage.verifyAnswer('Absence sub-type', 'RDR (Resettlement Day Release)')
@@ -118,8 +118,8 @@ test.describe('/temporary-absences/:id', () => {
     const testPage = await new TapOccurrenceDetailsPage(page).verifyContent()
 
     await testPage.verifyAnswer('Status', /Cancelled/)
-    await testPage.verifyAnswer('Start date and time', 'Monday, 1 January 2001 10:00')
-    await testPage.verifyAnswer('Return date and time', 'Monday, 1 January 2001 17:30')
+    await testPage.verifyAnswer('Start date and time', 'Monday, 1 January 2001 at 10:00')
+    await testPage.verifyAnswer('Return date and time', 'Monday, 1 January 2001 at 17:30')
     await testPage.verifyAnswer('Absence type', 'Police production')
     await testPage.verifyAnswerNotVisible('Absence sub-type')
     await testPage.verifyAnswerNotVisible('Absence reason')

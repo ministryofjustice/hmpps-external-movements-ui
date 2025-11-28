@@ -7,21 +7,22 @@
 {% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
+{% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
 
 {% set fullWidth = true %}
-{% set pageTitle = 'View temporary absence - View temporary absences' %}
+{% set pageTitle = 'Manage temporary absence - Manage temporary absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <div class="govuk-grid-row govuk-!-margin-bottom-2">
       <div class="govuk-grid-column-two-thirds">
         <span class="govuk-caption-l">Manage Temporary Absences</span>
-        <h1 class="govuk-heading-l">View {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence</h1>
+        <h1 class="govuk-heading-l">Manage {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence</h1>
 
         <div class="govuk-button-group">
           {% if result.status.code === 'PENDING' %}
             {{ govukButton({
-              text: "Approve this absence",
+              text: "Review this absence",
               href: "/temporary-absence-authorisations/" + result.id + "/approval",
               preventDoubleClick: true
             }) }}
@@ -35,17 +36,22 @@
             }) }}
           {% endif %}
         </div>
+
+        {% set locationRows = [] %}
+
+        {% for loc in result.locations %}
+          {% set locationRows = (locationRows.push(loc.description or loc | joinAddress), locationRows) %}
+        {% endfor %}
+
+        {% set locationValue = { html: locationRows | join('<br/><br/>') } %}
+
         {% set viewAbsenceHtml %}
           {{ govukSummaryList({
             card: {
               classes: "govuk-!-margin-bottom-2",
               title: {
                 text: "Absence information"
-              },
-              actions: { items: [{
-                href: "/temporary-absence-authorisations/start-edit/" + result.id,
-                text: "Make changes to this absence"
-              }] }
+              }
             },
             rows: [
               {
@@ -54,27 +60,33 @@
               },
               {
                 key: { text: "Absence type" },
-                value: { text: result.absenceType.description }
+                value: { text: result.absenceType.description },
+                actions: { items: [{ href: result.id + "/edit/absence-type", text: "Change", visuallyHiddenText: "absence type", classes: "govuk-link--no-visited-state" }] }
               },
               {
                 key: { text: "Absence sub-type" },
-                value: { text: result.absenceSubType.description }
+                value: { text: result.absenceSubType.description },
+                actions: { items: [{ href: result.id + "/edit/absence-subtype", text: "Change", visuallyHiddenText: "absence sub-type", classes: "govuk-link--no-visited-state" }] }
               } if result.absenceSubType,
               {
                 key: { text: "Absence reason" },
-                value: { text: result.absenceReasonCategory.description }
+                value: { text: result.absenceReasonCategory.description },
+                actions: { items: [{ href: result.id + "/edit/reason-category", text: "Change", visuallyHiddenText: "absence reason", classes: "govuk-link--no-visited-state" }] }
               } if result.absenceReasonCategory,
               {
                 key: { text: "Work type" if result.absenceReasonCategory else "Absence reason" },
-                value: { text: result.absenceReason.description }
+                value: { text: result.absenceReason.description },
+                actions: { items: [{ href: result.id + "/edit/reason", text: "Change", visuallyHiddenText: "work type" if result.absenceReasonCategory else "absence reason", classes: "govuk-link--no-visited-state" }] }
               } if result.absenceReason,
               {
                 key: { text: "Start date" },
-                value: { text: result.fromDate | formatDate }
+                value: { text: result.fromDate | formatDate },
+                actions: { items: [{ href: result.id + "/edit/start-end-dates#fromDate", text: "Change", visuallyHiddenText: "start date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
               },
               {
                 key: { text: "End date" },
-                value: { text: result.toDate | formatDate }
+                value: { text: result.toDate | formatDate },
+                actions: { items: [{ href: result.id + "/edit/start-end-dates#toDate", text: "Change", visuallyHiddenText: "end date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
               },
               {
                 key: { text: "Single or repeating absence" },
@@ -82,7 +94,28 @@
               },
               {
                 key: { text: "Comments" },
-                value: { text: result.notes or "Not provided" }
+                value: { text: result.notes or "Not provided" },
+                actions: { items: [{ href: result.id + "/edit/comments", text: "Change", visuallyHiddenText: "comments", classes: "govuk-link--no-visited-state" }] }
+              },
+              {
+                key: { text: "Accompanied or unaccompanied" },
+                value: { text: result.accompaniedBy.description if result.accompaniedBy.code === 'U' else 'Accompanied' },
+                actions: { items: [{ href: result.id + "/edit/accompanied-or-unaccompanied", text: "Change", visuallyHiddenText: "if the prisoner will be accompanied or unaccompanied", classes: "govuk-link--no-visited-state" }] }
+              },
+              {
+                key: { text: "Accompanied by" },
+                value: { text: result.accompaniedBy.description },
+                actions: { items: [{ href: result.id + "/edit/accompanied", text: "Change", visuallyHiddenText: "who will accompany the prisoner", classes: "govuk-link--no-visited-state" }] }
+              } if result.accompaniedBy.code !== 'U',
+              {
+                key: { text: "Transport" },
+                value: { text: result.transport.description },
+                actions: { items: [{ href: result.id + "/edit/transport", text: "Change", visuallyHiddenText: "transport", classes: "govuk-link--no-visited-state" }] }
+              },
+              {
+                key: { text: "Location" if result.locations.length === 1 else "Locations" },
+                value: locationValue,
+                actions: { items: [{ href: result.id + "/edit/location", text: "Change", visuallyHiddenText: "location", classes: "govuk-link--no-visited-state" }] } if not result.repeat else null
               }
             ] | removeNullish
           }) }}
@@ -124,7 +157,7 @@
         {{ govukTabs({
           items: [
             {
-              label: "View absence",
+              label: "Manage absence",
               id: "view-absence",
               panel: {
               html: viewAbsenceHtml
@@ -149,39 +182,68 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-m">View absence occurrences</h2>
+        <h2 class="govuk-heading-m" id="view-occurrences">View absence occurrences</h2>
       </div>
-      <div class="govuk-summary-list govuk-summary-list__actions">
-        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}/occurrences">Add occurrence</a>
-      </div>
+      {% if result.repeat %}
+        <div class="govuk-summary-list govuk-summary-list__actions">
+          <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}/occurrences">Add occurrence</a>
+        </div>
+      {% endif %}
     </div>
 
+    {% if result.repeat %}
+      <div class="govuk-!-padding-0 govuk-!-margin-bottom-7">
+        <div class="moj-search govuk-!-width-two-thirds">
+          <form method="GET" action="#view-occurrences">
+            {{ hiddenInputs(query | getQueryEntries(['history'])) }}
+            {{ mojDatePicker({
+              id: "dateFrom",
+              name: "dateFrom",
+              label: {
+                text: 'Start date from'
+              },
+              value: dateFrom,
+              classes: 'hmpps-datepicker--fixed-width moj-search__input'
+            }) }}
+            {{ mojDatePicker({
+              id: "dateTo",
+              name: "dateTo",
+              label: {
+                text: 'End date to'
+              },
+              value: dateTo,
+              classes: 'hmpps-datepicker--fixed-width moj-search__input',
+              formGroup: { classes: 'govuk-!-margin-left-3 govuk-!-margin-right-3' }
+            }) }}
+            {{ govukButton({
+              classes: "moj-search__button",
+              text: "Apply",
+              preventDoubleClick: true
+            }) }}
+            <a class="govuk-link govuk-link--no-visited-state govuk-body no-label-form-clear-link govuk-!-margin-left-5" href="?clear=true#view-occurrences">Clear</a>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+
     {% set rows = [] %}
-    {% for occurrence in result.occurrences %}
+    {% for occurrence in result.occurrences | sort(false, false, 'releaseAt') %}
       {% set rows = (rows.push([
         {
-          text: occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm'),
+          text: occurrence.releaseAt | formatDate("cccc, d MMMM 'at' HH:mm"),
           attributes: { "data-sort-value": occurrence.releaseAt }
         },
         {
-          text: occurrence.returnBy | formatDate('cccc, d MMMM yyyy HH:mm'),
+          text: occurrence.returnBy | formatDate("cccc, d MMMM 'at' HH:mm"),
           attributes: { "data-sort-value": occurrence.returnBy }
         },
         {
-          text: occurrence.location.description,
-          attributes: { "data-sort-value": occurrence.location.description }
-        },
-        {
-          text: occurrence.accompaniedBy.description,
-          attributes: { "data-sort-value": occurrence.accompaniedBy.description }
-        },
-        {
-          text: occurrence.transport.description,
-          attributes: { "data-sort-value": occurrence.transport.description }
+          html: absenceStatusTag(occurrence),
+          attributes: { "data-sort-value": occurrence.status.code | statusPriority }
         },
         {
           classes: 'govuk-link govuk-link--no-visited-state',
-          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/start-edit/' + occurrence.id + '">Make changes to this occurrence<span class="govuk-visually-hidden"> on ' + occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm') + '</span></a>',
+          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">Make changes to this occurrence<span class="govuk-visually-hidden"> on ' + occurrence.releaseAt | formatDate("cccc, d MMMM yyyy 'at' HH:mm") + '</span></a>',
           format: "numeric"
         }
       ]), rows) %}
@@ -203,15 +265,7 @@
           attributes: { "aria-sort": "none" }
         },
         {
-          text: 'Location',
-          attributes: { "aria-sort": "none" }
-        },
-        {
-          text: 'Accompanied by',
-          attributes: { "aria-sort": "none" }
-        },
-        {
-          text: 'Transport',
+          text: 'Status',
           attributes: { "aria-sort": "none" }
         },
         {

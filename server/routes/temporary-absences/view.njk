@@ -123,11 +123,11 @@
             attributes: { "data-sort-value": occurrence.authorisation.person | firstNameSpaceLastName }
           },
           {
-            text: occurrence.releaseAt | formatDate('cccc, d MMMM yyyy HH:mm'),
+            text: occurrence.releaseAt | formatDate("cccc, d MMMM yyyy 'at' HH:mm"),
             attributes: { "data-sort-value": occurrence.releaseAt }
           },
           {
-            text: occurrence.returnBy | formatDate('cccc, d MMMM yyyy HH:mm'),
+            text: occurrence.returnBy | formatDate("cccc, d MMMM yyyy 'at' HH:mm"),
             attributes: { "data-sort-value": occurrence.returnBy }
           },
           {
