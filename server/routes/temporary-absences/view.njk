@@ -110,8 +110,8 @@
         </form>
     </div>
 
-    {% if not fromDate or not toDate %}
-      <p class="govuk-!-margin-bottom-6"><strong>Enter a date range to search and view temporary absences.</strong></p>
+    {% if hasValidationError %}
+      <p class="govuk-!-margin-bottom-6"><strong>Enter a valid filter to search and view temporary absences.</strong></p>
     {% elseif not results.length %}
       <p class="govuk-!-margin-bottom-6"><strong>No temporary absences match your search.</strong></p>
     {% else %}
@@ -166,7 +166,7 @@
         head: [
           {
             text: "Name and prison number",
-            key: 'prisonNumber'
+            key: 'lastName'
           },
           {
             text: "Start date and time",

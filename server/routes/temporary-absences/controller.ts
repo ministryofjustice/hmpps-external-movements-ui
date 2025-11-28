@@ -22,23 +22,25 @@ export class BrowseTapOccurrencesController {
       `status=${resQuery?.status ?? ''}`,
     ].join('&')
 
+    const hasValidationError = resQuery && !resQuery.validated
+
     let results: components['schemas']['TapOccurrenceResult'][] = []
     try {
-      const searchResponse =
-        resQuery?.validated?.toDate && resQuery?.validated?.fromDate
-          ? await this.externalMovementsService.searchTapOccurrences(
-              { res },
-              format(resQuery.validated.fromDate, 'yyyy-MM-dd'),
-              format(resQuery.validated.toDate, 'yyyy-MM-dd'),
-              resQuery.validated.status
-                ? [resQuery.validated.status]
-                : ['SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'OVERDUE', 'EXPIRED', 'CANCELLED', 'DENIED'],
-              resQuery.validated.searchTerm?.trim() || null,
-              resQuery.validated.sort ?? 'releaseAt,asc',
-              resQuery.validated.page,
-              this.PAGE_SIZE,
-            )
-          : undefined
+      const searchResponse = !hasValidationError
+        ? await this.externalMovementsService.searchTapOccurrences(
+            { res },
+            resQuery?.validated?.fromDate ? format(resQuery.validated.fromDate, 'yyyy-MM-dd') : null,
+            resQuery?.validated?.toDate ? format(resQuery.validated.toDate, 'yyyy-MM-dd') : null,
+            resQuery?.validated?.status
+              ? [resQuery.validated.status]
+              : ['SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'OVERDUE', 'EXPIRED', 'CANCELLED', 'DENIED'],
+            resQuery?.validated?.searchTerm?.trim() || null,
+            resQuery?.validated?.sort ?? 'releaseAt,asc',
+            resQuery?.validated?.page || 1,
+            this.PAGE_SIZE,
+          )
+        : undefined
+
       results = searchResponse?.content ?? []
 
       setPaginationLocals(
@@ -62,6 +64,7 @@ export class BrowseTapOccurrencesController {
       results,
       filterQueries,
       sort: resQuery?.sort ?? 'releaseAt,asc',
+      hasValidationError,
     })
   }
 }
