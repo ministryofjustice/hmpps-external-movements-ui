@@ -76,6 +76,25 @@ export class BaseTestPage {
     return this.page.getByRole('combobox', { name })
   }
 
+  async verifyTableRow(idx: number, content: (string | RegExp)[], tableSelector: string = '.govuk-table') {
+    const row = this.page.locator(tableSelector).locator('tr').nth(idx)
+    await expect(row).toBeVisible()
+    for (let i = 0; i < content.length; i += 1) {
+      await expect(row.locator('td').nth(i)).toContainText(content[i]!)
+    }
+  }
+
+  async verifyAnswer(heading: string | RegExp, value: string | RegExp) {
+    const rowHeading = this.page.locator('dt', { hasText: heading })
+    await expect(rowHeading).toBeVisible()
+    await expect(rowHeading.locator('//following-sibling::dd').first()).toContainText(value)
+  }
+
+  async verifyAnswerNotVisible(heading: string | RegExp) {
+    const rowHeading = this.page.locator('dt', { hasText: heading })
+    await expect(rowHeading).not.toBeVisible()
+  }
+
   historyParam(url: string, history: RegExp[]) {
     const actualUrl = new URL(url)
     const b64History = actualUrl.searchParams.get('history')

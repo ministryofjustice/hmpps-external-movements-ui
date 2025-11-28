@@ -75,10 +75,10 @@ test.describe('/add-temporary-absence/check-absences', () => {
       'Check rotating pattern absences - Add a temporary absence - DPS',
     )
 
-    await testPage.verifyAnswer('Monday, 1 January', /Release: 09:00(.+)?Return: 17:00/, true)
+    await testPage.verifyAnswer('Monday, 1 January', /Release: 09:00(.+)?Return: 17:00/)
     await testPage.verifyAnswer('Tuesday, 2 January', /Release: 10:00(.+)?Return: 18:00/)
     await testPage.verifyAnswer(/Wednesday, 3 January to(.+)?Thursday, 4 January/, /Release: 22:00(.+)?Return: 05:00/)
-    await testPage.verifyAnswer('Thursday, 4 January', /Release: 08:00(.+)?Return: 16:00/, true)
+    await testPage.verifyAnswer(/^\s+Thursday, 4 January\s+$/, /Release: 08:00(.+)?Return: 16:00/)
     await testPage.verifyAnswer(/Friday, 5 January to(.+)?Saturday, 6 January/, /Release: 23:00(.+)?Return: 04:00/)
     await testPage.verifyAnswer(/Saturday, 6 January to(.+)?Sunday, 7 January/, /Release: 23:00(.+)?Return: 04:00/)
     await testPage.verifyAnswer(/Sunday, 7 January to(.+)?Monday, 8 January/, /Release: 23:00(.+)?Return: 04:00/)
@@ -86,12 +86,12 @@ test.describe('/add-temporary-absence/check-absences', () => {
     await testPage.verifyAnswer('Tuesday, 9 January', /Release: 09:00(.+)?Return: 17:00/)
     await testPage.verifyAnswer('Wednesday, 10 January', /Release: 10:00(.+)?Return: 18:00/)
     await testPage.verifyAnswer(/Thursday, 11 January to(.+)?Friday, 12 January/, /Release: 22:00(.+)?Return: 05:00/)
-    await testPage.verifyAnswer('Friday, 12 January', /Release: 08:00(.+)?Return: 16:00/, true)
+    await testPage.verifyAnswer(/^\s+Friday, 12 January\s+$/, /Release: 08:00(.+)?Return: 16:00/)
     await testPage.verifyAnswer(/Saturday, 13 January to(.+)?Sunday, 14 January/, /Release: 23:00(.+)?Return: 04:00/)
     await testPage.verifyAnswer(/Sunday, 14 January to(.+)?Monday, 15 January/, /Release: 23:00(.+)?Return: 04:00/)
 
     await testPage.verifyAnswer(/Monday, 15 January to(.+)?Tuesday, 16 January/, /Release: 23:00(.+)?Return: 04:00/)
-    await testPage.verifyAnswer('Wednesday, 17 January', /Release: 09:00(.+)?Return: 17:00/, true)
+    await testPage.verifyAnswer('Wednesday, 17 January', /Release: 09:00(.+)?Return: 17:00/)
     expect(await page.getByText(/Thursday, 18 January/)).toHaveCount(0)
     // Would see Friday, 19 January to Saturday, 20 January but the below assert will cover both entries
     expect(await page.getByText(/Saturday, 20 January/)).toHaveCount(0)
@@ -128,7 +128,7 @@ test.describe('/add-temporary-absence/check-absences', () => {
       'Change dates and times (Week starting Monday, 1 January 2001)',
       /select-days-and-times\/1/,
     )
-    await testPage.verifyAnswer('Monday, 1 January', /Release: 10:00(.+)?Return: 17:30/, true)
+    await testPage.verifyAnswer('Monday, 1 January', /Release: 10:00(.+)?Return: 17:30/)
 
     await testPage.verifyLink('Add absence (Week starting Monday, 8 January 2001)', /select-days-and-times\/2/)
     expect(page.getByText('No absence entered')).toBeVisible()
@@ -165,9 +165,9 @@ test.describe('/add-temporary-absence/check-absences', () => {
     // verify page content
     const testPage = await new CheckPatternPage(page).verifyContent()
 
-    await testPage.verifyAnswer('Monday, 1 January', /Release: 10:00(.+)?Return: 17:30/, true)
-    await testPage.verifyAnswer('Monday, 8 January', /Release: 10:00(.+)?Return: 17:30/, true)
-    await testPage.verifyAnswer('Monday, 15 January', /Release: 10:00(.+)?Return: 17:30/, true)
+    await testPage.verifyAnswer('Monday, 1 January', /Release: 10:00(.+)?Return: 17:30/)
+    await testPage.verifyAnswer('Monday, 8 January', /Release: 10:00(.+)?Return: 17:30/)
+    await testPage.verifyAnswer('Monday, 15 January', /Release: 10:00(.+)?Return: 17:30/)
 
     await testPage.verifyAnswer(/Wednesday, 3 January to(.+)?Thursday, 4 January/, /Release: 23:00(.+)?Return: 04:30/)
     await testPage.verifyAnswer(/Wednesday, 10 January to(.+)?Thursday, 11 January/, /Release: 23:00(.+)?Return: 04:30/)

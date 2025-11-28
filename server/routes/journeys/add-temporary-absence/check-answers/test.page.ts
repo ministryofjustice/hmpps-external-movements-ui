@@ -1,4 +1,3 @@
-import { expect } from '@playwright/test'
 import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 
 export class AddTapCYAPage extends BaseTestPage {
@@ -10,17 +9,6 @@ export class AddTapCYAPage extends BaseTestPage {
       heading: 'Check this information before saving this absence',
       backUrl: /approval/,
     })
-  }
-
-  async verifyAnswer(heading: string | RegExp, value: string | RegExp) {
-    const rowHeading = this.page.locator('dt', { hasText: heading })
-    await expect(rowHeading).toBeVisible()
-    await expect(rowHeading.locator('//following-sibling::dd').first()).toContainText(value)
-  }
-
-  async verifyAnswerNotVisible(heading: string | RegExp) {
-    const rowHeading = this.page.locator('dt', { hasText: heading })
-    await expect(rowHeading).not.toBeVisible()
   }
 
   async clickChangeLinkFor(heading: string) {
