@@ -10,22 +10,25 @@ const $upDownArrow = `<svg width="22" height="22" focusable="false" aria-hidden=
 </svg>`
 
 export const initSortableTable = () => {
-  const $headings = Array.from(document.querySelector('.sortable-table').querySelectorAll('th'))
-  for (const $heading of $headings) {
-    const $button = $heading.querySelector('button')
-    if ($heading.hasAttribute('aria-sort') && $button) {
-      var _$button$querySelector
-      const direction = $heading.getAttribute('aria-sort')
-      ;(_$button$querySelector = $button.querySelector('svg')) == null || _$button$querySelector.remove()
-      switch (direction) {
-        case 'ascending':
-          $button.insertAdjacentHTML('beforeend', $upArrow)
-          break
-        case 'descending':
-          $button.insertAdjacentHTML('beforeend', $downArrow)
-          break
-        default:
-          $button.insertAdjacentHTML('beforeend', $upDownArrow)
+  const sortableTable = document.querySelector('.sortable-table')
+  if (sortableTable) {
+    const $headings = Array.from(sortableTable.querySelectorAll('th'))
+    for (const $heading of $headings) {
+      const $button = $heading.querySelector('button')
+      if ($heading.hasAttribute('aria-sort') && $button) {
+        var _$button$querySelector
+        const direction = $heading.getAttribute('aria-sort')
+        ;(_$button$querySelector = $button.querySelector('svg')) == null || _$button$querySelector.remove()
+        switch (direction) {
+          case 'ascending':
+            $button.insertAdjacentHTML('beforeend', $upArrow)
+            break
+          case 'descending':
+            $button.insertAdjacentHTML('beforeend', $downArrow)
+            break
+          default:
+            $button.insertAdjacentHTML('beforeend', $upDownArrow)
+        }
       }
     }
   }
