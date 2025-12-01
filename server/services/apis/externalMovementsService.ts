@@ -117,25 +117,27 @@ export default class ExternalMovementsService {
 
   searchTapAuthorisations(
     context: ApiRequestContext,
-    fromDate: string,
-    toDate: string,
+    fromDate: string | null | undefined,
+    toDate: string | null | undefined,
     status: string[],
     query: string | null,
+    sort: string,
+    page: number,
+    pageSize: number,
   ) {
-    const searchParams: string[] = [
-      `prisonCode=${context.res.locals.user.getActiveCaseloadId()}`,
-      `fromDate=${fromDate}`,
-      `toDate=${toDate}`,
-      ...status.map(val => `status=${val}`),
-      'page=1',
-      'size=2147483647',
-    ]
-    if (query) searchParams.push(`query=${encodeURIComponent(query)}`)
-
     return this.externalMovementsApiClient
       .withContext(context)
       .get<components['schemas']['TapAuthorisationSearchResponse']>({
-        path: `/search/temporary-absence-authorisations?${searchParams.join('&')}`,
+        path: `/search/temporary-absence-authorisations${parseQueryParams({
+          prisonCode: context.res.locals.user.getActiveCaseloadId(),
+          fromDate,
+          toDate,
+          status,
+          sort,
+          page,
+          size: pageSize,
+          query,
+        })}`,
       })
   }
 }

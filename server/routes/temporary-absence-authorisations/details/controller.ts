@@ -10,7 +10,7 @@ export class TapAuthorisationDetailsController {
 
   GET = async (req: Request<{ id: string }>, res: Response) => {
     try {
-      const { dateFrom, dateTo, validated } = res.locals['query'] as ResQuerySchemaType
+      const { dateFrom, dateTo, validated } = (res.locals['query'] ?? {}) as ResQuerySchemaType
 
       const authorisation = await getAuthorisationAndPopulatePrisonerDetails(
         this.externalMovementsService,
