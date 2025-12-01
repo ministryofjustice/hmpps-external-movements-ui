@@ -89,20 +89,29 @@ export default class ExternalMovementsService {
     })
   }
 
-  searchTapOccurrences(context: ApiRequestContext, fromDate: string, toDate: string, query: string | null) {
-    const searchParams: string[] = [
-      `prisonCode=${context.res.locals.user.getActiveCaseloadId()}`,
-      `fromDate=${fromDate}`,
-      `toDate=${toDate}`,
-      'page=1',
-      'size=2147483647',
-    ]
-    if (query) searchParams.push(`query=${encodeURIComponent(query)}`)
-
+  searchTapOccurrences(
+    context: ApiRequestContext,
+    fromDate: string | null | undefined,
+    toDate: string | null | undefined,
+    status: string[],
+    query: string | null,
+    sort: string,
+    page: number,
+    pageSize: number,
+  ) {
     return this.externalMovementsApiClient
       .withContext(context)
       .get<components['schemas']['TapOccurrenceSearchResponse']>({
-        path: `/search/temporary-absence-occurrences?${searchParams.join('&')}`,
+        path: `/search/temporary-absence-occurrences${parseQueryParams({
+          prisonCode: context.res.locals.user.getActiveCaseloadId(),
+          fromDate,
+          toDate,
+          status,
+          sort,
+          page,
+          size: pageSize,
+          query,
+        })}`,
       })
   }
 

@@ -6,26 +6,51 @@ import ExternalMovementsService from '../../services/apis/externalMovementsServi
 import { ResQuerySchemaType } from './schema'
 import { components } from '../../@types/externalMovements'
 import { getApiUserErrorMessage } from '../../utils/utils'
+import { setPaginationLocals } from '../../views/partials/simplePagination/utils'
 
 export class BrowseTapOccurrencesController {
   constructor(readonly externalMovementsService: ExternalMovementsService) {}
 
+  private PAGE_SIZE = 25
+
   GET = async (_req: Request, res: Response) => {
     const resQuery = res.locals['query'] as ResQuerySchemaType
+    const filterQueries = [
+      `searchTerm=${resQuery?.searchTerm ?? ''}`,
+      `fromDate=${resQuery?.fromDate ?? ''}`,
+      `toDate=${resQuery?.toDate ?? ''}`,
+      `status=${resQuery?.status ?? ''}`,
+    ].join('&')
+
+    const hasValidationError = resQuery && !resQuery.validated
 
     let results: components['schemas']['TapOccurrenceResult'][] = []
     try {
-      results =
-        resQuery?.validated?.toDate && resQuery?.validated?.fromDate
-          ? (
-              await this.externalMovementsService.searchTapOccurrences(
-                { res },
-                format(resQuery.validated.fromDate, 'yyyy-MM-dd'),
-                format(resQuery.validated.toDate, 'yyyy-MM-dd'),
-                resQuery.validated.searchTerm?.trim() || null,
-              )
-            ).content
-          : []
+      const searchResponse = !hasValidationError
+        ? await this.externalMovementsService.searchTapOccurrences(
+            { res },
+            resQuery?.validated?.fromDate ? format(resQuery.validated.fromDate, 'yyyy-MM-dd') : null,
+            resQuery?.validated?.toDate ? format(resQuery.validated.toDate, 'yyyy-MM-dd') : null,
+            resQuery?.validated?.status
+              ? [resQuery.validated.status]
+              : ['SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'OVERDUE', 'EXPIRED', 'CANCELLED', 'DENIED'],
+            resQuery?.validated?.searchTerm?.trim() || null,
+            resQuery?.validated?.sort ?? 'releaseAt,asc',
+            resQuery?.validated?.page || 1,
+            this.PAGE_SIZE,
+          )
+        : undefined
+
+      results = searchResponse?.content ?? []
+
+      setPaginationLocals(
+        res,
+        this.PAGE_SIZE,
+        resQuery?.validated?.page ?? 1,
+        searchResponse?.metadata?.totalElements ?? 0,
+        results.length,
+        `?page={page}&${filterQueries}`,
+      )
     } catch (error: unknown) {
       res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
     }
@@ -36,8 +61,10 @@ export class BrowseTapOccurrencesController {
       fromDate: resQuery?.fromDate,
       toDate: resQuery?.toDate,
       status: resQuery?.status,
-      direction: resQuery?.direction,
       results,
+      filterQueries,
+      sort: resQuery?.sort ?? 'releaseAt,asc',
+      hasValidationError,
     })
   }
 }

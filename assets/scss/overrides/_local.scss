@@ -99,3 +99,11 @@
     display: inline!important;
   }
 }
+
+.govuk-table__header {
+  button {
+    svg {
+      overflow: visible;
+    }
+  }
+}

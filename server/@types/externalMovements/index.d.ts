@@ -448,6 +448,26 @@ export interface components {
     ScheduleOccurrence: {
       type: 'ScheduleOccurrence'
     } & Omit<components['schemas']['OccurrenceAction'], 'type'>
+    AuditHistory: {
+      content: components['schemas']['AuditedAction'][]
+    }
+    AuditedAction: {
+      user: components['schemas']['User']
+      /** Format: date-time */
+      occurredAt: string
+      domainEvents: string[]
+      reason?: string
+      changes: components['schemas']['Change'][]
+    }
+    Change: {
+      propertyName: string
+      previous?: unknown
+      change?: unknown
+    }
+    User: {
+      username: string
+      name: string
+    }
     AmendAuthorisationNotes: {
       type: 'AmendAuthorisationNotes'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
@@ -463,6 +483,14 @@ export interface components {
     CancelAuthorisation: {
       type: 'CancelAuthorisation'
     } & Omit<components['schemas']['AuthorisationAction'], 'type'>
+    ChangeAuthorisationDateRange: {
+      type: 'ChangeAuthorisationDateRange'
+    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
+      /** Format: date */
+      from: string
+      /** Format: date */
+      to: string
+    })
     ChangePrisonPerson: {
       type: 'ChangePrisonPerson'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
@@ -480,15 +508,6 @@ export interface components {
       absenceReasonCategoryCode?: string
       absenceReasonCode?: string
       reasonPath: components['schemas']['ReasonPath']
-    })
-    RescheduleAuthorisation: {
-      type: 'RescheduleAuthorisation'
-    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
-      /** Format: date */
-      from: string
-      /** Format: date */
-      to: string
-      repeat: boolean
     })
     SyncAtAndBy: {
       /** Format: date-time */
@@ -642,26 +661,6 @@ export interface components {
       contactInformation?: string
       scheduleReference?: components['schemas']['JsonNode']
       notes?: string
-    }
-    AuditHistory: {
-      content: components['schemas']['AuditedAction'][]
-    }
-    AuditedAction: {
-      user: components['schemas']['User']
-      /** Format: date-time */
-      occurredAt: string
-      domainEvents: string[]
-      reason?: string
-      changes: components['schemas']['Change'][]
-    }
-    Change: {
-      propertyName: string
-      previous?: unknown
-      change?: unknown
-    }
-    User: {
-      username: string
-      name: string
     }
     Occurrence: {
       /** Format: uuid */
@@ -975,7 +974,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          '*/*': components['schemas']['AuditHistory']
+        }
       }
     }
   }
@@ -1019,10 +1020,10 @@ export interface operations {
           | components['schemas']['AmendAuthorisationNotes']
           | components['schemas']['ApproveAuthorisation']
           | components['schemas']['CancelAuthorisation']
+          | components['schemas']['ChangeAuthorisationDateRange']
           | components['schemas']['ChangePrisonPerson']
           | components['schemas']['DenyAuthorisation']
           | components['schemas']['RecategoriseAuthorisation']
-          | components['schemas']['RescheduleAuthorisation']
       }
     }
     responses: {
@@ -1031,7 +1032,9 @@ export interface operations {
         headers: {
           [name: string]: unknown
         }
-        content?: never
+        content: {
+          '*/*': components['schemas']['AuditHistory']
+        }
       }
     }
   }

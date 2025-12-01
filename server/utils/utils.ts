@@ -106,10 +106,17 @@ export const getApiUserErrorMessage = (error: HTTPError) => {
   }
 }
 
-export const parseQueryParams = (queries: { [key: string]: string | number | null | undefined }) => {
+export const parseQueryParams = (queries: {
+  [key: string]: string[] | number[] | string | number | null | undefined
+}) => {
   const searchParams = Object.entries(queries)
     .filter(([_, val]) => val !== null && val !== undefined)
-    .map(([key, val]) => `${key}=${encodeURIComponent(val!)}`)
+    .map(([key, val]) => {
+      if (Array.isArray(val)) {
+        return val.map(itm => `${key}=${encodeURIComponent(itm)}`).join('&')
+      }
+      return `${key}=${encodeURIComponent(val!)}`
+    })
 
   return searchParams.length ? `?${searchParams.join('&')}` : ''
 }
