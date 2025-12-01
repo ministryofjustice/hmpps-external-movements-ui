@@ -22,7 +22,9 @@ export class BrowseTapAuthorisationsController {
       `status=${resQuery?.status ?? ''}`,
     ].join('&')
 
-    const hasValidationError = resQuery && !resQuery.validated
+    const hasValidationError =
+      Object.keys(resQuery).find(key => ['searchTerm', 'fromDate', 'toDate', 'status'].includes(key)) &&
+      !resQuery.validated
 
     let results: components['schemas']['TapAuthorisationResult'][] = []
 
@@ -30,12 +32,12 @@ export class BrowseTapAuthorisationsController {
       const searchResponse = !hasValidationError
         ? await this.externalMovementsService.searchTapAuthorisations(
             { res },
-            resQuery?.validated?.fromDate ? format(resQuery.validated.fromDate, 'yyyy-MM-dd') : null,
-            resQuery?.validated?.toDate ? format(resQuery.validated.toDate, 'yyyy-MM-dd') : null,
-            resQuery?.validated?.status ? [resQuery.validated.status] : ['PENDING', 'APPROVED', 'CANCELLED', 'DENIED'],
-            resQuery?.validated?.searchTerm?.trim() || null,
-            resQuery?.validated?.sort ?? 'fromDate,asc',
-            resQuery?.validated?.page || 1,
+            resQuery.validated?.fromDate ? format(resQuery.validated.fromDate, 'yyyy-MM-dd') : null,
+            resQuery.validated?.toDate ? format(resQuery.validated.toDate, 'yyyy-MM-dd') : null,
+            resQuery.validated?.status ? [resQuery.validated.status] : ['PENDING', 'APPROVED', 'CANCELLED', 'DENIED'],
+            resQuery.validated?.searchTerm?.trim() || null,
+            resQuery.validated?.sort ?? 'fromDate,asc',
+            resQuery.validated?.page || 1,
             this.PAGE_SIZE,
           )
         : undefined

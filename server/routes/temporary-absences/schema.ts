@@ -27,4 +27,4 @@ export const schema = createSchema({
 })
 
 type SchemaType = z.infer<typeof schema>
-export type ResQuerySchemaType = (SchemaType & { validated?: SchemaType }) | undefined
+export type ResQuerySchemaType = SchemaType & { validated?: SchemaType }
