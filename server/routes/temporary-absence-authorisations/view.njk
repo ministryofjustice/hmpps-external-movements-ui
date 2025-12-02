@@ -6,26 +6,30 @@
 {% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
+{% from "partials/simplePagination/macro.njk" import simplePagination %}
 
 {% set fullWidth = true %}
-{% set pageTitle = 'Browse temporary absence authorisations' %}
+{% set pageTitle = 'Manage temporary absences - Manage temporary absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
-    <div class="govuk-!-static-margin-bottom-6">
-      <h1 class="govuk-heading-l">Temporary Absence authorisations</h1>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Manage Temporary Absences</span>
+        <h1 class="govuk-heading-l">Manage temporary absences in {{ user.activeCaseLoad.description }}</h1>
+      </div>
     </div>
 
     <div class="block-background govuk-!-padding-6 govuk-!-margin-bottom-7 search-form">
-        <h2 class="govuk-heading-m">Filter by</h2>
         <form method="GET">
           {{ hiddenInputs(query | getQueryEntries(['history'])) }}
+          <input type="hidden" name="page" value="1"/>
           <div class="horizontal-form govuk-!-margin-bottom-2">
             {{ govukInput({
               name: 'searchTerm',
               classes: "moj-search__input",
               label: {
-                text: "Prison number"
+                text: "Name or prison number"
               },
               value: searchTerm
             }) }}
@@ -34,7 +38,7 @@
               id: "fromDate",
               name: "fromDate",
               label: {
-                text: 'From'
+                text: 'Start date from'
               },
               value: fromDate,
               errorMessage: validationErrors | findError('fromDate'),
@@ -45,18 +49,16 @@
               id: "toDate",
               name: "toDate",
               label: {
-                text: 'To'
+                text: 'End date to'
               },
               value: toDate,
               errorMessage: validationErrors | findError('toDate'),
               classes: 'hmpps-datepicker--fixed-width govuk-body moj-search__input'
             }) }}
 
-          </div>
-          <div class="horizontal-form">
             {{ govukSelect({
               label: {
-                text: "Status"
+                text: "Absence status"
               },
               id: "status",
               name: "status",
@@ -74,19 +76,20 @@
                   text: "Approved"
                 },
                 {
-                  value: 'DENIED',
-                  text: "Denied"
+                  value: 'CANCELLED',
+                  text: "Cancelled"
                 },
                 {
-                  value: 'WITHDRAWN',
-                  text: "Withdrawn"
+                  value: 'DENIED',
+                  text: "Denied"
                 }
               ] | setSelectedValue(status or ''),
               errorMessage: validationErrors | findError('status')
             }) }}
+          </div>
 
+          <div class="horizontal-form">
             {{ govukButton({
-              classes: "moj-search__button",
               text: "Apply filters",
               preventDoubleClick: true
             }) }}
@@ -96,8 +99,8 @@
         </form>
     </div>
 
-    {% if not fromDate or not toDate %}
-      <p class="govuk-!-margin-bottom-6"><strong>Enter a date range to search and view temporary absence authorisations.</strong></p>
+    {% if hasValidationError %}
+      <p class="govuk-!-margin-bottom-6"><strong>Enter a valid filter to search and view temporary absences.</strong></p>
     {% elseif not results.length %}
       <p class="govuk-!-margin-bottom-6"><strong>No temporary absence authorisations match your search.</strong></p>
     {% else %}
@@ -105,28 +108,25 @@
       {% for authorisation in results %}
         {% set rows = (rows.push([
           {
-            html: '<a class="govuk-link--no-visited-state" href="' + prisonerProfileUrl + '/prisoner/' + authorisation.person.personIdentifier + '">' + authorisation.person | firstNameSpaceLastName + "</a><br/>" + authorisation.person.personIdentifier,
-            attributes: { "data-sort-value": authorisation.person | firstNameSpaceLastName }
+            html: '<a class="govuk-link--no-visited-state" href="' + prisonerProfileUrl + '/prisoner/' + authorisation.person.personIdentifier + '">' + authorisation.person | firstNameSpaceLastName + "</a><br/>" + authorisation.person.personIdentifier
           },
           {
-            text: authorisation.fromDate | formatDate,
-            attributes: { "data-sort-value": authorisation.fromDate }
+            text: authorisation.absenceType.description
           },
           {
-            text: authorisation.toDate | formatDate,
-            attributes: { "data-sort-value": authorisation.toDate }
+            text: authorisation.absenceReasonCategory.description or authorisation.absenceReason.description or 'None'
           },
           {
-            text: authorisation.absenceType.description,
-            attributes: { "data-sort-value": authorisation.absenceType.description }
+            text: ('Repeating (' + authorisation.occurrenceCount + ' occurrence' + (')' if authorisation.occurrenceCount === 1 else 's)')) if authorisation.repeat else 'Single'
           },
           {
-            text: ('Repeating ' + authorisation.occurrenceCount + ' occurrences') if authorisation.repeat else 'Single',
-            attributes: { "data-sort-value": authorisation.occurrences.length }
+            text: authorisation.fromDate | formatDate
           },
           {
-            html: absenceStatusTag(authorisation),
-            attributes: { "data-sort-value": authorisation.status.code | statusPriority }
+            text: authorisation.toDate | formatDate
+          },
+          {
+            html: absenceStatusTag(authorisation)
           },
           {
             classes: 'govuk-link govuk-link--no-visited-state',
@@ -136,44 +136,49 @@
         ]), rows) %}
       {% endfor %}
 
+      {{ simplePagination(paginationParams) }}
+
       {{ govukTable({
-        attributes: {
-          "data-module": "moj-sortable-table"
-        },
         firstCellIsHeader: false,
-        classes: 'table-vertical-align-middle govuk-!-margin-top-6',
+        classes: 'table-vertical-align-middle govuk-!-margin-top-6 sortable-table',
         head: [
           {
             text: "Name and prison number",
-            attributes: { "aria-sort": "none" }
-          },
-          {
-            text: "Start date",
-            attributes: { "aria-sort": "none" }
-          },
-          {
-            text: "End date",
-            attributes: { "aria-sort": "none" }
+            key: 'lastName'
           },
           {
             text: 'Absence type',
-            attributes: { "aria-sort": "none" }
+            key: 'absenceType'
+          },
+          {
+            text: 'Absence reason',
+            key: 'absenceReason'
           },
           {
             text: 'Single or repeating',
-            attributes: { "aria-sort": "none" }
+            key: 'repeat'
+          },
+          {
+            text: "Start date",
+            key: 'fromDate'
+          },
+          {
+            text: "End date",
+            key: 'toDate'
           },
           {
             text: 'Status',
-            attributes: { "aria-sort": "none" }
+            key: 'status'
           },
           {
             text: "Action",
             format: "numeric"
           }
-        ],
+        ] | convertToSortableColumns(sort or 'fromDate,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
         rows: rows
       }) }}
+
+      {{ simplePagination(paginationParams) }}
     {% endif %}
   </div>
 {% endblock %}

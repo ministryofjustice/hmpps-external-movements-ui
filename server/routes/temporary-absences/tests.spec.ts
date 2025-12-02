@@ -77,8 +77,8 @@ test.describe('/temporary-absences', () => {
     await expect(page.getByText('Showing 26 to 26 of 26 results')).toHaveCount(2)
     await testPage.verifyTableRow(1, [
       /Prisoner-Name Prisoner-Surname(.*)A9965EA/,
-      'Monday, 1 January 2001 at 10:00',
-      'Monday, 1 January 2001 at 17:30',
+      '1 January 2001 at 10:00',
+      '1 January 2001 at 17:30',
       'Restricted ROTL (Release on Temporary Licence)',
       'Random Street, UK',
       'Unaccompanied',
