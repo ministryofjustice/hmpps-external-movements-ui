@@ -52,8 +52,8 @@ export class BaseTestPage {
     await this.clickButton('Continue')
   }
 
-  button(name: string | RegExp) {
-    return this.page.getByRole('button', { name })
+  button(name: string | RegExp, exact: boolean = false) {
+    return this.page.getByRole('button', { name, exact })
   }
 
   radio(name: string | RegExp) {

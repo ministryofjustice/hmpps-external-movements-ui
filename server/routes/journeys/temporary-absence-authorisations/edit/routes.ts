@@ -7,6 +7,7 @@ import { EditAbsenceSubTypeRoutes } from './absence-subtype/routes'
 import { EditReasonCategoryRoutes } from './reason-category/routes'
 import { EditAbsenceReasonRoutes } from './reason/routes'
 import { EditTapAuthorisationConfirmationRoutes } from './confirmation/routes'
+import { TapCancelRoutes } from './cancel/routes'
 
 export const EditTapAuthorisationRoutes = (services: Services) => {
   const { router } = BaseRouter()
@@ -17,6 +18,9 @@ export const EditTapAuthorisationRoutes = (services: Services) => {
   router.use('/reason', EditAbsenceReasonRoutes(services))
   router.use('/comments', EditAbsenceCommentsRoutes())
   router.use('/start-end-dates', EditStartEndDatesRoutes(services))
+
+  router.use('/cancel', TapCancelRoutes(services))
+
   router.use('/confirmation', EditTapAuthorisationConfirmationRoutes())
 
   return router

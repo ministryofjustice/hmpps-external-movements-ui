@@ -1,14 +1,19 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
-{% set pageTitle = 'Are you sure you want to cancel this absence? - Manage Temporary Absences' %}
+
+{% set pageTitle = 'Cancel absence reason - Manage temporary absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Manage Temporary Absences</span>
     <h1 class="govuk-heading-l">Are you sure you want to cancel this absence?</h1>
-    <p class="govuk-hint">If this is a repeating absence all occurrences of the absence will be cancelled.</p>
+    {{ govukWarningText({
+      text: "This action cannot be reversed. Any future occurrences of this absence will be cancelled. Completed and in progress occurrences will not be affected.",
+      iconFallbackText: "Warning"
+    }) }}
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
       {{ govukTextarea({
@@ -31,7 +36,7 @@
         {{ govukButton({
           classes: "govuk-button--secondary",
           text: "Do not cancel this absence",
-          href: "/temporary-absence-authorisations/" + result.id,
+          href: '/temporary-absence-authorisations/' + authorisation.id,
           preventDoubleClick: true
         }) }}
       </div>
