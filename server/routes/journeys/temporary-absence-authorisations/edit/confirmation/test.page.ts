@@ -5,7 +5,7 @@ export class EditTapAuthorisationConfirmationPage extends BaseTestPage {
     return this.verify({
       pageUrl: /\/temporary-absence-authorisations\/edit\/confirmation/,
       title: 'Change temporary absence authorisation confirmation - Manage temporary absences - DPS',
-      heading: /Temporary absence .+ for Prisoner-Name Prisoner-Surname/,
+      heading: /Absence .+/,
     })
   }
 }

@@ -96,9 +96,7 @@ test.describe('/temporary-absence-authorisations/edit/confirmation', () => {
     // verify page content
     const testPage = await new EditTapAuthorisationConfirmationPage(page).verifyContent()
 
-    await expect(
-      page.getByText('Temporary absence start date updated for Prisoner-Name Prisoner-Surname'),
-    ).toBeVisible()
+    await expect(page.getByText('Absence rescheduled')).toBeVisible()
 
     await testPage.verifyLink(
       'View this temporary absence',
@@ -128,7 +126,7 @@ test.describe('/temporary-absence-authorisations/edit/confirmation', () => {
     // verify page content
     const testPage = await new EditTapAuthorisationConfirmationPage(page).verifyContent()
 
-    await expect(page.getByText('Temporary absence cancelled for Prisoner-Name Prisoner-Surname')).toBeVisible()
+    await expect(page.getByText('Absence cancelled')).toBeVisible()
 
     await testPage.verifyLink('View all temporary absence in Leeds (HMP)', /temporary-absence-authorisations\?/)
     await testPage.verifyLink('Return to the DPS homepage', /localhost:3001$/)

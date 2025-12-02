@@ -3,12 +3,16 @@
 
 {% set pageTitle = 'Change temporary absence authorisation confirmation - Manage temporary absences' %}
 
+{% set EVENT_DESCRIPTION = {
+  'person.temporary-absence-authorisation.date-range-changed': 'Absence rescheduled'
+} %}
+
 {% block innerContent %}
   <div class="govuk-width-container">
     {% switch domainEvent %}
     {% case 'person.temporary-absence-authorisation.approved' %}
       {{ govukPanel({
-        titleText: "Temporary absence approved for " + prisonerDetails | firstNameSpaceLastName,
+        titleText: "Absence approved",
         text: ""
       }) }}
 
@@ -25,7 +29,7 @@
       </p>
     {% case 'person.temporary-absence-authorisation.denied' %}
       {{ govukPanel({
-        titleText: "Temporary absence rejected for " + prisonerDetails | firstNameSpaceLastName,
+        titleText: "Absence denied",
         text: ""
       }) }}
 
@@ -42,7 +46,7 @@
       </p>
     {% case 'person.temporary-absence-authorisation.cancelled' %}
       {{ govukPanel({
-        titleText: "Temporary absence cancelled for " + prisonerDetails | firstNameSpaceLastName,
+        titleText: "Absence cancelled",
         text: ""
       }) }}
 
@@ -55,7 +59,7 @@
       </p>
     {% default %}
       {{ govukPanel({
-        titleText: "Temporary absence " + updatedProps + " updated for " + prisonerDetails | firstNameSpaceLastName,
+        titleText: EVENT_DESCRIPTION[domainEvent] or "Absence updated",
         text: ""
       }) }}
 
