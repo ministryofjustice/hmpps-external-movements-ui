@@ -5,10 +5,7 @@ import componentsApi from '../../../../../../integration_tests/mockApis/componen
 import { signIn } from '../../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../../integration_tests/mockApis/prisonerSearchApi'
-import {
-  stubGetAllAbsenceTypes,
-  stubGetTapAuthorisation,
-} from '../../../../../../integration_tests/mockApis/externalMovementsApi'
+import { stubGetTapAuthorisation } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { EditTapAuthorisationConfirmationPage } from './test.page'
 import { injectJourneyData } from '../../../../../../integration_tests/steps/journey'
@@ -20,7 +17,7 @@ test.describe('/temporary-absence-authorisations/edit/confirmation', () => {
   const authorisation = {
     id: authorisationId,
     person: {
-      personIdentifier: 'A9965EA',
+      personIdentifier: prisonNumber,
       firstName: 'PRISONER-NAME',
       lastName: 'PRISONER-SURNAME',
       dateOfBirth: '1990-01-01',
@@ -63,7 +60,6 @@ test.describe('/temporary-absence-authorisations/edit/confirmation', () => {
       componentsApi.stubComponents(),
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
-      stubGetAllAbsenceTypes(),
       stubGetTapAuthorisation(authorisation),
     ])
   })

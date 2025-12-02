@@ -12,13 +12,13 @@ export const schema = async (req: Request, _res: Response) =>
   }).transform(({ fromDate, toDate }, ctx) => {
     const firstStartDate = req.journeyData
       .updateTapAuthorisation!.authorisation.occurrences.reduce((acc, itm) => {
-        if (!acc || itm.releaseAt < acc) return itm.releaseAt
+        if ((!acc || itm.releaseAt < acc) && itm.status.code !== 'CANCELLED') return itm.releaseAt
         return acc
       }, '')
       .substring(0, 10)
     const lastEndDate = req.journeyData
       .updateTapAuthorisation!.authorisation.occurrences.reduce((acc, itm) => {
-        if (!acc || itm.returnBy > acc) return itm.returnBy
+        if ((!acc || itm.returnBy > acc) && itm.status.code !== 'CANCELLED') return itm.returnBy
         return acc
       }, '')
       .substring(0, 10)
