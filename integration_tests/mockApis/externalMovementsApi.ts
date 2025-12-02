@@ -66,6 +66,16 @@ export const stubSearchTapOccurrence = (
     response,
   })
 
+export const stubSearchTapAuthorisation = (
+  query: string,
+  response: components['schemas']['TapAuthorisationSearchResponse'],
+) =>
+  successStub({
+    method: 'GET',
+    urlPattern: `/external-movements-api/search/temporary-absence-authorisations\\?${query}`,
+    response,
+  })
+
 export const stubGetAllAbsenceTypes = () =>
   successStub({
     method: 'GET',
