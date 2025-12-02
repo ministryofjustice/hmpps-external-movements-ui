@@ -1,0 +1,44 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set pageTitle = 'Approve absence - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukRadios({
+        name: "approve",
+        errorMessage: validationErrors | findError('approve'),
+        fieldset: {
+          legend: {
+            text: "Do you want to approve this absence?",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--xl"
+          }
+        },
+        items: [
+          {
+            value: 'YES',
+            text: "Yes, approve this absence",
+            checked: approve === true,
+            hint: { text: "This will also approve all occurrences of this absence if it is a repeating absence." } if authorisation.repeat else null
+          },
+          {
+            value: 'NO',
+            text: "No, reject this absence",
+            checked: approve === false,
+            hint: { text: "This will cancel the absence and all occurrences." } if authorisation.repeat else null
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}
