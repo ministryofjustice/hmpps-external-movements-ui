@@ -19,11 +19,13 @@
         <span class="govuk-caption-l">Manage Temporary Absences</span>
         <h1 class="govuk-heading-l">Manage {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence</h1>
 
+        {% set baseEditUrl = "/temporary-absence-authorisations/start-edit/" + result.id %}
+
         <div class="govuk-button-group">
           {% if result.status.code === 'PENDING' %}
             {{ govukButton({
               text: "Review this absence",
-              href: "/temporary-absence-authorisations/" + result.id + "/approval",
+              href: baseEditUrl + "/review",
               preventDoubleClick: true
             }) }}
           {% endif %}
@@ -31,7 +33,7 @@
             {{ govukButton({
               classes: "govuk-button--warning",
               text: "Cancel this absence",
-              href: "/temporary-absence-authorisations/" + result.id + "/cancel",
+              href: baseEditUrl + "/cancel",
               preventDoubleClick: true
             }) }}
           {% endif %}
@@ -44,8 +46,6 @@
         {% endfor %}
 
         {% set locationValue = { html: locationRows | join('<br/><br/>') } %}
-
-        {% set baseEditUrl = "/temporary-absence-authorisations/start-edit/" + result.id %}
 
         {% set viewAbsenceHtml %}
           {{ govukSummaryList({

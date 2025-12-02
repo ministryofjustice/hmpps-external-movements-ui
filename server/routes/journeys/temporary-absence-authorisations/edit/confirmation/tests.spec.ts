@@ -9,6 +9,7 @@ import { stubGetTapAuthorisation } from '../../../../../../integration_tests/moc
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { EditTapAuthorisationConfirmationPage } from './test.page'
 import { injectJourneyData } from '../../../../../../integration_tests/steps/journey'
+import { JourneyData } from '../../../../../@types/journeys'
 
 test.describe('/temporary-absence-authorisations/edit/confirmation', () => {
   const prisonNumber = randomPrisonNumber()
@@ -68,9 +69,15 @@ test.describe('/temporary-absence-authorisations/edit/confirmation', () => {
     await signIn(page)
   })
 
-  const startJourney = async (page: Page, journeyId: string) => {
+  const startJourney = async (page: Page, journeyId: string, journeyData: Partial<JourneyData>) => {
     await page.goto(`/${journeyId}/temporary-absence-authorisations/start-edit/${authorisationId}/start-end-dates`)
-    await injectJourneyData(page, journeyId, {
+    await injectJourneyData(page, journeyId, journeyData)
+    await page.goto(`/${journeyId}/temporary-absence-authorisations/edit/confirmation`)
+  }
+
+  test('should show TAP authorisation date range changed confirmation', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId, {
       updateTapAuthorisation: {
         authorisation,
         result: {
@@ -85,24 +92,43 @@ test.describe('/temporary-absence-authorisations/edit/confirmation', () => {
         },
       },
     })
-    await page.goto(`/${journeyId}/temporary-absence-authorisations/edit/confirmation`)
-  }
-
-  test('should try all cases', async ({ page }) => {
-    const journeyId = uuidV4()
-    await startJourney(page, journeyId)
 
     // verify page content
     const testPage = await new EditTapAuthorisationConfirmationPage(page).verifyContent()
 
-    await expect(
-      page.getByText('Temporary absence start date updated for Prisoner-Name Prisoner-Surname'),
-    ).toBeVisible()
+    await expect(page.getByText('Absence date range changed')).toBeVisible()
 
     await testPage.verifyLink(
       'View this temporary absence',
       /temporary-absence-authorisations\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
     )
     await testPage.verifyLink('View all temporary absence in Leeds (HMP)', /temporary-absence-authorisations\?/)
+  })
+
+  test('should show TAP authorisation cancelled confirmation', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId, {
+      updateTapAuthorisation: {
+        authorisation,
+        result: {
+          content: [
+            {
+              user: { username: 'USERNAME', name: 'User Name' },
+              occurredAt: '2025-12-01T17:50:20.421301',
+              domainEvents: ['person.temporary-absence-authorisation.cancelled'],
+              changes: [{ propertyName: '', previous: '', change: '' }],
+            },
+          ],
+        },
+      },
+    })
+
+    // verify page content
+    const testPage = await new EditTapAuthorisationConfirmationPage(page).verifyContent()
+
+    await expect(page.getByText('Absence cancelled')).toBeVisible()
+
+    await testPage.verifyLink('View all temporary absence in Leeds (HMP)', /temporary-absence-authorisations\?/)
+    await testPage.verifyLink('Return to the DPS homepage', /localhost:3001$/)
   })
 })
