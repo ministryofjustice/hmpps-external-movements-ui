@@ -1,21 +1,16 @@
 import { NextFunction, Request, Response } from 'express'
 import { SchemaType } from './schema'
-import { formatInputDate } from '../../../../../utils/dateTimeUtils'
 import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
 import { getBackToTapAuthorisationDetails } from '../utils'
 
-export class EditStartEndDatesController {
+export class TapCancelController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
-    res.render('temporary-absence-authorisations/edit/start-end-dates/view', {
+    res.render('temporary-absence-authorisations/edit/cancel/view', {
       backUrl: getBackToTapAuthorisationDetails(req, res),
-      fromDate:
-        res.locals.formResponses?.['fromDate'] ??
-        formatInputDate(req.journeyData.updateTapAuthorisation!.authorisation.fromDate),
-      toDate:
-        res.locals.formResponses?.['toDate'] ??
-        formatInputDate(req.journeyData.updateTapAuthorisation!.authorisation.toDate),
+      reason: res.locals.formResponses?.['reason'],
+      authorisation: req.journeyData.updateTapAuthorisation!.authorisation,
     })
   }
 
@@ -23,9 +18,8 @@ export class EditStartEndDatesController {
     const journey = req.journeyData.updateTapAuthorisation!
     try {
       journey.result = await this.externalMovementsService.updateTapAuthorisation({ res }, journey.authorisation.id, {
-        type: 'ChangeAuthorisationDateRange',
-        from: req.body.fromDate,
-        to: req.body.toDate,
+        type: 'CancelAuthorisation',
+        reason: req.body.reason,
       })
       next()
     } catch (e) {

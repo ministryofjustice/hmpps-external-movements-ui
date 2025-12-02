@@ -6,6 +6,14 @@ import logger from '../../../logger'
 import { components } from '../../@types/externalMovements'
 import { parseQueryParams } from '../../utils/utils'
 
+export type UpdateTapAuthorisation =
+  | components['schemas']['AmendAuthorisationNotes']
+  | components['schemas']['ApproveAuthorisation']
+  | components['schemas']['CancelAuthorisation']
+  | components['schemas']['ChangeAuthorisationDateRange']
+  | components['schemas']['RecategoriseAuthorisation']
+  | components['schemas']['DenyAuthorisation']
+
 export default class ExternalMovementsService {
   private externalMovementsApiClient: CustomRestClient
 
@@ -89,6 +97,13 @@ export default class ExternalMovementsService {
     })
   }
 
+  async updateTapAuthorisation(context: ApiRequestContext, id: string, request: UpdateTapAuthorisation) {
+    return this.externalMovementsApiClient.withContext(context).put<components['schemas']['AuditHistory']>({
+      path: `/temporary-absence-authorisations/${id}`,
+      data: request,
+    })
+  }
+
   searchTapOccurrences(
     context: ApiRequestContext,
     fromDate: string | null | undefined,
@@ -117,25 +132,27 @@ export default class ExternalMovementsService {
 
   searchTapAuthorisations(
     context: ApiRequestContext,
-    fromDate: string,
-    toDate: string,
+    fromDate: string | null | undefined,
+    toDate: string | null | undefined,
     status: string[],
     query: string | null,
+    sort: string,
+    page: number,
+    pageSize: number,
   ) {
-    const searchParams: string[] = [
-      `prisonCode=${context.res.locals.user.getActiveCaseloadId()}`,
-      `fromDate=${fromDate}`,
-      `toDate=${toDate}`,
-      ...status.map(val => `status=${val}`),
-      'page=1',
-      'size=2147483647',
-    ]
-    if (query) searchParams.push(`query=${encodeURIComponent(query)}`)
-
     return this.externalMovementsApiClient
       .withContext(context)
       .get<components['schemas']['TapAuthorisationSearchResponse']>({
-        path: `/search/temporary-absence-authorisations?${searchParams.join('&')}`,
+        path: `/search/temporary-absence-authorisations${parseQueryParams({
+          prisonCode: context.res.locals.user.getActiveCaseloadId(),
+          fromDate,
+          toDate,
+          status,
+          sort,
+          page,
+          size: pageSize,
+          query,
+        })}`,
       })
   }
 }

@@ -19,11 +19,13 @@
         <span class="govuk-caption-l">Manage Temporary Absences</span>
         <h1 class="govuk-heading-l">Manage {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence</h1>
 
+        {% set baseEditUrl = "/temporary-absence-authorisations/start-edit/" + result.id %}
+
         <div class="govuk-button-group">
           {% if result.status.code === 'PENDING' %}
             {{ govukButton({
               text: "Review this absence",
-              href: "/temporary-absence-authorisations/" + result.id + "/approval",
+              href: baseEditUrl + "/review",
               preventDoubleClick: true
             }) }}
           {% endif %}
@@ -31,7 +33,7 @@
             {{ govukButton({
               classes: "govuk-button--warning",
               text: "Cancel this absence",
-              href: "/temporary-absence-authorisations/" + result.id + "/cancel",
+              href: baseEditUrl + "/cancel",
               preventDoubleClick: true
             }) }}
           {% endif %}
@@ -61,32 +63,32 @@
               {
                 key: { text: "Absence type" },
                 value: { text: result.absenceType.description },
-                actions: { items: [{ href: result.id + "/edit/absence-type", text: "Change", visuallyHiddenText: "absence type", classes: "govuk-link--no-visited-state" }] }
+                actions: { items: [{ href: baseEditUrl + "/absence-type", text: "Change", visuallyHiddenText: "absence type", classes: "govuk-link--no-visited-state" }] }
               },
               {
                 key: { text: "Absence sub-type" },
                 value: { text: result.absenceSubType.description },
-                actions: { items: [{ href: result.id + "/edit/absence-subtype", text: "Change", visuallyHiddenText: "absence sub-type", classes: "govuk-link--no-visited-state" }] }
+                actions: { items: [{ href: baseEditUrl + "/absence-subtype", text: "Change", visuallyHiddenText: "absence sub-type", classes: "govuk-link--no-visited-state" }] }
               } if result.absenceSubType,
               {
                 key: { text: "Absence reason" },
                 value: { text: result.absenceReasonCategory.description },
-                actions: { items: [{ href: result.id + "/edit/reason-category", text: "Change", visuallyHiddenText: "absence reason", classes: "govuk-link--no-visited-state" }] }
+                actions: { items: [{ href: baseEditUrl + "/reason-category", text: "Change", visuallyHiddenText: "absence reason", classes: "govuk-link--no-visited-state" }] }
               } if result.absenceReasonCategory,
               {
                 key: { text: "Work type" if result.absenceReasonCategory else "Absence reason" },
                 value: { text: result.absenceReason.description },
-                actions: { items: [{ href: result.id + "/edit/reason", text: "Change", visuallyHiddenText: "work type" if result.absenceReasonCategory else "absence reason", classes: "govuk-link--no-visited-state" }] }
+                actions: { items: [{ href: baseEditUrl + "/reason", text: "Change", visuallyHiddenText: "work type" if result.absenceReasonCategory else "absence reason", classes: "govuk-link--no-visited-state" }] }
               } if result.absenceReason,
               {
                 key: { text: "Start date" },
                 value: { text: result.fromDate | formatDate },
-                actions: { items: [{ href: result.id + "/edit/start-end-dates#fromDate", text: "Change", visuallyHiddenText: "start date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
+                actions: { items: [{ href: baseEditUrl + "/start-end-dates#fromDate", text: "Change", visuallyHiddenText: "start date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
               },
               {
                 key: { text: "End date" },
                 value: { text: result.toDate | formatDate },
-                actions: { items: [{ href: result.id + "/edit/start-end-dates#toDate", text: "Change", visuallyHiddenText: "end date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
+                actions: { items: [{ href: baseEditUrl + "/start-end-dates#toDate", text: "Change", visuallyHiddenText: "end date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
               },
               {
                 key: { text: "Single or repeating absence" },
@@ -95,27 +97,27 @@
               {
                 key: { text: "Comments" },
                 value: { text: result.notes or "Not provided" },
-                actions: { items: [{ href: result.id + "/edit/comments", text: "Change", visuallyHiddenText: "comments", classes: "govuk-link--no-visited-state" }] }
+                actions: { items: [{ href: baseEditUrl + "/comments", text: "Change", visuallyHiddenText: "comments", classes: "govuk-link--no-visited-state" }] }
               },
               {
                 key: { text: "Accompanied or unaccompanied" },
                 value: { text: result.accompaniedBy.description if result.accompaniedBy.code === 'U' else 'Accompanied' },
-                actions: { items: [{ href: result.id + "/edit/accompanied-or-unaccompanied", text: "Change", visuallyHiddenText: "if the prisoner will be accompanied or unaccompanied", classes: "govuk-link--no-visited-state" }] }
+                actions: { items: [{ href: baseEditUrl + "/accompanied-or-unaccompanied", text: "Change", visuallyHiddenText: "if the prisoner will be accompanied or unaccompanied", classes: "govuk-link--no-visited-state" }] }
               },
               {
                 key: { text: "Accompanied by" },
                 value: { text: result.accompaniedBy.description },
-                actions: { items: [{ href: result.id + "/edit/accompanied", text: "Change", visuallyHiddenText: "who will accompany the prisoner", classes: "govuk-link--no-visited-state" }] }
+                actions: { items: [{ href: baseEditUrl + "/accompanied", text: "Change", visuallyHiddenText: "who will accompany the prisoner", classes: "govuk-link--no-visited-state" }] }
               } if result.accompaniedBy.code !== 'U',
               {
                 key: { text: "Transport" },
                 value: { text: result.transport.description },
-                actions: { items: [{ href: result.id + "/edit/transport", text: "Change", visuallyHiddenText: "transport", classes: "govuk-link--no-visited-state" }] }
+                actions: { items: [{ href: baseEditUrl + "/transport", text: "Change", visuallyHiddenText: "transport", classes: "govuk-link--no-visited-state" }] }
               },
               {
                 key: { text: "Location" if result.locations.length === 1 else "Locations" },
                 value: locationValue,
-                actions: { items: [{ href: result.id + "/edit/location", text: "Change", visuallyHiddenText: "location", classes: "govuk-link--no-visited-state" }] } if not result.repeat else null
+                actions: { items: [{ href: baseEditUrl + "/location", text: "Change", visuallyHiddenText: "location", classes: "govuk-link--no-visited-state" }] } if not result.repeat else null
               }
             ] | removeNullish
           }) }}

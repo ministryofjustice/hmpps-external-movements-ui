@@ -22,9 +22,9 @@ const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: 
         const dateString = format(date, 'yyyy-MM-dd')
         return dateString >= fromDate && dateString <= toDate
       },
-      'Enter or select a release date',
-      'Enter or select a valid release date',
-      `Release date must be between ${formatInputDate(fromDate)} and ${formatInputDate(toDate)}`,
+      'Enter or select a start date',
+      'Enter or select a valid start date',
+      `Start date must be between ${formatInputDate(fromDate)} and ${formatInputDate(toDate)}`,
     ).safeParse(startDate)
 
     parsedStartDate.error?.issues?.forEach(issue =>
@@ -51,7 +51,7 @@ const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: 
     if (!startTimeHour?.length) {
       ctx.addIssue({
         code: 'custom',
-        message: 'Enter a release time',
+        message: 'Enter a start time',
         path: ['startTimeHour'],
       })
       if (!startTimeMinute?.length) {
@@ -61,7 +61,7 @@ const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: 
     } else if (!startTimeMinute?.length) {
       ctx.addIssue({
         code: 'custom',
-        message: 'Enter a release time',
+        message: 'Enter a start time',
         path: ['startTimeMinute'],
       })
     }
@@ -69,14 +69,14 @@ const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: 
     if (parsedStartHour?.error) {
       ctx.addIssue({
         code: 'custom',
-        message: 'Release time hour must be 00 to 23',
+        message: 'Start time hour must be 00 to 23',
         path: ['startTimeHour'],
       })
     }
     if (parsedStartMinute?.error) {
       ctx.addIssue({
         code: 'custom',
-        message: 'Release time minute must be 00 to 59',
+        message: 'Start time minute must be 00 to 59',
         path: ['startTimeMinute'],
       })
     }
@@ -121,7 +121,7 @@ const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: 
       if (parsedReturnDate.data < parsedStartDate.data) {
         ctx.addIssue({
           code: 'custom',
-          message: 'Return date must be equal to or later than release date',
+          message: 'Return date must be equal to or later than start date',
           path: ['returnDate'],
         })
         return z.NEVER
@@ -130,7 +130,7 @@ const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: 
       if (differenceInDays(parsedReturnDate.data, parsedStartDate.data) > 1) {
         ctx.addIssue({
           code: 'custom',
-          message: 'Return date must be the same day or one day after release date',
+          message: 'Return date must be the same day or one day after start date',
           path: ['returnDate'],
         })
         return z.NEVER
@@ -151,7 +151,7 @@ const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: 
       ) {
         ctx.addIssue({
           code: 'custom',
-          message: 'Release time must be in the future',
+          message: 'Start time must be in the future',
           path: ['startTimeHour'],
         })
         // empty error message to highlight both input fields with error
@@ -165,7 +165,7 @@ const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: 
       ) {
         ctx.addIssue({
           code: 'custom',
-          message: 'Return time must be later than release time',
+          message: 'Return time must be later than start time',
           path: ['returnTimeHour'],
         })
         // empty error message to highlight both input fields with error

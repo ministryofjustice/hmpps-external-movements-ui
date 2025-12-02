@@ -22,21 +22,23 @@ export class BrowseTapOccurrencesController {
       `status=${resQuery?.status ?? ''}`,
     ].join('&')
 
-    const hasValidationError = resQuery && !resQuery.validated
+    const hasValidationError =
+      Object.keys(resQuery).find(key => ['searchTerm', 'fromDate', 'toDate', 'status'].includes(key)) &&
+      !resQuery.validated
 
     let results: components['schemas']['TapOccurrenceResult'][] = []
     try {
       const searchResponse = !hasValidationError
         ? await this.externalMovementsService.searchTapOccurrences(
             { res },
-            resQuery?.validated?.fromDate ? format(resQuery.validated.fromDate, 'yyyy-MM-dd') : null,
-            resQuery?.validated?.toDate ? format(resQuery.validated.toDate, 'yyyy-MM-dd') : null,
-            resQuery?.validated?.status
+            resQuery.validated?.fromDate ? format(resQuery.validated.fromDate, 'yyyy-MM-dd') : null,
+            resQuery.validated?.toDate ? format(resQuery.validated.toDate, 'yyyy-MM-dd') : null,
+            resQuery.validated?.status
               ? [resQuery.validated.status]
               : ['SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'OVERDUE', 'EXPIRED', 'CANCELLED', 'DENIED'],
-            resQuery?.validated?.searchTerm?.trim() || null,
-            resQuery?.validated?.sort ?? 'releaseAt,asc',
-            resQuery?.validated?.page || 1,
+            resQuery.validated?.searchTerm?.trim() || null,
+            resQuery.validated?.sort ?? 'releaseAt,asc',
+            resQuery.validated?.page || 1,
             this.PAGE_SIZE,
           )
         : undefined

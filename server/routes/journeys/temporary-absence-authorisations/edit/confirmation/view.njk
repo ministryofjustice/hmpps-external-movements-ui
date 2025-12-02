@@ -1,0 +1,75 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% set pageTitle = 'Change temporary absence authorisation confirmation - Manage temporary absences' %}
+
+{% set EVENT_DESCRIPTION = {
+  'person.temporary-absence-authorisation.date-range-changed': 'Absence date range changed'
+} %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    {% switch domainEvent %}
+    {% case 'person.temporary-absence-authorisation.approved' %}
+      {{ govukPanel({
+        titleText: "Absence approved",
+        text: ""
+      }) }}
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ authorisation.id }}">View this temporary absence</a>
+      </p>
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?fromDate=&toDate=&status=PENDING">View all absences waiting for review</a>
+      </p>
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?fromDate=&toDate=&status=">View all temporary absence in {{ user.activeCaseLoad.description }}</a>
+      </p>
+    {% case 'person.temporary-absence-authorisation.denied' %}
+      {{ govukPanel({
+        titleText: "Absence denied",
+        text: ""
+      }) }}
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ authorisation.id }}">View this temporary absence</a>
+      </p>
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?fromDate=&toDate=&status=PENDING">View all absences waiting for review</a>
+      </p>
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?fromDate=&toDate=&status=">View all temporary absence in {{ user.activeCaseLoad.description }}</a>
+      </p>
+    {% case 'person.temporary-absence-authorisation.cancelled' %}
+      {{ govukPanel({
+        titleText: "Absence cancelled",
+        text: ""
+      }) }}
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?fromDate=&toDate=&status=">View all temporary absence in {{ user.activeCaseLoad.description }}</a>
+      </p>
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ digitalPrisonServicesUrl }}">Return to the DPS homepage</a>
+      </p>
+    {% default %}
+      {{ govukPanel({
+        titleText: EVENT_DESCRIPTION[domainEvent] or "Absence updated",
+        text: ""
+      }) }}
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ authorisation.id }}">View this temporary absence</a>
+      </p>
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?fromDate=&toDate=&status=">View all temporary absence in {{ user.activeCaseLoad.description }}</a>
+      </p>
+    {% endswitch %}
+  </div>
+{% endblock %}

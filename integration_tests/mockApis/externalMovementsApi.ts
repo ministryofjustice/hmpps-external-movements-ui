@@ -49,6 +49,13 @@ export const stubGetTapAuthorisation = (response: components['schemas']['TapAuth
     response,
   })
 
+export const stubPutTapAuthorisation = (authorisationId: string, response: components['schemas']['AuditHistory']) =>
+  successStub({
+    method: 'PUT',
+    urlPattern: `/external-movements-api/temporary-absence-authorisations/${authorisationId}`,
+    response,
+  })
+
 export const stubGetTapOccurrence = (response: components['schemas']['TapOccurrence']) =>
   successStub({
     method: 'GET',
@@ -63,6 +70,16 @@ export const stubSearchTapOccurrence = (
   successStub({
     method: 'GET',
     urlPattern: `/external-movements-api/search/temporary-absence-occurrences\\?${query}`,
+    response,
+  })
+
+export const stubSearchTapAuthorisation = (
+  query: string,
+  response: components['schemas']['TapAuthorisationSearchResponse'],
+) =>
+  successStub({
+    method: 'GET',
+    urlPattern: `/external-movements-api/search/temporary-absence-authorisations\\?${query}`,
     response,
   })
 

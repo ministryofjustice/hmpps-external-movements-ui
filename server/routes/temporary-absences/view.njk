@@ -119,36 +119,28 @@
       {% for occurrence in results %}
         {% set rows = (rows.push([
           {
-            html: '<a class="govuk-link--no-visited-state" href="' + prisonerProfileUrl + '/prisoner/' + occurrence.authorisation.person.personIdentifier + '">' + occurrence.authorisation.person | firstNameSpaceLastName + "</a><br/>" + occurrence.authorisation.person.personIdentifier,
-            attributes: { "data-sort-value": occurrence.authorisation.person | firstNameSpaceLastName }
+            html: '<a class="govuk-link--no-visited-state" href="' + prisonerProfileUrl + '/prisoner/' + occurrence.authorisation.person.personIdentifier + '">' + occurrence.authorisation.person | firstNameSpaceLastName + "</a><br/>" + occurrence.authorisation.person.personIdentifier
           },
           {
-            text: occurrence.releaseAt | formatDate("cccc, d MMMM yyyy 'at' HH:mm"),
-            attributes: { "data-sort-value": occurrence.releaseAt }
+            text: occurrence.releaseAt | formatDate("d MMMM yyyy 'at' HH:mm")
           },
           {
-            text: occurrence.returnBy | formatDate("cccc, d MMMM yyyy 'at' HH:mm"),
-            attributes: { "data-sort-value": occurrence.returnBy }
+            text: occurrence.returnBy | formatDate("d MMMM yyyy 'at' HH:mm")
           },
           {
-            text: occurrence.absenceType.description,
-            attributes: { "data-sort-value": occurrence.absenceType.description }
+            text: occurrence.absenceType.description
           },
           {
-            text: occurrence.location.description,
-            attributes: { "data-sort-value": occurrence.location.description }
+            text: occurrence.location.description
           },
           {
-            text: occurrence.accompaniedBy.description,
-            attributes: { "data-sort-value": occurrence.accompaniedBy.description }
+            text: occurrence.accompaniedBy.description
           },
           {
-            text: occurrence.transport.description,
-            attributes: { "data-sort-value": occurrence.transport.description }
+            text: occurrence.transport.description
           },
           {
-            html: absenceStatusTag(occurrence),
-            attributes: { "data-sort-value": (occurrence | occurrenceStatus).code | statusPriority }
+            html: absenceStatusTag(occurrence)
           },
           {
             classes: 'govuk-link govuk-link--no-visited-state',

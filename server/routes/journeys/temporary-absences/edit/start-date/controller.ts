@@ -58,7 +58,7 @@ export class EditStartDateController {
 
       req.flash(
         FLASH_KEY__SUCCESS_BANNER,
-        `You’ve updated the temporary absence release date and time for ${firstNameSpaceLastName(req.journeyData.prisonerDetails!)}.`,
+        `You’ve updated the temporary absence start date and time for ${firstNameSpaceLastName(req.journeyData.prisonerDetails!)}.`,
       )
       return res.redirect(
         `/temporary-absence-authorisations/${journey.authorisation.id}?date=${formatInputDate(journey.occurrence.releaseAt)}`,

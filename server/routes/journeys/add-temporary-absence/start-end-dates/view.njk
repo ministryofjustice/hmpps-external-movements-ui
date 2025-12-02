@@ -8,14 +8,14 @@
 {% block innerContent %}
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Create a Temporary Absence</span>
-    <h1 class="govuk-heading-l">Add absence period</h1>
+    <h1 class="govuk-heading-l">Enter the absence period start and end dates</h1>
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
       {{ mojDatePicker({
         id: "fromDate",
         name: "fromDate",
         label: {
-          text: 'What date will ' + prisonerDetails | firstNameSpaceLastName + ' be released for the first absence?',
+          text: 'What date will ' + prisonerDetails | firstNameSpaceLastName | possessiveComma + ' first absence start?',
           classes: "govuk-fieldset__legend--m"
         },
         hint: {
