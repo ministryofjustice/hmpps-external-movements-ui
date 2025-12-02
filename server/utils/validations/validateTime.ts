@@ -17,12 +17,12 @@ export const parseMinute = (value: string) => parseNumber(value, 0, 59, 2)
 
 export function addEmptyHHMMErrors(
   ctx: z.core.$RefinementCtx,
-  segment: 'release' | 'return' | 'overnight',
+  segment: 'release' | 'return',
   parsedHour: z.ZodSafeParseResult<string> | undefined,
   parsedMinute: z.ZodSafeParseResult<string> | undefined,
   path: (string | number)[] = [],
 ) {
-  const errorMessage = `Enter a${segment[0] === 'o' ? 'n' : ''} ${segment} time`
+  const errorMessage = `Enter a ${segment === 'release' ? 'start' : 'return'} time`
   if (!parsedHour && !parsedMinute) {
     ctx.addIssue({
       code: 'custom',
@@ -52,12 +52,12 @@ export function addEmptyHHMMErrors(
 
 export function addInvalidHHMMErrors(
   ctx: z.core.$RefinementCtx,
-  segment: 'release' | 'return' | 'overnight',
+  segment: 'release' | 'return',
   parsedHour: z.ZodSafeParseResult<string> | undefined,
   parsedMinute: z.ZodSafeParseResult<string> | undefined,
   path: (string | number)[] = [],
 ) {
-  const error = `Enter a valid ${segment.toLowerCase()} time`
+  const error = `Enter a valid ${segment === 'release' ? 'start' : 'return'} time`
   if (parsedHour?.error && parsedMinute?.error) {
     ctx.addIssue({
       code: 'custom',
@@ -91,7 +91,7 @@ export function addBeforeErrors(
   parsedEndHour: z.ZodSafeParseResult<string>,
   parsedEndMinute: z.ZodSafeParseResult<string>,
   path: (string | number)[] = [],
-  errorMessage: string = 'The return time must come after the release date and time',
+  errorMessage: string = 'The return time must come after the start date and time',
 ) {
   const startTime = Number(parsedStartHour!.data) * 60 + Number(parsedStartMinute!.data)
   const endTime = Number(parsedEndHour!.data) * 60 + Number(parsedEndMinute!.data)

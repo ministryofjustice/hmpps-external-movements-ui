@@ -57,7 +57,7 @@ test.describe('/add-temporary-absence/start-end-dates', () => {
 
     // verify validation error
     await testPage.clickContinue()
-    await testPage.link('Enter or select a release date').click()
+    await testPage.link('Enter or select a start date').click()
     await expect(testPage.fromDateField()).toBeFocused()
     await testPage.link('Enter or select a return date').click()
     await expect(testPage.toDateField()).toBeFocused()
@@ -66,7 +66,7 @@ test.describe('/add-temporary-absence/start-end-dates', () => {
     await testPage.toDateField().fill('x')
     await testPage.clickContinue()
 
-    await testPage.link('Release date must be today or in the future').click()
+    await testPage.link('Start date must be today or in the future').click()
     await expect(testPage.fromDateField()).toBeFocused()
     await testPage.link('Enter or select a valid return date').click()
     await expect(testPage.toDateField()).toBeFocused()
@@ -77,7 +77,7 @@ test.describe('/add-temporary-absence/start-end-dates', () => {
     await testPage.toDateField().fill(`3/3/${nextYear}`)
     await testPage.clickContinue()
 
-    await testPage.link('Last return date must be later than first release date').click()
+    await testPage.link('Last return date must be later than first start date').click()
     await expect(testPage.toDateField()).toBeFocused()
 
     await testPage.fromDateField().fill(`1/1/${nextYear}`)

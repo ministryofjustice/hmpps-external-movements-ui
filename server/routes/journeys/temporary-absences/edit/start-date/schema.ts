@@ -11,8 +11,8 @@ export const schema = createSchema({
 }).transform(({ startDate, startTimeHour, startTimeMinute }, ctx) => {
   const parsedStartDate = validateTransformDate(
     () => true,
-    'Enter or select a release date',
-    'Enter or select a valid release date',
+    'Enter or select a start date',
+    'Enter or select a valid start date',
     '',
   ).safeParse(startDate)
 
@@ -26,7 +26,7 @@ export const schema = createSchema({
   if (!startTimeHour?.length) {
     ctx.addIssue({
       code: 'custom',
-      message: 'Enter a release time',
+      message: 'Enter a start time',
       path: ['startTimeHour'],
     })
     if (!startTimeMinute?.length) {
@@ -36,7 +36,7 @@ export const schema = createSchema({
   } else if (!startTimeMinute?.length) {
     ctx.addIssue({
       code: 'custom',
-      message: 'Enter a release time',
+      message: 'Enter a start time',
       path: ['startTimeMinute'],
     })
   }
@@ -44,14 +44,14 @@ export const schema = createSchema({
   if (parsedHour?.error) {
     ctx.addIssue({
       code: 'custom',
-      message: 'Release time hour must be 00 to 23',
+      message: 'Start time hour must be 00 to 23',
       path: ['startTimeHour'],
     })
   }
   if (parsedMinute?.error) {
     ctx.addIssue({
       code: 'custom',
-      message: 'Release time minute must be 00 to 59',
+      message: 'Start time minute must be 00 to 59',
       path: ['startTimeMinute'],
     })
   }

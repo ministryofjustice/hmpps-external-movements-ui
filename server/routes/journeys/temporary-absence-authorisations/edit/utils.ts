@@ -1,5 +1,13 @@
 import { Request, Response } from 'express'
 import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
+import { createBackUrlFor } from '../../../../middleware/history/historyMiddleware'
+
+export const getBackToTapAuthorisationDetails = (req: Request, res: Response) =>
+  createBackUrlFor(
+    res,
+    /temporary-absence-authorisations\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    `/temporary-absence-authorisations/${req.journeyData.updateTapAuthorisation!.authorisation.id}`,
+  )
 
 export const getUpdateAbsenceCategorisationsForDomain = async (
   externalMovementsService: ExternalMovementsService,

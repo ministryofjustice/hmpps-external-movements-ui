@@ -6,13 +6,13 @@ export class StartEndDatesPage extends BaseTestPage {
       pageUrl: /\/add-temporary-absence\/start-end-dates/,
       title: 'Enter absence start and end dates - Add a temporary absence - DPS',
       caption: 'Create a Temporary Absence',
-      heading: 'Add absence period',
+      heading: 'Enter the absence period start and end dates',
       backUrl: /single-or-repeating/,
     })
   }
 
   fromDateField() {
-    return this.textbox(/What date will (.+?) be released for the first absence\?/)
+    return this.textbox(/What date will (.+?)’s first absence start\?/)
   }
 
   toDateField() {

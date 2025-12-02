@@ -38,12 +38,12 @@
         {{ govukSummaryList({
           rows: [
             {
-              key: { text: "Release date and time" },
+              key: { text: "Start date and time" },
               value: { text: result.releaseAt | formatDate("cccc, d MMMM yyyy 'at' HH:mm") },
               actions: { items: [{
               href: "edit/start-date",
               text: "Change",
-              visuallyHiddenText: "release time"
+              visuallyHiddenText: "start time"
             }] }
             },
             {

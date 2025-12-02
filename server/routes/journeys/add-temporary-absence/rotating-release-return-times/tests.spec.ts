@@ -59,7 +59,7 @@ test.describe('/add-temporary-absence/rotating-release-return-times', () => {
       await expect(testPage.timeEntry(i, 'return', 'Minute')).toBeVisible()
     }
 
-    expect(await testPage.page.getByText('Release time').count()).toBe(6)
+    expect(await testPage.page.getByText('Start time').count()).toBe(6)
 
     // Check order of Working X headings
     await expect(testPage.page.getByRole('heading').nth(1)).toContainText('Working day 1')
@@ -192,7 +192,7 @@ test.describe('/add-temporary-absence/rotating-release-return-times', () => {
       await expect(testPage.timeEntry(i, 'return', 'Minute')).toBeVisible()
     }
 
-    expect(await testPage.page.getByText('Release time').count()).toBe(2)
+    expect(await testPage.page.getByText('Start time').count()).toBe(2)
 
     // Check order of Working X headings
     await expect(testPage.page.getByRole('heading').nth(1)).toContainText('Working days')

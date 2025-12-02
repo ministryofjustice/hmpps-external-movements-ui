@@ -70,7 +70,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
 
     // verify mandatory input
     await testPage.clickContinue()
-    await testPage.link('Enter or select a release date').click()
+    await testPage.link('Enter or select a start date').click()
     await expect(testPage.releaseDateField(0)).toBeFocused()
 
     // verify minimal input
@@ -157,21 +157,21 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
 
     await testPage.clickContinue()
 
-    await testPage.link('Release date must be between 1/1/2001 and 7/1/2001').click()
+    await testPage.link('Start date must be between 1/1/2001 and 7/1/2001').click()
     await expect(testPage.releaseDateField(0)).toBeFocused()
     await testPage.link('Return date must be between 1/1/2001 and 8/1/2001').click()
     await expect(testPage.returnDateField(0)).toBeFocused()
-    await testPage.link('Release time hour must be 00 to 23').click()
+    await testPage.link('Start time hour must be 00 to 23').click()
     await expect(testPage.releaseHourField(0)).toBeFocused()
     await testPage.link('Enter a return time').click()
     await expect(testPage.returnMinuteField(0)).toBeFocused()
-    await testPage.link('Return time must be later than release time').click()
+    await testPage.link('Return time must be later than start time').click()
     await expect(testPage.returnHourField(1)).toBeFocused()
-    await testPage.link('Return date must be equal to or later than release date').click()
+    await testPage.link('Return date must be equal to or later than start date').click()
     await expect(testPage.returnDateField(2)).toBeFocused()
-    await testPage.link('Return date must be the same day or one day after release date').click()
+    await testPage.link('Return date must be the same day or one day after start date').click()
     await expect(testPage.returnDateField(3)).toBeFocused()
-    await testPage.link('Enter or select a release date').click()
+    await testPage.link('Enter or select a start date').click()
     await expect(testPage.releaseDateField(5)).toBeFocused()
     await testPage.link('Enter or select a return date').click()
     await expect(testPage.returnDateField(5)).toBeFocused()
@@ -215,7 +215,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
 
     // verify mandatory input
     await testPage.clickContinue()
-    await testPage.link('Enter or select a release date').click()
+    await testPage.link('Enter or select a start date').click()
     await expect(testPage.releaseDateField(0)).toBeFocused()
 
     // verify minimal input
@@ -283,7 +283,7 @@ test.describe('/add-temporary-absence/select-days-and-time edge case', () => {
     // verify mandatory input
     testPage = await new FreeformSelectDaysPage(page).verifyContent('8 January to 8 January', /1/)
     await testPage.clickContinue()
-    await testPage.link('Enter or select a release date').click()
+    await testPage.link('Enter or select a start date').click()
     await expect(testPage.releaseDateField(0)).toBeFocused()
   })
 

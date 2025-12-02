@@ -3,19 +3,19 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
 
-{% set pageTitle = 'Enter absence start and end dates - Manage Temporary Absences' %}
+{% set pageTitle = 'Change absence dates - Manage temporary absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Manage Temporary Absences</span>
-    <h1 class="govuk-heading-l">Edit absence period</h1>
+    <h1 class="govuk-heading-l">What dates will this absence start and end?</h1>
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
       {{ mojDatePicker({
         id: "fromDate",
         name: "fromDate",
         label: {
-          text: 'What date will ' + prisonerDetails | firstNameSpaceLastName + ' be released for the first absence?',
+          text: 'What date will the first absence start?',
           classes: "govuk-fieldset__legend--m"
         },
         hint: {
@@ -30,7 +30,7 @@
         id: "toDate",
         name: "toDate",
         label: {
-          text: 'What date will ' + prisonerDetails | firstNameSpaceLastName + ' return from the last absence?',
+          text: 'What date will the last absence end?',
           classes: "govuk-fieldset__legend--m"
         },
         hint: {

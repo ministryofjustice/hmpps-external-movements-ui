@@ -16,11 +16,11 @@ export class RotatingReleaseReturnTimesPage extends BaseTestPage {
   }
 
   errorReturnBeforeRelease() {
-    return this.page.getByRole('link', { name: 'The return time must come after the release time' })
+    return this.page.getByRole('link', { name: 'The return time must come after the start time' })
   }
 
   errorEmptyReleaseTime() {
-    return this.page.getByRole('link', { name: 'Enter a release time' })
+    return this.page.getByRole('link', { name: 'Enter a start time' })
   }
 
   errorEmptyReturnTime() {
@@ -28,7 +28,7 @@ export class RotatingReleaseReturnTimesPage extends BaseTestPage {
   }
 
   errorInvalidReleaseTime() {
-    return this.page.getByRole('link', { name: 'Enter a valid release time' })
+    return this.page.getByRole('link', { name: 'Enter a valid start time' })
   }
 
   errorInvalidReturnTime() {
