@@ -70,14 +70,14 @@ export const schema = createSchema({
         if (parsedStartHour?.error) {
           ctx.addIssue({
             code: 'custom',
-            message: 'Release time hour must be 00 to 23',
+            message: 'Start time hour must be 00 to 23',
             path: ['startTimeHour'],
           })
         }
         if (parsedStartMinute?.error) {
           ctx.addIssue({
             code: 'custom',
-            message: 'Release time minute must be 00 to 59',
+            message: 'Start time minute must be 00 to 59',
             path: ['startTimeMinute'],
           })
         }
@@ -130,7 +130,7 @@ export const schema = createSchema({
           ) {
             ctx.addIssue({
               code: 'custom',
-              message: 'Return time must be later than release time for scheduled days',
+              message: 'Return time must be later than start time for scheduled days',
               path: ['returnTimeHour'],
             })
             // empty error message to highlight both input fields with error

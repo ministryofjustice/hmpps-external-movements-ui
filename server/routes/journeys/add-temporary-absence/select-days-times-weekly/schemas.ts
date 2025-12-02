@@ -63,7 +63,7 @@ export const schema = createSchema({
           if (previousDayReleaseTime > dayReleaseTime) {
             ctx.addIssue({
               code: 'custom',
-              message: 'The release time must be later than the overnight return time',
+              message: 'The start time must be later than the overnight return time',
               path: ['days', i, 'releaseHour'],
             })
             ctx.addIssue({

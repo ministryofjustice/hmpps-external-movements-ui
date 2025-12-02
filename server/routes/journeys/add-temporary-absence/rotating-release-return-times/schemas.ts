@@ -8,7 +8,7 @@ import {
   parseMinute,
 } from '../../../../utils/validations/validateTime'
 
-const ERROR_BEFORE_RELEASE = 'The return time must come after the release time'
+const ERROR_BEFORE_RELEASE = 'The return time must come after the start time'
 
 export const schema = createSchema({
   times: z.array(

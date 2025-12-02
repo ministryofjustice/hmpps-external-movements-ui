@@ -12,9 +12,9 @@ export const schema = createSchema({
 }).transform(({ startDate, startTimeHour, startTimeMinute }, ctx) => {
   const parsedStartDate = validateTransformDate(
     checkTodayOrFuture,
-    'Enter or select a release date',
-    'Enter or select a valid release date',
-    'Release date must be today or in the future',
+    'Enter or select a start date',
+    'Enter or select a valid start date',
+    'Start date must be today or in the future',
   ).safeParse(startDate)
 
   parsedStartDate.error?.issues?.forEach(issue =>
@@ -27,7 +27,7 @@ export const schema = createSchema({
   if (!startTimeHour?.length) {
     ctx.addIssue({
       code: 'custom',
-      message: 'Enter a release time',
+      message: 'Enter a start time',
       path: ['startTimeHour'],
     })
     if (!startTimeMinute?.length) {
@@ -37,7 +37,7 @@ export const schema = createSchema({
   } else if (!startTimeMinute?.length) {
     ctx.addIssue({
       code: 'custom',
-      message: 'Enter a release time',
+      message: 'Enter a start time',
       path: ['startTimeMinute'],
     })
   }
@@ -45,14 +45,14 @@ export const schema = createSchema({
   if (parsedHour?.error) {
     ctx.addIssue({
       code: 'custom',
-      message: 'Release time hour must be 00 to 23',
+      message: 'Start time hour must be 00 to 23',
       path: ['startTimeHour'],
     })
   }
   if (parsedMinute?.error) {
     ctx.addIssue({
       code: 'custom',
-      message: 'Release time minute must be 00 to 59',
+      message: 'Start time minute must be 00 to 59',
       path: ['startTimeMinute'],
     })
   }
@@ -64,7 +64,7 @@ export const schema = createSchema({
     ) {
       ctx.addIssue({
         code: 'custom',
-        message: 'Release time must be in the future',
+        message: 'Start time must be in the future',
         path: ['startTimeHour'],
       })
       // empty error message to highlight both input fields with error

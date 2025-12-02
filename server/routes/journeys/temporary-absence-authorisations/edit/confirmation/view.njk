@@ -1,0 +1,21 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% set pageTitle = 'Change temporary absence authorisation confirmation - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    {{ govukPanel({
+      titleText: "Temporary absence " + updatedProps + " updated for " + prisonerDetails | firstNameSpaceLastName,
+      text: ""
+    }) }}
+
+    <p class="govuk-body">
+      <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ authorisation.id }}">View this temporary absence</a>
+    </p>
+
+    <p class="govuk-body">
+      <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?fromDate={{ inputDate() }}&toDate=&status=">View all temporary absence in {{ user.activeCaseLoad.description }}</a>
+    </p>
+  </div>
+{% endblock %}

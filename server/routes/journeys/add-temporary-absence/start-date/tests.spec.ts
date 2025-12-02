@@ -60,9 +60,9 @@ test.describe('/add-temporary-absence/start-date', () => {
 
     // verify validation error
     await testPage.clickContinue()
-    await testPage.link('Enter or select a release date').click()
+    await testPage.link('Enter or select a start date').click()
     await expect(testPage.dateField()).toBeFocused()
-    await testPage.link('Enter a release time').click()
+    await testPage.link('Enter a start time').click()
     await expect(testPage.hourField()).toBeFocused()
 
     await testPage.dateField().fill('1/1/1999')
@@ -70,11 +70,11 @@ test.describe('/add-temporary-absence/start-date', () => {
     await testPage.minuteField().fill('1.2')
     await testPage.clickContinue()
 
-    await testPage.link('Release date must be today or in the future').click()
+    await testPage.link('Start date must be today or in the future').click()
     await expect(testPage.dateField()).toBeFocused()
-    await testPage.link('Release time hour must be 00 to 23').click()
+    await testPage.link('Start time hour must be 00 to 23').click()
     await expect(testPage.hourField()).toBeFocused()
-    await testPage.link('Release time minute must be 00 to 59').click()
+    await testPage.link('Start time minute must be 00 to 59').click()
     await expect(testPage.minuteField()).toBeFocused()
 
     const today = formatInputDate(new Date().toISOString())!
@@ -83,7 +83,7 @@ test.describe('/add-temporary-absence/start-date', () => {
     await testPage.minuteField().fill('00')
     await testPage.clickContinue()
 
-    await testPage.link('Release time must be in the future').click()
+    await testPage.link('Start time must be in the future').click()
     await expect(testPage.hourField()).toBeFocused()
 
     // verify next page routing

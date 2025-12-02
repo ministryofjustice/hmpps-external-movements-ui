@@ -10,9 +10,9 @@ export const schema = createSchema({
 }).transform(({ fromDate, toDate }, ctx) => {
   const parsedFromDate = validateTransformDate(
     checkTodayOrFuture,
-    'Enter or select a release date',
-    'Enter or select a valid release date',
-    'Release date must be today or in the future',
+    'Enter or select a start date',
+    'Enter or select a valid start date',
+    'Start date must be today or in the future',
   ).safeParse(fromDate)
 
   parsedFromDate.error?.issues?.forEach(issue => ctx.addIssue({ ...issue, path: ['fromDate'] } as $ZodSuperRefineIssue))
@@ -30,7 +30,7 @@ export const schema = createSchema({
     if (parsedToDate.data <= parsedFromDate.data) {
       ctx.addIssue({
         code: 'custom',
-        message: 'Last return date must be later than first release date',
+        message: 'Last return date must be later than first start date',
         path: ['toDate'],
       })
       return z.NEVER

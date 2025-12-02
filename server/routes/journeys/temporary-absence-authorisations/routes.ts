@@ -8,26 +8,29 @@ import { EditTapAuthorisationRoutes } from './edit/routes'
 export const ManageTapAuthorisationRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
 
-  get('/start-edit/:authorisationId', async (req: Request<{ authorisationId: string }>, res) => {
-    try {
-      const authorisation = await services.externalMovementsService.getTapAuthorisation(
-        { res },
-        req.params.authorisationId,
-      )
-      req.journeyData.updateTapAuthorisation = { authorisation }
-      req.journeyData.prisonerDetails = {
-        prisonerNumber: authorisation.person.personIdentifier,
-        lastName: authorisation.person.lastName,
-        firstName: authorisation.person.firstName,
-        dateOfBirth: authorisation.person.dateOfBirth,
-        prisonName: res.locals.user.activeCaseLoad?.description,
-        cellLocation: authorisation.person.cellLocation,
+  get(
+    '/start-edit/:authorisationId/:property',
+    async (req: Request<{ authorisationId: string; property: string }>, res) => {
+      try {
+        const authorisation = await services.externalMovementsService.getTapAuthorisation(
+          { res },
+          req.params.authorisationId,
+        )
+        req.journeyData.updateTapAuthorisation = { authorisation }
+        req.journeyData.prisonerDetails = {
+          prisonerNumber: authorisation.person.personIdentifier,
+          lastName: authorisation.person.lastName,
+          firstName: authorisation.person.firstName,
+          dateOfBirth: authorisation.person.dateOfBirth,
+          prisonName: res.locals.user.activeCaseLoad?.description,
+          cellLocation: authorisation.person.cellLocation,
+        }
+        res.redirect(`../../edit/${req.params.property}`)
+      } catch {
+        res.notFound()
       }
-      res.redirect('../edit')
-    } catch {
-      res.notFound()
-    }
-  })
+    },
+  )
 
   get(
     '*any',

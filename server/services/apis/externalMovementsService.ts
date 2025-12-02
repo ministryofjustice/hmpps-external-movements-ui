@@ -6,6 +6,14 @@ import logger from '../../../logger'
 import { components } from '../../@types/externalMovements'
 import { parseQueryParams } from '../../utils/utils'
 
+export type UpdateTapAuthorisation =
+  | components['schemas']['AmendAuthorisationNotes']
+  | components['schemas']['ApproveAuthorisation']
+  | components['schemas']['CancelAuthorisation']
+  | components['schemas']['ChangeAuthorisationDateRange']
+  | components['schemas']['RecategoriseAuthorisation']
+  | components['schemas']['DenyAuthorisation']
+
 export default class ExternalMovementsService {
   private externalMovementsApiClient: CustomRestClient
 
@@ -86,6 +94,13 @@ export default class ExternalMovementsService {
   async getTapAuthorisation(context: ApiRequestContext, id: string, fromDate?: string | null, toDate?: string | null) {
     return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapAuthorisation']>({
       path: `/temporary-absence-authorisations/${id}${parseQueryParams({ fromDate, toDate })}`,
+    })
+  }
+
+  async updateTapAuthorisation(context: ApiRequestContext, id: string, request: UpdateTapAuthorisation) {
+    return this.externalMovementsApiClient.withContext(context).put<components['schemas']['AuditHistory']>({
+      path: `/temporary-absence-authorisations/${id}`,
+      data: request,
     })
   }
 

@@ -89,7 +89,7 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
     await testPage.checkbox('Monday').check()
     await testPage.clickContinue()
 
-    await testPage.link('Enter a release time').click()
+    await testPage.link('Enter a start time').click()
     await expect(testPage.timeEntry('monday', 'release', 'Hour')).toBeFocused()
 
     await testPage.link('Enter a return time').click()
@@ -103,7 +103,7 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
     await testPage.timeEntry('monday', 'return', 'Minute').fill('60')
     await testPage.clickContinue()
 
-    await expect(testPage.link('Enter a valid release time')).toBeVisible()
+    await expect(testPage.link('Enter a valid start time')).toBeVisible()
     await expect(testPage.link('Enter a valid return time')).toBeVisible()
   }
 
@@ -114,7 +114,7 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
     await testPage.timeEntry('monday', 'return', 'Hour').fill('09')
     await testPage.timeEntry('monday', 'return', 'Minute').fill('30')
     await testPage.clickContinue()
-    await expect(testPage.link('The return time must come after the release date and time')).toBeVisible()
+    await expect(testPage.link('The return time must come after the start date and time')).toBeVisible()
   }
 
   const validateOvernightTimeAfterReleaseTimeErrorMessage = async (testPage: SelectDaysTimesWeeklyPage) => {
@@ -130,6 +130,6 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
     await testPage.timeEntry('tuesday', 'release', 'Minute').fill('30')
     await testPage.clickContinue()
 
-    await expect(testPage.link('The release time must be later than the overnight return time')).toBeVisible()
+    await expect(testPage.link('The start time must be later than the overnight return time')).toBeVisible()
   }
 })
