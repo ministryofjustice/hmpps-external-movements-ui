@@ -26,7 +26,7 @@
     "precommit:lint": "node_modules/.bin/lint-staged",
     "precommit:verify": "npm run typecheck && npm test",
     "swagger": "npx openapi-typescript https://external-movements-api-dev.hmpps.service.justice.gov.uk/v3/api-docs > ./server/@types/externalMovements/index.d.ts && eslint --fix \"./server/@types/externalMovements/index.d.ts\"",
-    "download-address-data": "npm run build && node --env-file=.env dist/server/scripts/getAddressNamesForAutocomplete.js && eslint --fix \"./server/data/address/*\""
+    "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
   "engines": {
     "node": "^24",
@@ -87,9 +87,9 @@
     "@ministryofjustice/hmpps-monitoring": "^1.0.0",
     "@ministryofjustice/hmpps-prison-permissions-lib": "^0.5.0",
     "@ministryofjustice/hmpps-rest-client": "^1.0.0",
-    "@sentry/node": "^10.25.0",
+    "@sentry/node": "^10.27.0",
     "applicationinsights": "^2.9.7",
-    "body-parser": "^2.2.0",
+    "body-parser": "^2.2.1",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
     "compression": "^1.8.1",
@@ -115,6 +115,7 @@
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.4",
     "@ministryofjustice/eslint-config-hmpps": "^1.0.1",
+    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "@ministryofjustice/hmpps-precommit-hooks": "^1.0.2",
     "@playwright/test": "^1.56.1",
     "@testing-library/jest-dom": "^6.9.1",

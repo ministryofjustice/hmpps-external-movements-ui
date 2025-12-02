@@ -8,7 +8,11 @@ import {
 } from 'applicationinsights'
 import { Request, RequestHandler } from 'express'
 import { EnvelopeTelemetry } from 'applicationinsights/out/Declarations/Contracts'
+import { CorrelationContext } from 'applicationinsights/out/AutoCollection/CorrelationContextManager'
 import type { ApplicationInfo } from '../applicationInfo'
+
+const requestPrefixesToIgnore = ['GET /assets/', 'GET /health', 'GET /ping', 'GET /info', 'GET /metrics']
+const dependencyPrefixesToIgnore = ['sqs']
 
 export function initialiseAppInsights(): void {
   if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
@@ -22,7 +26,7 @@ export function initialiseAppInsights(): void {
 const addUserDataToRequests = (envelope: EnvelopeTelemetry, contextObjects: Record<string, unknown> | undefined) => {
   const isRequest = envelope.data.baseType === Contracts.TelemetryTypeString['Request']
   if (isRequest) {
-    const { username, activeCaseLoad } =
+    const { username, activeCaseLoad, authSource } =
       (contextObjects?.['http.ServerRequest'] as Request | undefined)?.res?.locals?.user || {}
     if (username) {
       const properties = envelope.data.baseData?.['properties']
@@ -31,6 +35,7 @@ const addUserDataToRequests = (envelope: EnvelopeTelemetry, contextObjects: Reco
       // eslint-disable-next-line no-param-reassign
       envelope.data.baseData['properties'] = {
         username,
+        authSource,
         activeCaseLoadId: activeCaseLoad?.caseLoadId,
         ...properties,
       }
@@ -39,9 +44,39 @@ const addUserDataToRequests = (envelope: EnvelopeTelemetry, contextObjects: Reco
   return true
 }
 
-const skipAdministrativeEndpoints = ({ data }: EnvelopeTelemetry) => {
-  const { url } = data.baseData!
-  return !url?.endsWith('/health') && !url?.endsWith('/ping') && !url?.endsWith('/metrics')
+export function ignoredRequestsProcessor(envelope: EnvelopeTelemetry) {
+  if (envelope.data.baseType === Contracts.TelemetryTypeString['Request']) {
+    const requestData = envelope.data.baseData
+    if (requestData instanceof Contracts.RequestData && requestData.success) {
+      const { name } = requestData
+      return requestPrefixesToIgnore.every(prefix => !name.startsWith(prefix))
+    }
+  }
+  return true
+}
+
+export function ignoredDependenciesProcessor(envelope: EnvelopeTelemetry) {
+  if (envelope.data.baseType === Contracts.TelemetryTypeString['Dependency']) {
+    const dependencyData = envelope.data.baseData
+    if (dependencyData instanceof Contracts.RemoteDependencyData && dependencyData.success) {
+      const { target } = dependencyData
+      return dependencyPrefixesToIgnore.every(prefix => !target.startsWith(prefix))
+    }
+  }
+  return true
+}
+
+function parameterisePaths(envelope: EnvelopeTelemetry, contextObjects: Record<string, unknown> | undefined) {
+  const operationNameOverride = (
+    contextObjects?.['correlationContext'] as CorrelationContext
+  )?.customProperties?.getProperty('operationName')
+  if (operationNameOverride) {
+    /*  eslint-disable no-param-reassign */
+    envelope.tags['ai.operation.name'] = operationNameOverride
+    if (envelope.data.baseData) envelope.data.baseData['name'] = operationNameOverride
+    /*  eslint-enable no-param-reassign */
+  }
+  return true
 }
 
 export function buildAppInsightsClient(
@@ -52,21 +87,10 @@ export function buildAppInsightsClient(
     defaultClient.context.tags['ai.cloud.role'] = overrideName || applicationName
     defaultClient.context.tags['ai.application.ver'] = buildNumber
 
-    defaultClient.addTelemetryProcessor(skipAdministrativeEndpoints)
+    defaultClient.addTelemetryProcessor(ignoredRequestsProcessor)
+    defaultClient.addTelemetryProcessor(ignoredDependenciesProcessor)
     defaultClient.addTelemetryProcessor(addUserDataToRequests)
-
-    defaultClient.addTelemetryProcessor(({ tags, data }, contextObjects) => {
-      const operationNameOverride =
-        contextObjects?.['correlationContext']?.customProperties?.getProperty('operationName')
-      if (operationNameOverride) {
-        /*  eslint-disable no-param-reassign */
-        tags['ai.operation.name'] = operationNameOverride
-        if (data?.baseData) {
-          data.baseData['name'] = operationNameOverride
-        }
-      }
-      return true
-    })
+    defaultClient.addTelemetryProcessor(parameterisePaths)
 
     return defaultClient
   }
