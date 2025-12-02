@@ -96,7 +96,7 @@ test.describe('/temporary-absence-authorisations/edit/confirmation', () => {
     // verify page content
     const testPage = await new EditTapAuthorisationConfirmationPage(page).verifyContent()
 
-    await expect(page.getByText('Absence rescheduled')).toBeVisible()
+    await expect(page.getByText('Absence date range changed')).toBeVisible()
 
     await testPage.verifyLink(
       'View this temporary absence',
