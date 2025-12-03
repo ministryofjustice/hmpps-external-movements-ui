@@ -1,0 +1,45 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+
+{% set pageTitle = 'Cancel occurrence reason - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <h1 class="govuk-heading-l">Are you sure you want to cancel this occurrence?</h1>
+    {{ govukWarningText({
+      text: "This action cannot be reversed.",
+      iconFallbackText: "Warning"
+    }) }}
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukTextarea({
+        id: "reason",
+        name: "reason",
+        errorMessage: validationErrors | findError('reason'),
+        label: {
+          text: "Enter a reason for cancelling this absence"
+        },
+        value: approveReason
+      }) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          classes: "govuk-button--warning",
+          text: "Cancel this absence",
+          preventDoubleClick: true
+        }) }}
+
+        {{ govukButton({
+          classes: "govuk-button--secondary",
+          text: "Do not cancel this absence",
+          href: '/temporary-absences/' + occurrence.id,
+          preventDoubleClick: true
+        }) }}
+      </div>
+    </form>
+  </div>
+{% endblock %}
