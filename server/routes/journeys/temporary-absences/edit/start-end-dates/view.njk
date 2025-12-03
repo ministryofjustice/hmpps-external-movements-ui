@@ -1,0 +1,97 @@
+{% extends "partials/layout.njk" %}
+{% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% set pageTitle = 'Change occurrence start and end date and time - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <h1 class="govuk-heading-l">What dates and times will this absence occurrence start and end?</h1>
+
+    {% if repeat %}
+      {{ govukInsetText({
+        text: "You can add new occurrences between the absence start and end dates of " + fromDate | formatDate("d MMMM yyyy") + " to " + toDate | formatDate("d MMMM yyyy") + ". To add an occurrence outside these dates, you should change the absence start and end times first."
+      }) }}
+    {% endif %}
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ mojDatePicker({
+        id: "startDate",
+        name: "startDate",
+        label: {
+          text: 'What date will this absence occurrence start?',
+          classes: "govuk-fieldset__legend--m"
+        },
+        hint: {
+          text: 'For example, 17/5/2024.'
+        },
+        value: startDate,
+        errorMessage: validationErrors | findError('startDate'),
+        classes: 'hmpps-datepicker--fixed-width govuk-body',
+        minDate: (fromDate | formatInputDate) if repeat else inputDate(),
+        maxDate: (toDate | formatInputDate) if repeat else null
+      }) }}
+
+      {{ validatedTimeInput({
+        id: "startTime",
+        name: "startTime",
+        classes: 'govuk-!-static-margin-bottom-6',
+        fieldset: {
+          legend: {
+            text: 'What time will this absence occurrence start?',
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        hint: {
+          text: 'Use the 24-hour clock. For example, 09 08 or 17 32.'
+        },
+        validationErrors: validationErrors,
+        hour: startTimeHour,
+        minute: startTimeMinute
+      }) }}
+
+      {{ mojDatePicker({
+        id: "returnDate",
+        name: "returnDate",
+        label: {
+          text: 'What date will this absence occurrence end?',
+          classes: "govuk-fieldset__legend--m"
+        },
+        hint: {
+          text: 'For example, 17/5/2024.'
+        },
+        value: returnDate,
+        errorMessage: validationErrors | findError('returnDate'),
+        classes: 'hmpps-datepicker--fixed-width govuk-body',
+        minDate: (fromDate | formatInputDate) if repeat else inputDate(),
+        maxDate: (toDate | formatInputDate) if repeat else null
+      }) }}
+
+      {{ validatedTimeInput({
+        id: "returnTime",
+        name: "returnTime",
+        classes: 'govuk-!-static-margin-bottom-6',
+        fieldset: {
+          legend: {
+            text: 'What time will this absence occurrence end?',
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        hint: {
+          text: 'Use the 24-hour clock. For example, 09 08 or 17 32.'
+        },
+        validationErrors: validationErrors,
+        hour: returnTimeHour,
+        minute: returnTimeMinute
+      }) }}
+
+      {{ govukButton({
+        text: "Confirm and save",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

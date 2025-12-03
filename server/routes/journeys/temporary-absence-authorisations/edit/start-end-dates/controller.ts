@@ -2,14 +2,13 @@ import { NextFunction, Request, Response } from 'express'
 import { SchemaType } from './schema'
 import { formatInputDate } from '../../../../../utils/dateTimeUtils'
 import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
-import { getBackToTapAuthorisationDetails } from '../utils'
 
 export class EditStartEndDatesController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
     res.render('temporary-absence-authorisations/edit/start-end-dates/view', {
-      backUrl: getBackToTapAuthorisationDetails(req, res),
+      backUrl: req.journeyData.updateTapAuthorisation!.backUrl,
       fromDate:
         res.locals.formResponses?.['fromDate'] ??
         formatInputDate(req.journeyData.updateTapAuthorisation!.authorisation.fromDate),

@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response } from 'express'
 import { SchemaType } from './schema'
 import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
-import { getBackToTapAuthorisationDetails } from '../utils'
 
 export class TapCancelController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
     res.render('temporary-absence-authorisations/edit/cancel/view', {
-      backUrl: getBackToTapAuthorisationDetails(req, res),
+      backUrl: req.journeyData.updateTapAuthorisation!.backUrl,
       reason: res.locals.formResponses?.['reason'],
       authorisation: req.journeyData.updateTapAuthorisation!.authorisation,
     })

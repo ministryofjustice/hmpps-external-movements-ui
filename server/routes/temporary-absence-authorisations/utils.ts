@@ -1,8 +1,5 @@
 import { Request, Response } from 'express'
-import type { HTTPError } from 'superagent'
 import ExternalMovementsService from '../../services/apis/externalMovementsService'
-import { components } from '../../@types/externalMovements'
-import { getApiUserErrorMessage } from '../../utils/utils'
 
 export const getAuthorisationAndPopulatePrisonerDetails = async (
   externalMovementsService: ExternalMovementsService,
@@ -21,24 +18,4 @@ export const getAuthorisationAndPopulatePrisonerDetails = async (
     cellLocation: result.person.cellLocation,
   }
   return result
-}
-
-export abstract class ManageTapAuthorisationBaseClass {
-  constructor(readonly externalMovementsService: ExternalMovementsService) {}
-
-  abstract handleGet(
-    _authorisation: components['schemas']['TapAuthorisation'],
-    _req: Request<{ id: string }>,
-    _res: Response,
-  ): Promise<unknown>
-
-  GET = async (req: Request<{ id: string }>, res: Response) => {
-    try {
-      const result = await getAuthorisationAndPopulatePrisonerDetails(this.externalMovementsService, req, res)
-      await this.handleGet(result, req, res)
-    } catch (error: unknown) {
-      res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
-      res.notFound()
-    }
-  }
 }
