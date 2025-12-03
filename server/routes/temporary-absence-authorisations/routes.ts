@@ -4,7 +4,6 @@ import { BrowseTapAuthorisationsController } from './controller'
 import { validateOnGET } from '../../middleware/validation/validationMiddleware'
 import { schema } from './schema'
 import { TapAuthorisationDetailsController } from './details/controller'
-import { TapApprovalRoutes } from './approval/routes'
 import { schema as detailsSchema } from './details/schema'
 
 export const BrowseTapAuthorisationsRoutes = (services: Services) => {
@@ -18,8 +17,6 @@ export const BrowseTapAuthorisationsRoutes = (services: Services) => {
     validateOnGET(detailsSchema, 'dateFrom', 'dateTo'),
     new TapAuthorisationDetailsController(externalMovementsService).GET,
   )
-
-  router.use('/:id/approval', TapApprovalRoutes(services))
 
   return router
 }

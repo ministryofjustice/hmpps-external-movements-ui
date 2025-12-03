@@ -1,0 +1,33 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% set pageTitle = 'Approve or reject absence reason - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukTextarea({
+        id: "reason",
+        name: "reason",
+        errorMessage: validationErrors | findError('reason'),
+        label: {
+          text: "Enter a reason for " + ("approving" if approve else "rejecting") +" this absence (optional)",
+          classes: "govuk-label--l",
+          isPageHeading: true
+        },
+        value: approveReason
+      }) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          classes: "govuk-button--warning" if not approve else null,
+          text: "Confirm and approve" if approve else "Confirm and reject",
+          preventDoubleClick: true
+        }) }}
+      </div>
+    </form>
+  </div>
+{% endblock %}
