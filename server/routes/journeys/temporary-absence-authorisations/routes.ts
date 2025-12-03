@@ -4,6 +4,7 @@ import { BaseRouter } from '../../common/routes'
 import { Page } from '../../../services/auditService'
 import preventNavigationToExpiredJourneys from '../../../middleware/journey/preventNavigationToExpiredJourneys'
 import { EditTapAuthorisationRoutes } from './edit/routes'
+import { createBackUrlFor } from '../../../middleware/history/historyMiddleware'
 
 export const ManageTapAuthorisationRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -16,7 +17,14 @@ export const ManageTapAuthorisationRoutes = (services: Services) => {
           { res },
           req.params.authorisationId,
         )
-        req.journeyData.updateTapAuthorisation = { authorisation }
+        req.journeyData.updateTapAuthorisation = {
+          authorisation,
+          backUrl: createBackUrlFor(
+            res,
+            /temporary-absence-authorisations\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+            `/temporary-absence-authorisations/${authorisation.id}`,
+          ),
+        }
         req.journeyData.prisonerDetails = {
           prisonerNumber: authorisation.person.personIdentifier,
           lastName: authorisation.person.lastName,

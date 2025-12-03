@@ -1,10 +1,8 @@
 import { Request, Response } from 'express'
 import { SchemaType } from './schema'
-import { getBackToTapAuthorisationDetails } from '../utils'
 
 export class TapReviewController {
   GET = async (req: Request, res: Response) => {
-    req.journeyData.updateTapAuthorisation!.backUrl ??= getBackToTapAuthorisationDetails(req, res)
     const { backUrl, authorisation, approve } = req.journeyData.updateTapAuthorisation!
 
     res.render('temporary-absence-authorisations/edit/review/view', {

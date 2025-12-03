@@ -133,6 +133,7 @@ export type DayOfWeekTimeSlot = {
 export type UpdateTapOccurrenceJourney = {
   occurrence: components['schemas']['TapOccurrence']
   authorisation: components['schemas']['TapAuthorisation']
+  backUrl: string
 } & Partial<{
   changeType: 'start-date' | 'end-date' | 'transport' | 'location' | 'notes'
   startDate: string
@@ -142,12 +143,13 @@ export type UpdateTapOccurrenceJourney = {
   location: Address
   transport: components['schemas']['CodedDescription']
   notes: string
+  result: components['schemas']['AuditHistory']
 }>
 
 export type UpdateTapAuthorisationJourney = {
   authorisation: components['schemas']['TapAuthorisation']
-} & Partial<{
   backUrl: string
+} & Partial<{
   absenceType: components['schemas']['AbsenceCategorisation']
   absenceSubType: components['schemas']['AbsenceCategorisation']
   reasonCategory: components['schemas']['AbsenceCategorisation']

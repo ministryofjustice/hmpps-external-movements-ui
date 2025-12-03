@@ -14,6 +14,19 @@ export type UpdateTapAuthorisation =
   | components['schemas']['RecategoriseAuthorisation']
   | components['schemas']['DenyAuthorisation']
 
+export type UpdateTapOccurrence =
+  | components['schemas']['AmendOccurrenceNotes']
+  | components['schemas']['CancelOccurrence']
+  | components['schemas']['ChangeOccurrenceAccompaniment']
+  | components['schemas']['ChangeOccurrenceContactInformation']
+  | components['schemas']['ChangeOccurrenceLocation']
+  | components['schemas']['ChangeOccurrenceTransport']
+  | components['schemas']['ExpireOccurrence']
+  | components['schemas']['MarkOccurrenceOverdue']
+  | components['schemas']['RecategoriseOccurrence']
+  | components['schemas']['RescheduleOccurrence']
+  | components['schemas']['ScheduleOccurrence']
+
 export default class ExternalMovementsService {
   private externalMovementsApiClient: CustomRestClient
 
@@ -84,8 +97,8 @@ export default class ExternalMovementsService {
     })
   }
 
-  async updateTapOccurrence(context: ApiRequestContext, id: string, request: Record<string, unknown>) {
-    return this.externalMovementsApiClient.withContext(context).put<components['schemas']['TapOccurrence']>({
+  async updateTapOccurrence(context: ApiRequestContext, id: string, request: UpdateTapOccurrence) {
+    return this.externalMovementsApiClient.withContext(context).put<components['schemas']['AuditHistory']>({
       path: `/temporary-absence-occurrences/${id}`,
       data: request,
     })

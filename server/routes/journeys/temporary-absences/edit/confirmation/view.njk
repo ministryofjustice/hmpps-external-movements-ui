@@ -1,0 +1,53 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% set pageTitle = 'Change temporary absence occurrence confirmation - Manage temporary absences' %}
+
+{% set EVENT_DESCRIPTION = {
+  'person.temporary-absence.rescheduled': 'Absence rescheduled'
+} %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    {% switch domainEvent %}
+    {% case 'person.temporary-absence.cancelled' %}
+      {{ govukPanel({
+        titleText: "Absence cancelled",
+        text: ""
+      }) }}
+
+      {% if authorisation.repeat %}
+        <p class="govuk-body">
+          <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ authorisation.id }}">View this temporary absence</a>
+        </p>
+      {% endif %}
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?fromDate=&toDate=&status=">View all temporary absence occurrences in {{ user.activeCaseLoad.description }}</a>
+      </p>
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ digitalPrisonServicesUrl }}">Return to the DPS homepage</a>
+      </p>
+    {% default %}
+      {{ govukPanel({
+        titleText: EVENT_DESCRIPTION[domainEvent] or "Absence updated",
+        text: ""
+      }) }}
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/{{ occurrence.id }}">View this occurrence</a>
+      </p>
+
+      {% if authorisation.repeat %}
+        <p class="govuk-body">
+          <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ authorisation.id }}">View this temporary absence</a>
+        </p>
+      {% endif %}
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?fromDate=&toDate=&status=">View all temporary absence occurrences in {{ user.activeCaseLoad.description }}</a>
+      </p>
+    {% endswitch %}
+  </div>
+{% endblock %}
