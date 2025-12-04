@@ -5,6 +5,7 @@ import { EditTapOccurrenceConfirmationRoutes } from './confirmation/routes'
 import { TapOccurrenceCancelRoutes } from './cancel/routes'
 import { Page } from '../../../../services/auditService'
 import preventNavigationToExpiredJourneys from '../../../../middleware/journey/preventNavigationToExpiredJourneys'
+import { EditAbsenceCommentsRoutes } from './comments/routes'
 
 export const EditTapOccurrenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -24,6 +25,7 @@ export const EditTapOccurrenceRoutes = (services: Services) => {
   router.use('/start-end-dates', EditOccurrenceStartEndDatesRoutes(services))
   router.use('/cancel', TapOccurrenceCancelRoutes(services))
   router.use('/confirmation', EditTapOccurrenceConfirmationRoutes())
+  router.use('/comments', EditAbsenceCommentsRoutes(services))
 
   return router
 }
