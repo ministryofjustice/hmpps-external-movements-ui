@@ -1,0 +1,96 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% set pageTitle = 'Check this information before saving this occurrence - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Check this information before saving this occurrence</h1>
+
+    {% set location = occurrence.location if occurrence.locationOption === 'NEW' else authorisation.locations[occurrence.locationOption] %}
+
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: { text: "Start date and time" },
+          value: { text: occurrence.startDate | formatDate("d MMMM yyyy") + ' at ' + occurrence.startTime },
+          actions: {
+          items: [
+            {
+              href: "../add-occurrence#startDate",
+              text: "Change",
+              visuallyHiddenText: "start date and time",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: { text: "End date and time" },
+          value: { text: occurrence.returnDate | formatDate("d MMMM yyyy") + ' at ' + occurrence.returnTime },
+          actions: {
+          items: [
+            {
+              href: "../add-occurrence#returnDate",
+              text: "Change",
+              visuallyHiddenText: "end date and time",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: { text: "Location" },
+          value: { text: location.description or occurrence.location | joinAddress },
+          actions: {
+          items: [
+            {
+              href: "search-location" if occurrence.locationOption === 'NEW' else 'select-location',
+              text: "Change",
+              visuallyHiddenText: "location",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: { text: "Comments" },
+          value: { text: occurrence.notes or 'Not provided' },
+          actions: {
+          items: [
+            {
+              href: "comments",
+              text: "Change",
+              visuallyHiddenText: "comments",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: { text: "Accompanied or unaccompanied" },
+          value: { text: 'unaccompanied' if authorisation.accompaniedBy.code === 'U' else 'Accompanied' }
+        },
+        {
+          key: { text: "Accompanied by" },
+          value: { text: authorisation.accompaniedBy.description }
+        } if authorisation.accompaniedBy.code !== 'U' else null,
+        {
+          key: { text: "Transport" },
+          value: { text: authorisation.transport.description }
+        }
+      ] | removeNullish
+    }) }}
+
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukButton({
+        text: "Confirm and save",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

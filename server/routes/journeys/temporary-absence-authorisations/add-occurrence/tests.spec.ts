@@ -132,7 +132,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence', () => {
     await testPage.endDateField().fill(`3/1/2001`)
     await testPage.clickContinue()
 
-    expect(page.url()).toMatch(/\/search-location/)
+    expect(page.url()).toMatch(/\/select-location/)
 
     // verify input values are persisted
     await page.goBack()
