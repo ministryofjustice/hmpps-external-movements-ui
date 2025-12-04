@@ -23,8 +23,8 @@ export class EditStartEndDatesController {
     try {
       journey.result = await this.externalMovementsService.updateTapAuthorisation({ res }, journey.authorisation.id, {
         type: 'ChangeAuthorisationDateRange',
-        from: req.body.fromDate,
-        to: req.body.toDate,
+        fromDate: req.body.fromDate,
+        toDate: req.body.toDate,
       })
       next()
     } catch (e) {
