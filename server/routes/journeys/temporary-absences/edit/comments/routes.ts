@@ -6,7 +6,7 @@ import { Services } from '../../../../../services'
 
 export const EditAbsenceCommentsRoutes = ({ externalMovementsService }: Services) => {
   const { router, get, post } = BaseRouter()
-  const controller = new EditAbsenceCommentsController()
+  const controller = new EditAbsenceCommentsController(externalMovementsService)
 
   get('/', controller.GET)
   post('/', validate(schema), controller.POST)

@@ -3,8 +3,11 @@ import { SchemaType } from './schema'
 import { FLASH_KEY__SUCCESS_BANNER } from '../../../../../utils/constants'
 import { firstNameSpaceLastName } from '../../../../../utils/formatUtils'
 import { formatInputDate } from '../../../../../utils/dateTimeUtils'
+import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
 
 export class EditAbsenceCommentsController {
+  constructor(private readonly externalMovementsService: ExternalMovementsService) {}
+
   GET = async (req: Request, res: Response) => {
     res.render('temporary-absences/edit/comments/view', {
       backUrl: '../edit',
