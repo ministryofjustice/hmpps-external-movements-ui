@@ -10,9 +10,23 @@ import { EditTapAuthorisationConfirmationRoutes } from './confirmation/routes'
 import { TapCancelRoutes } from './cancel/routes'
 import { TapReviewRoutes } from './review/routes'
 import { TapReviewReasonRoutes } from './review-reason/routes'
+import { Page } from '../../../../services/auditService'
+import preventNavigationToExpiredJourneys from '../../../../middleware/journey/preventNavigationToExpiredJourneys'
 
 export const EditTapAuthorisationRoutes = (services: Services) => {
-  const { router } = BaseRouter()
+  const { router, get } = BaseRouter()
+
+  get(
+    '*any',
+    Page.EDIT_TEMPORARY_ABSENCE_AUTHORISATION,
+    (req, res, next) => {
+      if (req.journeyData.prisonerDetails) {
+        res.setAuditDetails.prisonNumber(req.journeyData.prisonerDetails.prisonerNumber)
+      }
+      next()
+    },
+    preventNavigationToExpiredJourneys(),
+  )
 
   router.use('/absence-type', EditAbsenceTypeRoutes(services))
   router.use('/absence-subtype', EditAbsenceSubTypeRoutes(services))

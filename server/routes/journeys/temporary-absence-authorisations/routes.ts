@@ -1,10 +1,9 @@
 import { Request } from 'express'
 import { Services } from '../../../services'
 import { BaseRouter } from '../../common/routes'
-import { Page } from '../../../services/auditService'
-import preventNavigationToExpiredJourneys from '../../../middleware/journey/preventNavigationToExpiredJourneys'
 import { EditTapAuthorisationRoutes } from './edit/routes'
 import { createBackUrlFor } from '../../../middleware/history/historyMiddleware'
+import { AddTapOccurrenceRoutes } from './add-occurrence/routes'
 
 export const ManageTapAuthorisationRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -41,18 +40,38 @@ export const ManageTapAuthorisationRoutes = (services: Services) => {
   )
 
   get(
-    '*any',
-    Page.EDIT_TEMPORARY_ABSENCE_AUTHORISATION,
-    (req, res, next) => {
-      if (req.journeyData.prisonerDetails) {
-        res.setAuditDetails.prisonNumber(req.journeyData.prisonerDetails.prisonerNumber)
+    '/start-add-occurrence/:authorisationId',
+    async (req: Request<{ authorisationId: string; property: string }>, res) => {
+      try {
+        const authorisation = await services.externalMovementsService.getTapAuthorisation(
+          { res },
+          req.params.authorisationId,
+        )
+        req.journeyData.addTapOccurrence = {
+          authorisation,
+          backUrl: createBackUrlFor(
+            res,
+            /(temporary-absence-authorisations|temporary-absences)\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+            `/temporary-absence-authorisations/${authorisation.id}`,
+          ),
+        }
+        req.journeyData.prisonerDetails = {
+          prisonerNumber: authorisation.person.personIdentifier,
+          lastName: authorisation.person.lastName,
+          firstName: authorisation.person.firstName,
+          dateOfBirth: authorisation.person.dateOfBirth,
+          prisonName: res.locals.user.activeCaseLoad?.description,
+          cellLocation: authorisation.person.cellLocation,
+        }
+        res.redirect(`../add-occurrence`)
+      } catch {
+        res.notFound()
       }
-      next()
     },
-    preventNavigationToExpiredJourneys(),
   )
 
   router.use('/edit', EditTapAuthorisationRoutes(services))
+  router.use('/add-occurrence', AddTapOccurrenceRoutes(services))
 
   return router
 }
