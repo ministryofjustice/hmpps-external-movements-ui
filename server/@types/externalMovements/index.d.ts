@@ -112,6 +112,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/migrate/temporary-absences/{personIdentifier}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
+     */
+    put: operations['migrateTemporaryAbsences']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/temporary-absence-authorisations/{personIdentifier}': {
     parameters: {
       query?: never
@@ -583,6 +603,87 @@ export interface components {
       updated?: components['schemas']['SyncAtAndBy']
       /** Format: int64 */
       legacyId: number
+    }
+    MigrateTapAuthorisation: {
+      prisonCode: string
+      statusCode: string
+      absenceTypeCode?: string
+      absenceSubTypeCode?: string
+      absenceReasonCode: string
+      accompaniedByCode: string
+      transportCode: string
+      repeat: boolean
+      /** Format: date */
+      fromDate: string
+      /** Format: date */
+      toDate: string
+      notes?: string
+      created: components['schemas']['SyncAtAndBy']
+      updated?: components['schemas']['SyncAtAndBy']
+      /** Format: int64 */
+      legacyId: number
+      occurrences: components['schemas']['MigrateTapOccurrence'][]
+    }
+    MigrateTapMovement: {
+      /** Format: date-time */
+      occurredAt: string
+      /** @enum {string} */
+      direction: 'IN' | 'OUT'
+      absenceReasonCode: string
+      location: components['schemas']['Location']
+      accompaniedByCode: string
+      accompaniedByNotes?: string
+      notes?: string
+      created: components['schemas']['SyncAtAndByWithPrison']
+      updated?: components['schemas']['SyncAtAndBy']
+      legacyId: string
+    }
+    MigrateTapOccurrence: {
+      isCancelled: boolean
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
+      location: components['schemas']['Location']
+      absenceTypeCode?: string
+      absenceSubTypeCode?: string
+      absenceReasonCode: string
+      accompaniedByCode: string
+      transportCode: string
+      contactInformation?: string
+      notes?: string
+      created: components['schemas']['SyncAtAndBy']
+      updated?: components['schemas']['SyncAtAndBy']
+      /** Format: int64 */
+      legacyId: number
+      movements: components['schemas']['MigrateTapMovement'][]
+    }
+    MigrateTapRequest: {
+      temporaryAbsences: components['schemas']['MigrateTapAuthorisation'][]
+      unscheduledMovements: components['schemas']['MigrateTapMovement'][]
+    }
+    MigrateTapResponse: {
+      temporaryAbsences: components['schemas']['MigratedAuthorisation'][]
+      unscheduledMovements: components['schemas']['MigratedMovement'][]
+    }
+    MigratedAuthorisation: {
+      /** Format: int64 */
+      legacyId: number
+      /** Format: uuid */
+      id: string
+      occurrences: components['schemas']['MigratedOccurrence'][]
+    }
+    MigratedMovement: {
+      legacyId: string
+      /** Format: uuid */
+      id: string
+    }
+    MigratedOccurrence: {
+      /** Format: int64 */
+      legacyId: number
+      /** Format: uuid */
+      id: string
+      movements: components['schemas']['MigratedMovement'][]
     }
     CreateTapAuthorisationRequest: {
       absenceTypeCode: string
@@ -1112,6 +1213,32 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['SyncResponse']
+        }
+      }
+    }
+  }
+  migrateTemporaryAbsences: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        personIdentifier: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['MigrateTapRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['MigrateTapResponse']
         }
       }
     }
