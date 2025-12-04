@@ -24,6 +24,7 @@ export type JourneyData = {
   prisonerDetails?: PrisonerDetails
   addTemporaryAbsence?: AddTemporaryAbsenceJourney
   updateTapOccurrence?: UpdateTapOccurrenceJourney
+  addTapOccurrence?: AddTapOccurrenceJourney
   updateTapAuthorisation?: UpdateTapAuthorisationJourney
   isCheckAnswers?: boolean
   journeyCompleted?: boolean
@@ -144,6 +145,19 @@ export type UpdateTapOccurrenceJourney = {
   transport: components['schemas']['CodedDescription']
   notes: string
   result: components['schemas']['AuditHistory']
+}>
+
+export type AddTapOccurrenceJourney = {
+  authorisation: components['schemas']['TapAuthorisation']
+  backUrl: string
+} & Partial<{
+  startDate: string
+  startTime: string
+  returnDate: string
+  returnTime: string
+  locationOption: string
+  location: Address
+  notes: string
 }>
 
 export type UpdateTapAuthorisationJourney = {

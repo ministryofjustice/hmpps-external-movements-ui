@@ -1,9 +1,6 @@
 import { Request } from 'express'
 import { Services } from '../../../services'
 import { BaseRouter } from '../../common/routes'
-import { Page } from '../../../services/auditService'
-
-import preventNavigationToExpiredJourneys from '../../../middleware/journey/preventNavigationToExpiredJourneys'
 import { createBackUrlFor } from '../../../middleware/history/historyMiddleware'
 import { EditTapOccurrenceRoutes } from './edit/routes'
 
@@ -39,18 +36,6 @@ export const ManageTemporaryAbsenceRoutes = (services: Services) => {
       res.notFound()
     }
   })
-
-  get(
-    '*any',
-    Page.EDIT_TEMPORARY_ABSENCE,
-    (req, res, next) => {
-      if (req.journeyData.prisonerDetails) {
-        res.setAuditDetails.prisonNumber(req.journeyData.prisonerDetails.prisonerNumber)
-      }
-      next()
-    },
-    preventNavigationToExpiredJourneys(),
-  )
 
   router.use('/edit', EditTapOccurrenceRoutes(services))
 
