@@ -21,11 +21,8 @@ test.describe('/temporary-absences/:id', () => {
     ])
   })
 
-  test.beforeEach(async ({ page }) => {
-    await signIn(page)
-  })
-
   test('should show temporary absence details for single SCHEDULED absence', async ({ page }) => {
+    await signIn(page)
     const occurrenceId = uuidV4()
     await stubGetTapOccurrence({
       id: occurrenceId,
@@ -88,6 +85,7 @@ test.describe('/temporary-absences/:id', () => {
   })
 
   test('should show temporary absence details for repeating CANCELLED absence', async ({ page }) => {
+    await signIn(page)
     const occurrenceId = uuidV4()
     await stubGetTapOccurrence({
       id: occurrenceId,
@@ -135,5 +133,43 @@ test.describe('/temporary-absences/:id', () => {
     await expect(testPage.button('Cancel this occurrence')).toHaveCount(0)
     await expect(testPage.link('View all occurrences of this absence')).toBeVisible()
     await expect(testPage.link('Add occurrence')).toBeVisible()
+  })
+
+  test('should not show cancel button for view only user', async ({ page }) => {
+    await signIn(page, { roles: ['EXTERNAL_MOVEMENTS__TAP__RO'] })
+    const occurrenceId = uuidV4()
+    await stubGetTapOccurrence({
+      id: occurrenceId,
+      authorisation: {
+        id: uuidV4(),
+        person: {
+          personIdentifier: 'A9965EA',
+          firstName: 'PRISONER-NAME',
+          lastName: 'PRISONER-SURNAME',
+          dateOfBirth: '1990-01-01',
+          cellLocation: '2-1-005',
+        },
+        status: { code: 'APPROVED', description: 'Approved' },
+        absenceType: {
+          code: 'RR',
+          description: 'Restricted ROTL (Release on Temporary Licence)',
+        },
+        repeat: false,
+        accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      },
+      status: { code: 'SCHEDULED', description: 'Scheduled' },
+      releaseAt: '2001-01-01T10:00:00',
+      returnBy: '2001-01-01T17:30:00',
+      location: { uprn: 1001, description: 'Random Street, UK' },
+      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      transport: { code: 'CAR', description: 'Car' },
+    })
+    await page.goto(`/temporary-absences/${occurrenceId}`)
+
+    // verify page content
+    const testPage = await new TapOccurrenceDetailsPage(page).verifyContent()
+
+    await expect(testPage.link('Create a new absence for Prisoner-Name Prisoner-Surname')).toHaveCount(0)
+    await expect(testPage.button('Cancel this occurrence')).toHaveCount(0)
   })
 })

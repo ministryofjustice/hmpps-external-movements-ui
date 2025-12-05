@@ -12,6 +12,13 @@ import {
 } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { CancelTapOccurrencePage } from './test.page'
+import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/temporary-absences/edit/cancel', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absences/edit/cancel`)
+  })
+})
 
 test.describe('/temporary-absences/edit/cancel', () => {
   const prisonNumber = randomPrisonNumber()

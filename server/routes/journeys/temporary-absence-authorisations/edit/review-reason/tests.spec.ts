@@ -12,6 +12,13 @@ import {
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { TapAuthorisationReviewReasonPage } from './test.page'
 import { ReviewTapAuthorisationPage } from '../review/test.page'
+import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/temporary-absence-authorisations/edit/review-reason unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/edit/review-reason`)
+  })
+})
 
 test.describe('/temporary-absence-authorisations/edit/review-reason', () => {
   const prisonNumber = randomPrisonNumber()

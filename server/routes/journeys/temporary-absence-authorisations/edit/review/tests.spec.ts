@@ -8,6 +8,13 @@ import { stubGetPrisonerDetails } from '../../../../../../integration_tests/mock
 import { stubGetTapAuthorisation } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { ReviewTapAuthorisationPage } from './test.page'
+import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/temporary-absence-authorisations/edit/review unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/edit/review`)
+  })
+})
 
 test.describe('/temporary-absence-authorisations/edit/review', () => {
   const prisonNumber = randomPrisonNumber()

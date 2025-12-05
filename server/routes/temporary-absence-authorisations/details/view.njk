@@ -247,8 +247,8 @@
           classes: 'govuk-link govuk-link--no-visited-state',
           html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">Make changes to this occurrence<span class="govuk-visually-hidden"> on ' + occurrence.releaseAt | formatDate("cccc, d MMMM yyyy 'at' HH:mm") + '</span></a>',
           format: "numeric"
-        }
-      ]), rows) %}
+        } if user | hasPermission('TAP', 'MANAGE') else null
+      ] | removeNullish), rows) %}
     {% endfor %}
 
     {{ govukTable({
@@ -273,8 +273,8 @@
         {
           text: "Action",
           format: "numeric"
-        }
-      ],
+        } if user | hasPermission('TAP', 'MANAGE') else null
+      ] | removeNullish,
       rows: rows
     }) }}
   </div>

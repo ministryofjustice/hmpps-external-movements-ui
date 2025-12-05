@@ -9,6 +9,13 @@ import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApi
 import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { AbsenceTypePage } from './test.page'
+import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/add-temporary-absence/absence-type unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/add-temporary-absence/absence-type`)
+  })
+})
 
 test.describe('/add-temporary-absence/absence-type', () => {
   const prisonNumber = randomPrisonNumber()
