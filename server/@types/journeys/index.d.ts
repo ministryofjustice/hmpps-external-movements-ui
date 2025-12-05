@@ -155,9 +155,9 @@ export type AddTapOccurrenceJourney = {
   startTime: string
   returnDate: string
   returnTime: string
-  locationOption: string
+  locationOption: number | 'NEW'
   location: Address
-  notes: string
+  notes: string | null
 }>
 
 export type UpdateTapAuthorisationJourney = {

@@ -35,6 +35,6 @@ export class AddOccurrenceController {
     journey.startTime = `${req.body.startTimeHour}:${req.body.startTimeMinute}`
     journey.returnDate = req.body.returnDate
     journey.returnTime = `${req.body.returnTimeHour}:${req.body.returnTimeMinute}`
-    res.redirect('add-occurrence/search-location')
+    res.redirect(req.journeyData.isCheckAnswers ? 'add-occurrence/check-answers' : 'add-occurrence/select-location')
   }
 }

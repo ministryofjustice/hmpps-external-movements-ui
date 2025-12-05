@@ -5,8 +5,11 @@ import preventNavigationToExpiredJourneys from '../../../../middleware/journey/p
 import { validate } from '../../../../middleware/validation/validationMiddleware'
 import { schema } from './schema'
 import { AddOccurrenceController } from './controller'
+import { AddTapOccurrenceSelectLocationRoutes } from './select-location/routes'
+import { AddTapOccurrenceCommentsRoutes } from './comments/routes'
+import { AddTapOccurrenceCheckAnswersRoutes } from './check-answers/routes'
 
-export const AddTapOccurrenceRoutes = (_services: Services) => {
+export const AddTapOccurrenceRoutes = (services: Services) => {
   const { router, get, post } = BaseRouter()
   const controller = new AddOccurrenceController()
 
@@ -24,6 +27,10 @@ export const AddTapOccurrenceRoutes = (_services: Services) => {
 
   get('/', controller.GET)
   post('/', validate(schema), controller.POST)
+
+  router.use('/select-location', AddTapOccurrenceSelectLocationRoutes())
+  router.use('/comments', AddTapOccurrenceCommentsRoutes())
+  router.use('/check-answers', AddTapOccurrenceCheckAnswersRoutes(services))
 
   return router
 }
