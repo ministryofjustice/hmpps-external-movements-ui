@@ -85,15 +85,15 @@ test.describe('/temporary-absences/edit/confirmation', () => {
     await signIn(page)
   })
 
-  const startJourney = async (page: Page, journeyId: string, journeyData: Partial<JourneyData>) => {
-    await page.goto(`/${journeyId}/temporary-absences/start-edit/${occurrenceId}/start-end-dates`)
+  const startJourney = async (page: Page, journeyId: string, endpoint: string, journeyData: Partial<JourneyData>) => {
+    await page.goto(`/${journeyId}/temporary-absences/start-edit/${occurrenceId}/${endpoint}`)
     await injectJourneyData(page, journeyId, journeyData)
     await page.goto(`/${journeyId}/temporary-absences/edit/confirmation`)
   }
 
   test('should show TAP occurrence rescheduled', async ({ page }) => {
     const journeyId = uuidV4()
-    await startJourney(page, journeyId, {
+    await startJourney(page, journeyId, 'start-end-dates', {
       updateTapOccurrence: {
         backUrl: `/temporary-absences/${occurrenceId}`,
         authorisation,
@@ -129,7 +129,7 @@ test.describe('/temporary-absences/edit/confirmation', () => {
 
   test('should show TAP occurrence cancelled confirmation', async ({ page }) => {
     const journeyId = uuidV4()
-    await startJourney(page, journeyId, {
+    await startJourney(page, journeyId, 'start-end-dates', {
       updateTapOccurrence: {
         backUrl: `/temporary-absences/${occurrenceId}`,
         authorisation,
@@ -158,5 +158,38 @@ test.describe('/temporary-absences/edit/confirmation', () => {
     )
     await testPage.verifyLink('View all temporary absence occurrences in Leeds (HMP)', /temporary-absences\?/)
     await testPage.verifyLink('Return to the DPS homepage', /localhost:3001$/)
+  })
+
+  test('should show TAP occurrence notes updated', async ({page}) => {
+    const journeyId = uuidV4()
+
+    await startJourney(page, journeyId, 'comments', {
+      updateTapOccurrence: {
+        backUrl: `/temporary-absences/${occurrenceId}`,
+        authorisation,
+        occurrence,
+        result: {
+          content: [
+            {
+              user: { username: 'USERNAME', name: 'User Name' },
+              occurredAt: '2025-12-01T17:50:20.421301',
+              domainEvents: ['person.temporary-absence.notes-changed'],
+              changes: [{ propertyName: '', previous: '', change: '' }],
+            },
+          ],
+        },
+      },
+    })
+
+    // verify page content
+    const testPage = await new EditTapOccurrenceConfirmationPage(page).verifyContent()
+
+    await expect(page.getByText('Absence notes changed')).toBeVisible()
+
+    await testPage.verifyLink(
+      'View this temporary absence',
+      /temporary-absence-authorisations\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    )
+    await testPage.verifyLink('View all temporary absence occurrences in Leeds (HMP)', /temporary-absences\?/)
   })
 })
