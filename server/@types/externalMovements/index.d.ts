@@ -152,6 +152,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/temporary-absence-authorisations/{id}/occurrences': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
+    post: operations['createOccurrence']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/temporary-absence-occurrences/{id}/history': {
     parameters: {
       query?: never
@@ -423,7 +443,8 @@ export interface components {
       description?: string
       address?: string
       postcode?: string
-      uprn?: string
+      /** Format: int64 */
+      uprn?: number
     }
     MarkOccurrenceOverdue: {
       type: 'MarkOccurrenceOverdue'
@@ -672,7 +693,7 @@ export interface components {
       absenceSubTypeCode?: string
       absenceReasonCategoryCode?: string
       absenceReasonCode?: string
-      occurrences: components['schemas']['CreateTapOccurrenceRequest'][]
+      occurrences: components['schemas']['OccurrenceRequest'][]
       /** @enum {string} */
       statusCode: 'PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED'
       accompaniedByCode: string
@@ -686,7 +707,8 @@ export interface components {
       contactInformation?: string
       schedule?: components['schemas']['JsonNode']
     }
-    CreateTapOccurrenceRequest: {
+    JsonNode: unknown
+    OccurrenceRequest: {
       /** Format: date-time */
       releaseAt: string
       /** Format: date-time */
@@ -694,10 +716,17 @@ export interface components {
       location: components['schemas']['Location']
       scheduleReference?: components['schemas']['JsonNode']
     }
-    JsonNode: unknown
     ReferenceId: {
       /** Format: uuid */
       id: string
+    }
+    CreateOccurrenceRequest: {
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
+      location: components['schemas']['Location']
+      notes?: string
     }
     Authorisation: {
       /** Format: uuid */
@@ -1242,6 +1271,32 @@ export interface operations {
     responses: {
       /** @description Created */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReferenceId']
+        }
+      }
+    }
+  }
+  createOccurrence: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateOccurrenceRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
         headers: {
           [name: string]: unknown
         }

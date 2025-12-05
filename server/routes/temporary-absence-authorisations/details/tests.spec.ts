@@ -53,14 +53,14 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       toDate: '2001-01-01',
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       transport: { code: 'CAR', description: 'Car' },
-      locations: [{ uprn: '1001', description: 'Random Street, UK' }],
+      locations: [{ uprn: 1001, description: 'Random Street, UK' }],
       occurrences: [
         {
           id: 'occurrence-id',
           status: { code: 'PENDING', description: 'To be reviewed' },
           releaseAt: '2001-01-01T10:00:00',
           returnBy: '2001-01-01T17:30:00',
-          location: { uprn: '1001', description: 'Random Street, UK' },
+          location: { uprn: 1001, description: 'Random Street, UK' },
           accompaniedBy: { code: 'U', description: 'Unaccompanied' },
           transport: { code: 'CAR', description: 'Car' },
         },
@@ -110,14 +110,14 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       toDate: '2001-01-01',
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       transport: { code: 'CAR', description: 'Car' },
-      locations: [{ uprn: '1001', description: 'Random Street, UK' }],
+      locations: [{ uprn: 1001, description: 'Random Street, UK' }],
       occurrences: [
         {
           id: 'occurrence-id',
           status: { code: 'PENDING', description: 'To be reviewed' },
           releaseAt: '2001-01-01T10:00:00',
           returnBy: '2001-01-01T17:30:00',
-          location: { uprn: '1001', description: 'Random Street, UK' },
+          location: { uprn: 1001, description: 'Random Street, UK' },
           accompaniedBy: { code: 'U', description: 'Unaccompanied' },
           transport: { code: 'CAR', description: 'Car' },
         },

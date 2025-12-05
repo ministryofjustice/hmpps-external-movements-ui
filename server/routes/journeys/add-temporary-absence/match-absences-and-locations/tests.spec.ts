@@ -38,8 +38,8 @@ test.describe('/add-temporary-absence/match-absences-and-locations', () => {
         },
         repeat: true,
         locations: [
-          { id: '1001', description: 'Address 1, P05T 60D' },
-          { id: '1002', description: 'Address 2, P05T 60D' },
+          { id: 1001, description: 'Address 1, P05T 60D' },
+          { id: 1002, description: 'Address 2, P05T 60D' },
         ],
         ...pattern,
       },
