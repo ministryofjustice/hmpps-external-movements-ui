@@ -9,7 +9,7 @@ export const EditAbsenceCommentsRoutes = ({ externalMovementsService }: Services
   const controller = new EditAbsenceCommentsController(externalMovementsService)
 
   get('/', controller.GET)
-  post('/', validate(schema), controller.POST)
+  post('/', validate(schema), controller.submitToApi, controller.POST)
 
   return router
 }
