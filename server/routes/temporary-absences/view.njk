@@ -131,7 +131,7 @@
             text: occurrence.absenceType.description
           },
           {
-            text: occurrence.location.description
+            text: occurrence.location | formatAddress
           },
           {
             text: occurrence.accompaniedBy.description

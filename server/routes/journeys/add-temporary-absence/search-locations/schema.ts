@@ -24,6 +24,8 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
           ...val,
           uprn: '',
           addressString: '',
+          postcode: null,
+          description: null,
         }
       }
       ctx.addIssue({ code: 'custom', message: ERROR_MSG, path: ['address-autosuggest-input'] })
@@ -41,6 +43,7 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
           city,
           county: county?.trim() ? county : null,
           postcode: postcode?.trim() ? postcode : null,
+          description: null,
         }
       }
 
@@ -68,6 +71,8 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
       ...val,
       uprn: val.uprn!,
       addressString: address.addressString,
+      postcode: address.postcode,
+      description: address.subBuildingName,
     }
   })
 

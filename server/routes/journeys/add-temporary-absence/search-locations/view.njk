@@ -107,7 +107,7 @@
         <div class="govuk-!-margin-bottom-6">
           {% for location in locations %}
             <div class="govuk-grid-row">
-              <div class="govuk-grid-column-three-quarters">{{ location.description or location | joinAddress }}</div>
+              <div class="govuk-grid-column-three-quarters">{{ location | joinAddress }}</div>
               <div class="govuk-summary-card__actions"><a href="search-locations/remove/{{ loop.index }}" class="govuk-link govuk-link--no-visited-state">Remove<span class="govuk-visually-hidden"> location {{ loop.index }}</span></a></div>
             </div>
           {% endfor %}

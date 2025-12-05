@@ -272,12 +272,12 @@
       {% set locationRows = [] %}
 
       {% for loc in locations %}
-        {% set locationRows = (locationRows.push(loc.description or loc | joinAddress), locationRows) %}
+        {% set locationRows = (locationRows.push(loc | joinAddress), locationRows) %}
       {% endfor %}
 
       {% set locationValue = { html: locationRows | join('<br/><br/>') } %}
     {% else %}
-      {% set locationValue = { text: location.description or location | joinAddress } %}
+      {% set locationValue = { text: location | joinAddress } %}
     {% endif %}
 
     {{ govukSummaryList({

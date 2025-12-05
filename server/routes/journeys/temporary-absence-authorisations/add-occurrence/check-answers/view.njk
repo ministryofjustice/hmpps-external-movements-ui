@@ -9,7 +9,7 @@
     <span class="govuk-caption-l">Manage Temporary Absences</span>
     <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Check this information before saving this occurrence</h1>
 
-    {% set location = occurrence.location if occurrence.locationOption === 'NEW' else authorisation.locations[occurrence.locationOption] %}
+    {% set location = (occurrence.location | joinAddress) if occurrence.locationOption === 'NEW' else (authorisation.locations[occurrence.locationOption] | formatAddress )%}
 
     {{ govukSummaryList({
       classes: "govuk-!-margin-bottom-7",
@@ -44,7 +44,7 @@
         },
         {
           key: { text: "Location" },
-          value: { text: location.description or occurrence.location | joinAddress },
+          value: { text: location  },
           actions: {
           items: [
             {

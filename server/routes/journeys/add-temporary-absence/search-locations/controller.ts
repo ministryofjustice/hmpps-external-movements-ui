@@ -31,7 +31,9 @@ export class SearchLocationsController {
       req.journeyData.addTemporaryAbsence!.locations ??= []
       req.journeyData.addTemporaryAbsence!.locations.push({
         id: Number(req.body.uprn),
-        description: req.body.addressString ?? null,
+        address: req.body.addressString ?? null,
+        description: req.body.description,
+        postcode: req.body.postcode,
       })
 
       res.redirect('search-locations')
