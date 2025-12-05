@@ -22,14 +22,14 @@
         {% set baseEditUrl = "/temporary-absence-authorisations/start-edit/" + result.id %}
 
         <div class="govuk-button-group">
-          {% if result.status.code === 'PENDING' %}
+          {% if result.status.code === 'PENDING' and user | hasPermission('TAP', 'MANAGE') %}
             {{ govukButton({
               text: "Review this absence",
               href: baseEditUrl + "/review",
               preventDoubleClick: true
             }) }}
           {% endif %}
-          {% if result.status.code === 'APPROVED' %}
+          {% if result.status.code === 'APPROVED' and user | hasPermission('TAP', 'MANAGE') %}
             {{ govukButton({
               classes: "govuk-button--warning",
               text: "Cancel this absence",
@@ -119,7 +119,7 @@
                 value: locationValue,
                 actions: { items: [{ href: baseEditUrl + "/location", text: "Change", visuallyHiddenText: "location", classes: "govuk-link--no-visited-state" }] } if not result.repeat else null
               }
-            ] | removeNullish
+            ] | removeNullish | showChangeLinksIf(user | hasPermission('TAP', 'MANAGE'))
           }) }}
         {% endset -%}
 

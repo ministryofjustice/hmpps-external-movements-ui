@@ -11,10 +11,14 @@ import populateValidationErrors from '../middleware/validation/populateValidatio
 import { BrowseTapAuthorisationsRoutes } from './temporary-absence-authorisations/routes'
 import { BrowseTapOccurrencesRoutes } from './temporary-absences/routes'
 import { FLASH_KEY__SUCCESS_BANNER } from '../utils/constants'
+import { populateUserPermissions } from '../middleware/permissions/populateUserPermissions'
+import { requirePermissions } from '../middleware/permissions/requirePermissions'
+import { UserPermissionLevel } from '../interfaces/hmppsUser'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
 
+  router.use(populateUserPermissions)
   router.use(breadcrumbs())
   router.use(
     historyMiddleware(() => [
@@ -71,16 +75,29 @@ export default function routes(services: Services): Router {
     })
   })
 
-  get('/temporary-absences-home', Page.TAP_HOME_PAGE, async (_req, res) => {
-    res.render('view-tap', {
-      showBreadcrumbs: true,
-      ...(await services.externalMovementsService.getTapOverview({ res })),
-    })
-  })
+  get(
+    '/temporary-absences-home',
+    Page.TAP_HOME_PAGE,
+    requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
+    async (_req, res) => {
+      res.render('view-tap', {
+        showBreadcrumbs: true,
+        ...(await services.externalMovementsService.getTapOverview({ res })),
+      })
+    },
+  )
 
-  router.use('/search-prisoner', SearchPrisonerRoutes(services))
-  router.use('/temporary-absence-authorisations', BrowseTapAuthorisationsRoutes(services))
-  router.use('/temporary-absences', BrowseTapOccurrencesRoutes(services))
+  router.use('/search-prisoner', requirePermissions('TAP', UserPermissionLevel.MANAGE), SearchPrisonerRoutes(services))
+  router.use(
+    '/temporary-absence-authorisations',
+    requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
+    BrowseTapAuthorisationsRoutes(services),
+  )
+  router.use(
+    '/temporary-absences',
+    requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
+    BrowseTapOccurrencesRoutes(services),
+  )
 
   router.use(insertJourneyIdentifier())
   router.use('/:journeyId', JourneyRoutes(services))

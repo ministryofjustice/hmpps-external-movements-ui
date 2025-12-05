@@ -21,7 +21,7 @@
         {% set baseEditUrl = "/temporary-absences/start-edit/" + occurrence.id %}
 
         <div class="govuk-button-group">
-          {% if occurrence.status.code === 'SCHEDULED' %}
+          {% if occurrence.status.code === 'SCHEDULED' and user | hasPermission('TAP', 'MANAGE') %}
             {{ govukButton({
               classes: "govuk-button--warning",
               text: "Cancel this occurrence",
@@ -97,7 +97,7 @@
                 value: { text: occurrence.location.description },
                 actions: { items: [{ href: baseEditUrl + "/location", text: "Change", visuallyHiddenText: "address" }] }
               }
-            ] | removeNullish
+            ] | removeNullish | showChangeLinksIf(user | hasPermission('TAP', 'MANAGE'))
           }) }}
         {% endset -%}
 
