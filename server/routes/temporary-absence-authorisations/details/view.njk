@@ -42,7 +42,7 @@
         {% set locationRows = [] %}
 
         {% for loc in result.locations %}
-          {% set locationRows = (locationRows.push(loc.description or loc | joinAddress), locationRows) %}
+          {% set locationRows = (locationRows.push(loc | formatAddress), locationRows) %}
         {% endfor %}
 
         {% set locationValue = { html: locationRows | join('<br/><br/>') } %}

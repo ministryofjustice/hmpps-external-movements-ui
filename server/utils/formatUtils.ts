@@ -109,6 +109,29 @@ export const initialiseName = (fullName?: string): string | null => {
   return `${array[0]?.[0]}. ${array.reverse()[0]}`
 }
 
-export const joinAddress = ({ line1, line2, city, county, postcode }: Address) => {
-  return [line1, line2, city, county].filter(itm => !!itm?.trim()).join(', ') + (postcode ? ` ${postcode}` : '')
+export const joinAddress = ({ line1, line2, city, county, postcode, address, description }: Address) => {
+  if (address) return address
+  return (
+    [description, line1, line2, city, county].filter(itm => !!itm?.trim()).join(', ') + (postcode ? ` ${postcode}` : '')
+  )
 }
+
+export const trimAddress = ({ line1, line2, city, county, postcode, address, description }: Address) => {
+  if (address) {
+    let result = postcode ? address.replace(`, ${postcode}`, '') : address
+    if (description) result = result.replace(`${description}, `, '')
+    return result
+  }
+  return [line1, line2, city, county].filter(itm => !!itm?.trim()).join(', ')
+}
+
+export const formatAddress = ({
+  description,
+  address,
+  postcode,
+}: {
+  description: string
+  address: string
+  postcode: string
+  uprn: number
+}) => [description, address, postcode].filter(itm => !!itm?.trim()).join(', ')

@@ -94,7 +94,7 @@
               },
               {
                 key: { text: "Address" },
-                value: { text: occurrence.location.description },
+                value: { text: occurrence.location | formatAddress },
                 actions: { items: [{ href: baseEditUrl + "/location", text: "Change", visuallyHiddenText: "address" }] }
               }
             ] | removeNullish

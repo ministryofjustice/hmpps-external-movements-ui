@@ -10,12 +10,12 @@ export class SearchLocationController {
     res.render('add-temporary-absence/search-location/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'end-date'),
       uprn: location?.id ? String(location?.id) : null,
-      inputValue: res.locals.formResponses?.['address-autosuggest-input'] ?? location?.description,
+      inputValue: res.locals.formResponses?.['address-autosuggest-input'] ?? location?.address,
       line1: res.locals.formResponses?.['line1'] ?? location?.line1,
       line2: res.locals.formResponses?.['line2'] ?? location?.line2,
       city: res.locals.formResponses?.['city'] ?? location?.city,
       county: res.locals.formResponses?.['county'] ?? location?.county,
-      postcode: res.locals.formResponses?.['postcode'] ?? location?.postcode,
+      postcode: res.locals.formResponses?.['postcode'] ?? (location?.id ? null : location?.postcode),
     })
   }
 
@@ -27,7 +27,9 @@ export class SearchLocationController {
         }
       : {
           id: Number(req.body.uprn!),
-          description: req.body.addressString ?? null,
+          address: req.body.addressString ?? null,
+          description: req.body.description,
+          postcode: req.body.postcode,
         }
 
     res.redirect(

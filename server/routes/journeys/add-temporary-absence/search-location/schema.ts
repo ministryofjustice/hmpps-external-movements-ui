@@ -22,6 +22,8 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
         isManual: false,
         uprn: uprn!,
         addressString: address.addressString,
+        postcode: address.postcode,
+        description: address.subBuildingName,
       }
     }
 
@@ -34,6 +36,7 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
           city,
           county: county?.trim() ? county : null,
           postcode: postcode?.trim() ? postcode : null,
+          description: null,
         }
       }
 
