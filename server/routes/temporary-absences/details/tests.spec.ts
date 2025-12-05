@@ -56,7 +56,7 @@ test.describe('/temporary-absences/:id', () => {
       status: { code: 'SCHEDULED', description: 'Scheduled' },
       releaseAt: '2001-01-01T10:00:00',
       returnBy: '2001-01-01T17:30:00',
-      location: { uprn: '1001', description: 'Random Street, UK' },
+      location: { uprn: 1001, description: 'Random Street, UK' },
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       transport: { code: 'CAR', description: 'Car' },
     })
@@ -108,7 +108,7 @@ test.describe('/temporary-absences/:id', () => {
       status: { code: 'CANCELLED', description: 'Cancelled' },
       releaseAt: '2001-01-01T10:00:00',
       returnBy: '2001-01-01T17:30:00',
-      location: { uprn: '1001', description: 'Random Street, UK' },
+      location: { uprn: 1001, description: 'Random Street, UK' },
       accompaniedBy: { code: 'OTH', description: 'Others' },
       transport: { code: 'CAR', description: 'Car' },
     })

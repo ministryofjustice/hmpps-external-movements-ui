@@ -42,7 +42,7 @@ test.describe('/temporary-absence-authorisations', () => {
           repeat: false,
           fromDate: '2001-01-01',
           toDate: '2001-01-01',
-          locations: [{ uprn: '1001', description: 'Random Street, UK' }],
+          locations: [{ uprn: 1001, description: 'Random Street, UK' }],
           occurrenceCount: 1,
         },
         {
@@ -62,7 +62,7 @@ test.describe('/temporary-absence-authorisations', () => {
           repeat: true,
           fromDate: '2001-01-02',
           toDate: '2001-03-01',
-          locations: [{ uprn: '1001', description: 'Random Street, UK' }],
+          locations: [{ uprn: 1001, description: 'Random Street, UK' }],
           occurrenceCount: 12,
         },
       ],

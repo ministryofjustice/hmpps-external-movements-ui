@@ -10,7 +10,7 @@ export interface PrisonerDetails {
 }
 
 export type Address = {
-  id?: string | null
+  id?: number | null
   description?: string | null
   line1?: string | null
   line2?: string | null

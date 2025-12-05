@@ -40,7 +40,7 @@ test.describe('/add-temporary-absence/approval', () => {
         startTime: '10:00',
         returnDate: '2025-05-05',
         returnTime: '12:00',
-        location: { id: 'id', description: 'Random Street, UK' },
+        location: { id: 1001, description: 'Random Street, UK' },
         accompanied: false,
         transport: { code: 'POL', description: 'Police vehicle' },
       },

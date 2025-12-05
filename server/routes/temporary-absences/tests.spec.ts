@@ -51,7 +51,7 @@ test.describe('/temporary-absences', () => {
           status: { code: 'SCHEDULED', description: 'Scheduled' },
           releaseAt: '2001-01-01T10:00:00',
           returnBy: '2001-01-01T17:30:00',
-          location: { uprn: '1001', description: 'Random Street, UK' },
+          location: { uprn: 1001, description: 'Random Street, UK' },
           accompaniedBy: { code: 'U', description: 'Unaccompanied' },
           transport: { code: 'CAR', description: 'Car' },
           isCancelled: false,

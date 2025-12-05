@@ -55,7 +55,7 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
       return z.NEVER
     }
 
-    if (req.journeyData.addTemporaryAbsence!.locations?.find(itm => itm.id === val.uprn)) {
+    if (req.journeyData.addTemporaryAbsence!.locations?.find(itm => String(itm.id) === val.uprn)) {
       ctx.addIssue({
         code: 'custom',
         message: 'Enter and select an address that has not been already added',

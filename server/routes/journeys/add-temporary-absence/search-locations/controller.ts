@@ -30,7 +30,7 @@ export class SearchLocationsController {
     } else if (req.body.add !== undefined) {
       req.journeyData.addTemporaryAbsence!.locations ??= []
       req.journeyData.addTemporaryAbsence!.locations.push({
-        id: req.body.uprn,
+        id: Number(req.body.uprn),
         description: req.body.addressString ?? null,
       })
 
