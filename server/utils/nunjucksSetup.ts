@@ -17,6 +17,7 @@ import config from '../config'
 import logger from '../../logger'
 import {
   firstNameSpaceLastName,
+  formatAddress,
   formatRefDataName,
   joinAddress,
   lastNameCommaFirstName,
@@ -109,6 +110,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('contains', (arr, value) => arr.includes(value))
   njkEnv.addFilter('joinAddress', joinAddress)
+  njkEnv.addFilter('formatAddress', formatAddress)
   njkEnv.addFilter('convertToSortableColumns', convertToSortableColumns)
   njkEnv.addFilter('hasPermission', hasPermissionFilter)
   njkEnv.addFilter(

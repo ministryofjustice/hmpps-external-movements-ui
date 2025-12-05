@@ -9,7 +9,7 @@
   {% set options = (options.push(
     {
       value: loop.index0 | string,
-      text: location.description or location | joinAddress
+      text: location | formatAddress
     }
   ), options) %}
 {% endfor %}

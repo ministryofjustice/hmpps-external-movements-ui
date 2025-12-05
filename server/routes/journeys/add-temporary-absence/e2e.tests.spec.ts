@@ -443,7 +443,8 @@ test.describe('/add-temporary-absence/e2e', () => {
           {
             location: {
               uprn: 2001,
-              description: 'Address, RS1 34T',
+              address: 'Address',
+              postcode: 'RS1 34T',
             },
             releaseAt: '2069-10-10T12:30:00',
             returnBy: '2069-10-11T12:30:00',
