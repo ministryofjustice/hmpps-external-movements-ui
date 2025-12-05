@@ -8,6 +8,13 @@ import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApi
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { EnterRotatingPatternPage } from './test.page'
+import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/add-temporary-absence/enter-rotating-pattern unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/add-temporary-absence/enter-rotating-pattern`)
+  })
+})
 
 test.describe('/add-temporary-absence/enter-rotating-pattern', () => {
   const prisonNumber = randomPrisonNumber()

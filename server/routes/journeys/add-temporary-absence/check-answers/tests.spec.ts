@@ -13,6 +13,13 @@ import { injectJourneyData } from '../../../../../integration_tests/steps/journe
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { getSentAuditEvents } from '../../../../../integration_tests/mockApis/wiremock'
 import { AddTapCYAPage } from './test.page'
+import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/add-temporary-absence/check-answers unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/add-temporary-absence/check-answers`)
+  })
+})
 
 test.describe('/add-temporary-absence/check-answers', () => {
   const prisonNumber = randomPrisonNumber()

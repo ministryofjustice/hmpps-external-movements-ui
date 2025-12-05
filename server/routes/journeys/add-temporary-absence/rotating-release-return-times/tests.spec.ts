@@ -9,6 +9,13 @@ import { injectJourneyData } from '../../../../../integration_tests/steps/journe
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { RotatingReleaseReturnTimesPage } from './test.page'
 import { AddTemporaryAbsenceJourney } from '../../../../@types/journeys'
+import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/add-temporary-absence/rotating-release-return-times unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/add-temporary-absence/rotating-release-return-times`)
+  })
+})
 
 test.describe('/add-temporary-absence/rotating-release-return-times', () => {
   const prisonNumber = randomPrisonNumber()

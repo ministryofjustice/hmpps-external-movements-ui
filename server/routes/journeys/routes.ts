@@ -5,6 +5,8 @@ import { mergeObjects } from '../../utils/utils'
 import { AddTemporaryAbsenceRoutes } from './add-temporary-absence/routes'
 import { ManageTemporaryAbsenceRoutes } from './temporary-absences/routes'
 import { ManageTapAuthorisationRoutes } from './temporary-absence-authorisations/routes'
+import { requirePermissions } from '../../middleware/permissions/requirePermissions'
+import { UserPermissionLevel } from '../../interfaces/hmppsUser'
 
 export const JourneyRoutes = (services: Services) => {
   const router = Router({ mergeParams: true })
@@ -18,9 +20,21 @@ export const JourneyRoutes = (services: Services) => {
     next()
   })
 
-  router.use('/add-temporary-absence', AddTemporaryAbsenceRoutes(services))
-  router.use('/temporary-absences', ManageTemporaryAbsenceRoutes(services))
-  router.use('/temporary-absence-authorisations', ManageTapAuthorisationRoutes(services))
+  router.use(
+    '/add-temporary-absence',
+    requirePermissions('TAP', UserPermissionLevel.MANAGE),
+    AddTemporaryAbsenceRoutes(services),
+  )
+  router.use(
+    '/temporary-absences',
+    requirePermissions('TAP', UserPermissionLevel.MANAGE),
+    ManageTemporaryAbsenceRoutes(services),
+  )
+  router.use(
+    '/temporary-absence-authorisations',
+    requirePermissions('TAP', UserPermissionLevel.MANAGE),
+    ManageTapAuthorisationRoutes(services),
+  )
 
   if (process.env.NODE_ENV === 'e2e-test') {
     router.get('/inject-journey-data', (req, res) => {

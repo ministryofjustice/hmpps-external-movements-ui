@@ -10,6 +10,13 @@ import { injectJourneyData } from '../../../../../integration_tests/steps/journe
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { formatInputDate } from '../../../../utils/dateTimeUtils'
 import { StartDatePage } from './test.page'
+import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/add-temporary-absence/start-date unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/add-temporary-absence/start-date`)
+  })
+})
 
 test.describe('/add-temporary-absence/start-date', () => {
   const prisonNumber = randomPrisonNumber()

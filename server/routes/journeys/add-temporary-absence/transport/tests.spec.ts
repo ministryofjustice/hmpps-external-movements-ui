@@ -12,6 +12,13 @@ import {
 } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { TransportPage } from './test.page'
+import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/add-temporary-absence/transport unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/add-temporary-absence/transport`)
+  })
+})
 
 test.describe('/add-temporary-absence/transport', () => {
   const prisonNumber = randomPrisonNumber()

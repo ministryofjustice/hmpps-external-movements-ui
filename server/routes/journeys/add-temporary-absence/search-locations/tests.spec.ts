@@ -10,6 +10,13 @@ import { injectJourneyData } from '../../../../../integration_tests/steps/journe
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { SearchLocationsPage } from './test.page'
 import { stubGetAddress, stubSearchAddresses } from '../../../../../integration_tests/mockApis/osPlacesApi'
+import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/add-temporary-absence/search-locations unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/add-temporary-absence/search-locations`)
+  })
+})
 
 test.describe('/add-temporary-absence/search-locations', () => {
   const prisonNumber = randomPrisonNumber()
