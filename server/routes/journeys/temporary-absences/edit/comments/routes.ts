@@ -2,13 +2,14 @@ import { BaseRouter } from '../../../../common/routes'
 import { EditAbsenceCommentsController } from './controller'
 import { validate } from '../../../../../middleware/validation/validationMiddleware'
 import { schema } from './schema'
+import { Services } from '../../../../../services'
 
-export const EditAbsenceCommentsRoutes = () => {
+export const EditAbsenceCommentsRoutes = ({ externalMovementsService }: Services) => {
   const { router, get, post } = BaseRouter()
-  const controller = new EditAbsenceCommentsController()
+  const controller = new EditAbsenceCommentsController(externalMovementsService)
 
   get('/', controller.GET)
-  post('/', validate(schema), controller.POST)
+  post('/', validate(schema), controller.submitToApi, controller.POST)
 
   return router
 }
