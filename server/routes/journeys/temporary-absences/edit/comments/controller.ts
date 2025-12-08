@@ -6,8 +6,10 @@ export class EditAbsenceCommentsController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
+    const { backUrl } = req.journeyData.updateTapOccurrence!
+
     res.render('temporary-absences/edit/comments/view', {
-      backUrl: '../edit',
+      backUrl,
       notes: res.locals.formResponses?.['notes'] ?? req.journeyData.updateTapOccurrence!.occurrence.notes,
     })
   }

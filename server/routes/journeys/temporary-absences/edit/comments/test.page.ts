@@ -7,6 +7,7 @@ export class EditAbsenceCommentsPage extends BaseTestPage {
       title: 'Change comments - Manage Temporary Absence - DPS',
       caption: 'Manage Temporary Absences',
       heading: 'Enter any relevant comments (optional)',
+      backUrl: /\/temporary-absences\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
     })
   }
 
