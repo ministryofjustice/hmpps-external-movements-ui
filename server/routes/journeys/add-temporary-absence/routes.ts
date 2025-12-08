@@ -154,7 +154,8 @@ const guard = {
   'start-date': (req: Request) => (get(req, '', 'repeat') === undefined ? '/single-or-repeating' : undefined),
   'end-date': (req: Request) => (get(req, 'startDateTimeSubJourney', 'startDate') ? undefined : '/start-date'),
   'search-location': (req: Request) => (get(req, '', 'returnDate') ? undefined : '/end-date'),
-  'enter-location': (req: Request) => (get(req, '', 'returnDate') ? undefined : '/end-date'),
+  'enter-location': (req: Request) =>
+    req.journeyData.addTemporaryAbsence!.repeat || get(req, '', 'returnDate') ? undefined : '/end-date',
   'confirm-location': (req: Request) =>
     get(req, 'confirmLocationSubJourney', 'location') ? undefined : '/search-location',
   'accompanied-or-unaccompanied': (req: Request) =>

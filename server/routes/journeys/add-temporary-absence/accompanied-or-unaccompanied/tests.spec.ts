@@ -42,6 +42,7 @@ test.describe('/add-temporary-absence/accompanied-or-unaccompanied', () => {
           code: 'PP',
           description: 'Police production',
         },
+        location: { id: 1001, address: 'Random Street, UK' },
         repeat: false,
       },
     })
