@@ -4,7 +4,7 @@ export class EditAbsenceCommentsPage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
       pageUrl: /\/temporary-absences\/edit\/comments/,
-      title: 'Enter optional comments - Manage Temporary Absence - DPS',
+      title: 'Change comments - Manage Temporary Absence - DPS',
       caption: 'Manage Temporary Absences',
       heading: 'Enter any relevant comments (optional)',
     })
