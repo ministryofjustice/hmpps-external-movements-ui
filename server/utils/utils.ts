@@ -1,5 +1,7 @@
 import type { HTTPError } from 'superagent'
 import { components } from '../@types/externalMovements'
+import { Address } from '../@types/journeys'
+import { trimAddress } from './formatUtils'
 
 const properCase = (word: string): string => (word[0] ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word)
 
@@ -120,3 +122,10 @@ export const parseQueryParams = (queries: {
 
   return searchParams.length ? `?${searchParams.join('&')}` : ''
 }
+
+export const parseAddress = (location: Address) => ({
+  address: trimAddress(location),
+  ...(location.description ? { description: location.description } : {}),
+  ...(location.id ? { uprn: location.id } : {}),
+  ...(location.postcode ? { postcode: location.postcode } : {}),
+})

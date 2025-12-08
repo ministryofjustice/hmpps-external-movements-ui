@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
 import { components } from '../../../../@types/externalMovements'
-import { Address } from '../../../../@types/journeys'
-import { trimAddress } from '../../../../utils/formatUtils'
+import { parseAddress } from '../../../../utils/utils'
 
 export class AddTapCheckAnswersController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -86,10 +85,3 @@ export class AddTapCheckAnswersController {
 
   POST = (_req: Request, res: Response) => res.redirect('confirmation')
 }
-
-const parseAddress = (location: Address) => ({
-  address: trimAddress(location),
-  ...(location.description ? { description: location.description } : {}),
-  ...(location.id ? { uprn: location.id } : {}),
-  ...(location.postcode ? { postcode: location.postcode } : {}),
-})

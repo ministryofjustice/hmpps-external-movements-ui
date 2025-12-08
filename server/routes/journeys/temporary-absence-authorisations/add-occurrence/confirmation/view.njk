@@ -1,0 +1,25 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% set pageTitle = 'Add occurrence confirmation - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    {{ govukPanel({
+      titleText: "Temporary absence occurrence added for " + prisonerDetails | firstNameSpaceLastName,
+      text: ""
+    }) }}
+
+    <p class="govuk-body">
+      <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/{{ occurrenceId }}">View this occurrence</a>
+    </p>
+
+    <p class="govuk-body">
+      <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ authorisation.id }}">View this temporary absence</a>
+    </p>
+
+    <p class="govuk-body">
+      <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?fromDate=&toDate=&status=">View all temporary absence occurrences in {{ user.activeCaseLoad.description }}</a>
+    </p>
+  </div>
+{% endblock %}

@@ -104,6 +104,17 @@ export default class ExternalMovementsService {
     })
   }
 
+  async addTapOccurrence(
+    context: ApiRequestContext,
+    authorisationId: string,
+    request: components['schemas']['CreateOccurrenceRequest'],
+  ) {
+    return this.externalMovementsApiClient.withContext(context).post<components['schemas']['ReferenceId']>({
+      path: `/temporary-absence-authorisations/${authorisationId}/occurrences`,
+      data: request,
+    })
+  }
+
   async getTapAuthorisation(context: ApiRequestContext, id: string, fromDate?: string | null, toDate?: string | null) {
     return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapAuthorisation']>({
       path: `/temporary-absence-authorisations/${id}${parseQueryParams({ fromDate, toDate })}`,
