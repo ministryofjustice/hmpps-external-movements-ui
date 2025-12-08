@@ -8,6 +8,13 @@ import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApi
 import { stubGetTapAuthorisation } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { AddTapOccurrencePage } from './test.page'
+import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/temporary-absence-authorisations/add-occurrence unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/add-occurrence`)
+  })
+})
 
 test.describe('/temporary-absence-authorisations/add-occurrence', () => {
   const prisonNumber = randomPrisonNumber()

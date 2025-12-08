@@ -11,6 +11,13 @@ import {
 } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { EditTapAuthorisationStartEndDatesPage } from './test.page'
+import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/temporary-absence-authorisations/edit/start-end-dates unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/edit/start-end-dates`)
+  })
+})
 
 test.describe('/temporary-absence-authorisations/edit/start-end-dates', () => {
   const prisonNumber = randomPrisonNumber()

@@ -26,7 +26,7 @@ import { auditPageViewMiddleware } from './middleware/audit/auditPageViewMiddlew
 import { auditApiCallMiddleware } from './middleware/audit/auditApiCallMiddleware'
 import PrisonerImageRoutes from './routes/prisonerImageRoutes'
 import { handleApiError } from './middleware/validation/handleApiError'
-import { permissionsMiddleware } from './middleware/permissionsMiddleware'
+import { permissionsMiddleware } from './middleware/permissions/permissionsMiddleware'
 
 export default function createApp(services: Services): express.Application {
   const app = express()

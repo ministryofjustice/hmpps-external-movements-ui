@@ -21,11 +21,9 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     ])
   })
 
-  test.beforeEach(async ({ page }) => {
-    await signIn(page)
-  })
-
   test('should show temporary absence details for PENDING absence', async ({ page }) => {
+    await signIn(page)
+
     const authorisationId = uuidV4()
     await stubGetTapAuthorisation({
       id: authorisationId,
@@ -93,6 +91,8 @@ test.describe('/temporary-absence-authorisations/:id', () => {
   })
 
   test('should show temporary absence details for APPROVED absence', async ({ page }) => {
+    await signIn(page)
+
     const authorisationId = uuidV4()
     await stubGetTapAuthorisation({
       id: authorisationId,
@@ -147,5 +147,89 @@ test.describe('/temporary-absence-authorisations/:id', () => {
 
     await expect(testPage.button('Review this absence')).toHaveCount(0)
     await expect(testPage.button('Cancel this absence')).toBeVisible()
+  })
+
+  test('should not show cancel button for view only user', async ({ page }) => {
+    await signIn(page, { roles: ['EXTERNAL_MOVEMENTS__TAP__RO'] })
+
+    const authorisationId = uuidV4()
+    await stubGetTapAuthorisation({
+      id: authorisationId,
+      person: {
+        personIdentifier: 'A9965EA',
+        firstName: 'PRISONER-NAME',
+        lastName: 'PRISONER-SURNAME',
+        dateOfBirth: '1990-01-01',
+        cellLocation: '2-1-005',
+      },
+      status: { code: 'APPROVED', description: 'Approved' },
+      absenceType: { code: 'PP', description: 'Police production' },
+      repeat: false,
+      fromDate: '2001-01-01',
+      toDate: '2001-01-01',
+      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      transport: { code: 'CAR', description: 'Car' },
+      locations: [{ uprn: 1001, description: 'Random Street, UK' }],
+      occurrences: [
+        {
+          id: 'occurrence-id',
+          status: { code: 'PENDING', description: 'To be reviewed' },
+          releaseAt: '2001-01-01T10:00:00',
+          returnBy: '2001-01-01T17:30:00',
+          location: { uprn: 1001, description: 'Random Street, UK' },
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+          transport: { code: 'CAR', description: 'Car' },
+        },
+      ],
+    })
+    await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
+
+    // verify page content
+    const testPage = await new TapAuthorisationDetailsPage(page).verifyContent()
+
+    await expect(testPage.button('Review this absence')).toHaveCount(0)
+    await expect(testPage.button('Cancel this absence')).toHaveCount(0)
+  })
+
+  test('should not show review button for view only user', async ({ page }) => {
+    await signIn(page, { roles: ['EXTERNAL_MOVEMENTS__TAP__RO'] })
+
+    const authorisationId = uuidV4()
+    await stubGetTapAuthorisation({
+      id: authorisationId,
+      person: {
+        personIdentifier: 'A9965EA',
+        firstName: 'PRISONER-NAME',
+        lastName: 'PRISONER-SURNAME',
+        dateOfBirth: '1990-01-01',
+        cellLocation: '2-1-005',
+      },
+      status: { code: 'PENDING', description: 'To be reviewed' },
+      absenceType: { code: 'PP', description: 'Police production' },
+      repeat: false,
+      fromDate: '2001-01-01',
+      toDate: '2001-01-01',
+      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      transport: { code: 'CAR', description: 'Car' },
+      locations: [{ uprn: 1001, description: 'Random Street, UK' }],
+      occurrences: [
+        {
+          id: 'occurrence-id',
+          status: { code: 'PENDING', description: 'To be reviewed' },
+          releaseAt: '2001-01-01T10:00:00',
+          returnBy: '2001-01-01T17:30:00',
+          location: { uprn: 1001, description: 'Random Street, UK' },
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+          transport: { code: 'CAR', description: 'Car' },
+        },
+      ],
+    })
+    await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
+
+    // verify page content
+    const testPage = await new TapAuthorisationDetailsPage(page).verifyContent()
+
+    await expect(testPage.button('Review this absence')).toHaveCount(0)
+    await expect(testPage.button('Cancel this absence')).toHaveCount(0)
   })
 })

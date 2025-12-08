@@ -9,6 +9,13 @@ import { stubGetTapAuthorisation } from '../../../../../../integration_tests/moc
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { AddTapOccurrenceCheckAnswersPage } from './test.page'
 import { injectJourneyData } from '../../../../../../integration_tests/steps/journey'
+import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/temporary-absence-authorisations/add-occurrence/check-answers unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/add-occurrence/check-answers`)
+  })
+})
 
 test.describe('/temporary-absence-authorisations/add-occurrence/check-answers', () => {
   const prisonNumber = randomPrisonNumber()

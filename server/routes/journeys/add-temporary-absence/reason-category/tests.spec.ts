@@ -12,6 +12,13 @@ import {
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { ReasonCategoryPage } from './test.page'
+import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/add-temporary-absence/reason-category unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/add-temporary-absence/reason-category`)
+  })
+})
 
 test.describe('/add-temporary-absence/reason-category', () => {
   const prisonNumber = randomPrisonNumber()

@@ -10,6 +10,13 @@ import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockAp
 import { EditTapAuthorisationConfirmationPage } from './test.page'
 import { injectJourneyData } from '../../../../../../integration_tests/steps/journey'
 import { JourneyData } from '../../../../../@types/journeys'
+import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
+
+test.describe('/temporary-absence-authorisations/edit/confirmation unauthorised', () => {
+  test('should show unauthorised error', async ({ page }) => {
+    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/edit/confirmation`)
+  })
+})
 
 test.describe('/temporary-absence-authorisations/edit/confirmation', () => {
   const prisonNumber = randomPrisonNumber()

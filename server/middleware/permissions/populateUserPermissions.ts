@@ -1,0 +1,24 @@
+import { RequestHandler, Response } from 'express'
+import { UserPermissionLevel } from '../../interfaces/hmppsUser'
+
+enum AuthorisedRoles {
+  EXTERNAL_MOVEMENTS__TAP__RO = 'EXTERNAL_MOVEMENTS__TAP__RO', // BETA External Movements - TAP & ROTL - View only role
+  EXTERNAL_MOVEMENTS__TAP__RW = 'EXTERNAL_MOVEMENTS__TAP__RW', // BETA External Movements - TAP & ROTL - Management role
+}
+
+const hasRole = (res: Response, ...roles: AuthorisedRoles[]) =>
+  roles.some(role => res.locals.user.userRoles.includes(role))
+
+export const populateUserPermissions: RequestHandler = async (_req, res, next) => {
+  res.locals.user.permissions = {
+    TAP: UserPermissionLevel.FORBIDDEN,
+  }
+
+  if (hasRole(res, AuthorisedRoles.EXTERNAL_MOVEMENTS__TAP__RW)) {
+    res.locals.user.permissions.TAP = UserPermissionLevel.MANAGE
+  } else if (hasRole(res, AuthorisedRoles.EXTERNAL_MOVEMENTS__TAP__RO)) {
+    res.locals.user.permissions.TAP = UserPermissionLevel.VIEW_ONLY
+  }
+
+  return next()
+}
