@@ -1,15 +1,13 @@
 {% extends "partials/layout.njk" %}
 {% from "dps/components/address-autosuggest/macro.njk" import addressAutosuggest %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/details/macro.njk" import govukDetails %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set pageTitle = 'Search for a location - Add a temporary absence' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Create a Temporary Absence</span>
-    <h1 class="govuk-heading-l"><label for="address-autosuggest-input">Search for a location where this absence will take place</label></h1>
+    <h1 class="govuk-heading-l"><label for="address-autosuggest-input">Add a location for this absence</label></h1>
 
     <p>You can add multiple locations if this absence will happen in multiple places.</p>
     <p>Enter a location manually if it:</p>
@@ -42,64 +40,9 @@
         }) }}
       </div>
 
-      {% set manualInputHtml %}
-        {{ govukInput({
-          id: "line1",
-          name: "line1",
-          label: { text: "Address line 1 (optional)" },
-          classes: 'govuk-!-width-two-thirds',
-          errorMessage: validationErrors | findError('line1'),
-          value: line1,
-          attributes: { autocomplete: "address-line1" }
-        }) }}
-        {{ govukInput({
-          id: "line2",
-          name: "line2",
-          label: { text: "Address line 2 (optional)" },
-          classes: 'govuk-!-width-two-thirds',
-          errorMessage: validationErrors | findError('line2'),
-          value: line2,
-          attributes: { autocomplete: "address-line2" }
-        }) }}
-        {{ govukInput({
-          id: "city",
-          name: "city",
-          label: { text: "Town or city" },
-          classes: 'govuk-!-width-one-half',
-          errorMessage: validationErrors | findError('city'),
-          value: city,
-          attributes: { autocomplete: "address-level2" }
-        }) }}
-        {{ govukInput({
-          id: "county",
-          name: "county",
-          label: { text: "County (optional)" },
-          classes: 'govuk-!-width-one-half',
-          errorMessage: validationErrors | findError('county'),
-          value: county,
-          attributes: { autocomplete: "address-level1" }
-        }) }}
-        {{ govukInput({
-          id: "postcode",
-          name: "postcode",
-          label: { text: "Postcode (optional)" },
-          classes: 'govuk-!-width-one-third',
-          errorMessage: validationErrors | findError('postcode'),
-          value: postcode,
-          attributes: { autocomplete: "postal-code" }
-        }) }}
-        {{ govukButton({
-          name: "addManual",
-          text: "Add location",
-          preventDoubleClick: true
-        }) }}
-      {% endset %}
-
-      {{ govukDetails({
-        summaryText: "Enter a location manually",
-        open: line1 or line2 or city or county or postcode,
-        html: manualInputHtml
-      }) }}
+      <p class="govuk-!-margin-bottom-7">
+        <a class="govuk-link govuk-link--no-visited-state" href="enter-location">Enter a location manually</a>
+      </p>
 
       {% if locations.length %}
         <h2 class="govuk-heading-m">You have added {{ locations.length }} {{ "location" if locations.length === 1 else "locations" }}</h2>

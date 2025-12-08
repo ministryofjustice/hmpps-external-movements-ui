@@ -9,15 +9,9 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
   createSchema({
     'address-autosuggest-input': z.string(),
     uprn: z.string().optional(),
-    line1: z.string().optional(),
-    line2: z.string().optional(),
-    city: z.string().optional(),
-    county: z.string().optional(),
-    postcode: z.string().optional(),
     add: z.string().optional(),
-    addManual: z.string().optional(),
     save: z.string().optional(),
-  }).transform(async ({ line1, line2, city, county, postcode, ...val }, ctx) => {
+  }).transform(async (val, ctx) => {
     if (val.save !== undefined) {
       if (req.journeyData.addTemporaryAbsence!.locations?.length) {
         return {
@@ -29,25 +23,6 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
         }
       }
       ctx.addIssue({ code: 'custom', message: ERROR_MSG, path: ['address-autosuggest-input'] })
-      return z.NEVER
-    }
-
-    if (val.addManual !== undefined) {
-      if (city) {
-        return {
-          ...val,
-          uprn: '',
-          addressString: '',
-          line1: line1?.trim() ? line1 : null,
-          line2: line2?.trim() ? line2 : null,
-          city,
-          county: county?.trim() ? county : null,
-          postcode: postcode?.trim() ? postcode : null,
-          description: null,
-        }
-      }
-
-      ctx.addIssue({ code: 'custom', message: 'Enter town or city', path: ['city'] })
       return z.NEVER
     }
 

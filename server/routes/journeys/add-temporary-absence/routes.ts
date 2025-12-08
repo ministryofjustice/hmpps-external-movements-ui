@@ -34,6 +34,7 @@ import { MatchAbsencesAndLocationsRoute } from './match-absences-and-locations/r
 import { RotatingReleaseReturnTimesRoutes } from './rotating-release-return-times/routes'
 import { EnterShiftPatternRoutes } from './enter-shift-pattern/routes'
 import { SelectDaysTimesBiWeeklyRoutes } from './select-days-times-biweekly/routes'
+import { EnterLocationRoutes } from './enter-location/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -69,6 +70,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/start-date', StartDateRoutes())
   router.use('/end-date', EndDateRoutes())
   router.use('/search-location', SearchLocationRoutes(services))
+  router.use('/enter-location', EnterLocationRoutes())
   router.use('/accompanied-or-unaccompanied', AccompaniedOrUnaccompaniedRoutes())
   router.use('/accompanied', AccompaniedRoutes(services))
   router.use('/transport', TransportRoutes(services))
@@ -152,7 +154,8 @@ const guard = {
   'start-date': (req: Request) => (get(req, '', 'repeat') === undefined ? '/single-or-repeating' : undefined),
   'end-date': (req: Request) => (get(req, 'startDateTimeSubJourney', 'startDate') ? undefined : '/start-date'),
   'search-location': (req: Request) => (get(req, '', 'returnDate') ? undefined : '/end-date'),
-  'enter-location': (req: Request) => (get(req, '', 'returnDate') ? undefined : '/end-date'),
+  'enter-location': (req: Request) =>
+    req.journeyData.addTemporaryAbsence!.repeat || get(req, '', 'returnDate') ? undefined : '/end-date',
   'confirm-location': (req: Request) =>
     get(req, 'confirmLocationSubJourney', 'location') ? undefined : '/search-location',
   'accompanied-or-unaccompanied': (req: Request) =>
