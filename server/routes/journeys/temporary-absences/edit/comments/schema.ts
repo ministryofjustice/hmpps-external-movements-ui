@@ -8,6 +8,7 @@ export const schema = createSchema({
     .string()
     .max(4000, { message: CHAR_COUNT_ERROR_MSG })
     .optional()
+    .default('')
 })
 
 export type SchemaType = z.infer<typeof schema>
