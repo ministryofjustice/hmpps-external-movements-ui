@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@playwright/test'
-import { randomPrisonNumber } from '../../../../../../integration_tests/data/testData'
 import { v4 as uuidV4 } from 'uuid'
+import { randomPrisonNumber } from '../../../../../../integration_tests/data/testData'
 import auth from '../../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../../integration_tests/mockApis/componentsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
@@ -104,7 +104,7 @@ test.describe('/temporary-absences/edit/comments', () => {
 
   const occurrence = {
     id: occurrenceId,
-    authorisation: authorisation,
+    authorisation,
     absenceType: {
       code: 'SR',
       description: 'Standard ROTL (Release on Temporary Licence)',

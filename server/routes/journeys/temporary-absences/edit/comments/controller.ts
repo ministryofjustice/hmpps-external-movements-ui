@@ -16,10 +16,10 @@ export class EditAbsenceCommentsController {
     const journey = req.journeyData.updateTapOccurrence!
 
     try {
-        journey.result = await this.externalMovementsService.updateTapOccurrence({ res }, journey.occurrence.id, {
-          type: 'AmendOccurrenceNotes',
-          notes: req.body.notes,
-        })
+      journey.result = await this.externalMovementsService.updateTapOccurrence({ res }, journey.occurrence.id, {
+        type: 'AmendOccurrenceNotes',
+        notes: req.body.notes,
+      })
       next()
     } catch (e) {
       next(e)

@@ -160,7 +160,7 @@ test.describe('/temporary-absences/edit/confirmation', () => {
     await testPage.verifyLink('Return to the DPS homepage', /localhost:3001$/)
   })
 
-  test('should show TAP occurrence notes updated', async ({page}) => {
+  test('should show TAP occurrence notes updated', async ({ page }) => {
     const journeyId = uuidV4()
 
     await startJourney(page, journeyId, 'comments', {
