@@ -19,7 +19,10 @@ export class AccompaniedOrUnaccompaniedController {
   }
 
   getNormalPreviousPage = (journey: AddTemporaryAbsenceJourney) => {
-    if (!journey.repeat) return 'search-location'
+    if (!journey.repeat) {
+      if (journey.location?.id) return 'search-location'
+      return 'enter-location'
+    }
     if (journey.locations?.length === 1) return 'search-locations'
     return 'match-absences-and-locations'
   }

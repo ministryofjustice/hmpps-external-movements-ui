@@ -9,25 +9,12 @@ export class SearchLocationsController {
       backUrl: AddTapFlowControl.getBackUrl(req, 'check-absences'),
       inputValue: res.locals.formResponses?.['address-autosuggest-input'],
       uprn: res.locals.formResponses?.['uprn'],
-      line1: res.locals.formResponses?.['line1'],
-      line2: res.locals.formResponses?.['line2'],
-      city: res.locals.formResponses?.['city'],
-      county: res.locals.formResponses?.['county'],
-      postcode: res.locals.formResponses?.['postcode'],
       locations: req.journeyData.addTemporaryAbsence!.locations ?? [],
     })
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    if (req.body.addManual !== undefined) {
-      req.journeyData.addTemporaryAbsence!.locations ??= []
-      req.journeyData.addTemporaryAbsence!.locations.push({
-        id: null,
-        ...req.body,
-      })
-
-      res.redirect('search-locations')
-    } else if (req.body.add !== undefined) {
+    if (req.body.add !== undefined) {
       req.journeyData.addTemporaryAbsence!.locations ??= []
       req.journeyData.addTemporaryAbsence!.locations.push({
         id: Number(req.body.uprn),
