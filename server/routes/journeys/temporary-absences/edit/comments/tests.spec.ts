@@ -209,4 +209,25 @@ test.describe('/temporary-absences/edit/comments', () => {
     await testPage.clickButton('Continue')
     expect(page.url()).toMatch(/\/temporary-absences\/edit\/confirmation/)
   })
+
+  test('should not allow more than 4000 characters', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    // verify page content
+    const testPage = await new EditAbsenceCommentsPage(page).verifyContent()
+
+    await expect(testPage.notesField()).toBeVisible()
+    await expect(testPage.notesField()).toHaveValue('Staying with cousin John Smith')
+    await expect(testPage.button('Continue')).toBeVisible()
+
+    const testString = 'a'.repeat(4001)
+    await testPage.notesField().clear()
+    await testPage.notesField().fill(testString)
+    await testPage.clickButton('Continue')
+
+    await expect(testPage.errorSummary()).toBeVisible()
+    await expect(testPage.errorSummaryTitle()).toContainText('There is a problem')
+    await expect(testPage.errorSummaryList()).toContainText('The maximum character limit is 4000')
+  })
 })

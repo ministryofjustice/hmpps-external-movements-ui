@@ -11,6 +11,18 @@ export class EditAbsenceCommentsPage extends BaseTestPage {
   }
 
   notesField() {
-    return this.textbox(`Enter any relevant comments (optional)`).nth(0)
+    return this.textbox(`Enter any relevant comments (optional)`)
+  }
+
+  errorSummary() {
+    return this.page.locator('.govuk-error-summary')
+  }
+
+  errorSummaryTitle() {
+    return this.page.locator('.govuk-error-summary__title')
+  }
+
+  errorSummaryList() {
+    return this.page.locator('.govuk-error-summary__list')
   }
 }
