@@ -76,7 +76,7 @@
               },
               {
                 key: { text: "Comments" },
-                value: { text: occurrence.notes or "Not provided" },
+                value: { text: (occurrence.notes or "Not provided") | escape | nl2br },
                 actions: { items: [{ href: baseEditUrl + "/comments", text: "Change", visuallyHiddenText: "comments" }] }
               },
               {
