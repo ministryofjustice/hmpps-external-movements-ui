@@ -507,6 +507,11 @@ export interface components {
     CancelAuthorisation: {
       type: 'CancelAuthorisation'
     } & Omit<components['schemas']['AuthorisationAction'], 'type'>
+    ChangeAuthorisationAccompaniment: {
+      type: 'ChangeAuthorisationAccompaniment'
+    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
+      accompaniedByCode: string
+    })
     ChangeAuthorisationDateRange: {
       type: 'ChangeAuthorisationDateRange'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
@@ -1132,6 +1137,7 @@ export interface operations {
           | components['schemas']['AmendAuthorisationNotes']
           | components['schemas']['ApproveAuthorisation']
           | components['schemas']['CancelAuthorisation']
+          | components['schemas']['ChangeAuthorisationAccompaniment']
           | components['schemas']['ChangeAuthorisationDateRange']
           | components['schemas']['ChangePrisonPerson']
           | components['schemas']['DenyAuthorisation']

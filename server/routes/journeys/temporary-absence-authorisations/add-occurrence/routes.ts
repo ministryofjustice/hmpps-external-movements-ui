@@ -8,6 +8,9 @@ import { AddOccurrenceController } from './controller'
 import { AddTapOccurrenceSelectLocationRoutes } from './select-location/routes'
 import { AddTapOccurrenceCommentsRoutes } from './comments/routes'
 import { AddTapOccurrenceCheckAnswersRoutes } from './check-answers/routes'
+import { AddTapOccurrenceSearchLocationRoutes } from './search-location/routes'
+import { AddTapOccurrenceEnterLocationRoutes } from './enter-location/routes'
+import { AddTapOccurrenceConfirmationRoutes } from './confirmation/routes'
 
 export const AddTapOccurrenceRoutes = (services: Services) => {
   const { router, get, post } = BaseRouter()
@@ -29,8 +32,11 @@ export const AddTapOccurrenceRoutes = (services: Services) => {
   post('/', validate(schema), controller.POST)
 
   router.use('/select-location', AddTapOccurrenceSelectLocationRoutes())
+  router.use('/search-location', AddTapOccurrenceSearchLocationRoutes(services))
+  router.use('/enter-location', AddTapOccurrenceEnterLocationRoutes())
   router.use('/comments', AddTapOccurrenceCommentsRoutes())
   router.use('/check-answers', AddTapOccurrenceCheckAnswersRoutes(services))
+  router.use('/confirmation', AddTapOccurrenceConfirmationRoutes())
 
   return router
 }

@@ -1,26 +1,23 @@
 import { v4 as uuidV4 } from 'uuid'
-import { test, Page, expect } from '@playwright/test'
+import { expect, test, Page } from '@playwright/test'
 import auth from '../../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../../integration_tests/mockApis/prisonerSearchApi'
-import {
-  stubGetTapAuthorisation,
-  stubPostTapOccurrence,
-} from '../../../../../../integration_tests/mockApis/externalMovementsApi'
-import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
-import { AddTapOccurrenceCheckAnswersPage } from './test.page'
+import { stubGetTapAuthorisation } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { injectJourneyData } from '../../../../../../integration_tests/steps/journey'
+import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
+import { AddTapOccurrenceEnterLocationPage } from './test.page'
 import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
 
-test.describe('/temporary-absence-authorisations/add-occurrence/check-answers unauthorised', () => {
+test.describe('/temporary-absence-authorisations/add-occurrence/enter-location unauthorised', () => {
   test('should show unauthorised error', async ({ page }) => {
-    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/add-occurrence/check-answers`)
+    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/add-occurrence/enter-location`)
   })
 })
 
-test.describe('/temporary-absence-authorisations/add-occurrence/check-answers', () => {
+test.describe('/temporary-absence-authorisations/add-occurrence/enter-location', () => {
   const prisonNumber = randomPrisonNumber()
   const authorisationId = uuidV4()
 
@@ -41,7 +38,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/check-answers', 
     repeat: true,
     fromDate: '2001-01-02',
     toDate: '2001-01-05',
-    accompaniedBy: { code: 'P', description: 'Police escort' },
+    accompaniedBy: { code: 'U', description: 'Unaccompanied' },
     transport: { code: 'CAR', description: 'Car' },
     locations: [{ uprn: 1001, description: 'Random Street, UK' }],
     occurrences: [
@@ -64,7 +61,6 @@ test.describe('/temporary-absence-authorisations/add-occurrence/check-answers', 
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetTapAuthorisation(authorisation),
-      stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
     ])
   })
 
@@ -74,7 +70,6 @@ test.describe('/temporary-absence-authorisations/add-occurrence/check-answers', 
 
   const startJourney = async (page: Page, journeyId: string) => {
     await page.goto(`/${journeyId}/temporary-absence-authorisations/start-add-occurrence/${authorisationId}`)
-
     await injectJourneyData(page, journeyId, {
       addTapOccurrence: {
         authorisation,
@@ -83,38 +78,42 @@ test.describe('/temporary-absence-authorisations/add-occurrence/check-answers', 
         startTime: '10:00',
         returnDate: '2001-01-03',
         returnTime: '17:30',
-        locationOption: 0,
-        notes: 'new comments',
+        locationOption: 'NEW',
       },
     })
-
-    await page.goto(`/${journeyId}/temporary-absence-authorisations/add-occurrence/check-answers`)
+    await page.goto(`/${journeyId}/temporary-absence-authorisations/add-occurrence/enter-location`)
   }
 
-  test('should try all cases', async ({ page }) => {
+  test('should manually enter an address', async ({ page }) => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId)
 
     // verify page content
-    const testPage = await new AddTapOccurrenceCheckAnswersPage(page).verifyContent()
+    const testPage = await new AddTapOccurrenceEnterLocationPage(page).verifyContent()
 
-    await testPage.verifyAnswer('Start date and time', '3 January 2001 at 10:00')
-    await testPage.verifyAnswer('End date and time', '3 January 2001 at 17:30')
-    await testPage.verifyAnswer('Location', 'Random Street, UK')
-    await testPage.verifyAnswer('Comments', 'new comments')
-    await testPage.verifyAnswer('Accompanied or unaccompanied', 'Accompanied')
-    await testPage.verifyAnswer('Accompanied by', 'Police escort')
-    await testPage.verifyAnswer('Transport', 'Car')
+    await expect(testPage.organisationNameField()).toBeVisible()
+    await expect(testPage.line1Field()).toBeVisible()
+    await expect(testPage.line2Field()).toBeVisible()
+    await expect(testPage.cityField()).toBeVisible()
+    await expect(testPage.countyField()).toBeVisible()
+    await expect(testPage.postcodeField()).toBeVisible()
+    await expect(testPage.button('Continue')).toBeVisible()
 
-    await testPage.verifyLink('Change start date and time', /..\/add-occurrence#startDate/)
-    await testPage.verifyLink('Change end date and time', /..\/add-occurrence#returnDate/)
-    await testPage.verifyLink(/Change location$/, /select-location/)
-    await testPage.verifyLink('Change comments', /comments/)
-
-    await expect(testPage.button('Confirm and save')).toBeVisible()
+    // verify validation error
+    await testPage.line1Field().fill('1 Manual Street')
+    await testPage.clickContinue()
+    await testPage.link('Enter town or city').click()
+    await expect(testPage.cityField()).toBeFocused()
 
     // verify next page routing
-    await testPage.clickButton('Confirm and save')
-    expect(page.url()).toMatch(/\/add-occurrence\/confirmation/)
+    await testPage.cityField().fill('Manual City')
+    await testPage.clickContinue()
+    expect(page.url()).toMatch(/\/comments/)
+
+    // verify input values are persisted
+    await page.goBack()
+    await page.reload()
+    await expect(testPage.line1Field()).toHaveValue('1 Manual Street')
+    await expect(testPage.cityField()).toHaveValue('Manual City')
   })
 })

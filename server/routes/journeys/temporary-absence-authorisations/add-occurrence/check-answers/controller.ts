@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
+import { components } from '../../../../../@types/externalMovements'
+import { parseAddress } from '../../../../../utils/utils'
 
 export class AddTapOccurrenceCheckAnswersController {
-  // @ts-expect-error service not yet in use
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
@@ -17,9 +18,22 @@ export class AddTapOccurrenceCheckAnswersController {
     })
   }
 
-  submitToApi = async (_req: Request, _res: Response, next: NextFunction) => {
+  submitToApi = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // TODO: add API call
+      const journey = req.journeyData.addTapOccurrence!
+
+      const request: components['schemas']['CreateOccurrenceRequest'] = {
+        releaseAt: `${journey.startDate}T${journey.startTime}:00`,
+        returnBy: `${journey.returnDate}T${journey.returnTime}:00`,
+        location:
+          journey.locationOption === 'NEW'
+            ? parseAddress(journey.location!)
+            : journey.authorisation.locations[journey.locationOption!]!,
+      }
+
+      if (journey.notes) request.notes = journey.notes
+
+      journey.result = await this.externalMovementsService.addTapOccurrence({ res }, journey.authorisation.id, request)
       next()
     } catch (e) {
       next(e)
