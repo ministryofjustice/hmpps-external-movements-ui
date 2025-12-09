@@ -21,10 +21,12 @@ export const absenceCategorisationMapper = ({
   code,
   description,
   hintText,
+  nextDomain,
 }: components['schemas']['AbsenceCategorisation']) => ({
   value: code,
   text: description,
   hint: hintText ? { text: hintText } : undefined,
+  attributes: nextDomain ? { nextDomain } : undefined,
 })
 
 export const getAbsenceCategorisationsForDomain = async (

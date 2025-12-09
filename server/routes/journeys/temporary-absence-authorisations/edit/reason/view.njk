@@ -2,7 +2,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = 'Select type of work - Manage Temporary Absences' if reasonCategory else 'Select absence reason - Manage Temporary Absences' %}
+{% set pageTitle = 'Select type of work - Manage temporary absences' if reasonCategory else 'Select absence reason - Manage temporary absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
@@ -23,7 +23,7 @@
       }) }}
 
       {{ govukButton({
-        text: "Confirm and save",
+        text: "Continue",
         preventDoubleClick: true
       }) }}
     </form>

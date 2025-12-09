@@ -12,6 +12,7 @@ import { TapReviewRoutes } from './review/routes'
 import { TapReviewReasonRoutes } from './review-reason/routes'
 import { Page } from '../../../../services/auditService'
 import preventNavigationToExpiredJourneys from '../../../../middleware/journey/preventNavigationToExpiredJourneys'
+import { EditTapAuthorisationChangeConfirmationRoutes } from './change-confirmation/routes'
 
 export const EditTapAuthorisationRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -38,6 +39,8 @@ export const EditTapAuthorisationRoutes = (services: Services) => {
   router.use('/cancel', TapCancelRoutes(services))
   router.use('/review', TapReviewRoutes())
   router.use('/review-reason', TapReviewReasonRoutes(services))
+
+  router.use('/change-confirmation', EditTapAuthorisationChangeConfirmationRoutes(services))
 
   router.use('/confirmation', EditTapAuthorisationConfirmationRoutes())
 

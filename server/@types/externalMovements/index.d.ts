@@ -520,6 +520,11 @@ export interface components {
       /** Format: date */
       toDate: string
     })
+    ChangeAuthorisationTransport: {
+      type: 'ChangeAuthorisationTransport'
+    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
+      transportCode: string
+    })
     ChangePrisonPerson: {
       type: 'ChangePrisonPerson'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
@@ -1139,6 +1144,7 @@ export interface operations {
           | components['schemas']['CancelAuthorisation']
           | components['schemas']['ChangeAuthorisationAccompaniment']
           | components['schemas']['ChangeAuthorisationDateRange']
+          | components['schemas']['ChangeAuthorisationTransport']
           | components['schemas']['ChangePrisonPerson']
           | components['schemas']['DenyAuthorisation']
           | components['schemas']['RecategoriseAuthorisation']

@@ -3,8 +3,6 @@ import ExternalMovementsService from '../../../../../services/apis/externalMovem
 import { SchemaType } from './schema'
 import { absenceCategorisationMapper } from '../../../../common/utils'
 import { getUrlForNextDomain } from '../../../add-temporary-absence/flow'
-import { FLASH_KEY__SUCCESS_BANNER } from '../../../../../utils/constants'
-import { firstNameSpaceLastName } from '../../../../../utils/formatUtils'
 import { getUpdateAbsenceCategorisationsForDomain, getUpdateAbsenceCategoryBackUrl } from '../utils'
 
 export class EditReasonCategoryController {
@@ -31,16 +29,27 @@ export class EditReasonCategoryController {
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    req.journeyData.updateTapAuthorisation!.reasonCategory = req.body.reasonCategory
+    const journey = req.journeyData.updateTapAuthorisation!
+
+    if (
+      (journey.authorisation.absenceType?.code === journey.absenceType?.code || !journey.absenceType) &&
+      (journey.authorisation.absenceSubType?.code === journey.absenceSubType?.code || !journey.absenceSubType) &&
+      journey.authorisation.absenceReasonCategory?.code === req.body.reasonCategory.code
+    ) {
+      res.redirect(`/temporary-absence-authorisations/${journey.authorisation.id}`)
+      return
+    }
+
+    if (journey.reasonCategory !== req.body.reasonCategory) {
+      delete journey.reason
+    }
+    journey.reasonCategory = req.body.reasonCategory
+
     if (req.body.reasonCategory.nextDomain) {
       res.redirect(getUrlForNextDomain(req.body.reasonCategory.nextDomain))
-    } else {
-      // TODO: send API call to apply change
-      req.flash(
-        FLASH_KEY__SUCCESS_BANNER,
-        `You’ve updated the temporary absence categorisation for ${firstNameSpaceLastName(req.journeyData.prisonerDetails!)}.`,
-      )
-      res.redirect(`/temporary-absence-authorisations/${req.journeyData.updateTapAuthorisation!.authorisation.id}`)
+      return
     }
+
+    res.redirect('change-confirmation')
   }
 }
