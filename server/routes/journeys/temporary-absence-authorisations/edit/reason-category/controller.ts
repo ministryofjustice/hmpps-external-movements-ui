@@ -35,11 +35,6 @@ export class EditReasonCategoryController {
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
     const journey = req.journeyData.updateTapAuthorisation!
 
-    if (journey.authorisation.absenceReasonCategory?.code === req.body.reasonCategory.code) {
-      res.redirect(`/temporary-absence-authorisations/${journey.authorisation.id}`)
-      return
-    }
-
     if (journey.reasonCategory !== req.body.reasonCategory) {
       delete journey.reason
     }

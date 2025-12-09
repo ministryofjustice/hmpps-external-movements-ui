@@ -30,11 +30,6 @@ export class EditAbsenceReasonController {
     const journey = req.journeyData.updateTapAuthorisation!
     journey.reason = req.body.reason
 
-    if (journey.authorisation.absenceReason?.code === req.body.reason.code) {
-      res.redirect(`/temporary-absence-authorisations/${journey.authorisation.id}`)
-      return
-    }
-
     try {
       journey.result = await this.externalMovementsService.updateTapAuthorisation(
         { res },

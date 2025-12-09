@@ -31,11 +31,6 @@ export class EditAbsenceSubTypeController {
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
     const journey = req.journeyData.updateTapAuthorisation!
 
-    if (journey.authorisation.absenceSubType?.code === req.body.absenceSubType.code) {
-      res.redirect(`/temporary-absence-authorisations/${journey.authorisation.id}`)
-      return
-    }
-
     if (journey.absenceSubType !== req.body.absenceSubType) {
       delete journey.reasonCategory
       delete journey.reason
