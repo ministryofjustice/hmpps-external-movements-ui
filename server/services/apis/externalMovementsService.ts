@@ -10,9 +10,12 @@ export type UpdateTapAuthorisation =
   | components['schemas']['AmendAuthorisationNotes']
   | components['schemas']['ApproveAuthorisation']
   | components['schemas']['CancelAuthorisation']
+  | components['schemas']['ChangeAuthorisationAccompaniment']
   | components['schemas']['ChangeAuthorisationDateRange']
-  | components['schemas']['RecategoriseAuthorisation']
+  | components['schemas']['ChangeAuthorisationTransport']
+  | components['schemas']['ChangePrisonPerson']
   | components['schemas']['DenyAuthorisation']
+  | components['schemas']['RecategoriseAuthorisation']
 
 export type UpdateTapOccurrence =
   | components['schemas']['AmendOccurrenceNotes']

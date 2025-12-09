@@ -1,12 +1,8 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
 import { SchemaType } from './schema'
 import { absenceCategorisationMapper } from '../../../../common/utils'
-import {
-  getUpdateAbsenceCategorisationsForDomain,
-  getUpdateAbsenceCategoryBackUrl,
-  getUpdateAbsenceCategoryRequest,
-} from '../utils'
+import { getUpdateAbsenceCategorisationsForDomain, getUpdateAbsenceCategoryBackUrl } from '../utils'
 
 export class EditAbsenceReasonController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -26,23 +22,20 @@ export class EditAbsenceReasonController {
     })
   }
 
-  POST = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
+  POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     const journey = req.journeyData.updateTapAuthorisation!
     journey.reason = req.body.reason
 
-    try {
-      journey.result = await this.externalMovementsService.updateTapAuthorisation(
-        { res },
-        journey.authorisation.id,
-        getUpdateAbsenceCategoryRequest(req),
-      )
-      res.redirect(
-        journey.result!.content.length
-          ? 'confirmation'
-          : `/temporary-absence-authorisations/${journey.authorisation.id}`,
-      )
-    } catch (e) {
-      next(e)
+    if (
+      (journey.authorisation.absenceType?.code === journey.absenceType?.code || !journey.absenceType) &&
+      (journey.authorisation.absenceSubType?.code === journey.absenceSubType?.code || !journey.absenceSubType) &&
+      (journey.authorisation.absenceReasonCategory?.code === journey.reasonCategory?.code || !journey.reasonCategory) &&
+      journey.authorisation.absenceReason?.code === req.body.reason.code
+    ) {
+      res.redirect(`/temporary-absence-authorisations/${journey.authorisation.id}`)
+      return
     }
+
+    res.redirect('change-confirmation')
   }
 }

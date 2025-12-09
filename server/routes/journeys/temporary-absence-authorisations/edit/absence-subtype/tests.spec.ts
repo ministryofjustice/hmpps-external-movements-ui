@@ -8,7 +8,6 @@ import { stubGetPrisonerDetails } from '../../../../../../integration_tests/mock
 import {
   stubGetAbsenceCategory,
   stubGetTapAuthorisation,
-  stubPutTapAuthorisation,
 } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { EditAbsenceSubTypePage } from './test.page'
@@ -72,16 +71,6 @@ test.describe('/temporary-absence-authorisations/edit/absence-subtype', () => {
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetTapAuthorisation(authorisation),
       stubGetAbsenceCategory('ABSENCE_TYPE', 'RR'),
-      stubPutTapAuthorisation(authorisationId, {
-        content: [
-          {
-            user: { username: 'USERNAME', name: 'User Name' },
-            occurredAt: '2025-12-01T17:50:20.421301',
-            domainEvents: ['person.temporary-absence-authorisation.recategorised'],
-            changes: [{ propertyName: '', previous: '', change: '' }],
-          },
-        ],
-      }),
     ])
   })
 
@@ -107,9 +96,9 @@ test.describe('/temporary-absence-authorisations/edit/absence-subtype', () => {
 
     // verify next page routing
     await testPage.crlRadio().click()
-    await testPage.clickButton('Confirm and save')
+    await testPage.clickContinue()
 
-    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/confirmation/)
+    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/change-confirmation/)
   })
 
   test('should select absence subtype and continue to next page', async ({ page }) => {

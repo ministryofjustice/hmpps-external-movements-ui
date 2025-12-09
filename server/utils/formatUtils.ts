@@ -130,8 +130,8 @@ export const formatAddress = ({
   address,
   postcode,
 }: {
-  description: string
-  address: string
-  postcode: string
-  uprn: number
+  description?: string
+  address?: string
+  postcode?: string
+  uprn?: number
 }) => [description, address, postcode].filter(itm => !!itm?.trim()).join(', ')

@@ -1,0 +1,29 @@
+{% extends "partials/layout.njk" %}
+{%- from "moj/components/interruption-card/macro.njk" import interruptionCard -%}
+
+{% set fullWidth = true %}
+{% set pageTitle = 'Are you sure you want to change this? - Manage temporary absences' %}
+
+{% block innerContent %}
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    {% call interruptionCard({
+      heading: "Are you sure you want to change this?",
+      primaryAction: {
+        text: "Continue"
+      },
+      secondaryAction: {
+        text: "Go back",
+        href: goBackUrl
+      }
+    }) -%}
+      <p>This will change {{ fieldName}} from {{ previousValue}} to {{ newValue }}.</p>
+
+      {% if repeat %}
+        <p>This change will apply to all future occurrences of this absence. Completed and in progress occurrences will not be affected. </p>
+      {% endif %}
+
+      <p>Go back if you do not want to make this change.</p>
+    {%- endcall %}
+  </form>
+{% endblock %}

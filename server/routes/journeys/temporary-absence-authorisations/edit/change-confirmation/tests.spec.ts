@@ -6,20 +6,23 @@ import { signIn } from '../../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber } from '../../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../../integration_tests/mockApis/prisonerSearchApi'
 import {
-  stubGetAbsenceCategory,
+  stubGetAllAbsenceTypes,
   stubGetTapAuthorisation,
+  stubPutTapAuthorisation,
 } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
-import { EditAbsenceReasonPage } from './test.page'
+import { EditTapAuthorisationChangeConfirmationPage } from './test.page'
 import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
+import { JourneyData } from '../../../../../@types/journeys'
+import { injectJourneyData } from '../../../../../../integration_tests/steps/journey'
 
-test.describe('/temporary-absence-authorisations/edit/reason unauthorised', () => {
+test.describe('/temporary-absence-authorisations/edit/change-confirmation unauthorised', () => {
   test('should show unauthorised error', async ({ page }) => {
-    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/edit/reason`)
+    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/edit/change-confirmation`)
   })
 })
 
-test.describe('/temporary-absence-authorisations/edit/reason', () => {
+test.describe('/temporary-absence-authorisations/edit/change-confirmation', () => {
   const prisonNumber = randomPrisonNumber()
 
   const authorisation = {
@@ -63,8 +66,7 @@ test.describe('/temporary-absence-authorisations/edit/reason', () => {
       componentsApi.stubComponents(),
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
-      stubGetAbsenceCategory('ABSENCE_SUB_TYPE', 'SPL'),
-      stubGetAbsenceCategory('ABSENCE_REASON_CATEGORY', 'PW'),
+      stubGetAllAbsenceTypes(),
     ])
   })
 
@@ -72,11 +74,18 @@ test.describe('/temporary-absence-authorisations/edit/reason', () => {
     await signIn(page)
   })
 
-  const startJourney = async (page: Page, journeyId: string, authorisationId: string) => {
-    await page.goto(`/${journeyId}/temporary-absence-authorisations/start-edit/${authorisationId}/reason`)
+  const startJourney = async (
+    page: Page,
+    journeyId: string,
+    authorisationId: string,
+    journeyData: Partial<JourneyData>,
+  ) => {
+    await page.goto(`/${journeyId}/temporary-absence-authorisations/start-edit/${authorisationId}/absence-type`)
+    await injectJourneyData(page, journeyId, journeyData)
+    await page.goto(`/${journeyId}/temporary-absence-authorisations/edit/change-confirmation`)
   }
 
-  test('should confirm and save absence reason', async ({ page }) => {
+  test('should confirm and save absence categorisation', async ({ page }) => {
     const authorisationId = uuidV4()
 
     await stubGetTapAuthorisation({
@@ -84,50 +93,40 @@ test.describe('/temporary-absence-authorisations/edit/reason', () => {
       id: authorisationId,
     })
 
+    await stubPutTapAuthorisation(authorisationId, {
+      content: [
+        {
+          user: { username: 'USERNAME', name: 'User Name' },
+          occurredAt: '2025-12-01T17:50:20.421301',
+          domainEvents: ['person.temporary-absence-authorisation.recategorised'],
+          changes: [{ propertyName: '', previous: '', change: '' }],
+        },
+      ],
+    })
+
     const journeyId = uuidV4()
-    await startJourney(page, journeyId, authorisationId)
-
-    // verify page content
-    const testPage = await new EditAbsenceReasonPage(page).verifyContent(false)
-
-    await expect(testPage.workReasonRadio()).toHaveCount(0)
-    await expect(testPage.otherReasonRadio()).toBeVisible()
-
-    // verify next page routing
-    await testPage.otherReasonRadio().click()
-    await testPage.clickContinue()
-
-    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/change-confirmation/)
-  })
-
-  test('should confirm and save work type', async ({ page }) => {
-    const authorisationId = uuidV4()
-
-    await stubGetTapAuthorisation({
-      ...authorisation,
-      id: authorisationId,
-      absenceSubType: {
-        code: 'RDR',
-        description: 'RDR (Resettlement Day Release)',
-        hintText: 'For prisoners to carry out activities linked to objectives in their sentence plan.',
+    await startJourney(page, journeyId, authorisationId, {
+      updateTapAuthorisation: {
+        backUrl: 'back-url',
+        authorisation: { ...authorisation, id: authorisationId },
+        absenceType: { code: 'PP', description: 'Police production' },
       },
-      absenceReasonCategory: { code: 'PW', description: 'Paid work' },
-      absenceReason: { code: 'R15', description: 'IT and communication' },
     })
 
-    const journeyId = uuidV4()
-    await startJourney(page, journeyId, authorisationId)
-
     // verify page content
-    const testPage = await new EditAbsenceReasonPage(page).verifyContent(true)
+    const testPage = await new EditTapAuthorisationChangeConfirmationPage(page).verifyContent()
 
-    await expect(testPage.workReasonRadio()).toBeVisible()
-    await expect(testPage.otherReasonRadio()).toHaveCount(0)
+    await expect(testPage.goBackLink()).toBeVisible()
+    await expect(testPage.goBackLink()).toHaveAttribute('href', /back-url/)
+
+    await expect(
+      page.getByText(
+        'This will change categorisation from Restricted ROTL (Release on Temporary Licence) - SPL (Special Purpose Licence) - Death or funeral to Police production.',
+      ),
+    ).toBeVisible()
 
     // verify next page routing
-    await testPage.workReasonRadio().click()
     await testPage.clickContinue()
-
-    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/change-confirmation/)
+    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/confirmation/)
   })
 })

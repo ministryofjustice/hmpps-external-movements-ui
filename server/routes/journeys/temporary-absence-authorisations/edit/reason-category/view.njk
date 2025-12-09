@@ -23,12 +23,9 @@
       }) }}
 
       {{ govukButton({
-        classes: 'confirm-or-continue-button',
-        text: "Confirm and save",
+        text: "Continue",
         preventDoubleClick: true
       }) }}
     </form>
   </div>
 {% endblock %}
-
-{% block pageScripts %} {% include '../common/recategorisationSubmitButtonScript.njk' %} {% endblock %}

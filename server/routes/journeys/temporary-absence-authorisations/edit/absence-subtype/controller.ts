@@ -1,13 +1,9 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
 import { SchemaType } from './schema'
 import { absenceCategorisationMapper } from '../../../../common/utils'
 import { getUrlForNextDomain } from '../../../add-temporary-absence/flow'
-import {
-  getUpdateAbsenceCategorisationsForDomain,
-  getUpdateAbsenceCategoryBackUrl,
-  getUpdateAbsenceCategoryRequest,
-} from '../utils'
+import { getUpdateAbsenceCategorisationsForDomain, getUpdateAbsenceCategoryBackUrl } from '../utils'
 
 export class EditAbsenceSubTypeController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -28,8 +24,16 @@ export class EditAbsenceSubTypeController {
     })
   }
 
-  POST = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
+  POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     const journey = req.journeyData.updateTapAuthorisation!
+
+    if (
+      (journey.authorisation.absenceType?.code === journey.absenceType?.code || !journey.absenceType) &&
+      journey.authorisation.absenceSubType?.code === req.body.absenceSubType.code
+    ) {
+      res.redirect(`/temporary-absence-authorisations/${journey.authorisation.id}`)
+      return
+    }
 
     if (journey.absenceSubType !== req.body.absenceSubType) {
       delete journey.reasonCategory
@@ -42,19 +46,6 @@ export class EditAbsenceSubTypeController {
       return
     }
 
-    try {
-      journey.result = await this.externalMovementsService.updateTapAuthorisation(
-        { res },
-        journey.authorisation.id,
-        getUpdateAbsenceCategoryRequest(req),
-      )
-      res.redirect(
-        journey.result!.content.length
-          ? 'confirmation'
-          : `/temporary-absence-authorisations/${journey.authorisation.id}`,
-      )
-    } catch (e) {
-      next(e)
-    }
+    res.redirect('change-confirmation')
   }
 }

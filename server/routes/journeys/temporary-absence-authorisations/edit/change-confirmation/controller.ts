@@ -1,0 +1,124 @@
+import { NextFunction, Request, Response } from 'express'
+import { formatAddress, joinAddress } from '../../../../../utils/formatUtils'
+import { getUpdateAbsenceCategoryRequest } from '../utils'
+import ExternalMovementsService, { UpdateTapAuthorisation } from '../../../../../services/apis/externalMovementsService'
+
+export class EditTapAuthorisationChangeConfirmationController {
+  constructor(private readonly externalMovementsService: ExternalMovementsService) {}
+
+  GET = async (req: Request, res: Response) => {
+    const {
+      backUrl,
+      authorisation,
+      absenceType,
+      absenceSubType,
+      reason,
+      reasonCategory,
+      notes,
+      location,
+      transport,
+      accompanied,
+      accompaniedBy,
+    } = req.journeyData.updateTapAuthorisation!
+
+    let fieldName = ''
+    let previousValue = ''
+    let newValue = ''
+
+    if (absenceType || absenceSubType || reason || reasonCategory) {
+      fieldName = 'categorisation'
+
+      previousValue = [
+        authorisation.absenceType,
+        authorisation.absenceSubType,
+        authorisation.absenceReasonCategory,
+        authorisation.absenceReason,
+      ]
+        .filter(itm => Boolean(itm))
+        .map(itm => itm?.description)
+        .join(' - ')
+
+      newValue = [absenceType, absenceSubType, reasonCategory, reason]
+        .filter(itm => Boolean(itm))
+        .map(itm => itm?.description)
+        .join(' - ')
+    } else if (notes !== undefined) {
+      fieldName = 'relevant comments'
+      previousValue = authorisation.notes || 'Not provided'
+      newValue = notes || 'Not provided'
+    } else if (transport) {
+      fieldName = 'transport'
+      previousValue = authorisation.transport.description
+      newValue = transport.description
+    } else if (location) {
+      fieldName = 'location'
+      previousValue = formatAddress(authorisation.locations[0]!)
+      newValue = joinAddress(location)
+    } else if (accompanied !== undefined || accompaniedBy) {
+      fieldName = 'accompaniment'
+      previousValue = authorisation.accompaniedBy.description
+      newValue = accompaniedBy?.description || 'Unaccompanied'
+    }
+
+    res.render('temporary-absence-authorisations/edit/change-confirmation/view', {
+      goBackUrl: backUrl,
+      repeat: authorisation.repeat,
+      fieldName,
+      previousValue,
+      newValue,
+    })
+  }
+
+  POST = async (req: Request, res: Response, next: NextFunction) => {
+    const journey = req.journeyData.updateTapAuthorisation!
+
+    const {
+      absenceType,
+      absenceSubType,
+      reason,
+      reasonCategory,
+      notes,
+      location,
+      transport,
+      accompanied,
+      accompaniedBy,
+    } = journey
+
+    try {
+      let requestBody: UpdateTapAuthorisation
+      if (absenceType || absenceSubType || reason || reasonCategory) {
+        requestBody = getUpdateAbsenceCategoryRequest(req)
+      } else if (notes !== undefined) {
+        requestBody = {
+          type: 'AmendAuthorisationNotes',
+          notes: notes!,
+        }
+      } else if (transport) {
+        requestBody = {
+          type: 'ChangeAuthorisationTransport',
+          transportCode: transport.code,
+        }
+      } else if (location) {
+        // TODO: set requestBody for location change
+      } else if (accompanied !== undefined || accompaniedBy) {
+        requestBody = {
+          type: 'ChangeAuthorisationAccompaniment',
+          accompaniedByCode: accompaniedBy?.code || 'U',
+        }
+      }
+
+      journey.result = await this.externalMovementsService.updateTapAuthorisation(
+        { res },
+        journey.authorisation.id,
+        requestBody!,
+      )
+      res.redirect(
+        journey.result?.content.length
+          ? 'confirmation'
+          : `/temporary-absence-authorisations/${journey.authorisation.id}`,
+      )
+    } catch (e) {
+      next(e)
+    }
+  }
+}
