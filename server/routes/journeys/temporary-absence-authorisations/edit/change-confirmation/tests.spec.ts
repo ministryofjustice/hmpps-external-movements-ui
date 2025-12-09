@@ -9,6 +9,7 @@ import {
   stubGetAllAbsenceTypes,
   stubGetTapAuthorisation,
   stubPutTapAuthorisation,
+  stubPutTapOccurrence,
 } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { EditTapAuthorisationChangeConfirmationPage } from './test.page'
@@ -46,14 +47,14 @@ test.describe('/temporary-absence-authorisations/edit/change-confirmation', () =
     toDate: '2001-01-05',
     accompaniedBy: { code: 'U', description: 'Unaccompanied' },
     transport: { code: 'CAR', description: 'Car' },
-    locations: [{ uprn: 1001, description: 'Random Street, UK' }],
+    locations: [{ uprn: 1001, address: 'Random Street, UK' }],
     occurrences: [
       {
         id: 'occurrence-id-1',
         status: { code: 'SCHEDULED', description: 'Scheduled' },
         releaseAt: '2001-01-02T10:00:00',
         returnBy: '2001-01-02T17:30:00',
-        location: { uprn: 1001, description: 'Random Street, UK' },
+        location: { uprn: 1001, address: 'Random Street, UK' },
         accompaniedBy: { code: 'U', description: 'Unaccompanied' },
         transport: { code: 'CAR', description: 'Car' },
       },
@@ -123,6 +124,49 @@ test.describe('/temporary-absence-authorisations/edit/change-confirmation', () =
       page.getByText(
         'This will change categorisation from Restricted ROTL (Release on Temporary Licence) - SPL (Special Purpose Licence) - Death or funeral to Police production.',
       ),
+    ).toBeVisible()
+
+    // verify next page routing
+    await testPage.clickContinue()
+    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/confirmation/)
+  })
+
+  test('should confirm and save new location', async ({ page }) => {
+    const authorisationId = uuidV4()
+
+    await stubGetTapAuthorisation({
+      ...authorisation,
+      id: authorisationId,
+    })
+
+    await stubPutTapOccurrence('occurrence-id-1', {
+      content: [
+        {
+          user: { username: 'USERNAME', name: 'User Name' },
+          occurredAt: '2025-12-01T17:50:20.421301',
+          domainEvents: ['person.temporary-absence.relocated'],
+          changes: [{ propertyName: '', previous: '', change: '' }],
+        },
+      ],
+    })
+
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId, authorisationId, {
+      updateTapAuthorisation: {
+        backUrl: 'back-url',
+        authorisation: { ...authorisation, id: authorisationId },
+        location: { line1: '42 New Street', city: 'New City' },
+      },
+    })
+
+    // verify page content
+    const testPage = await new EditTapAuthorisationChangeConfirmationPage(page).verifyContent()
+
+    await expect(testPage.goBackLink()).toBeVisible()
+    await expect(testPage.goBackLink()).toHaveAttribute('href', /back-url/)
+
+    await expect(
+      page.getByText('This will change location from Random Street, UK to 42 New Street, New City.'),
     ).toBeVisible()
 
     // verify next page routing

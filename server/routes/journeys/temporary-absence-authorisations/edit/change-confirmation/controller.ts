@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { formatAddress, joinAddress } from '../../../../../utils/formatUtils'
 import { getUpdateAbsenceCategoryRequest } from '../utils'
 import ExternalMovementsService, { UpdateTapAuthorisation } from '../../../../../services/apis/externalMovementsService'
+import { parseAddress } from '../../../../../utils/utils'
 
 export class EditTapAuthorisationChangeConfirmationController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -55,7 +56,7 @@ export class EditTapAuthorisationChangeConfirmationController {
       previousValue = formatAddress(authorisation.locations[0]!)
       newValue = joinAddress(location)
     } else if (accompanied !== undefined || accompaniedBy) {
-      fieldName = 'accompaniment'
+      fieldName = 'escort'
       previousValue = authorisation.accompaniedBy.description
       newValue = accompaniedBy?.description || 'Unaccompanied'
     }
@@ -85,33 +86,43 @@ export class EditTapAuthorisationChangeConfirmationController {
     } = journey
 
     try {
-      let requestBody: UpdateTapAuthorisation
-      if (absenceType || absenceSubType || reason || reasonCategory) {
-        requestBody = getUpdateAbsenceCategoryRequest(req)
-      } else if (notes !== undefined) {
-        requestBody = {
-          type: 'AmendAuthorisationNotes',
-          notes: notes!,
+      if (location) {
+        journey.result = await this.externalMovementsService.updateTapOccurrence(
+          { res },
+          journey.authorisation.occurrences[0]!.id,
+          {
+            type: 'ChangeOccurrenceLocation',
+            location: parseAddress(location),
+          },
+        )
+      } else {
+        let requestBody: UpdateTapAuthorisation
+        if (absenceType || absenceSubType || reason || reasonCategory) {
+          requestBody = getUpdateAbsenceCategoryRequest(req)
+        } else if (notes !== undefined) {
+          requestBody = {
+            type: 'AmendAuthorisationNotes',
+            notes: notes!,
+          }
+        } else if (transport) {
+          requestBody = {
+            type: 'ChangeAuthorisationTransport',
+            transportCode: transport.code,
+          }
+        } else if (accompanied !== undefined || accompaniedBy) {
+          requestBody = {
+            type: 'ChangeAuthorisationAccompaniment',
+            accompaniedByCode: accompaniedBy?.code || 'U',
+          }
         }
-      } else if (transport) {
-        requestBody = {
-          type: 'ChangeAuthorisationTransport',
-          transportCode: transport.code,
-        }
-      } else if (location) {
-        // TODO: set requestBody for location change
-      } else if (accompanied !== undefined || accompaniedBy) {
-        requestBody = {
-          type: 'ChangeAuthorisationAccompaniment',
-          accompaniedByCode: accompaniedBy?.code || 'U',
-        }
+
+        journey.result = await this.externalMovementsService.updateTapAuthorisation(
+          { res },
+          journey.authorisation.id,
+          requestBody!,
+        )
       }
 
-      journey.result = await this.externalMovementsService.updateTapAuthorisation(
-        { res },
-        journey.authorisation.id,
-        requestBody!,
-      )
       res.redirect(
         journey.result?.content.length
           ? 'confirmation'
