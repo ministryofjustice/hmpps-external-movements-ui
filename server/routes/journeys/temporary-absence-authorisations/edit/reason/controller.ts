@@ -1,10 +1,12 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
 import { SchemaType } from './schema'
 import { absenceCategorisationMapper } from '../../../../common/utils'
-import { FLASH_KEY__SUCCESS_BANNER } from '../../../../../utils/constants'
-import { firstNameSpaceLastName } from '../../../../../utils/formatUtils'
-import { getUpdateAbsenceCategorisationsForDomain, getUpdateAbsenceCategoryBackUrl } from '../utils'
+import {
+  getUpdateAbsenceCategorisationsForDomain,
+  getUpdateAbsenceCategoryBackUrl,
+  getUpdateAbsenceCategoryRequest,
+} from '../utils'
 
 export class EditAbsenceReasonController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -18,17 +20,34 @@ export class EditAbsenceReasonController {
       options: (
         await getUpdateAbsenceCategorisationsForDomain(this.externalMovementsService, req, res, 'ABSENCE_REASON')
       ).items.map(absenceCategorisationMapper),
-      reasonCategory: absenceType || absenceSubType || reasonCategory ? reasonCategory : authorisation,
+      reasonCategory:
+        absenceType || absenceSubType || reasonCategory ? reasonCategory : authorisation.absenceReasonCategory,
       reason: res.locals.formResponses?.['reason'] ?? reason?.code ?? authorisation.absenceReason?.code,
     })
   }
 
-  POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    // TODO: send API call to apply change
-    req.flash(
-      FLASH_KEY__SUCCESS_BANNER,
-      `You’ve updated the temporary absence categorisation for ${firstNameSpaceLastName(req.journeyData.prisonerDetails!)}.`,
-    )
-    res.redirect(`/temporary-absence-authorisations/${req.journeyData.updateTapAuthorisation!.authorisation.id}`)
+  POST = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
+    const journey = req.journeyData.updateTapAuthorisation!
+    journey.reason = req.body.reason
+
+    if (journey.authorisation.absenceReason?.code === req.body.reason.code) {
+      res.redirect(`/temporary-absence-authorisations/${journey.authorisation.id}`)
+      return
+    }
+
+    try {
+      journey.result = await this.externalMovementsService.updateTapAuthorisation(
+        { res },
+        journey.authorisation.id,
+        getUpdateAbsenceCategoryRequest(req),
+      )
+      res.redirect(
+        journey.result!.content.length
+          ? 'confirmation'
+          : `/temporary-absence-authorisations/${journey.authorisation.id}`,
+      )
+    } catch (e) {
+      next(e)
+    }
   }
 }
