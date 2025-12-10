@@ -123,36 +123,39 @@
           }) }}
         {% endset -%}
 
+        {% set timeLineItems = [] %}
+        {% for action in auditHistory %}
+          {% set itemHtml %}
+            {{ action.content | replace('<prisoner>', prisonerDetails | firstNameSpaceLastName) | escape }}
+            {% if action.reason %}
+              <br/><br/>
+              {% if action.reason.length > 200 %}
+                <span class="case-note-truncated">Reason: {{ action.reason | escape }}</span>
+                <details class="no-margin upward case-note-details">
+                  <summary aria-label="show reason" class="govuk-details__summary-text"></summary>
+                  <div class="case-note-full">Reason: {{ action.reason | escape | nl2br | safe }}</div>
+                </details>
+              {% else %}
+                Reason: {{ action.reason | escape }}
+              {% endif %}
+            {% endif %}
+            {% if action.reasonRequested and not action.reason %}
+              <br/><br/>
+              {{ action.user.name }} did not enter a reason.
+            {% endif %}
+          {% endset %}
+
+          {% set timeLineItems = (timeLineItems.push({
+            label: { text: action.heading },
+            html: itemHtml,
+            datetime: { timestamp: action.occurredAt, type: 'datetime' },
+            byline: { text: action.user.name + ' (' + action.user.username + ')' }
+          }), timeLineItems) %}
+        {% endfor %}
+
         {% set absenceHistoryHtml %}
           {{ mojTimeline({
-            items: [
-              {
-                label: {
-                text:  "Absence created"
-              },
-                text: "Temporary absence saved for " + prisonerDetails | firstNameSpaceLastName + ".",
-                datetime: {
-                timestamp: result.submitted.at,
-                type: "datetime"
-              },
-                byline: {
-                text: result.submitted.displayName | initialiseName + ' (' + result.submitted.by + ')'
-              }
-              },
-              {
-                label: {
-                text:  "Absence approved"
-              },
-                text: "Temporary absence approved for " + prisonerDetails | firstNameSpaceLastName + ".",
-                datetime: {
-                timestamp: result.approved.at,
-                type: "datetime"
-              },
-                byline: {
-                text: result.approved.displayName | initialiseName + ' (' + result.approved.by + ')'
-              }
-              } if result.approved else undefined
-            ] | removeNullish | reverse
+            items: timeLineItems
           }) }}
         {% endset -%}
 
