@@ -49,6 +49,16 @@ export const stubGetTapAuthorisation = (response: components['schemas']['TapAuth
     response,
   })
 
+export const stubGetTapAuthorisationHistory = (
+  authorisationId: string,
+  response: components['schemas']['AuditHistory'],
+) =>
+  successStub({
+    method: 'GET',
+    urlPattern: `/external-movements-api/temporary-absence-authorisations/${authorisationId}/history`,
+    response,
+  })
+
 export const stubPutTapAuthorisation = (authorisationId: string, response: components['schemas']['AuditHistory']) =>
   successStub({
     method: 'PUT',

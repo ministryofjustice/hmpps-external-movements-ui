@@ -29,7 +29,7 @@ export class TapAuthorisationDetailsController {
         result: authorisation,
         dateFrom,
         dateTo,
-        auditHistory: parseAuditHistory(history.content.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt))),
+        auditedActions: parseAuditHistory(history.content.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt))),
       })
     } catch (error: unknown) {
       res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }

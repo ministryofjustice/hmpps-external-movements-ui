@@ -6,8 +6,7 @@
 {% from "partials/hiddenInputs/macro.njk" import hiddenInputs %}
 {% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
-{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
-{% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
+{% from "partials/auditHistory/macro.njk" import auditHistory %}
 
 {% set fullWidth = true %}
 {% set pageTitle = 'Manage temporary absence - Manage temporary absences' %}
@@ -123,57 +122,17 @@
           }) }}
         {% endset -%}
 
-        {% set timeLineItems = [] %}
-        {% for action in auditHistory %}
-          {% set itemHtml %}
-            {{ action.content | replace('<prisoner>', prisonerDetails | firstNameSpaceLastName) | escape }}
-            {% if action.reason %}
-              <br/><br/>
-              {% if action.reason.length > 200 %}
-                <span class="case-note-truncated">Reason: {{ action.reason | escape }}</span>
-                <details class="no-margin upward case-note-details">
-                  <summary aria-label="show reason" class="govuk-details__summary-text"></summary>
-                  <div class="case-note-full">Reason: {{ action.reason | escape | nl2br | safe }}</div>
-                </details>
-              {% else %}
-                Reason: {{ action.reason | escape }}
-              {% endif %}
-            {% endif %}
-            {% if action.reasonRequested and not action.reason %}
-              <br/><br/>
-              {{ action.user.name }} did not enter a reason.
-            {% endif %}
-          {% endset %}
-
-          {% set timeLineItems = (timeLineItems.push({
-            label: { text: action.heading },
-            html: itemHtml,
-            datetime: { timestamp: action.occurredAt, type: 'datetime' },
-            byline: { text: action.user.name + ' (' + action.user.username + ')' }
-          }), timeLineItems) %}
-        {% endfor %}
-
-        {% set absenceHistoryHtml %}
-          {{ mojTimeline({
-            items: timeLineItems
-          }) }}
-        {% endset -%}
-
         {{ govukTabs({
           items: [
             {
               label: "Manage absence",
               id: "view-absence",
-              panel: {
-              html: viewAbsenceHtml
-            }
+              panel: { html: viewAbsenceHtml }
             },
             {
               label: "Absence history",
               id: "absence-history",
-              panel: {
-              html: absenceHistoryHtml
-            }
+              panel: { html: auditHistory({ actions: auditedActions, prisonerName: prisonerDetails | firstNameSpaceLastName }) }
             }
           ]
         }) }}
