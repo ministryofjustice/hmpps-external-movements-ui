@@ -100,6 +100,12 @@ export default class ExternalMovementsService {
     })
   }
 
+  async getTapOccurrenceHistory(context: ApiRequestContext, id: string) {
+    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['AuditHistory']>({
+      path: `/temporary-absence-occurrences/${id}/history`,
+    })
+  }
+
   async updateTapOccurrence(context: ApiRequestContext, id: string, request: UpdateTapOccurrence) {
     return this.externalMovementsApiClient.withContext(context).put<components['schemas']['AuditHistory']>({
       path: `/temporary-absence-occurrences/${id}`,
@@ -121,6 +127,12 @@ export default class ExternalMovementsService {
   async getTapAuthorisation(context: ApiRequestContext, id: string, fromDate?: string | null, toDate?: string | null) {
     return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapAuthorisation']>({
       path: `/temporary-absence-authorisations/${id}${parseQueryParams({ fromDate, toDate })}`,
+    })
+  }
+
+  async getTapAuthorisationHistory(context: ApiRequestContext, id: string) {
+    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['AuditHistory']>({
+      path: `/temporary-absence-authorisations/${id}/history`,
     })
   }
 

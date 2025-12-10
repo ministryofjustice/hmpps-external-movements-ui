@@ -6,8 +6,7 @@
 {% from "partials/hiddenInputs/macro.njk" import hiddenInputs %}
 {% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
-{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
-{% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
+{% from "partials/auditHistory/macro.njk" import auditHistory %}
 
 {% set fullWidth = true %}
 {% set pageTitle = 'Manage temporary absence - Manage temporary absences' %}
@@ -123,54 +122,17 @@
           }) }}
         {% endset -%}
 
-        {% set absenceHistoryHtml %}
-          {{ mojTimeline({
-            items: [
-              {
-                label: {
-                text:  "Absence created"
-              },
-                text: "Temporary absence saved for " + prisonerDetails | firstNameSpaceLastName + ".",
-                datetime: {
-                timestamp: result.submitted.at,
-                type: "datetime"
-              },
-                byline: {
-                text: result.submitted.displayName | initialiseName + ' (' + result.submitted.by + ')'
-              }
-              },
-              {
-                label: {
-                text:  "Absence approved"
-              },
-                text: "Temporary absence approved for " + prisonerDetails | firstNameSpaceLastName + ".",
-                datetime: {
-                timestamp: result.approved.at,
-                type: "datetime"
-              },
-                byline: {
-                text: result.approved.displayName | initialiseName + ' (' + result.approved.by + ')'
-              }
-              } if result.approved else undefined
-            ] | removeNullish | reverse
-          }) }}
-        {% endset -%}
-
         {{ govukTabs({
           items: [
             {
               label: "Manage absence",
               id: "view-absence",
-              panel: {
-              html: viewAbsenceHtml
-            }
+              panel: { html: viewAbsenceHtml }
             },
             {
               label: "Absence history",
               id: "absence-history",
-              panel: {
-              html: absenceHistoryHtml
-            }
+              panel: { html: auditHistory({ actions: auditedActions, prisonerName: prisonerDetails | firstNameSpaceLastName }) }
             }
           ]
         }) }}

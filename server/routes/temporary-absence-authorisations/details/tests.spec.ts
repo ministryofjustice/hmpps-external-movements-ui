@@ -7,7 +7,10 @@ import { randomPrisonNumber } from '../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetPrisonerImage } from '../../../../integration_tests/mockApis/prisonApi'
 import { TapAuthorisationDetailsPage } from './test.page'
-import { stubGetTapAuthorisation } from '../../../../integration_tests/mockApis/externalMovementsApi'
+import {
+  stubGetTapAuthorisation,
+  stubGetTapAuthorisationHistory,
+} from '../../../../integration_tests/mockApis/externalMovementsApi'
 
 test.describe('/temporary-absence-authorisations/:id', () => {
   const prisonNumber = randomPrisonNumber()
@@ -64,6 +67,8 @@ test.describe('/temporary-absence-authorisations/:id', () => {
         },
       ],
     })
+    await stubGetTapAuthorisationHistory(authorisationId, { content: [] })
+
     await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
 
     // verify page content
@@ -123,6 +128,8 @@ test.describe('/temporary-absence-authorisations/:id', () => {
         },
       ],
     })
+    await stubGetTapAuthorisationHistory(authorisationId, { content: [] })
+
     await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
 
     // verify page content
@@ -182,6 +189,8 @@ test.describe('/temporary-absence-authorisations/:id', () => {
         },
       ],
     })
+    await stubGetTapAuthorisationHistory(authorisationId, { content: [] })
+
     await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
 
     // verify page content
@@ -224,6 +233,8 @@ test.describe('/temporary-absence-authorisations/:id', () => {
         },
       ],
     })
+    await stubGetTapAuthorisationHistory(authorisationId, { content: [] })
+
     await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
 
     // verify page content
