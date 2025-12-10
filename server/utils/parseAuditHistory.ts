@@ -28,7 +28,7 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
   'person.temporary-absence-authorisation.recategorised': {
     heading: 'Absence recategorised',
   },
-  'person.temporary-absence-authorisation.notes-changed': {
+  'person.temporary-absence-authorisation.comments-changed': {
     heading: 'Absence comments changed',
   },
   'person.temporary-absence-authorisation.accompaniment-changed': {
@@ -44,12 +44,12 @@ const CHANGE_PROPERTY_MAP: { [key: string]: string } = {
   absenceSubType: 'Absence sub-type',
   absenceReasonCategory: 'Absence reason category',
   absenceReason: 'Absence reason',
-  fromDate: 'Start date',
-  toDate: 'End date',
+  start: 'Start date',
+  end: 'End date',
   transport: 'Transport',
   location: 'Location',
   accompaniedBy: 'Escort',
-  notes: 'Comments',
+  comments: 'Comments',
 }
 
 export const parseAuditHistory = (history: components['schemas']['AuditedAction'][]) => {

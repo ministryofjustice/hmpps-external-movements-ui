@@ -5,10 +5,10 @@ export const getAuthorisationAndPopulatePrisonerDetails = async (
   externalMovementsService: ExternalMovementsService,
   req: Request<{ id: string }>,
   res: Response,
-  fromDate?: string | null,
-  toDate?: string | null,
+  start?: string | null,
+  end?: string | null,
 ) => {
-  const result = await externalMovementsService.getTapAuthorisation({ res }, req.params.id, fromDate, toDate)
+  const result = await externalMovementsService.getTapAuthorisation({ res }, req.params.id, start, end)
   res.locals.prisonerDetails = {
     prisonerNumber: result.person.personIdentifier,
     lastName: result.person.lastName,

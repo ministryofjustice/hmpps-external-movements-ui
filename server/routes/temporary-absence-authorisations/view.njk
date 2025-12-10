@@ -35,24 +35,24 @@
             }) }}
 
             {{ mojDatePicker({
-              id: "fromDate",
-              name: "fromDate",
+              id: "start",
+              name: "start",
               label: {
                 text: 'Start date from'
               },
-              value: fromDate,
-              errorMessage: validationErrors | findError('fromDate'),
+              value: start,
+              errorMessage: validationErrors | findError('start'),
               classes: 'hmpps-datepicker--fixed-width govuk-body moj-search__input'
             }) }}
 
             {{ mojDatePicker({
-              id: "toDate",
-              name: "toDate",
+              id: "end",
+              name: "end",
               label: {
                 text: 'End date to'
               },
-              value: toDate,
-              errorMessage: validationErrors | findError('toDate'),
+              value: end,
+              errorMessage: validationErrors | findError('end'),
               classes: 'hmpps-datepicker--fixed-width govuk-body moj-search__input'
             }) }}
 
@@ -120,10 +120,10 @@
             text: ('Repeating (' + authorisation.occurrenceCount + ' occurrence' + (')' if authorisation.occurrenceCount === 1 else 's)')) if authorisation.repeat else 'Single'
           },
           {
-            text: authorisation.fromDate | formatDate
+            text: authorisation.start | formatDate
           },
           {
-            text: authorisation.toDate | formatDate
+            text: authorisation.end | formatDate
           },
           {
             html: absenceStatusTag(authorisation)
@@ -160,11 +160,11 @@
           },
           {
             text: "Start date",
-            key: 'fromDate'
+            key: 'start'
           },
           {
             text: "End date",
-            key: 'toDate'
+            key: 'end'
           },
           {
             text: 'Status',
@@ -174,7 +174,7 @@
             text: "Action",
             format: "numeric"
           }
-        ] | convertToSortableColumns(sort or 'fromDate,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
+        ] | convertToSortableColumns(sort or 'start,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
         rows: rows
       }) }}
 

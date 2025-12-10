@@ -11,11 +11,11 @@ export class StartEndDatesPage extends BaseTestPage {
     })
   }
 
-  fromDateField() {
+  startField() {
     return this.textbox(/What date will (.+?)’s first absence start\?/)
   }
 
-  toDateField() {
+  endField() {
     return this.textbox(/What date will (.+?) return from the last absence\?/)
   }
 }

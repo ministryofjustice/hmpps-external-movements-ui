@@ -56,47 +56,47 @@ test.describe('/add-temporary-absence/start-end-dates', () => {
     // verify page content
     const testPage = await new StartEndDatesPage(page).verifyContent()
 
-    await expect(testPage.fromDateField()).toBeVisible()
-    await expect(testPage.fromDateField()).toHaveValue('')
-    await expect(testPage.toDateField()).toBeVisible()
-    await expect(testPage.toDateField()).toHaveValue('')
+    await expect(testPage.startField()).toBeVisible()
+    await expect(testPage.startField()).toHaveValue('')
+    await expect(testPage.endField()).toBeVisible()
+    await expect(testPage.endField()).toHaveValue('')
     await expect(testPage.button('Continue')).toBeVisible()
 
     // verify validation error
     await testPage.clickContinue()
     await testPage.link('Enter or select a start date').click()
-    await expect(testPage.fromDateField()).toBeFocused()
+    await expect(testPage.startField()).toBeFocused()
     await testPage.link('Enter or select a return date').click()
-    await expect(testPage.toDateField()).toBeFocused()
+    await expect(testPage.endField()).toBeFocused()
 
-    await testPage.fromDateField().fill('1/1/1999')
-    await testPage.toDateField().fill('x')
+    await testPage.startField().fill('1/1/1999')
+    await testPage.endField().fill('x')
     await testPage.clickContinue()
 
     await testPage.link('Start date must be today or in the future').click()
-    await expect(testPage.fromDateField()).toBeFocused()
+    await expect(testPage.startField()).toBeFocused()
     await testPage.link('Enter or select a valid return date').click()
-    await expect(testPage.toDateField()).toBeFocused()
+    await expect(testPage.endField()).toBeFocused()
 
     const nextYear = new Date().getFullYear() + 1
 
-    await testPage.fromDateField().fill(`4/4/${nextYear}`)
-    await testPage.toDateField().fill(`3/3/${nextYear}`)
+    await testPage.startField().fill(`4/4/${nextYear}`)
+    await testPage.endField().fill(`3/3/${nextYear}`)
     await testPage.clickContinue()
 
     await testPage.link('Last return date must be later than first start date').click()
-    await expect(testPage.toDateField()).toBeFocused()
+    await expect(testPage.endField()).toBeFocused()
 
-    await testPage.fromDateField().fill(`1/1/${nextYear}`)
-    await testPage.toDateField().fill(`2/7/${nextYear}`)
+    await testPage.startField().fill(`1/1/${nextYear}`)
+    await testPage.endField().fill(`2/7/${nextYear}`)
     await testPage.clickContinue()
 
     await testPage.link('Absence period can only extend to 6 months from the entry date').click()
-    await expect(testPage.toDateField()).toBeFocused()
+    await expect(testPage.endField()).toBeFocused()
 
     // verify next page routing
-    await testPage.fromDateField().fill(`1/1/${nextYear}`)
-    await testPage.toDateField().fill(`1/7/${nextYear}`)
+    await testPage.startField().fill(`1/1/${nextYear}`)
+    await testPage.endField().fill(`1/7/${nextYear}`)
     await testPage.clickContinue()
 
     expect(page.url()).toMatch(/\/add-temporary-absence\/repeating-pattern/)
@@ -104,7 +104,7 @@ test.describe('/add-temporary-absence/start-end-dates', () => {
     // verify input values are persisted
     await page.goBack()
     await page.reload()
-    await expect(testPage.fromDateField()).toHaveValue(`1/1/${nextYear}`)
-    await expect(testPage.toDateField()).toHaveValue(`1/7/${nextYear}`)
+    await expect(testPage.startField()).toHaveValue(`1/1/${nextYear}`)
+    await expect(testPage.endField()).toHaveValue(`1/7/${nextYear}`)
   })
 })

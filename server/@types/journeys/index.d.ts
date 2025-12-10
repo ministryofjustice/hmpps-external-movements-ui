@@ -64,10 +64,10 @@ export type AddTemporaryAbsenceJourney = Partial<{
   accompanied: boolean
   accompaniedBy: components['schemas']['CodedDescription']
   transport: components['schemas']['CodedDescription']
-  notes: string | null
+  comments: string | null
   requireApproval: boolean
-  fromDate: string
-  toDate: string
+  start: string
+  end: string
   patternType: 'FREEFORM' | 'WEEKLY' | 'ROTATING' | 'SHIFT' | 'BIWEEKLY'
   freeFormPattern: {
     startDate: string
@@ -91,13 +91,13 @@ export type AddTemporaryAbsenceJourney = Partial<{
   }
   isCheckPattern: boolean
   occurrencesToMatch: {
-    releaseAt: string
-    returnBy: string
+    start: string
+    end: string
     locationIdx?: number
   }[]
   occurrences: {
-    releaseAt: string
-    returnBy: string
+    start: string
+    end: string
     locationIdx: number
   }[]
 }>
@@ -137,14 +137,13 @@ export type UpdateTapOccurrenceJourney = {
   authorisation: components['schemas']['TapAuthorisation']
   backUrl: string
 } & Partial<{
-  changeType: 'start-date' | 'end-date' | 'transport' | 'location' | 'notes'
   startDate: string
   startTime: string
   returnDate: string
   returnTime: string
   location: Address
   transport: components['schemas']['CodedDescription']
-  notes: string
+  comments: string
   result: components['schemas']['AuditHistory']
 }>
 
@@ -158,7 +157,7 @@ export type AddTapOccurrenceJourney = {
   returnTime: string
   locationOption: number | 'NEW'
   location: Address
-  notes: string | null
+  comments: string | null
   result: components['schemas']['ReferenceId']
 }>
 
@@ -170,7 +169,7 @@ export type UpdateTapAuthorisationJourney = {
   absenceSubType: components['schemas']['AbsenceCategorisation']
   reasonCategory: components['schemas']['AbsenceCategorisation']
   reason: components['schemas']['AbsenceCategorisation']
-  notes: string
+  comments: string
   location: Address
   accompanied: boolean
   accompaniedBy: components['schemas']['CodedDescription']

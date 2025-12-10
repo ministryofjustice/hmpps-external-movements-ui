@@ -27,9 +27,9 @@ export const inputDate = (plusDays: number = 0, plusMonth: number = 0) => {
   return format(date, 'd/M/yyyy')
 }
 
-export const absenceTimeRange = ({ releaseAt, returnBy }: { releaseAt: string; returnBy: string }) => {
-  if (releaseAt.substring(0, 10) === returnBy.substring(0, 10)) {
-    return `${format(releaseAt, 'cccc, d MMMM')} (${format(releaseAt, 'HH:mm')} to ${format(returnBy, 'HH:mm')})`
+export const absenceTimeRange = ({ start, end }: { start: string; end: string }) => {
+  if (start.substring(0, 10) === end.substring(0, 10)) {
+    return `${format(start, 'cccc, d MMMM')} (${format(start, 'HH:mm')} to ${format(end, 'HH:mm')})`
   }
-  return `${format(releaseAt, 'cccc, d MMMM')} to ${format(returnBy, 'cccc, d MMMM')} (${format(releaseAt, 'HH:mm')} to ${format(returnBy, 'HH:mm')})`
+  return `${format(start, 'cccc, d MMMM')} to ${format(end, 'cccc, d MMMM')} (${format(start, 'HH:mm')} to ${format(end, 'HH:mm')})`
 }

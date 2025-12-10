@@ -14,11 +14,11 @@ export class BrowseTapAuthorisationsPage extends BaseTestPage {
     return this.textbox('Name or prison number')
   }
 
-  fromDateField() {
+  startDateField() {
     return this.textbox('Start date from')
   }
 
-  toDateField() {
+  endDateField() {
     return this.textbox('End date to')
   }
 

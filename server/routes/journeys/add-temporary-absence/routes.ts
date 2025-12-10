@@ -170,7 +170,7 @@ const guard = {
     return get(req, 'accompaniedSubJourney', 'accompanied') === false ? undefined : '/accompanied-or-unaccompanied'
   },
   comments: (req: Request) => (get(req, '', 'transport') ? undefined : '/transport'),
-  approval: (req: Request) => (get(req, '', 'notes') !== undefined ? undefined : '/comments'),
+  approval: (req: Request) => (get(req, '', 'comments') !== undefined ? undefined : '/comments'),
   'check-answers': (req: Request) => (get(req, '', 'requireApproval') !== undefined ? undefined : '/approval'),
   confirmation: (req: Request) => (req.journeyData.journeyCompleted ? undefined : '/check-answers'),
 }

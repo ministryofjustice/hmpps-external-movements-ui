@@ -17,8 +17,8 @@ export class FreeformSelectDaysController {
       backUrl,
       startDate,
       endDate,
-      fromDate: req.journeyData.addTemporaryAbsence!.fromDate,
-      toDate: req.journeyData.addTemporaryAbsence!.toDate,
+      start: req.journeyData.addTemporaryAbsence!.start,
+      end: req.journeyData.addTemporaryAbsence!.end,
       freeFormPattern: req.journeyData.addTemporaryAbsence!.freeFormPattern ?? [],
       isLastWeek: nextIdx === undefined,
       isOptional,
@@ -29,13 +29,13 @@ export class FreeformSelectDaysController {
   }
 
   POST = async (req: Request<{ idx?: string }, unknown, SchemaType>, res: Response) => {
-    const { startDate: fromDate, endDate: toDate, nextIdx } = getSelectDayRange(req)
+    const { startDate: start, endDate: end, nextIdx } = getSelectDayRange(req)
     if (req.body.save !== undefined) {
       req.journeyData.addTemporaryAbsence!.freeFormPattern ??= []
 
       req.journeyData.addTemporaryAbsence!.freeFormPattern =
         req.journeyData.addTemporaryAbsence!.freeFormPattern.filter(
-          ({ startDate }) => !(startDate >= fromDate && startDate <= toDate),
+          ({ startDate }) => !(startDate >= start && startDate <= end),
         )
 
       req.journeyData.addTemporaryAbsence!.freeFormPattern.push(
@@ -60,9 +60,9 @@ export class FreeformSelectDaysController {
     return res.redirect('')
   }
 
-  private getAbsencesFromJourney = (journey: AddTemporaryAbsenceJourney, fromDate: string, toDate: string) => {
+  private getAbsencesFromJourney = (journey: AddTemporaryAbsenceJourney, from: string, to: string) => {
     const absences = journey.freeFormPattern
-      ?.filter(({ startDate }) => startDate >= fromDate && startDate <= toDate)
+      ?.filter(({ startDate }) => startDate >= from && startDate <= to)
       .map(({ startDate, startTime, returnDate, returnTime }) => {
         const [startTimeHour, startTimeMinute] = startTime.split(':')
         const [returnTimeHour, returnTimeMinute] = returnTime.split(':')

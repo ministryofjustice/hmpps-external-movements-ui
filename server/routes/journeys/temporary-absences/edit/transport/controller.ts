@@ -22,7 +22,6 @@ export class EditTransportController {
 
     if (journey.authorisation.repeat) {
       journey.transport = req.body.transport
-      journey.changeType = 'transport'
       res.redirect('apply-change')
     } else {
       // TODO: send API call to apply change
@@ -31,7 +30,7 @@ export class EditTransportController {
         `You’ve updated the temporary absence transport for ${firstNameSpaceLastName(req.journeyData.prisonerDetails!)}.`,
       )
       res.redirect(
-        `/temporary-absence-authorisations/${journey.authorisation.id}?date=${formatInputDate(journey.occurrence.releaseAt)}`,
+        `/temporary-absence-authorisations/${journey.authorisation.id}?date=${formatInputDate(journey.occurrence.start)}`,
       )
     }
   }

@@ -11,11 +11,11 @@ export class EditTapAuthorisationStartEndDatesPage extends BaseTestPage {
     })
   }
 
-  fromDateField() {
+  startDateField() {
     return this.textbox(/What date will the first absence start\?/)
   }
 
-  toDateField() {
+  endDateField() {
     return this.textbox(/What date will the last absence end\?/)
   }
 }

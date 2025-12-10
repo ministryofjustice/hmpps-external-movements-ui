@@ -3,7 +3,7 @@ import { test, Page, expect } from '@playwright/test'
 import auth from '../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../../integration_tests/steps/signIn'
-import { randomPrisonNumber } from '../../../../../integration_tests/data/testData'
+import { randomPrisonNumber, testTapAuthorisation } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetTapAuthorisation } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
@@ -21,6 +21,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence', () => {
   const authorisationId = uuidV4()
 
   const authorisation = {
+    ...testTapAuthorisation,
     id: authorisationId,
     person: {
       personIdentifier: prisonNumber,
@@ -29,28 +30,11 @@ test.describe('/temporary-absence-authorisations/add-occurrence', () => {
       dateOfBirth: '1990-01-01',
       cellLocation: '2-1-005',
     },
-    status: { code: 'PENDING', description: 'To be reviewed' },
-    absenceType: {
-      code: 'RR',
-      description: 'Restricted ROTL (Release on Temporary Licence)',
-    },
     repeat: true,
+    start: '2001-01-02',
+    end: '2001-01-05',
     fromDate: '2001-01-02',
     toDate: '2001-01-05',
-    accompaniedBy: { code: 'U', description: 'Unaccompanied' },
-    transport: { code: 'CAR', description: 'Car' },
-    locations: [{ uprn: 1001, description: 'Random Street, UK' }],
-    occurrences: [
-      {
-        id: 'occurrence-id-1',
-        status: { code: 'PENDING', description: 'To be reviewed' },
-        releaseAt: '2001-01-02T10:00:00',
-        returnBy: '2001-01-02T17:30:00',
-        location: { uprn: 1001, description: 'Random Street, UK' },
-        accompaniedBy: { code: 'U', description: 'Unaccompanied' },
-        transport: { code: 'CAR', description: 'Car' },
-      },
-    ],
   }
 
   test.beforeAll(async () => {

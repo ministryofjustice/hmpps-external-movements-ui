@@ -40,6 +40,8 @@ test.describe('/temporary-absence-authorisations', () => {
           absenceReasonCategory: { code: 'PW', description: 'Paid work' },
           absenceReason: { code: 'R15', description: 'IT and communication' },
           repeat: false,
+          start: '2001-01-01',
+          end: '2001-01-01',
           fromDate: '2001-01-01',
           toDate: '2001-01-01',
           locations: [{ uprn: 1001, description: 'Random Street, UK' }],
@@ -60,6 +62,8 @@ test.describe('/temporary-absence-authorisations', () => {
             description: 'Police production',
           },
           repeat: true,
+          start: '2001-01-02',
+          end: '2001-03-01',
           fromDate: '2001-01-02',
           toDate: '2001-03-01',
           locations: [{ uprn: 1001, description: 'Random Street, UK' }],
@@ -67,9 +71,7 @@ test.describe('/temporary-absence-authorisations', () => {
         },
       ],
     })
-    await page.goto(
-      `/temporary-absence-authorisations?searchTerm=test&fromDate=01/01/2001&toDate=02/01/2001&status=&page=2`,
-    )
+    await page.goto(`/temporary-absence-authorisations?searchTerm=test&start=01/01/2001&end=02/01/2001&status=&page=2`)
 
     // verify page content
     const testPage = await new BrowseTapAuthorisationsPage(page).verifyContent()
@@ -77,10 +79,10 @@ test.describe('/temporary-absence-authorisations', () => {
     // verify query strings are populated into filter fields
     await expect(testPage.searchField()).toBeVisible()
     await expect(testPage.searchField()).toHaveValue('test')
-    await expect(testPage.fromDateField()).toBeVisible()
-    await expect(testPage.fromDateField()).toHaveValue('01/01/2001')
-    await expect(testPage.toDateField()).toBeVisible()
-    await expect(testPage.toDateField()).toHaveValue('02/01/2001')
+    await expect(testPage.startDateField()).toBeVisible()
+    await expect(testPage.startDateField()).toHaveValue('01/01/2001')
+    await expect(testPage.endDateField()).toBeVisible()
+    await expect(testPage.endDateField()).toHaveValue('02/01/2001')
     await expect(testPage.statusDropdown()).toBeVisible()
     await expect(testPage.statusDropdown()).toHaveValue('')
 
@@ -106,10 +108,10 @@ test.describe('/temporary-absence-authorisations', () => {
     ])
 
     // verify validation error
-    await testPage.fromDateField().fill('25/12/2001')
+    await testPage.startDateField().fill('25/12/2001')
     await testPage.clickButton('Apply filters')
     await testPage.link('Enter a valid date range').click()
-    await expect(testPage.fromDateField()).toBeFocused()
+    await expect(testPage.startDateField()).toBeFocused()
     await expect(page.getByText('Enter a valid filter to search and view temporary absences.')).toBeVisible()
   })
 })

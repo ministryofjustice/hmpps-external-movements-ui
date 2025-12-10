@@ -25,9 +25,9 @@ export class SearchLocationsController {
 
       res.redirect('search-locations')
     } else if (req.journeyData.addTemporaryAbsence!.locations?.length === 1) {
-      req.journeyData.addTemporaryAbsence!.occurrences = getOccurrencesToMatch(req).map(({ releaseAt, returnBy }) => ({
-        releaseAt,
-        returnBy,
+      req.journeyData.addTemporaryAbsence!.occurrences = getOccurrencesToMatch(req).map(({ start, end }) => ({
+        start,
+        end,
         locationIdx: 0,
       }))
       res.redirect('accompanied-or-unaccompanied')

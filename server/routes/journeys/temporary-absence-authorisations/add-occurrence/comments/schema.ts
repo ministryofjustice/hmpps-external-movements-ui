@@ -4,7 +4,7 @@ import { createSchema } from '../../../../../middleware/validation/validationMid
 const ERROR_MSG = 'Enter 4000 or fewer characters'
 
 export const schema = createSchema({
-  notes: z
+  comments: z
     .string()
     .max(4000, { message: ERROR_MSG })
     .transform(val => (val.trim().length ? val : null)),

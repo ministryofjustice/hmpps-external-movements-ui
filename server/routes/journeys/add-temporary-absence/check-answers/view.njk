@@ -135,12 +135,12 @@
             text: "Start date"
           },
             value: {
-            text: fromDate | formatDate
+            text: start | formatDate
           },
             actions: {
             items: [
               {
-                href: "start-end-dates#fromDate",
+                href: "start-end-dates#start",
                 text: "Change",
                 visuallyHiddenText: "start date",
                 classes: "govuk-link--no-visited-state"
@@ -153,12 +153,12 @@
             text: "End date"
           },
             value: {
-            text: toDate | formatDate
+            text: end | formatDate
           },
             actions: {
             items: [
               {
-                href: "start-end-dates#toDate",
+                href: "start-end-dates#end",
                 text: "Change",
                 visuallyHiddenText: "end date",
                 classes: "govuk-link--no-visited-state"
@@ -365,7 +365,7 @@
           text: "Relevant comments"
         },
           value: {
-          html: (notes or "Not provided") | escape | nl2br
+          html: (comments or "Not provided") | escape | nl2br
         },
           actions: {
           items: [

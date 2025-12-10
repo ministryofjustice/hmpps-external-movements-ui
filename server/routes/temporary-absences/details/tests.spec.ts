@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 import auth from '../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../integration_tests/steps/signIn'
-import { randomPrisonNumber } from '../../../../integration_tests/data/testData'
+import { randomPrisonNumber, testTapOccurrence } from '../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetPrisonerImage } from '../../../../integration_tests/mockApis/prisonApi'
 import { TapOccurrenceDetailsPage } from './test.page'
@@ -25,6 +25,7 @@ test.describe('/temporary-absences/:id', () => {
     await signIn(page)
     const occurrenceId = uuidV4()
     await stubGetTapOccurrence({
+      ...testTapOccurrence,
       id: occurrenceId,
       authorisation: {
         id: uuidV4(),
@@ -36,20 +37,20 @@ test.describe('/temporary-absences/:id', () => {
           cellLocation: '2-1-005',
         },
         status: { code: 'APPROVED', description: 'Approved' },
-        absenceType: {
-          code: 'RR',
-          description: 'Restricted ROTL (Release on Temporary Licence)',
-        },
-        absenceSubType: {
-          code: 'RDR',
-          description: 'RDR (Resettlement Day Release)',
-          hintText: 'For prisoners to carry out activities linked to objectives in their sentence plan.',
-        },
-        absenceReasonCategory: { code: 'PW', description: 'Paid work' },
-        absenceReason: { code: 'R15', description: 'IT and communication' },
         repeat: false,
         accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       },
+      absenceType: {
+        code: 'RR',
+        description: 'Restricted ROTL (Release on Temporary Licence)',
+      },
+      absenceSubType: {
+        code: 'RDR',
+        description: 'RDR (Resettlement Day Release)',
+        hintText: 'For prisoners to carry out activities linked to objectives in their sentence plan.',
+      },
+      absenceReasonCategory: { code: 'PW', description: 'Paid work' },
+      absenceReason: { code: 'R15', description: 'IT and communication' },
       status: { code: 'SCHEDULED', description: 'Scheduled' },
       releaseAt: '2001-01-01T10:00:00',
       returnBy: '2001-01-01T17:30:00',
@@ -88,20 +89,15 @@ test.describe('/temporary-absences/:id', () => {
     await signIn(page)
     const occurrenceId = uuidV4()
     await stubGetTapOccurrence({
+      ...testTapOccurrence,
       id: occurrenceId,
       authorisation: {
-        id: uuidV4(),
-        person: {
-          personIdentifier: 'A9965EA',
-          firstName: 'PRISONER-NAME',
-          lastName: 'PRISONER-SURNAME',
-          dateOfBirth: '1990-01-01',
-          cellLocation: '2-1-005',
-        },
-        status: { code: 'PENDING', description: 'To be reviewed' },
-        absenceType: { code: 'PP', description: 'Police production' },
+        ...testTapOccurrence.authorisation,
         repeat: true,
-        accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      },
+      absenceType: {
+        code: 'PP',
+        description: 'Police production',
       },
       status: { code: 'CANCELLED', description: 'Cancelled' },
       releaseAt: '2001-01-01T10:00:00',
@@ -138,32 +134,7 @@ test.describe('/temporary-absences/:id', () => {
   test('should not show cancel button for view only user', async ({ page }) => {
     await signIn(page, { roles: ['EXTERNAL_MOVEMENTS__TAP__RO'] })
     const occurrenceId = uuidV4()
-    await stubGetTapOccurrence({
-      id: occurrenceId,
-      authorisation: {
-        id: uuidV4(),
-        person: {
-          personIdentifier: 'A9965EA',
-          firstName: 'PRISONER-NAME',
-          lastName: 'PRISONER-SURNAME',
-          dateOfBirth: '1990-01-01',
-          cellLocation: '2-1-005',
-        },
-        status: { code: 'APPROVED', description: 'Approved' },
-        absenceType: {
-          code: 'RR',
-          description: 'Restricted ROTL (Release on Temporary Licence)',
-        },
-        repeat: false,
-        accompaniedBy: { code: 'U', description: 'Unaccompanied' },
-      },
-      status: { code: 'SCHEDULED', description: 'Scheduled' },
-      releaseAt: '2001-01-01T10:00:00',
-      returnBy: '2001-01-01T17:30:00',
-      location: { uprn: 1001, description: 'Random Street, UK' },
-      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
-      transport: { code: 'CAR', description: 'Car' },
-    })
+    await stubGetTapOccurrence({ ...testTapOccurrence, id: occurrenceId })
     await page.goto(`/temporary-absences/${occurrenceId}`)
 
     // verify page content

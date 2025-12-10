@@ -7,7 +7,8 @@ export class EditAbsenceCommentsController {
   GET = async (req: Request, res: Response) => {
     res.render('temporary-absence-authorisations/edit/comments/view', {
       backUrl: '../edit',
-      notes: res.locals.formResponses?.['notes'] ?? req.journeyData.updateTapAuthorisation!.authorisation.notes,
+      comments:
+        res.locals.formResponses?.['comments'] ?? req.journeyData.updateTapAuthorisation!.authorisation.comments,
     })
   }
 

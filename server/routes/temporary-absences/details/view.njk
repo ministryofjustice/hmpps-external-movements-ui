@@ -46,37 +46,37 @@
               },
               {
                 key: { text: "Start date and time" },
-                value: { text: occurrence.releaseAt | formatDate("cccc, d MMMM yyyy 'at' HH:mm") },
+                value: { text: occurrence.start | formatDate("cccc, d MMMM yyyy 'at' HH:mm") },
                 actions: { items: [{ href: baseEditUrl + "/start-end-dates#startDate", text: "Change", visuallyHiddenText: "start date and time" }] }
               },
               {
                 key: { text: "Return date and time" },
-                value: { text: occurrence.returnBy | formatDate("cccc, d MMMM yyyy 'at' HH:mm") },
+                value: { text: occurrence.end | formatDate("cccc, d MMMM yyyy 'at' HH:mm") },
                 actions: { items: [{ href: baseEditUrl + "/start-end-dates#endDate", text: "Change", visuallyHiddenText: "return date and time" }] }
               },
               {
                 key: { text: "Absence type" },
-                value: { text: result.absenceType.description }
+                value: { text: occurrence.absenceType.description }
               },
               {
                 key: { text: "Absence sub-type" },
-                value: { text: result.absenceSubType.description }
-              } if result.absenceSubType,
+                value: { text: occurrence.absenceSubType.description }
+              } if occurrence.absenceSubType,
               {
                 key: { text: "Absence reason" },
-                value: { text: result.absenceReasonCategory.description }
-              } if result.absenceReasonCategory,
+                value: { text: occurrence.absenceReasonCategory.description }
+              } if occurrence.absenceReasonCategory,
               {
-                key: { text: "Work type" if result.absenceReasonCategory else "Absence reason" },
-                value: { text: result.absenceReason.description }
-              } if result.absenceReason,
+                key: { text: "Work type" if occurrence.absenceReasonCategory else "Absence reason" },
+                value: { text: occurrence.absenceReason.description }
+              } if occurrence.absenceReason,
               {
                 key: { text: "Single or repeating absence" },
                 value: { text: 'Repeating' if result.repeat else 'Single' }
               },
               {
                 key: { text: "Comments" },
-                value: { text: (occurrence.notes or "Not provided") | escape | nl2br },
+                value: { text: (occurrence.comments or "Not provided") | escape | nl2br },
                 actions: { items: [{ href: baseEditUrl + "/comments", text: "Change", visuallyHiddenText: "comments" }] }
               },
               {

@@ -36,8 +36,8 @@ test.describe('/add-temporary-absence/enter-rotating-pattern', () => {
     await page.goto(`/${journeyId}/add-temporary-absence/start/${prisonNumber}`)
     await injectJourneyData(page, journeyId, {
       addTemporaryAbsence: {
-        fromDate: '2025-12-25',
-        toDate: '2025-12-31',
+        start: '2025-12-25',
+        end: '2025-12-31',
       },
     })
 

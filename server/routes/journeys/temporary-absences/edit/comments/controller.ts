@@ -10,7 +10,7 @@ export class EditAbsenceCommentsController {
 
     res.render('temporary-absences/edit/comments/view', {
       backUrl,
-      notes: res.locals.formResponses?.['notes'] ?? req.journeyData.updateTapOccurrence!.occurrence.notes,
+      comments: res.locals.formResponses?.['comments'] ?? req.journeyData.updateTapOccurrence!.occurrence.comments,
     })
   }
 
@@ -19,8 +19,8 @@ export class EditAbsenceCommentsController {
 
     try {
       journey.result = await this.externalMovementsService.updateTapOccurrence({ res }, journey.occurrence.id, {
-        type: 'AmendOccurrenceNotes',
-        notes: req.body.notes,
+        type: 'ChangeOccurrenceComments',
+        comments: req.body.comments,
       })
       next()
     } catch (e) {

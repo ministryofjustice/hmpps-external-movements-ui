@@ -43,8 +43,8 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
           description: 'Police production',
         },
         repeat: true,
-        fromDate: '2001-01-01',
-        toDate: '2001-01-18',
+        start: '2001-01-01',
+        end: '2001-01-18',
         patternType: 'FREEFORM',
       },
     })
@@ -264,8 +264,8 @@ test.describe('/add-temporary-absence/select-days-and-time edge case', () => {
           description: 'Police production',
         },
         repeat: true,
-        fromDate: '2001-01-01',
-        toDate: '2001-01-08',
+        start: '2001-01-01',
+        end: '2001-01-08',
         patternType: 'FREEFORM',
       },
     })

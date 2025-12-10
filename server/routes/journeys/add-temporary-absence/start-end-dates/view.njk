@@ -12,8 +12,8 @@
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
       {{ mojDatePicker({
-        id: "fromDate",
-        name: "fromDate",
+        id: "start",
+        name: "start",
         label: {
           text: 'What date will ' + prisonerDetails | firstNameSpaceLastName | possessiveComma + ' first absence start?',
           classes: "govuk-fieldset__legend--m"
@@ -21,15 +21,15 @@
         hint: {
           text: 'For example, 17/5/2024.'
         },
-        value: fromDate,
-        errorMessage: validationErrors | findError('fromDate'),
+        value: start,
+        errorMessage: validationErrors | findError('start'),
         classes: 'hmpps-datepicker--fixed-width govuk-body',
         minDate: inputDate()
       }) }}
 
       {{ mojDatePicker({
-        id: "toDate",
-        name: "toDate",
+        id: "end",
+        name: "end",
         label: {
           text: 'What date will ' + prisonerDetails | firstNameSpaceLastName + ' return from the last absence?',
           classes: "govuk-fieldset__legend--m"
@@ -37,8 +37,8 @@
         hint: {
           text: 'For example, 17/5/2024.'
         },
-        value: toDate,
-        errorMessage: validationErrors | findError('toDate'),
+        value: end,
+        errorMessage: validationErrors | findError('end'),
         classes: 'hmpps-datepicker--fixed-width govuk-body',
         minDate: inputDate()
       }) }}

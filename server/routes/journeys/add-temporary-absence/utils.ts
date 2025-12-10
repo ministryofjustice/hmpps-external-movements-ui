@@ -6,33 +6,33 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
   const journey = req.journeyData.addTemporaryAbsence!
 
   let occurrencesToMatch: {
-    releaseAt: string
-    returnBy: string
+    start: string
+    end: string
     locationIdx?: number
   }[] = []
 
   if (journey.patternType === 'FREEFORM') {
     occurrencesToMatch = journey.freeFormPattern!.map(({ startDate, startTime, returnDate, returnTime }) => ({
-      releaseAt: `${startDate}T${startTime}:00`,
-      returnBy: `${returnDate}T${returnTime}:00`,
+      start: `${startDate}T${startTime}:00`,
+      end: `${returnDate}T${returnTime}:00`,
     }))
   }
 
   if (journey.patternType === 'WEEKLY') {
-    const numberOfWeeks = Math.ceil((differenceInDays(journey.toDate!, journey.fromDate!) + 2) / 7)
+    const numberOfWeeks = Math.ceil((differenceInDays(journey.end!, journey.start!) + 2) / 7)
     occurrencesToMatch = Array.from(new Array(numberOfWeeks).keys())
       .map(idx => {
-        const fromDate = format(addDays(journey.fromDate!, idx * 7), 'yyyy-MM-dd')
-        let toDate = format(addDays(journey.fromDate!, idx * 7 + 6), 'yyyy-MM-dd')
-        if (toDate > journey.toDate!) toDate = journey.toDate!
+        const from = format(addDays(journey.start!, idx * 7), 'yyyy-MM-dd')
+        let to = format(addDays(journey.start!, idx * 7 + 6), 'yyyy-MM-dd')
+        if (to > journey.end!) to = journey.end!
         const isFinalWeek = idx === numberOfWeeks - 1
 
-        const startDoW = new Date(fromDate).getDay() - 1
+        const startDoW = new Date(from).getDay() - 1
 
         return journey
           .weeklyPattern!.map(({ day, overnight, startTime, returnTime }) => {
             const dayDiff = (day - startDoW + 7) % 7
-            const startDate = addDays(new Date(fromDate), dayDiff)
+            const startDate = addDays(new Date(from), dayDiff)
             const returnDate = overnight ? addDays(startDate, 1) : startDate
             return {
               startDate: format(startDate, 'yyyy-MM-dd'),
@@ -41,31 +41,29 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
               returnTime,
             }
           })
-          .filter(
-            ({ startDate, returnDate }) => startDate >= fromDate && (isFinalWeek ? returnDate : startDate) <= toDate,
-          )
+          .filter(({ startDate, returnDate }) => startDate >= from && (isFinalWeek ? returnDate : startDate) <= to)
           .map(({ startDate, startTime, returnDate, returnTime }) => ({
-            releaseAt: `${startDate}T${startTime}:00`,
-            returnBy: `${returnDate}T${returnTime}:00`,
+            start: `${startDate}T${startTime}:00`,
+            end: `${returnDate}T${returnTime}:00`,
           }))
       })
       .flat()
-      .sort((a, b) => a.releaseAt.localeCompare(b.releaseAt))
+      .sort((a, b) => a.start.localeCompare(b.start))
   }
 
   if (journey.patternType === 'ROTATING') {
-    let currentDay = new Date(journey.fromDate!)
+    let currentDay = new Date(journey.start!)
     const rotatingTime = iterateRotatingPattern(journey.rotatingPattern!.intervals)
 
-    while (format(currentDay, 'yyyy-MM-dd') <= journey.toDate!) {
+    while (format(currentDay, 'yyyy-MM-dd') <= journey.end!) {
       const time = rotatingTime.next().value
       if (time) {
         const startDate = format(currentDay, 'yyyy-MM-dd')
         const returnDate = time.startTime >= time.returnTime ? format(addDays(currentDay, 1), 'yyyy-MM-dd') : startDate
-        if (returnDate <= journey.toDate!) {
+        if (returnDate <= journey.end!) {
           occurrencesToMatch.push({
-            releaseAt: `${startDate}T${time.startTime}:00`,
-            returnBy: `${returnDate}T${time.returnTime}:00`,
+            start: `${startDate}T${time.startTime}:00`,
+            end: `${returnDate}T${time.returnTime}:00`,
           })
         }
       }
@@ -74,18 +72,18 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
   }
 
   if (journey.patternType === 'SHIFT') {
-    let currentDay = new Date(journey.fromDate!)
+    let currentDay = new Date(journey.start!)
     const rotatingTime = iterateShiftPattern(journey.shiftPattern!)
 
-    while (format(currentDay, 'yyyy-MM-dd') <= journey.toDate!) {
+    while (format(currentDay, 'yyyy-MM-dd') <= journey.end!) {
       const time = rotatingTime.next().value
       if (time) {
         const startDate = format(currentDay, 'yyyy-MM-dd')
         const returnDate = time.startTime >= time.returnTime ? format(addDays(currentDay, 1), 'yyyy-MM-dd') : startDate
-        if (returnDate <= journey.toDate!) {
+        if (returnDate <= journey.end!) {
           occurrencesToMatch.push({
-            releaseAt: `${startDate}T${time.startTime}:00`,
-            returnBy: `${returnDate}T${time.returnTime}:00`,
+            start: `${startDate}T${time.startTime}:00`,
+            end: `${returnDate}T${time.returnTime}:00`,
           })
         }
       }
@@ -94,22 +92,22 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
   }
 
   if (journey.patternType === 'BIWEEKLY') {
-    let currentDay = new Date(journey.fromDate!)
+    let currentDay = new Date(journey.start!)
     const rotatingTime = iterateBiweeklyPattern(
       journey.biweeklyPattern!.weekA,
       journey.biweeklyPattern!.weekB,
-      journey.fromDate!,
+      journey.start!,
     )
 
-    while (format(currentDay, 'yyyy-MM-dd') <= journey.toDate!) {
+    while (format(currentDay, 'yyyy-MM-dd') <= journey.end!) {
       const time = rotatingTime.next().value
       if (time) {
         const startDate = format(currentDay, 'yyyy-MM-dd')
         const returnDate = time.startTime >= time.returnTime ? format(addDays(currentDay, 1), 'yyyy-MM-dd') : startDate
-        if (returnDate <= journey.toDate!) {
+        if (returnDate <= journey.end!) {
           occurrencesToMatch.push({
-            releaseAt: `${startDate}T${time.startTime}:00`,
-            returnBy: `${returnDate}T${time.returnTime}:00`,
+            start: `${startDate}T${time.startTime}:00`,
+            end: `${returnDate}T${time.returnTime}:00`,
           })
         }
       }

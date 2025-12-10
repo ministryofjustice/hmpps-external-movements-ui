@@ -15,18 +15,16 @@ export const schema = async (req: Request, _res: Response) =>
     returnTimeHour: z.string().optional(),
     returnTimeMinute: z.string().optional(),
   }).transform(({ startDate, startTimeHour, startTimeMinute, returnDate, returnTimeHour, returnTimeMinute }, ctx) => {
-    const { fromDate, toDate, repeat } = req.journeyData.updateTapOccurrence!.authorisation
+    const { start, end, repeat } = req.journeyData.updateTapOccurrence!.authorisation
 
     const today = new Date().toISOString().substring(0, 10)
 
     const parsedStartDate = validateTransformDate(
       (date: Date) =>
-        repeat ? date.toISOString().substring(0, 10) >= fromDate : date.toISOString().substring(0, 10) >= today,
+        repeat ? date.toISOString().substring(0, 10) >= start : date.toISOString().substring(0, 10) >= today,
       'Enter or select a start date',
       'Enter or select a valid start date',
-      repeat
-        ? `Start date must be on or after ${format(fromDate, 'd/M/yyyy')}`
-        : 'Start date must be on or after today',
+      repeat ? `Start date must be on or after ${format(start, 'd/M/yyyy')}` : 'Start date must be on or after today',
     ).safeParse(startDate)
 
     parsedStartDate.error?.issues?.forEach(issue =>
@@ -71,12 +69,10 @@ export const schema = async (req: Request, _res: Response) =>
 
     const parsedReturnDate = validateTransformDate(
       (date: Date) =>
-        repeat ? date.toISOString().substring(0, 10) <= toDate : date.toISOString().substring(0, 10) >= today,
+        repeat ? date.toISOString().substring(0, 10) <= end : date.toISOString().substring(0, 10) >= today,
       'Enter or select a return date',
       'Enter or select a valid return date',
-      repeat
-        ? `Return date must be on or after ${format(toDate, 'd/M/yyyy')}`
-        : 'Return date must be on or after today',
+      repeat ? `Return date must be on or after ${format(end, 'd/M/yyyy')}` : 'Return date must be on or after today',
     ).safeParse(returnDate)
 
     parsedReturnDate.error?.issues?.forEach(issue =>

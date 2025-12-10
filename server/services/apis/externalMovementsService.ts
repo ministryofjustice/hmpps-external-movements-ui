@@ -7,7 +7,7 @@ import { components } from '../../@types/externalMovements'
 import { parseQueryParams } from '../../utils/utils'
 
 export type UpdateTapAuthorisation =
-  | components['schemas']['AmendAuthorisationNotes']
+  | components['schemas']['ChangeAuthorisationComments']
   | components['schemas']['ApproveAuthorisation']
   | components['schemas']['CancelAuthorisation']
   | components['schemas']['ChangeAuthorisationAccompaniment']
@@ -18,7 +18,7 @@ export type UpdateTapAuthorisation =
   | components['schemas']['RecategoriseAuthorisation']
 
 export type UpdateTapOccurrence =
-  | components['schemas']['AmendOccurrenceNotes']
+  | components['schemas']['ChangeOccurrenceComments']
   | components['schemas']['CancelOccurrence']
   | components['schemas']['ChangeOccurrenceAccompaniment']
   | components['schemas']['ChangeOccurrenceContactInformation']
@@ -124,9 +124,9 @@ export default class ExternalMovementsService {
     })
   }
 
-  async getTapAuthorisation(context: ApiRequestContext, id: string, fromDate?: string | null, toDate?: string | null) {
+  async getTapAuthorisation(context: ApiRequestContext, id: string, start?: string | null, end?: string | null) {
     return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapAuthorisation']>({
-      path: `/temporary-absence-authorisations/${id}${parseQueryParams({ fromDate, toDate })}`,
+      path: `/temporary-absence-authorisations/${id}${parseQueryParams({ start, end })}`,
     })
   }
 
@@ -145,8 +145,8 @@ export default class ExternalMovementsService {
 
   searchTapOccurrences(
     context: ApiRequestContext,
-    fromDate: string | null | undefined,
-    toDate: string | null | undefined,
+    start: string | null | undefined,
+    end: string | null | undefined,
     status: string[],
     query: string | null,
     sort: string,
@@ -158,8 +158,8 @@ export default class ExternalMovementsService {
       .get<components['schemas']['TapOccurrenceSearchResponse']>({
         path: `/search/temporary-absence-occurrences${parseQueryParams({
           prisonCode: context.res.locals.user.getActiveCaseloadId(),
-          fromDate,
-          toDate,
+          start,
+          end,
           status,
           sort,
           page,
@@ -171,8 +171,8 @@ export default class ExternalMovementsService {
 
   searchTapAuthorisations(
     context: ApiRequestContext,
-    fromDate: string | null | undefined,
-    toDate: string | null | undefined,
+    start: string | null | undefined,
+    end: string | null | undefined,
     status: string[],
     query: string | null,
     sort: string,
@@ -184,8 +184,8 @@ export default class ExternalMovementsService {
       .get<components['schemas']['TapAuthorisationSearchResponse']>({
         path: `/search/temporary-absence-authorisations${parseQueryParams({
           prisonCode: context.res.locals.user.getActiveCaseloadId(),
-          fromDate,
-          toDate,
+          start,
+          end,
           status,
           sort,
           page,
