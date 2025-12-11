@@ -7,7 +7,10 @@ import { randomPrisonNumber, testTapOccurrence } from '../../../../integration_t
 import { stubGetPrisonerDetails } from '../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetPrisonerImage } from '../../../../integration_tests/mockApis/prisonApi'
 import { TapOccurrenceDetailsPage } from './test.page'
-import { stubGetTapOccurrence } from '../../../../integration_tests/mockApis/externalMovementsApi'
+import {
+  stubGetTapOccurrence,
+  stubGetTapOccurrenceHistory,
+} from '../../../../integration_tests/mockApis/externalMovementsApi'
 
 test.describe('/temporary-absences/:id', () => {
   const prisonNumber = randomPrisonNumber()
@@ -58,6 +61,38 @@ test.describe('/temporary-absences/:id', () => {
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       transport: { code: 'CAR', description: 'Car' },
     })
+    await stubGetTapOccurrenceHistory(occurrenceId, {
+      content: [
+        {
+          domainEvents: ['person.temporary-absence-authorisation.pending'],
+          occurredAt: '2001-01-01T09:00:00',
+          user: { name: 'User Name', username: 'USERNAME' },
+          changes: [],
+        },
+        {
+          domainEvents: ['person.temporary-absence-authorisation.approved'],
+          occurredAt: '2001-01-01T09:05:00',
+          user: { name: 'User Name', username: 'USERNAME' },
+          changes: [],
+        },
+        {
+          domainEvents: ['person.temporary-absence.cancelled'],
+          occurredAt: '2001-01-01T09:10:00',
+          user: { name: 'User Name', username: 'USERNAME' },
+          changes: [],
+          reason: 'lorem ipsum',
+        },
+        {
+          domainEvents: ['person.temporary-absence.rescheduled'],
+          occurredAt: '2001-01-01T09:15:00',
+          user: { name: 'User Name', username: 'USERNAME' },
+          changes: [
+            { propertyName: 'start', previous: '2001-01-01T09:30:00', change: '2001-01-01T10:00:00' },
+            { propertyName: 'end', previous: '2001-01-01T17:00:00', change: '2001-01-01T17:30:00' },
+          ],
+        },
+      ],
+    })
     await page.goto(`/temporary-absences/${occurrenceId}`)
 
     // verify page content
@@ -83,6 +118,33 @@ test.describe('/temporary-absences/:id', () => {
     await expect(testPage.button('Cancel this occurrence')).toBeVisible()
     await expect(testPage.link('View all occurrences of this absence')).toHaveCount(0)
     await expect(testPage.link('Add occurrence')).toHaveCount(0)
+
+    // verify history tab
+    await testPage.clickTab('Occurrence history')
+
+    await testPage.verifyHistoryEntry(
+      'Absence created',
+      ['Temporary absence created for Prisoner-Name Prisoner-Surname'],
+      [],
+    )
+    await testPage.verifyHistoryEntry(
+      'Absence approved',
+      ['Temporary absence approved for Prisoner-Name Prisoner-Surname', 'User Name did not enter a reason.'],
+      [],
+    )
+    await testPage.verifyHistoryEntry(
+      'Absence occurrence cancelled',
+      ['Temporary absence occurrence cancelled for Prisoner-Name Prisoner-Surname', 'Reason: lorem ipsum'],
+      [],
+    )
+    await testPage.verifyHistoryEntry(
+      'Absence occurrence rescheduled',
+      [],
+      [
+        'Start date and time was changed from 1 January 2001 at 09:30 to 1 January 2001 at 10:00',
+        'End date and time was changed from 1 January 2001 at 17:00 to 1 January 2001 at 17:30',
+      ],
+    )
   })
 
   test('should show temporary absence details for repeating CANCELLED absence', async ({ page }) => {
@@ -106,6 +168,7 @@ test.describe('/temporary-absences/:id', () => {
       accompaniedBy: { code: 'OTH', description: 'Others' },
       transport: { code: 'CAR', description: 'Car' },
     })
+    await stubGetTapOccurrenceHistory(occurrenceId, { content: [] })
     await page.goto(`/temporary-absences/${occurrenceId}`)
 
     // verify page content
@@ -135,6 +198,7 @@ test.describe('/temporary-absences/:id', () => {
     await signIn(page, { roles: ['EXTERNAL_MOVEMENTS__TAP__RO'] })
     const occurrenceId = uuidV4()
     await stubGetTapOccurrence({ ...testTapOccurrence, id: occurrenceId })
+    await stubGetTapOccurrenceHistory(occurrenceId, { content: [] })
     await page.goto(`/temporary-absences/${occurrenceId}`)
 
     // verify page content

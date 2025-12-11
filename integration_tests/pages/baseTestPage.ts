@@ -52,6 +52,10 @@ export class BaseTestPage {
     await this.clickButton('Continue')
   }
 
+  async clickTab(name: string | RegExp) {
+    await this.page.getByRole('tab', { name }).click()
+  }
+
   button(name: string | RegExp, exact: boolean = false) {
     return this.page.getByRole('button', { name, exact })
   }
