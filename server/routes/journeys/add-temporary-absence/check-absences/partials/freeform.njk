@@ -17,12 +17,12 @@
   {{ govukSummaryList({
     card: {
       title: {
-        text: "Week starting " + period.startDate | formatDate('cccc, d MMMM yyyy')
+        text: "Month " + loop.index + " of " + periods.length + ": " + period.startDate | formatDate('MMMM yyyy')
       },
       actions: { items: [{
         classes: "govuk-link--no-visited-state",
         href: "select-days-and-times/" + loop.index,
-        text: "Change dates and times" if rows.length else "Add absence"
+        text: "Change dates and times" if rows.length else "Add absence occurrence"
       }] }
     },
     rows: rows if rows.length else [{ key: { text: "No absence entered" } }]

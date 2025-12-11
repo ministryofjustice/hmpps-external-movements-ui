@@ -71,7 +71,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await expect(testPage.returnHourField(0)).toHaveValue('')
     await expect(testPage.returnMinuteField(0)).toBeVisible()
     await expect(testPage.returnMinuteField(0)).toHaveValue('')
-    await expect(testPage.button('Add another absence')).toBeVisible()
+    await expect(testPage.button('Add another occurrence')).toBeVisible()
     await expect(testPage.button('Continue')).toBeVisible()
     await expect(testPage.button('Remove')).toHaveCount(0)
 
@@ -111,16 +111,16 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await expect(testPage.returnHourField(0)).toHaveValue('')
     await expect(testPage.returnMinuteField(0)).toBeVisible()
     await expect(testPage.returnMinuteField(0)).toHaveValue('')
-    await expect(testPage.button('Add another absence')).toBeVisible()
+    await expect(testPage.button('Add another occurrence')).toBeVisible()
     await expect(testPage.button('Continue')).toBeVisible()
     await expect(testPage.button('Remove')).toHaveCount(0)
 
     // verify validation error
-    await testPage.clickButton('Add another absence')
-    await testPage.clickButton('Add another absence')
-    await testPage.clickButton('Add another absence')
-    await testPage.clickButton('Add another absence')
-    await testPage.clickButton('Add another absence')
+    await testPage.clickButton('Add another occurrence')
+    await testPage.clickButton('Add another occurrence')
+    await testPage.clickButton('Add another occurrence')
+    await testPage.clickButton('Add another occurrence')
+    await testPage.clickButton('Add another occurrence')
 
     await testPage.releaseDateField(0).fill('31/12/2000')
     await testPage.releaseHourField(0).fill('x')
@@ -308,7 +308,7 @@ test.describe('/add-temporary-absence/select-days-and-time edge case', () => {
     await testPage.returnHourField(0).fill('17')
     await testPage.returnMinuteField(0).fill('30')
 
-    await testPage.clickButton('Add another absence')
+    await testPage.clickButton('Add another occurrence')
     await testPage.releaseDateField(1).fill('7/1/2001')
     await testPage.releaseHourField(1).fill('17')
     await testPage.releaseMinuteField(1).fill('00')
