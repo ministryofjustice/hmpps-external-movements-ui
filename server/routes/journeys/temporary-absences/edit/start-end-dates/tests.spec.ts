@@ -35,16 +35,12 @@ test.describe('/temporary-absences/edit/start-end-dates', () => {
     repeat: true,
     start: '2001-01-02',
     end: '2001-01-05',
-    fromDate: '2001-01-02',
-    toDate: '2001-01-05',
     occurrences: [
       {
         id: 'occurrence-id-1',
         status: { code: 'PENDING', description: 'To be reviewed' },
         start: '2001-01-02T10:00:00',
         end: '2001-01-02T17:30:00',
-        releaseAt: '2001-01-02T10:00:00',
-        returnBy: '2001-01-02T17:30:00',
         location: { uprn: 1001, description: 'Random Street, UK' },
         accompaniedBy: { code: 'U', description: 'Unaccompanied' },
         transport: { code: 'CAR', description: 'Car' },
@@ -59,8 +55,6 @@ test.describe('/temporary-absences/edit/start-end-dates', () => {
     status: { code: 'SCHEDULED', description: 'Scheduled' },
     start: '2001-01-03T10:00:00',
     end: '2001-01-03T17:30:00',
-    releaseAt: '2001-01-03T10:00:00',
-    returnBy: '2001-01-03T17:30:00',
   }
 
   test.beforeAll(async () => {
