@@ -48,8 +48,6 @@ test.describe('/temporary-absence-authorisations/edit/change-confirmation', () =
         status: { code: 'SCHEDULED', description: 'Scheduled' },
         start: '2001-01-02T10:00:00',
         end: '2001-01-02T17:30:00',
-        releaseAt: '2001-01-02T10:00:00',
-        returnBy: '2001-01-02T17:30:00',
         location: { uprn: 1001, address: 'Random Street, UK' },
         accompaniedBy: { code: 'U', description: 'Unaccompanied' },
         transport: { code: 'CAR', description: 'Car' },

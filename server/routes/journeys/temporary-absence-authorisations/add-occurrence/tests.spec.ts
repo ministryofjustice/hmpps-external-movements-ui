@@ -33,8 +33,6 @@ test.describe('/temporary-absence-authorisations/add-occurrence', () => {
     repeat: true,
     start: '2001-01-02',
     end: '2001-01-05',
-    fromDate: '2001-01-02',
-    toDate: '2001-01-05',
   }
 
   test.beforeAll(async () => {

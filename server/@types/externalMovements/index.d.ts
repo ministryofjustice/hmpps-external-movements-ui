@@ -534,6 +534,9 @@ export interface components {
     DenyAuthorisation: {
       type: 'DenyAuthorisation'
     } & Omit<components['schemas']['AuthorisationAction'], 'type'>
+    ExpireAuthorisation: {
+      type: 'ExpireAuthorisation'
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
     RecategoriseAuthorisation: {
       type: 'RecategoriseAuthorisation'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
@@ -627,10 +630,10 @@ export interface components {
       transportCode: string
       repeat: boolean
       /** Format: date */
-      fromDate: string
+      start: string
       /** Format: date */
-      toDate: string
-      notes?: string
+      end: string
+      comments?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
       /** Format: int64 */
@@ -705,7 +708,7 @@ export interface components {
       absenceReasonCode?: string
       occurrences: components['schemas']['OccurrenceRequest'][]
       /** @enum {string} */
-      statusCode: 'PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED'
+      statusCode: 'PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED' | 'EXPIRED'
       accompaniedByCode: string
       transportCode: string
       comments?: string
@@ -750,7 +753,6 @@ export interface components {
       accompaniedBy: components['schemas']['CodedDescription']
       repeat: boolean
       comments?: string
-      notes?: string
     }
     CodedDescription: {
       code: string
@@ -784,11 +786,6 @@ export interface components {
       contactInformation?: string
       scheduleReference?: components['schemas']['JsonNode']
       comments?: string
-      /** Format: date-time */
-      releaseAt: string
-      /** Format: date-time */
-      returnBy: string
-      notes?: string
     }
     Occurrence: {
       /** Format: uuid */
@@ -806,11 +803,6 @@ export interface components {
       accompaniedBy: components['schemas']['CodedDescription']
       transport: components['schemas']['CodedDescription']
       comments?: string
-      /** Format: date-time */
-      releaseAt: string
-      /** Format: date-time */
-      returnBy: string
-      notes?: string
     }
     TapAuthorisation: {
       /** Format: uuid */
@@ -832,11 +824,6 @@ export interface components {
       locations: components['schemas']['Location'][]
       schedule?: components['schemas']['JsonNode']
       comments?: string
-      /** Format: date */
-      start: string
-      /** Format: date */
-      end: string
-      notes?: string
     }
     SyncReadTapOccurrence: {
       /** Format: uuid */
@@ -857,11 +844,6 @@ export interface components {
       comments?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
-      /** Format: date-time */
-      releaseAt: string
-      /** Format: date-time */
-      returnBy: string
-      notes?: string
     }
     SyncReadTapOccurrenceAuthorisation: {
       /** Format: uuid */
@@ -906,11 +888,6 @@ export interface components {
       updated?: components['schemas']['SyncAtAndBy']
       comments?: string
       occurrences: components['schemas']['SyncReadTapAuthorisationOccurrence'][]
-      /** Format: date */
-      fromDate: string
-      /** Format: date */
-      toDate: string
-      notes?: string
     }
     SyncReadTapAuthorisationOccurrence: {
       /** Format: uuid */
@@ -929,18 +906,13 @@ export interface components {
       comments?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
-      /** Format: date-time */
-      releaseAt: string
-      /** Format: date-time */
-      returnBy: string
-      notes?: string
     }
     TapOccurrenceSearchRequest: {
       prisonCode: string
       /** Format: date */
-      fromDate?: string
+      start?: string
       /** Format: date */
-      toDate?: string
+      end?: string
       status: ('PENDING' | 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'OVERDUE' | 'EXPIRED' | 'CANCELLED' | 'DENIED')[]
       query?: string
       /** Format: int32 */
@@ -981,10 +953,6 @@ export interface components {
       transport: components['schemas']['CodedDescription']
       location: components['schemas']['Location']
       isCancelled: boolean
-      /** Format: date-time */
-      releaseAt: string
-      /** Format: date-time */
-      returnBy: string
     }
     TapOccurrenceSearchResponse: {
       content: components['schemas']['TapOccurrenceResult'][]
@@ -996,7 +964,7 @@ export interface components {
       start?: string
       /** Format: date */
       end?: string
-      status: ('PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED')[]
+      status: ('PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED' | 'EXPIRED')[]
       query?: string
       /** Format: int32 */
       page: number
@@ -1021,10 +989,6 @@ export interface components {
       locations: components['schemas']['Location'][]
       /** Format: int32 */
       occurrenceCount: number
-      /** Format: date */
-      fromDate: string
-      /** Format: date */
-      toDate: string
     }
     TapAuthorisationSearchResponse: {
       content: components['schemas']['TapAuthorisationResult'][]
@@ -1186,6 +1150,7 @@ export interface operations {
           | components['schemas']['ChangeAuthorisationTransport']
           | components['schemas']['ChangePrisonPerson']
           | components['schemas']['DenyAuthorisation']
+          | components['schemas']['ExpireAuthorisation']
           | components['schemas']['RecategoriseAuthorisation']
       }
     }
