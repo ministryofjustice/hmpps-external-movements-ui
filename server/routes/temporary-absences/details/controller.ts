@@ -2,13 +2,17 @@ import { Request, Response } from 'express'
 import { HTTPError } from 'superagent'
 import ExternalMovementsService from '../../../services/apis/externalMovementsService'
 import { getApiUserErrorMessage } from '../../../utils/utils'
+import { parseAuditHistory } from '../../../utils/parseAuditHistory'
 
 export class TapOccurrenceDetailsController {
   constructor(readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request<{ id: string }>, res: Response) => {
     try {
-      const occurrence = await this.externalMovementsService.getTapOccurrence({ res }, req.params.id)
+      const [occurrence, history] = await Promise.all([
+        this.externalMovementsService.getTapOccurrence({ res }, req.params.id),
+        this.externalMovementsService.getTapOccurrenceHistory({ res }, req.params.id),
+      ])
 
       res.locals.prisonerDetails = {
         prisonerNumber: occurrence.authorisation.person.personIdentifier,
@@ -23,6 +27,7 @@ export class TapOccurrenceDetailsController {
         showBreadcrumbs: true,
         result: occurrence.authorisation,
         occurrence,
+        auditedActions: parseAuditHistory(history.content.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt))),
       })
     } catch (error: unknown) {
       res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }

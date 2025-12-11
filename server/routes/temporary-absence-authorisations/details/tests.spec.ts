@@ -61,7 +61,35 @@ test.describe('/temporary-absence-authorisations/:id', () => {
         },
       ],
     })
-    await stubGetTapAuthorisationHistory(authorisationId, { content: [] })
+    await stubGetTapAuthorisationHistory(authorisationId, {
+      content: [
+        {
+          domainEvents: ['person.temporary-absence-authorisation.pending'],
+          occurredAt: '2001-01-01T09:00:00',
+          user: { name: 'User Name', username: 'USERNAME' },
+          changes: [],
+        },
+        {
+          domainEvents: ['person.temporary-absence-authorisation.approved'],
+          occurredAt: '2001-01-01T09:05:00',
+          user: { name: 'User Name', username: 'USERNAME' },
+          changes: [],
+        },
+        {
+          domainEvents: ['person.temporary-absence-authorisation.cancelled'],
+          occurredAt: '2001-01-01T09:10:00',
+          user: { name: 'User Name', username: 'USERNAME' },
+          changes: [],
+          reason: 'lorem ipsum',
+        },
+        {
+          domainEvents: ['person.temporary-absence-authorisation.date-range-changed'],
+          occurredAt: '2001-01-01T09:15:00',
+          user: { name: 'User Name', username: 'USERNAME' },
+          changes: [{ propertyName: 'start', previous: '2001-01-02', change: '2001-01-01' }],
+        },
+      ],
+    })
 
     await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
 
@@ -87,6 +115,30 @@ test.describe('/temporary-absence-authorisations/:id', () => {
 
     await expect(testPage.button('Review this absence')).toBeVisible()
     await expect(testPage.button('Cancel this absence')).toHaveCount(0)
+
+    // verify history tab
+    await testPage.clickTab('Absence history')
+
+    await testPage.verifyHistoryEntry(
+      'Absence created',
+      ['Temporary absence created for Prisoner-Name Prisoner-Surname'],
+      [],
+    )
+    await testPage.verifyHistoryEntry(
+      'Absence approved',
+      ['Temporary absence approved for Prisoner-Name Prisoner-Surname', 'User Name did not enter a reason.'],
+      [],
+    )
+    await testPage.verifyHistoryEntry(
+      'Absence cancelled',
+      ['Temporary absence cancelled for Prisoner-Name Prisoner-Surname', 'Reason: lorem ipsum'],
+      [],
+    )
+    await testPage.verifyHistoryEntry(
+      'Absence date range changed',
+      [],
+      ['Start date was changed from 2 January 2001 to 1 January 2001'],
+    )
   })
 
   test('should show temporary absence details for APPROVED absence', async ({ page }) => {

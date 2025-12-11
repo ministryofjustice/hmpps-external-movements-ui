@@ -80,6 +80,13 @@ export const stubGetTapOccurrence = (response: components['schemas']['TapOccurre
     response,
   })
 
+export const stubGetTapOccurrenceHistory = (occurrenceId: string, response: components['schemas']['AuditHistory']) =>
+  successStub({
+    method: 'GET',
+    urlPattern: `/external-movements-api/temporary-absence-occurrences/${occurrenceId}/history`,
+    response,
+  })
+
 export const stubPutTapOccurrence = (occurrenceId: string, response: components['schemas']['AuditHistory']) =>
   successStub({
     method: 'PUT',

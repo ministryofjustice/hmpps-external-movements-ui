@@ -1,6 +1,7 @@
 import { components } from '../@types/externalMovements'
+import { formatDate } from './dateTimeUtils'
 
-type DomainEventText = { heading: string; content?: string; reasonRequested?: boolean }
+type DomainEventText = { heading: string; content?: string; reasonRequested?: boolean; changes?: string[] }
 
 const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
   'person.temporary-absence-authorisation.approved': {
@@ -37,6 +38,44 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
   'person.temporary-absence-authorisation.transport-changed': {
     heading: 'Absence transport changed',
   },
+  'person.temporary-absence.scheduled': {
+    heading: 'Absence occurrence created',
+    content: 'Temporary absence occurrence created for <prisoner>',
+  },
+  'person.temporary-absence.cancelled': {
+    heading: 'Absence occurrence cancelled',
+    content: 'Temporary absence occurrence cancelled for <prisoner>',
+    reasonRequested: true,
+  },
+  'person.temporary-absence.expired': {
+    heading: 'Absence occurrence expired',
+    content: 'Temporary absence occurrence expired for <prisoner>',
+  },
+  'person.temporary-absence.overdue': {
+    heading: 'Absence occurrence overdue',
+    content: 'Temporary absence occurrence overdue for <prisoner>',
+  },
+  'person.temporary-absence.contact-information-changed': {
+    heading: 'Absence occurrence contact information changed',
+  },
+  'person.temporary-absence.rescheduled': {
+    heading: 'Absence occurrence rescheduled',
+  },
+  'person.temporary-absence.comments-changed': {
+    heading: 'Absence occurrence comments changed',
+  },
+  'person.temporary-absence.accompaniment-changed': {
+    heading: 'Absence occurrence escort changed',
+  },
+  'person.temporary-absence.transport-changed': {
+    heading: 'Absence occurrence transport changed',
+  },
+  'person.temporary-absence.recategorised': {
+    heading: 'Absence occurrence categorisation changed',
+  },
+  'person.temporary-absence.relocated': {
+    heading: 'Absence occurrence location changed',
+  },
 }
 
 const CHANGE_PROPERTY_MAP: { [key: string]: string } = {
@@ -52,6 +91,31 @@ const CHANGE_PROPERTY_MAP: { [key: string]: string } = {
   comments: 'Comments',
 }
 
+const OCCURRENCE_CHANGE_PROPERTY_MAP: { [key: string]: string } = {
+  start: 'Start date and time',
+  end: 'End date and time',
+}
+
+const parseChangedPropertyValue = (domain: string, value: unknown) => {
+  if (!value) return 'Not applicable'
+
+  if (domain.endsWith('comments-change')) return `“${value}”`
+
+  if (domain.endsWith('date-range-changed')) return formatDate(String(value))
+
+  if (domain.endsWith('rescheduled')) return formatDate(String(value), `d MMMM yyyy 'at' HH:mm`)
+
+  return String(value)
+}
+
+const parsePropertyName = (domain: string, propertyName: string) => {
+  if (domain.startsWith('person.temporary-absence.')) {
+    return OCCURRENCE_CHANGE_PROPERTY_MAP[propertyName] ?? CHANGE_PROPERTY_MAP[propertyName] ?? propertyName
+  }
+
+  return CHANGE_PROPERTY_MAP[propertyName] ?? propertyName
+}
+
 export const parseAuditHistory = (history: components['schemas']['AuditedAction'][]) => {
   const result = history
     .map(action => {
@@ -59,14 +123,12 @@ export const parseAuditHistory = (history: components['schemas']['AuditedAction'
       if (!eventText) return null
 
       if (!eventText.content) {
-        eventText.content = action.changes
-          .map(change =>
-            change.change
-              ? `${CHANGE_PROPERTY_MAP[change.propertyName] ?? change.propertyName} was changed from ${change.previous} to ${change.change}.`
-              : `${CHANGE_PROPERTY_MAP[change.propertyName] ?? change.propertyName} ${change.previous} was removed.`,
+        eventText.changes = action.changes
+          .map(
+            change =>
+              `${parsePropertyName(action.domainEvents[0]!, change.propertyName)} was changed from ${parseChangedPropertyValue(action.domainEvents[0]!, change.previous)} to ${parseChangedPropertyValue(action.domainEvents[0]!, change.change)}.`,
           )
           .filter(itm => Boolean(itm))
-          .join(' ')
       }
 
       return {
