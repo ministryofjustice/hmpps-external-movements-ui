@@ -8,7 +8,7 @@ import { formatInputDate } from '../../../../utils/dateTimeUtils'
 import { getSelectDayRange } from './utils'
 import { parseHour, parseMinute } from '../../../../utils/validations/validateTime'
 
-const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: string) =>
+const absenceDateTimeSchema = (start: string, end: string, maxReturnDate: string) =>
   createSchema({
     startDate: z.string().optional(),
     startTimeHour: z.string().optional(),
@@ -20,11 +20,11 @@ const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: 
     const parsedStartDate = validateTransformDate(
       (date: Date) => {
         const dateString = format(date, 'yyyy-MM-dd')
-        return dateString >= fromDate && dateString <= toDate
+        return dateString >= start && dateString <= end
       },
       'Enter or select a start date',
       'Enter or select a valid start date',
-      `Start date must be between ${formatInputDate(fromDate)} and ${formatInputDate(toDate)}`,
+      `Start date must be between ${formatInputDate(start)} and ${formatInputDate(end)}`,
     ).safeParse(startDate)
 
     parsedStartDate.error?.issues?.forEach(issue =>
@@ -34,11 +34,11 @@ const absenceDateTimeSchema = (fromDate: string, toDate: string, maxReturnDate: 
     const parsedReturnDate = validateTransformDate(
       (date: Date) => {
         const dateString = format(date, 'yyyy-MM-dd')
-        return dateString >= fromDate && dateString <= maxReturnDate
+        return dateString >= start && dateString <= maxReturnDate
       },
       'Enter or select a return date',
       'Enter or select a valid return date',
-      `Return date must be between ${formatInputDate(fromDate)} and ${formatInputDate(maxReturnDate)}`,
+      `Return date must be between ${formatInputDate(start)} and ${formatInputDate(maxReturnDate)}`,
     ).safeParse(returnDate)
 
     parsedReturnDate.error?.issues?.forEach(issue =>
@@ -213,8 +213,8 @@ export const schema = async (
       absence.returnTimeMinute === '',
   )
 
-  const { startDate: fromDate, endDate: toDate, nextIdx, isOptional } = getSelectDayRange(req)
-  const maxReturnDate = nextIdx ? format(addDays(new Date(toDate), 1), 'yyyy-MM-dd') : toDate
+  const { startDate: from, endDate: to, nextIdx, isOptional } = getSelectDayRange(req)
+  const maxReturnDate = nextIdx ? format(addDays(new Date(to), 1), 'yyyy-MM-dd') : to
 
   return createSchema({
     absences: z.array(
@@ -227,7 +227,7 @@ export const schema = async (
             returnTimeHour: z.string().optional(),
             returnTimeMinute: z.string().optional(),
           })
-        : absenceDateTimeSchema(fromDate, toDate, maxReturnDate),
+        : absenceDateTimeSchema(from, to, maxReturnDate),
     ),
     save: z.string().optional(),
     add: z.string().optional(),

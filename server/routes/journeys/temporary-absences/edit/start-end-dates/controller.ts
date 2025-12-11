@@ -9,13 +9,13 @@ export class EditOccurrenceStartEndDatesController {
   GET = async (req: Request, res: Response) => {
     const { backUrl, occurrence, authorisation } = req.journeyData.updateTapOccurrence!
 
-    const startDate = res.locals.formResponses?.['startDate'] ?? format(occurrence.releaseAt, 'd/M/yyyy')
-    const startTimeHour = res.locals.formResponses?.['startTimeHour'] ?? format(occurrence.releaseAt, 'HH')
-    const startTimeMinute = res.locals.formResponses?.['startTimeMinute'] ?? format(occurrence.releaseAt, 'mm')
+    const startDate = res.locals.formResponses?.['startDate'] ?? format(occurrence.start, 'd/M/yyyy')
+    const startTimeHour = res.locals.formResponses?.['startTimeHour'] ?? format(occurrence.start, 'HH')
+    const startTimeMinute = res.locals.formResponses?.['startTimeMinute'] ?? format(occurrence.start, 'mm')
 
-    const returnDate = res.locals.formResponses?.['returnDate'] ?? format(occurrence.returnBy, 'd/M/yyyy')
-    const returnTimeHour = res.locals.formResponses?.['returnTimeHour'] ?? format(occurrence.returnBy, 'HH')
-    const returnTimeMinute = res.locals.formResponses?.['returnTimeMinute'] ?? format(occurrence.returnBy, 'mm')
+    const returnDate = res.locals.formResponses?.['returnDate'] ?? format(occurrence.end, 'd/M/yyyy')
+    const returnTimeHour = res.locals.formResponses?.['returnTimeHour'] ?? format(occurrence.end, 'HH')
+    const returnTimeMinute = res.locals.formResponses?.['returnTimeMinute'] ?? format(occurrence.end, 'mm')
 
     res.render('temporary-absences/edit/start-end-dates/view', {
       backUrl,
@@ -26,8 +26,8 @@ export class EditOccurrenceStartEndDatesController {
       returnTimeHour,
       returnTimeMinute,
       repeat: authorisation.repeat,
-      fromDate: authorisation.fromDate,
-      toDate: authorisation.toDate,
+      start: authorisation.start,
+      end: authorisation.end,
     })
   }
 
@@ -36,8 +36,8 @@ export class EditOccurrenceStartEndDatesController {
     try {
       journey.result = await this.externalMovementsService.updateTapOccurrence({ res }, journey.occurrence.id, {
         type: 'RescheduleOccurrence',
-        releaseAt: `${req.body.startDate}T${req.body.startTimeHour}:${req.body.startTimeMinute}:00`,
-        returnBy: `${req.body.returnDate}T${req.body.returnTimeHour}:${req.body.returnTimeMinute}:00`,
+        start: `${req.body.startDate}T${req.body.startTimeHour}:${req.body.startTimeMinute}:00`,
+        end: `${req.body.returnDate}T${req.body.returnTimeHour}:${req.body.returnTimeMinute}:00`,
       })
       next()
     } catch (e) {

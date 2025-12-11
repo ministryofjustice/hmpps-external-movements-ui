@@ -5,7 +5,7 @@ const REQUIRED_ERROR_MSG = 'Enter comments on this temporary absence'
 const CHAR_COUNT_ERROR_MSG = 'The maximum character limit is 4000'
 
 export const schema = createSchema({
-  notes: z
+  comments: z
     .string({ message: REQUIRED_ERROR_MSG })
     .max(4000, { message: CHAR_COUNT_ERROR_MSG })
     .transform((val, ctx) => {

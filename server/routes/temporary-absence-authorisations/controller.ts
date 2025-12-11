@@ -17,14 +17,13 @@ export class BrowseTapAuthorisationsController {
     const resQuery = res.locals['query'] as ResQuerySchemaType
     const filterQueries = [
       `searchTerm=${resQuery?.searchTerm ?? ''}`,
-      `fromDate=${resQuery?.fromDate ?? ''}`,
-      `toDate=${resQuery?.toDate ?? ''}`,
+      `start=${resQuery?.start ?? ''}`,
+      `end=${resQuery?.end ?? ''}`,
       `status=${resQuery?.status ?? ''}`,
     ].join('&')
 
     const hasValidationError =
-      Object.keys(resQuery).find(key => ['searchTerm', 'fromDate', 'toDate', 'status'].includes(key)) &&
-      !resQuery.validated
+      Object.keys(resQuery).find(key => ['searchTerm', 'start', 'end', 'status'].includes(key)) && !resQuery.validated
 
     let results: components['schemas']['TapAuthorisationResult'][] = []
 
@@ -32,11 +31,11 @@ export class BrowseTapAuthorisationsController {
       const searchResponse = !hasValidationError
         ? await this.externalMovementsService.searchTapAuthorisations(
             { res },
-            resQuery.validated?.fromDate ? format(resQuery.validated.fromDate, 'yyyy-MM-dd') : null,
-            resQuery.validated?.toDate ? format(resQuery.validated.toDate, 'yyyy-MM-dd') : null,
+            resQuery.validated?.start ? format(resQuery.validated.start, 'yyyy-MM-dd') : null,
+            resQuery.validated?.end ? format(resQuery.validated.end, 'yyyy-MM-dd') : null,
             resQuery.validated?.status ? [resQuery.validated.status] : ['PENDING', 'APPROVED', 'CANCELLED', 'DENIED'],
             resQuery.validated?.searchTerm?.trim() || null,
-            resQuery.validated?.sort ?? 'fromDate,asc',
+            resQuery.validated?.sort ?? 'start,asc',
             resQuery.validated?.page || 1,
             this.PAGE_SIZE,
           )
@@ -58,12 +57,12 @@ export class BrowseTapAuthorisationsController {
     res.render('temporary-absence-authorisations/view', {
       showBreadcrumbs: true,
       searchTerm: resQuery?.searchTerm,
-      fromDate: resQuery?.fromDate,
-      toDate: resQuery?.toDate,
+      start: resQuery?.start,
+      end: resQuery?.end,
       status: resQuery?.status,
       results,
       filterQueries,
-      sort: resQuery?.sort ?? 'fromDate,asc',
+      sort: resQuery?.sort ?? 'start,asc',
       hasValidationError,
     })
   }

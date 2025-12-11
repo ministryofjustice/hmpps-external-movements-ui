@@ -10,8 +10,8 @@
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
       {{ govukCharacterCount({
-        name: "notes",
-        errorMessage: validationErrors | findError('notes'),
+        name: "comments",
+        errorMessage: validationErrors | findError('comments'),
         maxlength: 4000,
         rows: 10,
         label: {
@@ -22,7 +22,7 @@
         hint: {
           text: "Add any details that might be relevant for reception staff or other colleagues viewing this absence to see."
         },
-        value: notes
+        value: comments
       }) }}
 
       {{ govukButton({

@@ -32,14 +32,14 @@ export class AddTapCheckAnswersController {
       accompanied,
       accompaniedBy,
       transport,
-      notes,
+      comments,
       location,
       repeat,
       requireApproval,
       locations,
       occurrences,
-      fromDate,
-      toDate,
+      start,
+      end,
     } = req.journeyData.addTemporaryAbsence!
 
     try {
@@ -47,20 +47,20 @@ export class AddTapCheckAnswersController {
         repeat: repeat!,
         statusCode: requireApproval ? 'PENDING' : 'APPROVED',
         absenceTypeCode: absenceType!.code,
-        fromDate: repeat ? fromDate! : startDate!,
-        toDate: repeat ? toDate! : returnDate!,
+        start: repeat ? start! : startDate!,
+        end: repeat ? end! : returnDate!,
         accompaniedByCode: accompanied && accompaniedBy ? accompaniedBy.code : 'U',
         transportCode: transport!.code,
         occurrences: repeat
-          ? occurrences!.map(({ releaseAt, returnBy, locationIdx }) => ({
-              releaseAt,
-              returnBy,
-              location: parseAddress(locations![locationIdx]!),
+          ? occurrences!.map(occurrence => ({
+              start: occurrence.start,
+              end: occurrence.end,
+              location: parseAddress(locations![occurrence.locationIdx]!),
             }))
           : [
               {
-                releaseAt: `${startDate}T${startTime}:00`,
-                returnBy: `${returnDate}T${returnTime}:00`,
+                start: `${startDate}T${startTime}:00`,
+                end: `${returnDate}T${returnTime}:00`,
                 location: parseAddress(location!),
               },
             ],
@@ -70,8 +70,8 @@ export class AddTapCheckAnswersController {
       if (reasonCategory) request.absenceReasonCategoryCode = reasonCategory.code
       if (reason) request.absenceReasonCode = reason.code
 
-      if (notes) {
-        request.notes = notes
+      if (comments) {
+        request.comments = comments
       }
 
       await this.externalMovementsService.createTap({ res }, req.journeyData.prisonerDetails!.prisonerNumber, request)

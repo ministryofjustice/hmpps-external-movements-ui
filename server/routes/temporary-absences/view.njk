@@ -35,24 +35,24 @@
             }) }}
 
             {{ mojDatePicker({
-              id: "fromDate",
-              name: "fromDate",
+              id: "start",
+              name: "start",
               label: {
                 text: 'Start date from'
               },
-              value: fromDate,
-              errorMessage: validationErrors | findError('fromDate'),
+              value: start,
+              errorMessage: validationErrors | findError('start'),
               classes: 'hmpps-datepicker--fixed-width govuk-body moj-search__input'
             }) }}
 
             {{ mojDatePicker({
-              id: "toDate",
-              name: "toDate",
+              id: "end",
+              name: "end",
               label: {
                 text: 'End date to'
               },
-              value: toDate,
-              errorMessage: validationErrors | findError('toDate'),
+              value: end,
+              errorMessage: validationErrors | findError('end'),
               classes: 'hmpps-datepicker--fixed-width govuk-body moj-search__input'
             }) }}
 
@@ -122,10 +122,10 @@
             html: '<a class="govuk-link--no-visited-state" href="' + prisonerProfileUrl + '/prisoner/' + occurrence.authorisation.person.personIdentifier + '">' + occurrence.authorisation.person | firstNameSpaceLastName + "</a><br/>" + occurrence.authorisation.person.personIdentifier
           },
           {
-            text: occurrence.releaseAt | formatDate("d MMMM yyyy 'at' HH:mm")
+            text: occurrence.start | formatDate("d MMMM yyyy 'at' HH:mm")
           },
           {
-            text: occurrence.returnBy | formatDate("d MMMM yyyy 'at' HH:mm")
+            text: occurrence.end | formatDate("d MMMM yyyy 'at' HH:mm")
           },
           {
             text: occurrence.absenceType.description
@@ -162,11 +162,11 @@
           },
           {
             text: "Start date and time",
-            key: 'releaseAt'
+            key: 'start'
           },
           {
             text: "End date and time",
-            key: 'returnBy'
+            key: 'end'
           },
           {
             text: 'Absence type',
@@ -192,7 +192,7 @@
             text: "",
             format: "numeric"
           }
-        ] | convertToSortableColumns(sort or 'releaseAt,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
+        ] | convertToSortableColumns(sort or 'start,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
         rows: rows
       }) }}
 

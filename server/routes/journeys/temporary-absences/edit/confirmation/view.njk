@@ -5,7 +5,7 @@
 
 {% set EVENT_DESCRIPTION = {
   'person.temporary-absence.rescheduled': 'Absence rescheduled',
-  'person.temporary-absence.notes-changed': 'Absence notes changed'
+  'person.temporary-absence.comments-changed': 'Absence comments changed'
 } %}
 
 {% block innerContent %}
@@ -24,7 +24,7 @@
       {% endif %}
 
       <p class="govuk-body">
-        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?fromDate=&toDate=&status=">View all temporary absence occurrences in {{ user.activeCaseLoad.description }}</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?start=&end=&status=">View all temporary absence occurrences in {{ user.activeCaseLoad.description }}</a>
       </p>
 
       <p class="govuk-body">
@@ -47,7 +47,7 @@
       {% endif %}
 
       <p class="govuk-body">
-        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?fromDate=&toDate=&status=">View all temporary absence occurrences in {{ user.activeCaseLoad.description }}</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences?start=&end=&status=">View all temporary absence occurrences in {{ user.activeCaseLoad.description }}</a>
       </p>
     {% endswitch %}
   </div>

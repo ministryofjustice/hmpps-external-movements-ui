@@ -1,3 +1,6 @@
+import { v4 as uuidV4 } from 'uuid'
+import { components } from '../../server/@types/externalMovements'
+
 const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 const randomChar = () => uppercaseChars.charAt(Math.floor(Math.random() * 26))
 export const randomPrisonNumber = () =>
@@ -289,4 +292,93 @@ export const testRefData = {
     { code: 'B', description: 'accompaniedBy B', hintText: 'Hint text for B' },
     { code: 'C', description: 'accompaniedBy C', hintText: 'Hint text for C' },
   ],
+}
+
+export const testTapOccurrenceResult: components['schemas']['TapOccurrenceResult'] = {
+  id: 'occurrence-id',
+  authorisation: {
+    id: uuidV4(),
+    person: {
+      personIdentifier: 'A9965EA',
+      firstName: 'PRISONER-NAME',
+      lastName: 'PRISONER-SURNAME',
+      dateOfBirth: '1990-01-01',
+      cellLocation: '2-1-005',
+    },
+    status: { code: 'APPROVED', description: 'Approved' },
+    absenceType: {
+      code: 'RR',
+      description: 'Restricted ROTL (Release on Temporary Licence)',
+    },
+    absenceSubType: {
+      code: 'RDR',
+      description: 'RDR (Resettlement Day Release)',
+      hintText: 'For prisoners to carry out activities linked to objectives in their sentence plan.',
+    },
+    absenceReasonCategory: { code: 'PW', description: 'Paid work' },
+    absenceReason: { code: 'R15', description: 'IT and communication' },
+    repeat: false,
+  },
+  absenceType: {
+    code: 'RR',
+    description: 'Restricted ROTL (Release on Temporary Licence)',
+  },
+  status: { code: 'SCHEDULED', description: 'Scheduled' },
+  releaseAt: '2001-01-01T10:00:00',
+  returnBy: '2001-01-01T17:30:00',
+  start: '2001-01-01T10:00:00',
+  end: '2001-01-01T17:30:00',
+  location: { uprn: 1001, description: 'Random Street, UK' },
+  accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+  transport: { code: 'CAR', description: 'Car' },
+  isCancelled: false,
+}
+
+export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
+  id: 'occurrence-id',
+  authorisation: {
+    id: uuidV4(),
+    person: {
+      personIdentifier: 'A9965EA',
+      firstName: 'PRISONER-NAME',
+      lastName: 'PRISONER-SURNAME',
+      dateOfBirth: '1990-01-01',
+      cellLocation: '2-1-005',
+    },
+    status: { code: 'APPROVED', description: 'Approved' },
+    absenceType: {
+      code: 'RR',
+      description: 'Restricted ROTL (Release on Temporary Licence)',
+    },
+    repeat: false,
+    accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+  },
+  status: { code: 'SCHEDULED', description: 'Scheduled' },
+  start: '2001-01-01T10:00:00',
+  end: '2001-01-01T17:30:00',
+  releaseAt: '2001-01-01T10:00:00',
+  returnBy: '2001-01-01T17:30:00',
+  location: { uprn: 1001, description: 'Random Street, UK' },
+  accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+  transport: { code: 'CAR', description: 'Car' },
+}
+
+export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
+  id: 'authorisation-id',
+  person: {
+    personIdentifier: 'A9965EA',
+    firstName: 'PRISONER-NAME',
+    lastName: 'PRISONER-SURNAME',
+    dateOfBirth: '1990-01-01',
+    cellLocation: '2-1-005',
+  },
+  status: { code: 'PENDING', description: 'To be reviewed' },
+  absenceType: { code: 'PP', description: 'Police production' },
+  repeat: false,
+  start: '2001-01-01',
+  end: '2001-01-01',
+  accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+  transport: { code: 'CAR', description: 'Car' },
+  locations: [{ uprn: 1001, description: 'Random Street, UK' }],
+  occurrences: [],
 }

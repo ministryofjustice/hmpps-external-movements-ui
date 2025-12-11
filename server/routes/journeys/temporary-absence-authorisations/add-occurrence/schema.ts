@@ -15,13 +15,13 @@ export const schema = async (req: Request, _res: Response) =>
     returnTimeHour: z.string().optional(),
     returnTimeMinute: z.string().optional(),
   }).transform(({ startDate, startTimeHour, startTimeMinute, returnDate, returnTimeHour, returnTimeMinute }, ctx) => {
-    const { fromDate, toDate } = req.journeyData.addTapOccurrence!.authorisation
+    const { start, end } = req.journeyData.addTapOccurrence!.authorisation
 
     const parsedStartDate = validateTransformDate(
-      (date: Date) => date.toISOString().substring(0, 10) >= fromDate,
+      (date: Date) => date.toISOString().substring(0, 10) >= start,
       'Enter or select a start date',
       'Enter or select a valid start date',
-      `Start date must be on or after ${format(fromDate, 'd/M/yyyy')}`,
+      `Start date must be on or after ${format(start, 'd/M/yyyy')}`,
     ).safeParse(startDate)
 
     parsedStartDate.error?.issues?.forEach(issue =>
@@ -65,10 +65,10 @@ export const schema = async (req: Request, _res: Response) =>
     }
 
     const parsedReturnDate = validateTransformDate(
-      (date: Date) => date.toISOString().substring(0, 10) <= toDate,
+      (date: Date) => date.toISOString().substring(0, 10) <= end,
       'Enter or select a return date',
       'Enter or select a valid return date',
-      `Return date must be on or after ${format(toDate, 'd/M/yyyy')}`,
+      `Return date must be on or after ${format(end, 'd/M/yyyy')}`,
     ).safeParse(returnDate)
 
     parsedReturnDate.error?.issues?.forEach(issue =>

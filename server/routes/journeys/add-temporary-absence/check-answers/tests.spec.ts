@@ -73,7 +73,7 @@ test.describe('/add-temporary-absence/check-answers', () => {
         accompanied: true,
         accompaniedBy: { code: 'P', description: 'Police escort' },
         transport: { code: 'POL', description: 'Police vehicle' },
-        notes: 'lorem ipsum',
+        comments: 'lorem ipsum',
         requireApproval: false,
       },
     })

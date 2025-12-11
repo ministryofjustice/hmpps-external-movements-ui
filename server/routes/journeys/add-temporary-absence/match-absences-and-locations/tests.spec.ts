@@ -95,8 +95,8 @@ test.describe('/add-temporary-absence/match-absences-and-locations', () => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId, {
       patternType: 'WEEKLY',
-      fromDate: '2001-01-01',
-      toDate: '2001-01-18',
+      start: '2001-01-01',
+      end: '2001-01-18',
       weeklyPattern: [
         { day: 0, overnight: false, startTime: '10:00', returnTime: '17:30' },
         { day: 3, overnight: true, startTime: '23:00', returnTime: '04:30' },
@@ -119,8 +119,8 @@ test.describe('/add-temporary-absence/match-absences-and-locations', () => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId, {
       patternType: 'ROTATING',
-      fromDate: '2001-01-01',
-      toDate: '2001-01-09',
+      start: '2001-01-01',
+      end: '2001-01-09',
       rotatingPattern: {
         isSameTime: false,
         intervals: [

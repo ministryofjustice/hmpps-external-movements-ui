@@ -435,8 +435,8 @@ test.describe('/add-temporary-absence/e2e', () => {
       {
         absenceSubTypeCode: 'CRL',
         absenceTypeCode: 'SR',
-        fromDate: '2069-10-10',
-        notes: 'Sample text',
+        start: '2069-10-10',
+        comments: 'Sample text',
         accompaniedByCode: 'U',
         transportCode: 'AMB',
         occurrences: [
@@ -446,13 +446,13 @@ test.describe('/add-temporary-absence/e2e', () => {
               address: 'Address',
               postcode: 'RS1 34T',
             },
-            releaseAt: '2069-10-10T12:30:00',
-            returnBy: '2069-10-11T12:30:00',
+            start: '2069-10-10T12:30:00',
+            end: '2069-10-11T12:30:00',
           },
         ],
         repeat: false,
         statusCode: 'PENDING',
-        toDate: '2069-10-11',
+        end: '2069-10-11',
       },
     ])
   })

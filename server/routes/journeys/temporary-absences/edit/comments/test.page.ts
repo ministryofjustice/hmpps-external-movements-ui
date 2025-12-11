@@ -11,7 +11,7 @@ export class EditAbsenceCommentsPage extends BaseTestPage {
     })
   }
 
-  notesField() {
+  commentsField() {
     return this.textbox(`Enter any relevant comments (optional)`)
   }
 

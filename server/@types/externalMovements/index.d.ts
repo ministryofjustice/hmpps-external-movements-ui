@@ -408,11 +408,6 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
-    AmendOccurrenceNotes: {
-      type: 'AmendOccurrenceNotes'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      notes: string
-    })
     CancelOccurrence: {
       type: 'CancelOccurrence'
     } & Omit<components['schemas']['OccurrenceAction'], 'type'>
@@ -420,6 +415,11 @@ export interface components {
       type: 'ChangeOccurrenceAccompaniment'
     } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
       accompaniedByCode: string
+    })
+    ChangeOccurrenceComments: {
+      type: 'ChangeOccurrenceComments'
+    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
+      comments: string
     })
     ChangeOccurrenceContactInformation: {
       type: 'ChangeOccurrenceContactInformation'
@@ -465,9 +465,9 @@ export interface components {
       type: 'RescheduleOccurrence'
     } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
       /** Format: date-time */
-      releaseAt?: string
+      start?: string
       /** Format: date-time */
-      returnBy?: string
+      end?: string
     })
     ScheduleOccurrence: {
       type: 'ScheduleOccurrence'
@@ -492,11 +492,6 @@ export interface components {
       username: string
       name: string
     }
-    AmendAuthorisationNotes: {
-      type: 'AmendAuthorisationNotes'
-    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
-      notes: string
-    })
     ApproveAuthorisation: {
       type: 'ApproveAuthorisation'
     } & Omit<components['schemas']['AuthorisationAction'], 'type'>
@@ -512,13 +507,18 @@ export interface components {
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
       accompaniedByCode: string
     })
+    ChangeAuthorisationComments: {
+      type: 'ChangeAuthorisationComments'
+    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
+      comments: string
+    })
     ChangeAuthorisationDateRange: {
       type: 'ChangeAuthorisationDateRange'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
       /** Format: date */
-      fromDate: string
+      start: string
       /** Format: date */
-      toDate: string
+      end: string
     })
     ChangeAuthorisationTransport: {
       type: 'ChangeAuthorisationTransport'
@@ -565,8 +565,8 @@ export interface components {
       absenceReasonCode: string
       location: components['schemas']['Location']
       accompaniedByCode: string
-      accompaniedByNotes?: string
-      notes?: string
+      accompaniedByComments?: string
+      comments?: string
       created: components['schemas']['SyncAtAndByWithPrison']
       updated?: components['schemas']['SyncAtAndBy']
       legacyId: string
@@ -587,10 +587,10 @@ export interface components {
       transportCode: string
       repeat: boolean
       /** Format: date */
-      fromDate: string
+      start: string
       /** Format: date */
-      toDate: string
-      notes?: string
+      end: string
+      comments?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
       /** Format: int64 */
@@ -601,9 +601,9 @@ export interface components {
       id?: string
       isCancelled: boolean
       /** Format: date-time */
-      releaseAt: string
+      start: string
       /** Format: date-time */
-      returnBy: string
+      end: string
       location: components['schemas']['Location']
       absenceTypeCode?: string
       absenceSubTypeCode?: string
@@ -611,7 +611,7 @@ export interface components {
       accompaniedByCode: string
       transportCode: string
       contactInformation?: string
-      notes?: string
+      comments?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
       /** Format: int64 */
@@ -645,8 +645,8 @@ export interface components {
       absenceReasonCode: string
       location: components['schemas']['Location']
       accompaniedByCode: string
-      accompaniedByNotes?: string
-      notes?: string
+      accompaniedByComments?: string
+      comments?: string
       created: components['schemas']['SyncAtAndByWithPrison']
       updated?: components['schemas']['SyncAtAndBy']
       legacyId: string
@@ -654,9 +654,9 @@ export interface components {
     MigrateTapOccurrence: {
       isCancelled: boolean
       /** Format: date-time */
-      releaseAt: string
+      start: string
       /** Format: date-time */
-      returnBy: string
+      end: string
       location: components['schemas']['Location']
       absenceTypeCode?: string
       absenceSubTypeCode?: string
@@ -664,7 +664,7 @@ export interface components {
       accompaniedByCode: string
       transportCode: string
       contactInformation?: string
-      notes?: string
+      comments?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
       /** Format: int64 */
@@ -708,21 +708,21 @@ export interface components {
       statusCode: 'PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED'
       accompaniedByCode: string
       transportCode: string
-      notes?: string
+      comments?: string
       repeat: boolean
       /** Format: date */
-      fromDate: string
+      start: string
       /** Format: date */
-      toDate: string
+      end: string
       contactInformation?: string
       schedule?: components['schemas']['JsonNode']
     }
     JsonNode: unknown
     OccurrenceRequest: {
       /** Format: date-time */
-      releaseAt: string
+      start: string
       /** Format: date-time */
-      returnBy: string
+      end: string
       location: components['schemas']['Location']
       scheduleReference?: components['schemas']['JsonNode']
     }
@@ -732,11 +732,11 @@ export interface components {
     }
     CreateOccurrenceRequest: {
       /** Format: date-time */
-      releaseAt: string
+      start: string
       /** Format: date-time */
-      returnBy: string
+      end: string
       location: components['schemas']['Location']
-      notes?: string
+      comments?: string
     }
     Authorisation: {
       /** Format: uuid */
@@ -749,6 +749,7 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription']
       accompaniedBy: components['schemas']['CodedDescription']
       repeat: boolean
+      comments?: string
       notes?: string
     }
     CodedDescription: {
@@ -774,14 +775,19 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription']
       status: components['schemas']['CodedDescription']
       /** Format: date-time */
-      releaseAt: string
+      start: string
       /** Format: date-time */
-      returnBy: string
+      end: string
       location: components['schemas']['Location']
       accompaniedBy: components['schemas']['CodedDescription']
       transport: components['schemas']['CodedDescription']
       contactInformation?: string
       scheduleReference?: components['schemas']['JsonNode']
+      comments?: string
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
       notes?: string
     }
     Occurrence: {
@@ -793,12 +799,17 @@ export interface components {
       absenceReasonCategory?: components['schemas']['CodedDescription']
       absenceReason?: components['schemas']['CodedDescription']
       /** Format: date-time */
-      releaseAt: string
+      start: string
       /** Format: date-time */
-      returnBy: string
+      end: string
       location: components['schemas']['Location']
       accompaniedBy: components['schemas']['CodedDescription']
       transport: components['schemas']['CodedDescription']
+      comments?: string
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
       notes?: string
     }
     TapAuthorisation: {
@@ -814,12 +825,17 @@ export interface components {
       transport: components['schemas']['CodedDescription']
       repeat: boolean
       /** Format: date */
-      fromDate: string
+      start: string
       /** Format: date */
-      toDate: string
+      end: string
       occurrences: components['schemas']['Occurrence'][]
       locations: components['schemas']['Location'][]
       schedule?: components['schemas']['JsonNode']
+      comments?: string
+      /** Format: date */
+      start: string
+      /** Format: date */
+      end: string
       notes?: string
     }
     SyncReadTapOccurrence: {
@@ -828,9 +844,9 @@ export interface components {
       authorisation: components['schemas']['SyncReadTapOccurrenceAuthorisation']
       statusCode: string
       /** Format: date-time */
-      releaseAt: string
+      start: string
       /** Format: date-time */
-      returnBy: string
+      end: string
       location: components['schemas']['Location']
       absenceTypeCode?: string
       absenceSubTypeCode?: string
@@ -838,9 +854,14 @@ export interface components {
       accompaniedByCode: string
       transportCode: string
       contactInformation?: string
-      notes?: string
+      comments?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
+      notes?: string
     }
     SyncReadTapOccurrenceAuthorisation: {
       /** Format: uuid */
@@ -861,8 +882,8 @@ export interface components {
       absenceReasonCode: string
       location: components['schemas']['Location']
       accompaniedByCode: string
-      accompaniedByNotes?: string
-      notes?: string
+      accompaniedByComments?: string
+      comments?: string
       created: components['schemas']['SyncAtAndByWithPrison']
       updated?: components['schemas']['SyncAtAndBy']
     }
@@ -878,31 +899,41 @@ export interface components {
       accompaniedByCode: string
       repeat: boolean
       /** Format: date */
+      start: string
+      /** Format: date */
+      end: string
+      created: components['schemas']['SyncAtAndBy']
+      updated?: components['schemas']['SyncAtAndBy']
+      comments?: string
+      occurrences: components['schemas']['SyncReadTapAuthorisationOccurrence'][]
+      /** Format: date */
       fromDate: string
       /** Format: date */
       toDate: string
-      created: components['schemas']['SyncAtAndBy']
-      updated?: components['schemas']['SyncAtAndBy']
       notes?: string
-      occurrences: components['schemas']['SyncReadTapAuthorisationOccurrence'][]
     }
     SyncReadTapAuthorisationOccurrence: {
       /** Format: uuid */
       id: string
       statusCode: string
       /** Format: date-time */
-      releaseAt: string
+      start: string
       /** Format: date-time */
-      returnBy: string
+      end: string
       location: components['schemas']['Location']
       absenceTypeCode?: string
       absenceSubTypeCode?: string
       absenceReasonCode: string
       accompaniedByCode: string
       transportCode: string
-      notes?: string
+      comments?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
+      notes?: string
     }
     TapOccurrenceSearchRequest: {
       prisonCode: string
@@ -943,13 +974,17 @@ export interface components {
       absenceReasonCategory?: components['schemas']['CodedDescription']
       absenceReason?: components['schemas']['CodedDescription']
       /** Format: date-time */
-      releaseAt: string
+      start: string
       /** Format: date-time */
-      returnBy: string
+      end: string
       accompaniedBy: components['schemas']['CodedDescription']
       transport: components['schemas']['CodedDescription']
       location: components['schemas']['Location']
       isCancelled: boolean
+      /** Format: date-time */
+      releaseAt: string
+      /** Format: date-time */
+      returnBy: string
     }
     TapOccurrenceSearchResponse: {
       content: components['schemas']['TapOccurrenceResult'][]
@@ -958,9 +993,9 @@ export interface components {
     TapAuthorisationSearchRequest: {
       prisonCode: string
       /** Format: date */
-      fromDate?: string
+      start?: string
       /** Format: date */
-      toDate?: string
+      end?: string
       status: ('PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED')[]
       query?: string
       /** Format: int32 */
@@ -980,12 +1015,16 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription']
       repeat: boolean
       /** Format: date */
-      fromDate: string
+      start: string
       /** Format: date */
-      toDate: string
+      end: string
       locations: components['schemas']['Location'][]
       /** Format: int32 */
       occurrenceCount: number
+      /** Format: date */
+      fromDate: string
+      /** Format: date */
+      toDate: string
     }
     TapAuthorisationSearchResponse: {
       content: components['schemas']['TapAuthorisationResult'][]
@@ -1077,9 +1116,9 @@ export interface operations {
     requestBody: {
       content: {
         'application/json':
-          | components['schemas']['AmendOccurrenceNotes']
           | components['schemas']['CancelOccurrence']
           | components['schemas']['ChangeOccurrenceAccompaniment']
+          | components['schemas']['ChangeOccurrenceComments']
           | components['schemas']['ChangeOccurrenceContactInformation']
           | components['schemas']['ChangeOccurrenceLocation']
           | components['schemas']['ChangeOccurrenceTransport']
@@ -1105,8 +1144,8 @@ export interface operations {
   getTapAuthorisation: {
     parameters: {
       query?: {
-        fromDate?: string
-        toDate?: string
+        start?: string
+        end?: string
       }
       header?: never
       path: {
@@ -1139,10 +1178,10 @@ export interface operations {
     requestBody: {
       content: {
         'application/json':
-          | components['schemas']['AmendAuthorisationNotes']
           | components['schemas']['ApproveAuthorisation']
           | components['schemas']['CancelAuthorisation']
           | components['schemas']['ChangeAuthorisationAccompaniment']
+          | components['schemas']['ChangeAuthorisationComments']
           | components['schemas']['ChangeAuthorisationDateRange']
           | components['schemas']['ChangeAuthorisationTransport']
           | components['schemas']['ChangePrisonPerson']

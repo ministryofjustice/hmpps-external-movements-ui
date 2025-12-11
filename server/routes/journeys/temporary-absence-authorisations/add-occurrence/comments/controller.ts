@@ -4,16 +4,16 @@ import { JourneyData } from '../../../../../@types/journeys'
 
 export class AddTapOccurrenceCommentsController {
   GET = async (req: Request, res: Response) => {
-    const { authorisation, notes } = req.journeyData.addTapOccurrence!
+    const { authorisation, comments } = req.journeyData.addTapOccurrence!
 
     res.render('temporary-absence-authorisations/add-occurrence/comments/view', {
       backUrl: this.getBackUrl(req.journeyData),
-      notes: res.locals.formResponses?.['notes'] ?? (notes !== undefined ? notes : authorisation.notes),
+      comments: res.locals.formResponses?.['comments'] ?? (comments !== undefined ? comments : authorisation.comments),
     })
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    req.journeyData.addTapOccurrence!.notes = req.body.notes
+    req.journeyData.addTapOccurrence!.comments = req.body.comments
 
     res.redirect('check-answers')
   }

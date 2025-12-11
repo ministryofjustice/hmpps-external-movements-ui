@@ -12,7 +12,7 @@
     <h1 class="govuk-heading-l">Add an occurrence to this absence</h1>
 
     {{ govukInsetText({
-      text: "You can add new occurrences between the absence start and end dates of " + fromDate | formatDate("d MMMM yyyy") + " to " + toDate | formatDate("d MMMM yyyy") + ". To add an occurrence outside these dates, you should change the absence start and end times first."
+      text: "You can add new occurrences between the absence start and end dates of " + start | formatDate("d MMMM yyyy") + " to " + end | formatDate("d MMMM yyyy") + ". To add an occurrence outside these dates, you should change the absence start and end times first."
     }) }}
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -29,8 +29,8 @@
         value: startDate,
         errorMessage: validationErrors | findError('startDate'),
         classes: 'hmpps-datepicker--fixed-width govuk-body',
-        minDate: fromDate | formatInputDate,
-        maxDate: toDate | formatInputDate
+        minDate: start | formatInputDate,
+        maxDate: end | formatInputDate
       }) }}
 
       {{ validatedTimeInput({
@@ -64,8 +64,8 @@
         value: returnDate,
         errorMessage: validationErrors | findError('returnDate'),
         classes: 'hmpps-datepicker--fixed-width govuk-body',
-        minDate: fromDate | formatInputDate,
-        maxDate: toDate | formatInputDate
+        minDate: start | formatInputDate,
+        maxDate: end | formatInputDate
       }) }}
 
       {{ validatedTimeInput({

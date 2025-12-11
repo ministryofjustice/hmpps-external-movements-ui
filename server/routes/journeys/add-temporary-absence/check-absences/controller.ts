@@ -8,23 +8,22 @@ export class CheckPatternController {
     req.journeyData.addTemporaryAbsence!.isCheckPattern = true
 
     const numberOfWeeks = Math.ceil(
-      (differenceInDays(req.journeyData.addTemporaryAbsence!.toDate!, req.journeyData.addTemporaryAbsence!.fromDate!) +
-        2) /
+      (differenceInDays(req.journeyData.addTemporaryAbsence!.end!, req.journeyData.addTemporaryAbsence!.start!) + 2) /
         7,
     )
-    const occurrences = getOccurrencesToMatch(req).map(({ releaseAt, returnBy }) => {
+    const occurrences = getOccurrencesToMatch(req).map(({ start, end }) => {
       return {
-        startDate: format(releaseAt, 'yyyy-MM-dd'),
-        returnDate: format(returnBy, 'yyyy-MM-dd'),
-        startTime: format(releaseAt, 'HH:mm'),
-        returnTime: format(returnBy, 'HH:mm'),
+        startDate: format(start, 'yyyy-MM-dd'),
+        returnDate: format(end, 'yyyy-MM-dd'),
+        startTime: format(start, 'HH:mm'),
+        returnTime: format(end, 'HH:mm'),
       }
     })
 
     const periods = Array.from(new Array(numberOfWeeks).keys()).map(idx => {
-      const startDate = format(addDays(req.journeyData.addTemporaryAbsence!.fromDate!, idx * 7), 'yyyy-MM-dd')
-      let endDate = format(addDays(req.journeyData.addTemporaryAbsence!.fromDate!, idx * 7 + 6), 'yyyy-MM-dd')
-      if (endDate > req.journeyData.addTemporaryAbsence!.toDate!) endDate = req.journeyData.addTemporaryAbsence!.toDate!
+      const startDate = format(addDays(req.journeyData.addTemporaryAbsence!.start!, idx * 7), 'yyyy-MM-dd')
+      let endDate = format(addDays(req.journeyData.addTemporaryAbsence!.start!, idx * 7 + 6), 'yyyy-MM-dd')
+      if (endDate > req.journeyData.addTemporaryAbsence!.end!) endDate = req.journeyData.addTemporaryAbsence!.end!
       const overnightNewWeekDay = format(addDays(endDate, 1), 'yyyy-MM-dd')
       const isOvernight = (o: { startDate: string; returnDate: string }) => o.returnDate !== o.startDate
 

@@ -9,7 +9,7 @@ export const BrowseTapOccurrencesRoutes = ({ externalMovementsService }: Service
   const { router, get } = BaseRouter()
   const controller = new BrowseTapOccurrencesController(externalMovementsService)
 
-  get('/', validateOnGET(schema, 'searchTerm', 'fromDate', 'toDate', 'status', 'page', 'sort'), controller.GET)
+  get('/', validateOnGET(schema, 'searchTerm', 'start', 'end', 'status', 'page', 'sort'), controller.GET)
 
   get('/:id', new TapOccurrenceDetailsController(externalMovementsService).GET)
 

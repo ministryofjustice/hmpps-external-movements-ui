@@ -81,13 +81,13 @@
               } if result.absenceReason,
               {
                 key: { text: "Start date" },
-                value: { text: result.fromDate | formatDate },
-                actions: { items: [{ href: baseEditUrl + "/start-end-dates#fromDate", text: "Change", visuallyHiddenText: "start date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
+                value: { text: result.start | formatDate },
+                actions: { items: [{ href: baseEditUrl + "/start-end-dates#start", text: "Change", visuallyHiddenText: "start date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
               },
               {
                 key: { text: "End date" },
-                value: { text: result.toDate | formatDate },
-                actions: { items: [{ href: baseEditUrl + "/start-end-dates#toDate", text: "Change", visuallyHiddenText: "end date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
+                value: { text: result.end | formatDate },
+                actions: { items: [{ href: baseEditUrl + "/start-end-dates#end", text: "Change", visuallyHiddenText: "end date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
               },
               {
                 key: { text: "Single or repeating absence" },
@@ -95,7 +95,7 @@
               },
               {
                 key: { text: "Comments" },
-                value: { text: (result.notes or "Not provided") | escape | nl2br },
+                value: { text: (result.comments or "Not provided") | escape | nl2br },
                 actions: { items: [{ href: baseEditUrl + "/comments", text: "Change", visuallyHiddenText: "comments", classes: "govuk-link--no-visited-state" }] }
               },
               {
@@ -191,15 +191,15 @@
     {% endif %}
 
     {% set rows = [] %}
-    {% for occurrence in result.occurrences | sort(false, false, 'releaseAt') %}
+    {% for occurrence in result.occurrences | sort(false, false, 'start') %}
       {% set rows = (rows.push([
         {
-          text: occurrence.releaseAt | formatDate("cccc, d MMMM 'at' HH:mm"),
-          attributes: { "data-sort-value": occurrence.releaseAt }
+          text: occurrence.start | formatDate("cccc, d MMMM 'at' HH:mm"),
+          attributes: { "data-sort-value": occurrence.start }
         },
         {
-          text: occurrence.returnBy | formatDate("cccc, d MMMM 'at' HH:mm"),
-          attributes: { "data-sort-value": occurrence.returnBy }
+          text: occurrence.end | formatDate("cccc, d MMMM 'at' HH:mm"),
+          attributes: { "data-sort-value": occurrence.end }
         },
         {
           html: absenceStatusTag(occurrence),
@@ -207,7 +207,7 @@
         },
         {
           classes: 'govuk-link govuk-link--no-visited-state',
-          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">Make changes to this occurrence<span class="govuk-visually-hidden"> on ' + occurrence.releaseAt | formatDate("cccc, d MMMM yyyy 'at' HH:mm") + '</span></a>',
+          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">Make changes to this occurrence<span class="govuk-visually-hidden"> on ' + occurrence.start | formatDate("cccc, d MMMM yyyy 'at' HH:mm") + '</span></a>',
           format: "numeric"
         } if user | hasPermission('TAP', 'MANAGE') else null
       ] | removeNullish), rows) %}

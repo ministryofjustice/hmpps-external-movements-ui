@@ -6,11 +6,11 @@ export class AbsenceCommentsController {
   GET = async (req: Request, res: Response) => {
     res.render('add-temporary-absence/comments/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'transport'),
-      notes: res.locals.formResponses?.['notes'] ?? req.journeyData.addTemporaryAbsence!.notes,
+      comments: res.locals.formResponses?.['comments'] ?? req.journeyData.addTemporaryAbsence!.comments,
     })
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    res.redirect(AddTapFlowControl.saveDataAndGetNextPage(req, { notes: req.body.notes }))
+    res.redirect(AddTapFlowControl.saveDataAndGetNextPage(req, { comments: req.body.comments }))
   }
 }

@@ -44,8 +44,8 @@ test.describe('/add-temporary-absence/check-absences', () => {
           description: 'Police production',
         },
         repeat: true,
-        fromDate: '2001-01-01',
-        toDate: '2001-01-17',
+        start: '2001-01-01',
+        end: '2001-01-17',
         patternType: 'ROTATING',
         rotatingPattern: {
           isSameTime: false,
@@ -116,8 +116,8 @@ test.describe('/add-temporary-absence/check-absences', () => {
           description: 'Police production',
         },
         repeat: true,
-        fromDate: '2001-01-01',
-        toDate: '2001-01-17',
+        start: '2001-01-01',
+        end: '2001-01-17',
         patternType: 'FREEFORM',
         freeFormPattern: [
           { startDate: '2001-01-01', startTime: '10:00', returnDate: '2001-01-01', returnTime: '17:30' },
@@ -157,8 +157,8 @@ test.describe('/add-temporary-absence/check-absences', () => {
           description: 'Police production',
         },
         repeat: true,
-        fromDate: '2001-01-01',
-        toDate: '2001-01-17',
+        start: '2001-01-01',
+        end: '2001-01-17',
         patternType: 'WEEKLY',
         weeklyPattern: [
           { day: 0, overnight: false, startTime: '10:00', returnTime: '17:30' },

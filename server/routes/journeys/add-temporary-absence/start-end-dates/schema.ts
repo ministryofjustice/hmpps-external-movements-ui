@@ -5,49 +5,49 @@ import { createSchema } from '../../../../middleware/validation/validationMiddle
 import { checkTodayOrFuture, validateTransformDate } from '../../../../utils/validations/validateDatePicker'
 
 export const schema = createSchema({
-  fromDate: z.string().optional(),
-  toDate: z.string().optional(),
-}).transform(({ fromDate, toDate }, ctx) => {
-  const parsedFromDate = validateTransformDate(
+  start: z.string().optional(),
+  end: z.string().optional(),
+}).transform(({ start, end }, ctx) => {
+  const parsedStartDate = validateTransformDate(
     checkTodayOrFuture,
     'Enter or select a start date',
     'Enter or select a valid start date',
     'Start date must be today or in the future',
-  ).safeParse(fromDate)
+  ).safeParse(start)
 
-  parsedFromDate.error?.issues?.forEach(issue => ctx.addIssue({ ...issue, path: ['fromDate'] } as $ZodSuperRefineIssue))
+  parsedStartDate.error?.issues?.forEach(issue => ctx.addIssue({ ...issue, path: ['start'] } as $ZodSuperRefineIssue))
 
-  const parsedToDate = validateTransformDate(
+  const parsedEndDate = validateTransformDate(
     checkTodayOrFuture,
     'Enter or select a return date',
     'Enter or select a valid return date',
     'Return date must be today or in the future',
-  ).safeParse(toDate)
+  ).safeParse(end)
 
-  parsedToDate.error?.issues?.forEach(issue => ctx.addIssue({ ...issue, path: ['toDate'] } as $ZodSuperRefineIssue))
+  parsedEndDate.error?.issues?.forEach(issue => ctx.addIssue({ ...issue, path: ['end'] } as $ZodSuperRefineIssue))
 
-  if (parsedFromDate.success && parsedToDate.success) {
-    if (parsedToDate.data <= parsedFromDate.data) {
+  if (parsedStartDate.success && parsedEndDate.success) {
+    if (parsedEndDate.data <= parsedStartDate.data) {
       ctx.addIssue({
         code: 'custom',
         message: 'Last return date must be later than first start date',
-        path: ['toDate'],
+        path: ['end'],
       })
       return z.NEVER
     }
 
-    if (differenceInMonths(subDays(new Date(parsedToDate.data), 1), new Date(parsedFromDate.data)) >= 6) {
+    if (differenceInMonths(subDays(new Date(parsedEndDate.data), 1), new Date(parsedStartDate.data)) >= 6) {
       ctx.addIssue({
         code: 'custom',
         message: 'Absence period can only extend to 6 months from the entry date',
-        path: ['toDate'],
+        path: ['end'],
       })
       return z.NEVER
     }
 
     return {
-      fromDate: parsedFromDate.data,
-      toDate: parsedToDate.data,
+      start: parsedStartDate.data,
+      end: parsedEndDate.data,
     }
   }
   return z.NEVER

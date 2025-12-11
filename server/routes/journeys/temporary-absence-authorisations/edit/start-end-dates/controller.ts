@@ -9,12 +9,11 @@ export class EditStartEndDatesController {
   GET = async (req: Request, res: Response) => {
     res.render('temporary-absence-authorisations/edit/start-end-dates/view', {
       backUrl: req.journeyData.updateTapAuthorisation!.backUrl,
-      fromDate:
-        res.locals.formResponses?.['fromDate'] ??
-        formatInputDate(req.journeyData.updateTapAuthorisation!.authorisation.fromDate),
-      toDate:
-        res.locals.formResponses?.['toDate'] ??
-        formatInputDate(req.journeyData.updateTapAuthorisation!.authorisation.toDate),
+      start:
+        res.locals.formResponses?.['start'] ??
+        formatInputDate(req.journeyData.updateTapAuthorisation!.authorisation.start),
+      end:
+        res.locals.formResponses?.['end'] ?? formatInputDate(req.journeyData.updateTapAuthorisation!.authorisation.end),
     })
   }
 
@@ -23,8 +22,8 @@ export class EditStartEndDatesController {
     try {
       journey.result = await this.externalMovementsService.updateTapAuthorisation({ res }, journey.authorisation.id, {
         type: 'ChangeAuthorisationDateRange',
-        fromDate: req.body.fromDate,
-        toDate: req.body.toDate,
+        start: req.body.start,
+        end: req.body.end,
       })
       next()
     } catch (e) {

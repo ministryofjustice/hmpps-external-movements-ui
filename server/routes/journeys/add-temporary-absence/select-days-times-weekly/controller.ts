@@ -39,8 +39,8 @@ export class SelectDaysTimesWeeklyController {
         req.journeyData.addTemporaryAbsence?.weeklyPattern?.map(o => weekDays[o.day]) ??
         [],
       dayData: [...Array(7).keys()].map(i => getDayTimes(i)),
-      startDate: req.journeyData.addTemporaryAbsence!.fromDate,
-      endDate: req.journeyData.addTemporaryAbsence!.toDate,
+      startDate: req.journeyData.addTemporaryAbsence!.start,
+      endDate: req.journeyData.addTemporaryAbsence!.end,
     })
   }
 

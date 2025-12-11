@@ -23,15 +23,15 @@ export class AddTapOccurrenceCheckAnswersController {
       const journey = req.journeyData.addTapOccurrence!
 
       const request: components['schemas']['CreateOccurrenceRequest'] = {
-        releaseAt: `${journey.startDate}T${journey.startTime}:00`,
-        returnBy: `${journey.returnDate}T${journey.returnTime}:00`,
+        start: `${journey.startDate}T${journey.startTime}:00`,
+        end: `${journey.returnDate}T${journey.returnTime}:00`,
         location:
           journey.locationOption === 'NEW'
             ? parseAddress(journey.location!)
             : journey.authorisation.locations[journey.locationOption!]!,
       }
 
-      if (journey.notes) request.notes = journey.notes
+      if (journey.comments) request.comments = journey.comments
 
       journey.result = await this.externalMovementsService.addTapOccurrence({ res }, journey.authorisation.id, request)
       next()

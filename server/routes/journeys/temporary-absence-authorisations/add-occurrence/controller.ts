@@ -24,8 +24,8 @@ export class AddOccurrenceController {
       returnDate,
       returnTimeHour,
       returnTimeMinute,
-      fromDate: authorisation.fromDate,
-      toDate: authorisation.toDate,
+      start: authorisation.start,
+      end: authorisation.end,
     })
   }
 

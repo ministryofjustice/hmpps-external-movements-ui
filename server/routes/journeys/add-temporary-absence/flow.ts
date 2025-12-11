@@ -112,8 +112,8 @@ export class AddTapFlowControl {
       if (data.transport) {
         journey.transport = data.transport
       }
-      if (data.notes !== undefined) {
-        journey.notes = data.notes
+      if (data.comments !== undefined) {
+        journey.comments = data.comments
       }
       if (data.requireApproval !== undefined) {
         journey.requireApproval = data.requireApproval
@@ -204,8 +204,8 @@ export class AddTapFlowControl {
       journey.transport = data.transport
       return 'comments'
     }
-    if (data.notes !== undefined) {
-      journey.notes = data.notes
+    if (data.comments !== undefined) {
+      journey.comments = data.comments
       return 'approval'
     }
     if (data.requireApproval !== undefined) {
@@ -234,11 +234,11 @@ export class AddTapFlowControl {
       return data.repeat ? 'start-end-dates' : 'start-date'
     }
 
-    if (data.fromDate && data.toDate) {
-      if (journey.fromDate !== data.fromDate || journey.toDate !== data.toDate) delete journey.isCheckPattern
+    if (data.start && data.end) {
+      if (journey.start !== data.start || journey.end !== data.end) delete journey.isCheckPattern
 
-      journey.fromDate = data.fromDate
-      journey.toDate = data.toDate
+      journey.start = data.start
+      journey.end = data.end
       return 'repeating-pattern'
     }
 
@@ -289,8 +289,8 @@ export class AddTapFlowControl {
       journey.transport = data.transport
       return 'comments'
     }
-    if (data.notes !== undefined) {
-      journey.notes = data.notes
+    if (data.comments !== undefined) {
+      journey.comments = data.comments
       return 'approval'
     }
     if (data.requireApproval !== undefined) {

@@ -6,8 +6,8 @@ export const schema = createSchema({
   searchTerm: z.string().optional(),
   status: z.enum(['', 'PENDING', 'APPROVED', 'CANCELLED', 'DENIED']),
   clear: z.string().optional(),
-  fromDate: validateTransformOptionalDate('Enter a valid start date from'),
-  toDate: validateTransformOptionalDate('Enter a valid end date to'),
+  start: validateTransformOptionalDate('Enter a valid start date from'),
+  end: validateTransformOptionalDate('Enter a valid end date to'),
   sort: z.string().optional(),
   page: z
     .string()
@@ -19,10 +19,10 @@ export const schema = createSchema({
       return 1
     }),
 }).check(ctx => {
-  const { fromDate, toDate } = ctx.value
-  if (fromDate && toDate && toDate < fromDate) {
-    ctx.issues.push({ code: 'custom', message: 'Enter a valid date range', path: ['fromDate'], input: ctx.value })
-    ctx.issues.push({ code: 'custom', message: '', path: ['toDate'], input: ctx.value })
+  const { start, end } = ctx.value
+  if (start && end && end < start) {
+    ctx.issues.push({ code: 'custom', message: 'Enter a valid date range', path: ['start'], input: ctx.value })
+    ctx.issues.push({ code: 'custom', message: '', path: ['end'], input: ctx.value })
   }
 })
 

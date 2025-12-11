@@ -4,7 +4,7 @@ import { SchemaType } from '../select-days-times-weekly/schemas'
 export class SelectDaysTimesBiWeeklyController {
   GET = (week: 'FIRST' | 'SECOND') => async (req: Request, res: Response) => {
     req.journeyData.addTemporaryAbsence!.biweeklyPattern ??= { weekA: [], weekB: [] }
-    const { biweeklyPattern, fromDate, toDate } = req.journeyData.addTemporaryAbsence!
+    const { biweeklyPattern, start, end } = req.journeyData.addTemporaryAbsence!
 
     const pattern = week === 'FIRST' ? biweeklyPattern!.weekA : biweeklyPattern!.weekB
 
@@ -42,8 +42,8 @@ export class SelectDaysTimesBiWeeklyController {
       days: res.locals.formResponses?.['selectedDays'] ?? pattern?.map(o => weekDays[o.day]) ?? [],
       dayData: [...Array(7).keys()].map(i => getDayTimes(i)),
       week,
-      startDate: fromDate,
-      endDate: toDate,
+      startDate: start,
+      endDate: end,
       biweeklyPattern,
     })
   }

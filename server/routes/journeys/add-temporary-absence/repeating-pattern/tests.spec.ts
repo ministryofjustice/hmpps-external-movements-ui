@@ -43,8 +43,8 @@ test.describe('/add-temporary-absence/repeating-pattern', () => {
           description: 'Police production',
         },
         repeat: true,
-        fromDate: '2001-01-01',
-        toDate: '2001-03-01',
+        start: '2001-01-01',
+        end: '2001-03-01',
       },
     })
     await page.goto(`/${journeyId}/add-temporary-absence/repeating-pattern`)

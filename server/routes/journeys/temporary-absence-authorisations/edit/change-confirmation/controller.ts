@@ -15,7 +15,7 @@ export class EditTapAuthorisationChangeConfirmationController {
       absenceSubType,
       reason,
       reasonCategory,
-      notes,
+      comments,
       location,
       transport,
       accompanied,
@@ -43,10 +43,10 @@ export class EditTapAuthorisationChangeConfirmationController {
         .filter(itm => Boolean(itm))
         .map(itm => itm?.description)
         .join(' - ')
-    } else if (notes !== undefined) {
+    } else if (comments !== undefined) {
       fieldName = 'relevant comments'
-      previousValue = authorisation.notes || 'Not provided'
-      newValue = notes || 'Not provided'
+      previousValue = authorisation.comments || 'Not provided'
+      newValue = comments || 'Not provided'
     } else if (transport) {
       fieldName = 'transport'
       previousValue = authorisation.transport.description
@@ -78,7 +78,7 @@ export class EditTapAuthorisationChangeConfirmationController {
       absenceSubType,
       reason,
       reasonCategory,
-      notes,
+      comments,
       location,
       transport,
       accompanied,
@@ -99,10 +99,10 @@ export class EditTapAuthorisationChangeConfirmationController {
         let requestBody: UpdateTapAuthorisation
         if (absenceType || absenceSubType || reason || reasonCategory) {
           requestBody = getUpdateAbsenceCategoryRequest(req)
-        } else if (notes !== undefined) {
+        } else if (comments !== undefined) {
           requestBody = {
-            type: 'AmendAuthorisationNotes',
-            notes: notes!,
+            type: 'ChangeAuthorisationComments',
+            comments: comments!,
           }
         } else if (transport) {
           requestBody = {

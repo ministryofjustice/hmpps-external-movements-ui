@@ -15,13 +15,11 @@ export class MatchAbsencesAndLocationsController {
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    const occurrences = req.journeyData.addTemporaryAbsence!.occurrencesToMatch!.map(
-      ({ releaseAt, returnBy }, idx) => ({
-        releaseAt,
-        returnBy,
-        locationIdx: req.body.locations[idx]!,
-      }),
-    )
+    const occurrences = req.journeyData.addTemporaryAbsence!.occurrencesToMatch!.map(({ start, end }, idx) => ({
+      start,
+      end,
+      locationIdx: req.body.locations[idx]!,
+    }))
     res.redirect(AddTapFlowControl.saveDataAndGetNextPage(req, { occurrences }))
   }
 
@@ -34,9 +32,7 @@ export class MatchAbsencesAndLocationsController {
         return { ...occurrence, locationIdx: Number(formResponseLocations[idx]) }
       }
       if (journey.occurrences) {
-        const matched = journey.occurrences?.find(
-          itm => itm.releaseAt === occurrence.releaseAt && itm.returnBy === occurrence.returnBy,
-        )
+        const matched = journey.occurrences?.find(itm => itm.start === occurrence.start && itm.end === occurrence.end)
         if (matched) return { ...occurrence, locationIdx: matched.locationIdx }
       }
       return occurrence
