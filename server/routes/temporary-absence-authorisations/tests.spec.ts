@@ -54,7 +54,7 @@ test.describe('/temporary-absence-authorisations', () => {
             dateOfBirth: '1990-01-01',
             cellLocation: '2-1-005',
           },
-          status: { code: 'PENDING', description: 'Pending' },
+          status: { code: 'PENDING', description: 'To be reviewed' },
           absenceType: {
             code: 'PP',
             description: 'Police production',
@@ -100,7 +100,7 @@ test.describe('/temporary-absence-authorisations', () => {
       'Repeating (12 occurrences)',
       '2 January 2001',
       '1 March 2001',
-      'Pending',
+      'To be reviewed',
     ])
 
     // verify validation error
