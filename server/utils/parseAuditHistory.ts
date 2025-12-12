@@ -115,7 +115,7 @@ const OCCURRENCE_CHANGE_PROPERTY_MAP: { [key: string]: string } = {
 const parseChangedPropertyValue = (domain: string, value: unknown) => {
   if (!value) return 'Not applicable'
 
-  if (domain.endsWith('comments-change')) return `“${value}”`
+  if (domain.endsWith('comments-changed')) return `“${value}”`
 
   if (domain.endsWith('date-range-changed')) return formatDate(String(value))
 
