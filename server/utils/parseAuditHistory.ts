@@ -1,7 +1,13 @@
 import { components } from '../@types/externalMovements'
 import { formatDate } from './dateTimeUtils'
 
-type DomainEventText = { heading: string; content?: string; reasonRequested?: boolean; changes?: string[] }
+type DomainEventText = {
+  heading: string
+  content?: string
+  reasonRequested?: boolean
+  changes?: string[]
+  skipUser?: boolean
+}
 
 const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
   'person.temporary-absence-authorisation.approved': {
@@ -76,6 +82,16 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
   'person.temporary-absence.relocated': {
     heading: 'Absence occurrence location changed',
   },
+  'person.temporary-absence-authorisation.migrated': {
+    heading: 'Absence migrated',
+    content: 'Temporary absence migrated from NOMIS',
+    skipUser: true,
+  },
+  'person.temporary-absence.migrated': {
+    heading: 'Absence occurrence migrated',
+    content: 'Temporary absence occurrence migrated from NOMIS',
+    skipUser: true,
+  },
 }
 
 const CHANGE_PROPERTY_MAP: { [key: string]: string } = {
@@ -134,7 +150,7 @@ export const parseAuditHistory = (history: components['schemas']['AuditedAction'
       return {
         ...eventText,
         reason: action.reason,
-        user: action.user,
+        user: eventText.skipUser ? null : action.user,
         occurredAt: action.occurredAt,
       }
     })
