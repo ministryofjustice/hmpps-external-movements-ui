@@ -44,8 +44,8 @@ export class EditTapAuthorisationChangeConfirmationController {
         .join(' - ')
     } else if (comments !== undefined) {
       fieldName = 'relevant comments'
-      previousValue = authorisation.comments || 'Not provided'
-      newValue = comments || 'Not provided'
+      previousValue = authorisation.comments ? `“${authorisation.comments}”` : 'Not applicable'
+      newValue = comments ? `“${comments}”` : 'Not applicable'
     } else if (transport) {
       fieldName = 'transport'
       previousValue = authorisation.transport.description
@@ -101,7 +101,7 @@ export class EditTapAuthorisationChangeConfirmationController {
         } else if (comments !== undefined) {
           requestBody = {
             type: 'ChangeAuthorisationComments',
-            comments: comments!,
+            comments: comments ?? '',
           }
         } else if (transport) {
           requestBody = {
