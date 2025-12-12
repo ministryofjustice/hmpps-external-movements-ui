@@ -113,7 +113,7 @@
     {% if hasValidationError %}
       <p class="govuk-!-margin-bottom-6"><strong>Enter a valid filter to search and view temporary absences.</strong></p>
     {% elseif not results.length %}
-      <p class="govuk-!-margin-bottom-6"><strong>No temporary absences match your search.</strong></p>
+      <p class="govuk-!-margin-bottom-6"><strong>No temporary absence occurrences match your search.</strong></p>
     {% else %}
       {% set rows = [] %}
       {% for occurrence in results %}
@@ -144,7 +144,7 @@
           },
           {
             classes: 'govuk-link govuk-link--no-visited-state',
-            html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">View occurrence<span class="govuk-visually-hidden"> absence for ' + occurrence.authorisation.person | firstNameSpaceLastName + '</span></a>',
+            html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">View<span class="govuk-visually-hidden"> absence occurrence for ' + occurrence.authorisation.person | firstNameSpaceLastName + '</span></a>',
             format: "numeric"
           }
         ]), rows) %}

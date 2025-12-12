@@ -32,7 +32,6 @@ test.describe('/temporary-absence-authorisations/add-occurrence/comments', () =>
       cellLocation: '2-1-005',
     },
     repeat: true,
-    comments: 'existing comments',
   }
 
   test.beforeAll(async () => {
@@ -49,12 +48,20 @@ test.describe('/temporary-absence-authorisations/add-occurrence/comments', () =>
     await signIn(page)
   })
 
-  const startJourney = async (page: Page, journeyId: string, location: 'NEW' | number) => {
+  const startJourney = async (
+    page: Page,
+    journeyId: string,
+    location: 'NEW' | number,
+    authorisationComments: string,
+  ) => {
     await page.goto(`/${journeyId}/temporary-absence-authorisations/start-add-occurrence/${authorisationId}`)
 
     await injectJourneyData(page, journeyId, {
       addTapOccurrence: {
-        authorisation,
+        authorisation: {
+          ...authorisation,
+          comments: authorisationComments,
+        },
         backUrl: '',
         startDate: '2001-01-03',
         startTime: '10:00',
@@ -69,7 +76,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/comments', () =>
 
   test('should try remove default comments after selecting location', async ({ page }) => {
     const journeyId = uuidV4()
-    await startJourney(page, journeyId, 0)
+    await startJourney(page, journeyId, 0, 'existing comments')
 
     // verify page content
     const testPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/select-location/)
@@ -77,6 +84,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/comments', () =>
     await expect(testPage.commentsInput()).toBeVisible()
     await expect(testPage.commentsInput()).toHaveValue('existing comments')
     await expect(testPage.button('Continue')).toBeVisible()
+    await expect(page.getByText('You can edit or remove these absence comments.')).toBeVisible()
 
     // verify validation error
     await testPage.commentsInput().fill('n'.repeat(4001))
@@ -98,14 +106,15 @@ test.describe('/temporary-absence-authorisations/add-occurrence/comments', () =>
 
   test('should try edit comments after entering a new location', async ({ page }) => {
     const journeyId = uuidV4()
-    await startJourney(page, journeyId, 'NEW')
+    await startJourney(page, journeyId, 'NEW', '')
 
     // verify page content
     const testPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/search-location/)
 
     await expect(testPage.commentsInput()).toBeVisible()
-    await expect(testPage.commentsInput()).toHaveValue('existing comments')
+    await expect(testPage.commentsInput()).toHaveValue('')
     await expect(testPage.button('Continue')).toBeVisible()
+    await expect(page.getByText('You can edit or remove these absence comments.')).toHaveCount(0)
 
     // verify next page routing
     await testPage.commentsInput().fill('new comments')

@@ -27,6 +27,7 @@ import { auditApiCallMiddleware } from './middleware/audit/auditApiCallMiddlewar
 import PrisonerImageRoutes from './routes/prisonerImageRoutes'
 import { handleApiError } from './middleware/validation/handleApiError'
 import { permissionsMiddleware } from './middleware/permissions/permissionsMiddleware'
+import { AuthorisedRoles } from './middleware/permissions/populateUserPermissions'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -46,7 +47,23 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpAuthentication())
   app.get('*any', auditPageViewMiddleware(services.auditService))
   app.post('*any', auditApiCallMiddleware(services.auditService))
-  app.use(authorisationMiddleware())
+
+  app.get(
+    '/auth-error',
+    getFrontendComponents({
+      logger,
+      requestOptions: { includeSharedData: true },
+      componentApiConfig: config.apis.componentApi,
+      dpsUrl: config.serviceUrls.digitalPrison,
+    }),
+    (_req, res) => {
+      res.status(401)
+      return res.render('autherror')
+    },
+  )
+  app.use(
+    authorisationMiddleware([AuthorisedRoles.EXTERNAL_MOVEMENTS__TAP__RO, AuthorisedRoles.EXTERNAL_MOVEMENTS__TAP__RW]),
+  )
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
 

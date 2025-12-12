@@ -1,7 +1,7 @@
 import { RequestHandler, Response } from 'express'
 import { UserPermissionLevel } from '../../interfaces/hmppsUser'
 
-enum AuthorisedRoles {
+export enum AuthorisedRoles {
   EXTERNAL_MOVEMENTS__TAP__RO = 'EXTERNAL_MOVEMENTS__TAP__RO', // BETA External Movements - TAP & ROTL - View only role
   EXTERNAL_MOVEMENTS__TAP__RW = 'EXTERNAL_MOVEMENTS__TAP__RW', // BETA External Movements - TAP & ROTL - Management role
 }
