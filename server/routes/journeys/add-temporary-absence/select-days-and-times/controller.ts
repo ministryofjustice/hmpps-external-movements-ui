@@ -14,6 +14,7 @@ export class FreeformSelectDaysController {
       backUrl = req.params.idx === undefined ? 'check-absences' : '../check-absences'
 
     return res.render('add-temporary-absence/select-days-and-times/view', {
+      paramsIdx: req.params.idx,
       backUrl,
       startDate,
       endDate,

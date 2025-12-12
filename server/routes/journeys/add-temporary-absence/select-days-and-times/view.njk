@@ -28,7 +28,7 @@
         <p class="govuk-hint">If the prisoner is staying out overnight, set the return date to the next or a later day.</p>
 
         {{ govukInsetText({
-          html: "<span>This absence period starts on " + start | formatDate + " and ends on " +  end | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="start-end-dates">Go back if you need to change these dates.</a>'
+          html: "<span>This absence period starts on " + start | formatDate + " and ends on " +  end | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="' + ('../' if paramsIdx else '' ) + 'start-end-dates">Go back if you need to change these dates.</a>'
         }) }}
       </div>
     </div>
