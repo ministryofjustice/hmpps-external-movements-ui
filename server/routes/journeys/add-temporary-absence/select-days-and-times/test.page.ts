@@ -1,12 +1,12 @@
 import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 
 export class FreeformSelectDaysPage extends BaseTestPage {
-  async verifyContent(dateRange: string, backUrl: RegExp) {
+  async verifyContent(backUrl: RegExp) {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/select-days-and-times/,
       title: 'Enter absence dates - Add a temporary absence - DPS',
       caption: 'Create a Temporary Absence',
-      heading: `Enter absence dates and times for ${dateRange}`,
+      heading: /Month [0-9] of [0-9]: add absence occurrences taking place from \w+ [0-9]{1,2} to \w+ [0-9]{1,2} \w+/,
       backUrl,
     })
   }

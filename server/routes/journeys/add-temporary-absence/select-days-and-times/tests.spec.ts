@@ -44,7 +44,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
         },
         repeat: true,
         start: '2001-01-01',
-        end: '2001-01-18',
+        end: '2001-03-18',
         patternType: 'FREEFORM',
       },
     })
@@ -57,7 +57,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await startJourney(page, journeyId)
 
     // verify page content
-    const testPage = await new FreeformSelectDaysPage(page).verifyContent('1 January to 7 January', /repeating-pattern/)
+    const testPage = await new FreeformSelectDaysPage(page).verifyContent(/repeating-pattern/)
 
     await expect(testPage.releaseDateField(0)).toBeVisible()
     await expect(testPage.releaseDateField(0)).toHaveValue('')
@@ -71,7 +71,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await expect(testPage.returnHourField(0)).toHaveValue('')
     await expect(testPage.returnMinuteField(0)).toBeVisible()
     await expect(testPage.returnMinuteField(0)).toHaveValue('')
-    await expect(testPage.button('Add another absence')).toBeVisible()
+    await expect(testPage.button('Add another occurrence')).toBeVisible()
     await expect(testPage.button('Continue')).toBeVisible()
     await expect(testPage.button('Remove')).toHaveCount(0)
 
@@ -97,7 +97,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await startJourney(page, journeyId)
 
     // verify page content
-    const testPage = await new FreeformSelectDaysPage(page).verifyContent('1 January to 7 January', /repeating-pattern/)
+    const testPage = await new FreeformSelectDaysPage(page).verifyContent(/repeating-pattern/)
 
     await expect(testPage.releaseDateField(0)).toBeVisible()
     await expect(testPage.releaseDateField(0)).toHaveValue('')
@@ -111,21 +111,21 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await expect(testPage.returnHourField(0)).toHaveValue('')
     await expect(testPage.returnMinuteField(0)).toBeVisible()
     await expect(testPage.returnMinuteField(0)).toHaveValue('')
-    await expect(testPage.button('Add another absence')).toBeVisible()
+    await expect(testPage.button('Add another occurrence')).toBeVisible()
     await expect(testPage.button('Continue')).toBeVisible()
     await expect(testPage.button('Remove')).toHaveCount(0)
 
     // verify validation error
-    await testPage.clickButton('Add another absence')
-    await testPage.clickButton('Add another absence')
-    await testPage.clickButton('Add another absence')
-    await testPage.clickButton('Add another absence')
-    await testPage.clickButton('Add another absence')
+    await testPage.clickButton('Add another occurrence')
+    await testPage.clickButton('Add another occurrence')
+    await testPage.clickButton('Add another occurrence')
+    await testPage.clickButton('Add another occurrence')
+    await testPage.clickButton('Add another occurrence')
 
     await testPage.releaseDateField(0).fill('31/12/2000')
     await testPage.releaseHourField(0).fill('x')
     await testPage.releaseMinuteField(0).fill('00')
-    await testPage.returnDateField(0).fill('9/1/2001')
+    await testPage.returnDateField(0).fill('2/2/2001')
     await testPage.returnHourField(0).fill('10')
     await testPage.returnMinuteField(0).fill('')
 
@@ -164,9 +164,9 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
 
     await testPage.clickContinue()
 
-    await testPage.link('Start date must be between 1/1/2001 and 7/1/2001').click()
+    await testPage.link('Start date must be between 1/1/2001 and 31/1/2001').click()
     await expect(testPage.releaseDateField(0)).toBeFocused()
-    await testPage.link('Return date must be between 1/1/2001 and 8/1/2001').click()
+    await testPage.link('Return date must be between 1/1/2001 and 1/2/2001').click()
     await expect(testPage.returnDateField(0)).toBeFocused()
     await testPage.link('Start time hour must be 00 to 23').click()
     await expect(testPage.releaseHourField(0)).toBeFocused()
@@ -207,7 +207,8 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId, '2')
 
-    const testPage = await new FreeformSelectDaysPage(page).verifyContent('8 January to 14 January (optional)', /1/)
+    const testPage = await new FreeformSelectDaysPage(page).verifyContent(/1/)
+    expect(page.getByRole('heading', { name: /Month 2 of 3: .+? \(optional\)/ })).toBeVisible()
 
     // verify optional input, empty form allowed
     await testPage.clickContinue()
@@ -218,7 +219,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId, '3')
 
-    const testPage = await new FreeformSelectDaysPage(page).verifyContent('15 January to 18 January', /2/)
+    const testPage = await new FreeformSelectDaysPage(page).verifyContent(/2/)
 
     // verify mandatory input
     await testPage.clickContinue()
@@ -226,10 +227,10 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await expect(testPage.releaseDateField(0)).toBeFocused()
 
     // verify minimal input
-    await testPage.releaseDateField(0).fill('18/1/2001')
+    await testPage.releaseDateField(0).fill('18/3/2001')
     await testPage.releaseHourField(0).fill('10')
     await testPage.releaseMinuteField(0).fill('00')
-    await testPage.returnDateField(0).fill('18/1/2001')
+    await testPage.returnDateField(0).fill('18/3/2001')
     await testPage.returnHourField(0).fill('17')
     await testPage.returnMinuteField(0).fill('30')
 
@@ -265,7 +266,7 @@ test.describe('/add-temporary-absence/select-days-and-time edge case', () => {
         },
         repeat: true,
         start: '2001-01-01',
-        end: '2001-01-08',
+        end: '2001-02-01',
         patternType: 'FREEFORM',
       },
     })
@@ -278,7 +279,7 @@ test.describe('/add-temporary-absence/select-days-and-time edge case', () => {
     await startJourney(page, journeyId)
 
     // does not input last return date on previous page
-    let testPage = await new FreeformSelectDaysPage(page).verifyContent('1 January to 7 January', /repeating-pattern/)
+    let testPage = await new FreeformSelectDaysPage(page).verifyContent(/repeating-pattern/)
     await testPage.releaseDateField(0).fill('1/1/2001')
     await testPage.releaseHourField(0).fill('10')
     await testPage.releaseMinuteField(0).fill('00')
@@ -288,7 +289,9 @@ test.describe('/add-temporary-absence/select-days-and-time edge case', () => {
     await testPage.clickContinue()
 
     // verify mandatory input
-    testPage = await new FreeformSelectDaysPage(page).verifyContent('8 January to 8 January', /1/)
+    testPage = await new FreeformSelectDaysPage(page).verifyContent(/1/)
+    expect(page.getByRole('heading', { name: /Month 2 of 2: .+? \(optional\)/ })).toHaveCount(0)
+
     await testPage.clickContinue()
     await testPage.link('Enter or select a start date').click()
     await expect(testPage.releaseDateField(0)).toBeFocused()
@@ -299,7 +302,7 @@ test.describe('/add-temporary-absence/select-days-and-time edge case', () => {
     await startJourney(page, journeyId)
 
     // input last return date on previous page
-    let testPage = await new FreeformSelectDaysPage(page).verifyContent('1 January to 7 January', /repeating-pattern/)
+    let testPage = await new FreeformSelectDaysPage(page).verifyContent(/repeating-pattern/)
 
     await testPage.releaseDateField(0).fill('1/1/2001')
     await testPage.releaseHourField(0).fill('10')
@@ -308,18 +311,20 @@ test.describe('/add-temporary-absence/select-days-and-time edge case', () => {
     await testPage.returnHourField(0).fill('17')
     await testPage.returnMinuteField(0).fill('30')
 
-    await testPage.clickButton('Add another absence')
-    await testPage.releaseDateField(1).fill('7/1/2001')
+    await testPage.clickButton('Add another occurrence')
+    await testPage.releaseDateField(1).fill('31/1/2001')
     await testPage.releaseHourField(1).fill('17')
     await testPage.releaseMinuteField(1).fill('00')
-    await testPage.returnDateField(1).fill('8/1/2001')
+    await testPage.returnDateField(1).fill('1/2/2001')
     await testPage.returnHourField(1).fill('10')
     await testPage.returnMinuteField(1).fill('30')
 
     await testPage.clickContinue()
 
     // verify optional input, empty form allowed
-    testPage = await new FreeformSelectDaysPage(page).verifyContent('8 January to 8 January (optional)', /1/)
+    testPage = await new FreeformSelectDaysPage(page).verifyContent(/1/)
+    expect(page.getByRole('heading', { name: /Month 2 of 2: .+? \(optional\)/ })).toBeVisible()
+
     await testPage.clickContinue()
     expect(page.url()).toMatch(/check-absences/)
   })
