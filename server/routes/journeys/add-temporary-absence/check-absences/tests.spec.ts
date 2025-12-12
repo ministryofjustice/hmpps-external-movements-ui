@@ -132,13 +132,16 @@ test.describe('/add-temporary-absence/check-absences', () => {
     const testPage = await new CheckPatternPage(page).verifyContent()
 
     await testPage.verifyLink('Change dates and times (Month 1 of 3: January 2001)', /select-days-and-times\/1/)
-    await testPage.verifyAnswer('Monday, 1 January', /Release: 10:00(.+)?Return: 17:30/)
+    await testPage.verifyAnswer('Monday, 1 January', /Start time: 10:00(.+)?Return time: 17:30/)
 
     await testPage.verifyLink('Add absence occurrence (Month 2 of 3: February 2001)', /select-days-and-times\/2/)
     expect(page.getByText('No absence entered')).toBeVisible()
 
     await testPage.verifyLink('Change dates and times (Month 3 of 3: March 2001)', /select-days-and-times\/3/)
-    await testPage.verifyAnswer(/Friday, 16 March to(.+)?Saturday, 17 March/, /Release: 23:00(.+)?Return: 04:30/)
+    await testPage.verifyAnswer(
+      /Friday, 16 March to(.+)?Saturday, 17 March/,
+      /Start time: 23:00(.+)?Return time: 04:30/,
+    )
   })
 
   test('should show weekly absences', async ({ page }) => {
