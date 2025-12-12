@@ -1,0 +1,30 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Select transport - Manage temporary absences" %}
+
+{% block innerContent %}
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {{ govukRadios({
+          fieldset: {
+            legend: {
+              text: "What transport will " + prisonerDetails | firstNameSpaceLastName + " use?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          id: "transport",
+          name: "transport",
+          items: options | fromRefData | setCheckedValue(transport),
+          errorMessage: validationErrors | findError('transport')
+        }) }}
+        {{ govukButton({
+            text: "Continue",
+            preventDoubleClick: true
+        }) }}
+    </form>
+{% endblock %}
