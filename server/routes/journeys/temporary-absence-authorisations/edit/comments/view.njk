@@ -2,7 +2,7 @@
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = 'Enter comments - Manage Temporary Absences' %}
+{% set pageTitle = 'Enter comments - Manage temporary absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
@@ -15,7 +15,7 @@
         maxlength: 4000,
         rows: 10,
         label: {
-          text: "Enter any relevant comments",
+          text: "Enter any relevant comments (optional)",
           classes: "govuk-label--l",
           isPageHeading: true
         },
@@ -26,7 +26,7 @@
       }) }}
 
       {{ govukButton({
-        text: "Confirm and save",
+        text: "Continue",
         preventDoubleClick: true
       }) }}
     </form>
