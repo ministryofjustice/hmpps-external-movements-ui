@@ -88,6 +88,12 @@ test.describe('/temporary-absence-authorisations/:id', () => {
           user: { name: 'User Name', username: 'USERNAME' },
           changes: [{ propertyName: 'start', previous: '2001-01-02', change: '2001-01-01' }],
         },
+        {
+          domainEvents: ['person.temporary-absence-authorisation.migrated'],
+          occurredAt: '2001-01-01T09:20:00',
+          user: { name: 'Migrate User', username: 'MIGRATE' },
+          changes: [{ propertyName: 'start', previous: '2001-01-02', change: '2001-01-01' }],
+        },
       ],
     })
 
@@ -139,6 +145,9 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       [],
       ['Start date was changed from 2 January 2001 to 1 January 2001'],
     )
+    await testPage.verifyHistoryEntry('Absence migrated', ['Temporary absence migrated from NOMIS'], [])
+    await expect(page.getByText('by User Name (USERNAME)')).toHaveCount(4)
+    await expect(page.getByText('by Migrate User (MIGRATE)')).toHaveCount(0)
   })
 
   test('should show temporary absence details for APPROVED absence', async ({ page }) => {

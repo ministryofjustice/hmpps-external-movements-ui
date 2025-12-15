@@ -60,7 +60,7 @@ Parameters:
       label: { text: action.heading },
       html: itemHtml,
       datetime: { timestamp: action.occurredAt, type: 'datetime' },
-      byline: { text: action.user.name + ' (' + action.user.username + ')' }
+      byline: { text: action.user.name + ' (' + action.user.username + ')' } if action.user else null
     }), timeLineItems) %}
   {% endfor %}
 
