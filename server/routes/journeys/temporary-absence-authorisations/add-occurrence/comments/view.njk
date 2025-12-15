@@ -20,7 +20,7 @@
           isPageHeading: true
         },
         hint: {
-          text: "Add any details that might be relevant for reception staff or other colleagues viewing this absence to see."
+          html: "Add any details that might be relevant for reception staff or other colleagues viewing this absence to see." + ("<br/><br/>You can edit or remove these absence comments." if prepopulated else "")
         },
         value: comments
       }) }}
