@@ -51,6 +51,7 @@ test.describe('Sign In', () => {
     await tokenVerification.stubVerifyToken(true)
     await signIn(page, { name: 'bobby brown' })
 
-    await expect(page.getByTestId('header-user-name')).toContainText('B. Brown')
+    await expect(page.getByRole('heading', { name: 'Authorisation Error' })).toBeVisible()
+    await expect(page.getByText('You are not authorised to use this application.')).toBeVisible()
   })
 })

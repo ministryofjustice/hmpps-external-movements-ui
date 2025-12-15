@@ -129,9 +129,11 @@
       <p>
         <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}">View all occurrences of this absence</a>
       </p>
-      <p>
-        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/start-add-occurrence/{{ result.id }}">Add occurrence</a>
-      </p>
+      {% if user | hasPermission('TAP', 'MANAGE') %}
+        <p>
+          <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/start-add-occurrence/{{ result.id }}">Add occurrence</a>
+        </p>
+      {% endif %}
     {% endif %}
   </div>
 {% endblock %}

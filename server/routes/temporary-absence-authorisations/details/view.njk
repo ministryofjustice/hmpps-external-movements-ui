@@ -139,8 +139,10 @@
       </div>
 
       <div class="govuk-grid-column-one-quarter align-right">
-        <h2 class="govuk-heading-m">Related tasks</h2>
-        <p><a class="govuk-link govuk-link--no-visited-state" href="/add-temporary-absence/start/{{ prisonerDetails.prisonerNumber }}">Create a new absence for {{ prisonerDetails | firstNameSpaceLastName }}</a></p>
+        {% if user | hasPermission('TAP', 'MANAGE') %}
+          <h2 class="govuk-heading-m">Related tasks</h2>
+          <p><a class="govuk-link govuk-link--no-visited-state" href="/add-temporary-absence/start/{{ prisonerDetails.prisonerNumber }}">Create a new absence for {{ prisonerDetails | firstNameSpaceLastName }}</a></p>
+        {% endif %}
       </div>
     </div>
 
@@ -148,7 +150,7 @@
       <div class="govuk-grid-column-two-thirds">
         <h2 class="govuk-heading-m" id="view-occurrences">View absence occurrences</h2>
       </div>
-      {% if result.repeat %}
+      {% if result.repeat and user | hasPermission('TAP', 'MANAGE') %}
         <div class="govuk-summary-list govuk-summary-list__actions">
           <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/start-add-occurrence/{{ result.id }}">Add occurrence</a>
         </div>
@@ -207,9 +209,9 @@
         },
         {
           classes: 'govuk-link govuk-link--no-visited-state',
-          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">Make changes to this occurrence<span class="govuk-visually-hidden"> on ' + occurrence.start | formatDate("cccc, d MMMM yyyy 'at' HH:mm") + '</span></a>',
+          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">View<span class="govuk-visually-hidden"> occurrence on ' + occurrence.start | formatDate("cccc, d MMMM yyyy 'at' HH:mm") + '</span></a>',
           format: "numeric"
-        } if user | hasPermission('TAP', 'MANAGE') else null
+        }
       ] | removeNullish), rows) %}
     {% endfor %}
 
@@ -235,7 +237,7 @@
         {
           text: "Action",
           format: "numeric"
-        } if user | hasPermission('TAP', 'MANAGE') else null
+        }
       ] | removeNullish,
       rows: rows
     }) }}
