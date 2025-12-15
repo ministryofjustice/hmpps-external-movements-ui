@@ -69,11 +69,15 @@
                 },
                 {
                   value: 'PENDING',
-                  text: "Pending"
+                  text: "To be reviewed"
                 },
                 {
                   value: 'APPROVED',
                   text: "Approved"
+                },
+                {
+                  value: 'EXPIRED',
+                  text: 'Expired'
                 },
                 {
                   value: 'CANCELLED',
@@ -155,7 +159,7 @@
             key: 'absenceReason'
           },
           {
-            text: 'Single or repeating',
+            text: 'Single or repeating absence',
             key: 'repeat'
           },
           {
@@ -171,7 +175,7 @@
             key: 'status'
           },
           {
-            text: "Action",
+            text: "",
             format: "numeric"
           }
         ] | convertToSortableColumns(sort or 'start,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),

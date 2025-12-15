@@ -1,7 +1,13 @@
 import { components } from '../@types/externalMovements'
 import { formatDate } from './dateTimeUtils'
 
-type DomainEventText = { heading: string; content?: string; reasonRequested?: boolean; changes?: string[] }
+type DomainEventText = {
+  heading: string
+  content?: string
+  reasonRequested?: boolean
+  changes?: string[]
+  skipUser?: boolean
+}
 
 const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
   'person.temporary-absence-authorisation.approved': {
@@ -33,7 +39,7 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
     heading: 'Absence comments changed',
   },
   'person.temporary-absence-authorisation.accompaniment-changed': {
-    heading: 'Absence escort changed',
+    heading: 'Absence accompaniment changed',
   },
   'person.temporary-absence-authorisation.transport-changed': {
     heading: 'Absence transport changed',
@@ -65,7 +71,7 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
     heading: 'Absence occurrence comments changed',
   },
   'person.temporary-absence.accompaniment-changed': {
-    heading: 'Absence occurrence escort changed',
+    heading: 'Absence occurrence accompaniment changed',
   },
   'person.temporary-absence.transport-changed': {
     heading: 'Absence occurrence transport changed',
@@ -75,6 +81,16 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
   },
   'person.temporary-absence.relocated': {
     heading: 'Absence occurrence location changed',
+  },
+  'person.temporary-absence-authorisation.migrated': {
+    heading: 'Absence migrated',
+    content: 'Temporary absence migrated from NOMIS',
+    skipUser: true,
+  },
+  'person.temporary-absence.migrated': {
+    heading: 'Absence occurrence migrated',
+    content: 'Temporary absence occurrence migrated from NOMIS',
+    skipUser: true,
   },
 }
 
@@ -134,7 +150,7 @@ export const parseAuditHistory = (history: components['schemas']['AuditedAction'
       return {
         ...eventText,
         reason: action.reason,
-        user: action.user,
+        user: eventText.skipUser ? null : action.user,
         occurredAt: action.occurredAt,
       }
     })

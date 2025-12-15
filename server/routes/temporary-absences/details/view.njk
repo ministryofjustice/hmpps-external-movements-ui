@@ -16,7 +16,7 @@
     <div class="govuk-grid-row govuk-!-margin-bottom-2">
       <div class="govuk-grid-column-two-thirds">
         <span class="govuk-caption-l">Manage Temporary Absences</span>
-        <h1 class="govuk-heading-l">View {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence occurrence</h1>
+        <h1 class="govuk-heading-l">Manage {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence occurrence</h1>
 
         {% set baseEditUrl = "/temporary-absences/start-edit/" + occurrence.id %}
 
@@ -41,7 +41,7 @@
             },
             rows: [
               {
-                key: { text: "Approval status" },
+                key: { text: "Status" },
                 value: { html: absenceStatusTag(occurrence) }
               },
               {
@@ -75,6 +75,12 @@
                 value: { text: 'Repeating' if result.repeat else 'Single' }
               },
               {
+                key: { text: "Repeating pattern type" },
+                value: {
+                  text: ({ FREEFORM: 'Does not repeat in a regular pattern', WEEKLY: 'Repeats weekly', BIWEEKLY: 'Repeats every 2 weeks', SHIFT: 'Repeats in a custom pattern' })[occurrence.scheduleReference.type]
+                }
+              } if occurrence.scheduleReference.type,
+              {
                 key: { text: "Comments" },
                 value: { text: (occurrence.comments or "Not provided") | escape | nl2br },
                 actions: { items: [{ href: baseEditUrl + "/comments", text: "Change", visuallyHiddenText: "comments" }] }
@@ -93,7 +99,7 @@
                 actions: { items: [{ href: baseEditUrl + "/transport", text: "Change", visuallyHiddenText: "transport" }] }
               },
               {
-                key: { text: "Address" },
+                key: { text: "Location" },
                 value: { text: occurrence.location | formatAddress },
                 actions: { items: [{ href: baseEditUrl + "/location", text: "Change", visuallyHiddenText: "address" }] }
               }
@@ -129,8 +135,14 @@
       <p>
         <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}">View all occurrences of this absence</a>
       </p>
+      {% if user | hasPermission('TAP', 'MANAGE') %}
+        <p>
+          <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/start-add-occurrence/{{ result.id }}">Add occurrence</a>
+        </p>
+      {% endif %}
+    {% else %}
       <p>
-        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/start-add-occurrence/{{ result.id }}">Add occurrence</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}">View absence information</a>
       </p>
     {% endif %}
   </div>

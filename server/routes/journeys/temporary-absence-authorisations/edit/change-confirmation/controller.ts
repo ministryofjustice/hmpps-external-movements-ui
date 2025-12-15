@@ -9,7 +9,6 @@ export class EditTapAuthorisationChangeConfirmationController {
 
   GET = async (req: Request, res: Response) => {
     const {
-      backUrl,
       authorisation,
       absenceType,
       absenceSubType,
@@ -56,13 +55,13 @@ export class EditTapAuthorisationChangeConfirmationController {
       previousValue = formatAddress(authorisation.locations[0]!)
       newValue = joinAddress(location)
     } else if (accompanied !== undefined || accompaniedBy) {
-      fieldName = 'escort'
+      fieldName = 'accompaniment'
       previousValue = authorisation.accompaniedBy.description
       newValue = accompaniedBy?.description || 'Unaccompanied'
     }
 
     res.render('temporary-absence-authorisations/edit/change-confirmation/view', {
-      goBackUrl: backUrl,
+      goBackUrl: `/temporary-absence-authorisations/${authorisation.id}`,
       repeat: authorisation.repeat,
       fieldName,
       previousValue,

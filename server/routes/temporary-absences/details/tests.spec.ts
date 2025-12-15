@@ -112,7 +112,7 @@ test.describe('/temporary-absences/:id', () => {
     await testPage.verifyAnswer('Accompanied or unaccompanied', 'Unaccompanied')
     await testPage.verifyAnswerNotVisible('Accompanied by')
     await testPage.verifyAnswer('Transport', 'Car')
-    await testPage.verifyAnswer('Address', 'Random Street, UK')
+    await testPage.verifyAnswer('Location', 'Random Street, UK')
 
     await expect(testPage.link('Create a new absence for Prisoner-Name Prisoner-Surname')).toBeVisible()
     await expect(testPage.button('Cancel this occurrence')).toBeVisible()
@@ -167,6 +167,7 @@ test.describe('/temporary-absences/:id', () => {
       location: { uprn: 1001, description: 'Random Street, UK' },
       accompaniedBy: { code: 'OTH', description: 'Others' },
       transport: { code: 'CAR', description: 'Car' },
+      scheduleReference: { type: 'WEEKLY' },
     })
     await stubGetTapOccurrenceHistory(occurrenceId, { content: [] })
     await page.goto(`/temporary-absences/${occurrenceId}`)
@@ -182,11 +183,13 @@ test.describe('/temporary-absences/:id', () => {
     await testPage.verifyAnswerNotVisible('Absence reason')
     await testPage.verifyAnswerNotVisible('Work type')
 
+    await testPage.verifyAnswer('Single or repeating absence', 'Repeating')
+    await testPage.verifyAnswer('Repeating pattern type', 'Repeats weekly')
     await testPage.verifyAnswer('Comments', 'Not provided')
     await testPage.verifyAnswer('Accompanied or unaccompanied', 'Accompanied')
     await testPage.verifyAnswer('Accompanied by', 'Others')
     await testPage.verifyAnswer('Transport', 'Car')
-    await testPage.verifyAnswer('Address', 'Random Street, UK')
+    await testPage.verifyAnswer('Location', 'Random Street, UK')
 
     await expect(testPage.link('Create a new absence for Prisoner-Name Prisoner-Surname')).toBeVisible()
     await expect(testPage.button('Cancel this occurrence')).toHaveCount(0)

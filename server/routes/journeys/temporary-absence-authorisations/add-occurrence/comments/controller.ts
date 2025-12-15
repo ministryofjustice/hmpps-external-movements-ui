@@ -9,6 +9,7 @@ export class AddTapOccurrenceCommentsController {
     res.render('temporary-absence-authorisations/add-occurrence/comments/view', {
       backUrl: this.getBackUrl(req.journeyData),
       comments: res.locals.formResponses?.['comments'] ?? (comments !== undefined ? comments : authorisation.comments),
+      prepopulated: !!authorisation.comments?.trim().length,
     })
   }
 
