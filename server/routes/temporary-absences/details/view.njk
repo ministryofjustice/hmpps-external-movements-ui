@@ -134,6 +134,10 @@
           <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/start-add-occurrence/{{ result.id }}">Add occurrence</a>
         </p>
       {% endif %}
+    {% else %}
+      <p>
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}">View absence information</a>
+      </p>
     {% endif %}
   </div>
 {% endblock %}
