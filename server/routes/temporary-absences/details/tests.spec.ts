@@ -167,6 +167,7 @@ test.describe('/temporary-absences/:id', () => {
       location: { uprn: 1001, description: 'Random Street, UK' },
       accompaniedBy: { code: 'OTH', description: 'Others' },
       transport: { code: 'CAR', description: 'Car' },
+      scheduleReference: { type: 'WEEKLY' },
     })
     await stubGetTapOccurrenceHistory(occurrenceId, { content: [] })
     await page.goto(`/temporary-absences/${occurrenceId}`)
@@ -182,6 +183,8 @@ test.describe('/temporary-absences/:id', () => {
     await testPage.verifyAnswerNotVisible('Absence reason')
     await testPage.verifyAnswerNotVisible('Work type')
 
+    await testPage.verifyAnswer('Single or repeating absence', 'Repeating')
+    await testPage.verifyAnswer('Repeating pattern type', 'Repeats weekly')
     await testPage.verifyAnswer('Comments', 'Not provided')
     await testPage.verifyAnswer('Accompanied or unaccompanied', 'Accompanied')
     await testPage.verifyAnswer('Accompanied by', 'Others')

@@ -40,6 +40,7 @@ export class AddTapCheckAnswersController {
       occurrences,
       start,
       end,
+      ...journeyData
     } = req.journeyData.addTemporaryAbsence!
 
     try {
@@ -56,6 +57,7 @@ export class AddTapCheckAnswersController {
               start: occurrence.start,
               end: occurrence.end,
               location: parseAddress(locations![occurrence.locationIdx]!),
+              scheduleReference: { type: journeyData.patternType },
             }))
           : [
               {
@@ -69,9 +71,16 @@ export class AddTapCheckAnswersController {
       if (absenceSubType) request.absenceSubTypeCode = absenceSubType.code
       if (reasonCategory) request.absenceReasonCategoryCode = reasonCategory.code
       if (reason) request.absenceReasonCode = reason.code
-
       if (comments) {
         request.comments = comments
+      }
+      if (repeat) {
+        request.schedule = {
+          type: journeyData.patternType,
+          weeklyPattern: journeyData.weeklyPattern,
+          biweeklyPattern: journeyData.biweeklyPattern,
+          shiftPattern: journeyData.shiftPattern,
+        }
       }
 
       await this.externalMovementsService.createTap({ res }, req.journeyData.prisonerDetails!.prisonerNumber, request)
