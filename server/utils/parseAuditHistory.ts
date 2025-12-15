@@ -39,7 +39,7 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
     heading: 'Absence comments changed',
   },
   'person.temporary-absence-authorisation.accompaniment-changed': {
-    heading: 'Absence escort changed',
+    heading: 'Absence accompaniment changed',
   },
   'person.temporary-absence-authorisation.transport-changed': {
     heading: 'Absence transport changed',
@@ -71,7 +71,7 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
     heading: 'Absence occurrence comments changed',
   },
   'person.temporary-absence.accompaniment-changed': {
-    heading: 'Absence occurrence escort changed',
+    heading: 'Absence occurrence accompaniment changed',
   },
   'person.temporary-absence.transport-changed': {
     heading: 'Absence occurrence transport changed',
