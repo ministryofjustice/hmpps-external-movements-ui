@@ -46,6 +46,7 @@ test.describe('/add-temporary-absence/confirmation', () => {
     const testPage = await new AddAbsenceConfirmationPage(page).verifyContent()
 
     await testPage.verifyLink('Add another temporary absence for this prisoner', /add-temporary-absence\/start\//)
+    await testPage.verifyLink('View all temporary absences in Leeds (HMP)', /temporary-absence-authorisations\?/)
     await testPage.verifyLink('Return to the DPS homepage', /localhost:3001$/)
   })
 })

@@ -112,7 +112,10 @@ test.describe('/temporary-absence-authorisations/edit/change-confirmation', () =
     const testPage = await new EditTapAuthorisationChangeConfirmationPage(page).verifyContent()
 
     await expect(testPage.goBackLink()).toBeVisible()
-    await expect(testPage.goBackLink()).toHaveAttribute('href', /back-url/)
+    await expect(testPage.goBackLink()).toHaveAttribute(
+      'href',
+      /\/temporary-absence-authorisations\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    )
 
     await expect(
       page.getByText(
@@ -157,7 +160,10 @@ test.describe('/temporary-absence-authorisations/edit/change-confirmation', () =
     const testPage = await new EditTapAuthorisationChangeConfirmationPage(page).verifyContent()
 
     await expect(testPage.goBackLink()).toBeVisible()
-    await expect(testPage.goBackLink()).toHaveAttribute('href', /back-url/)
+    await expect(testPage.goBackLink()).toHaveAttribute(
+      'href',
+      /\/temporary-absence-authorisations\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    )
 
     await expect(
       page.getByText('This will change location from Random Street, UK to 42 New Street, New City.'),

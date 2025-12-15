@@ -9,7 +9,6 @@ export class EditTapAuthorisationChangeConfirmationController {
 
   GET = async (req: Request, res: Response) => {
     const {
-      backUrl,
       authorisation,
       absenceType,
       absenceSubType,
@@ -62,7 +61,7 @@ export class EditTapAuthorisationChangeConfirmationController {
     }
 
     res.render('temporary-absence-authorisations/edit/change-confirmation/view', {
-      goBackUrl: backUrl,
+      goBackUrl: `/temporary-absence-authorisations/${authorisation.id}`,
       repeat: authorisation.repeat,
       fieldName,
       previousValue,

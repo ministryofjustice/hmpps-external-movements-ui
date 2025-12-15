@@ -1,0 +1,42 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Select if accompanied or unaccompanied - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukRadios({
+        name: "accompanied",
+        errorMessage: validationErrors | findError('accompanied'),
+        fieldset: {
+          legend: {
+            text: 'Will ' + prisonerDetails | firstNameSpaceLastName + ' be accompanied?',
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--xl"
+          }
+        },
+        items: [
+          {
+            value: 'YES',
+            text: "Yes",
+            checked: accompanied === true
+          },
+          {
+            value: 'NO',
+            text: "No",
+            checked: accompanied === false
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}
