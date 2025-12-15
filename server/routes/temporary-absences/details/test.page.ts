@@ -7,7 +7,7 @@ export class TapOccurrenceDetailsPage extends BaseTestPage {
       pageUrl: /\/temporary-absences\/(\w|-)+/,
       title: 'Manage temporary absence occurrence - Manage temporary absences - DPS',
       caption: 'Manage Temporary Absences',
-      heading: /View .+ temporary absence occurrence/,
+      heading: /Manage .+ temporary absence occurrence/,
     })
   }
 

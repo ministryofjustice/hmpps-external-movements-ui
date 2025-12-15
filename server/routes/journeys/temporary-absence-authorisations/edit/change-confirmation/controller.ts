@@ -55,7 +55,7 @@ export class EditTapAuthorisationChangeConfirmationController {
       previousValue = formatAddress(authorisation.locations[0]!)
       newValue = joinAddress(location)
     } else if (accompanied !== undefined || accompaniedBy) {
-      fieldName = 'escort'
+      fieldName = 'accompaniment'
       previousValue = authorisation.accompaniedBy.description
       newValue = accompaniedBy?.description || 'Unaccompanied'
     }

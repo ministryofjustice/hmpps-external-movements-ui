@@ -16,7 +16,7 @@
     <div class="govuk-grid-row govuk-!-margin-bottom-2">
       <div class="govuk-grid-column-two-thirds">
         <span class="govuk-caption-l">Manage Temporary Absences</span>
-        <h1 class="govuk-heading-l">View {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence occurrence</h1>
+        <h1 class="govuk-heading-l">Manage {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence occurrence</h1>
 
         {% set baseEditUrl = "/temporary-absences/start-edit/" + occurrence.id %}
 
@@ -41,7 +41,7 @@
             },
             rows: [
               {
-                key: { text: "Approval status" },
+                key: { text: "Status" },
                 value: { html: absenceStatusTag(occurrence) }
               },
               {
@@ -93,7 +93,7 @@
                 actions: { items: [{ href: baseEditUrl + "/transport", text: "Change", visuallyHiddenText: "transport" }] }
               },
               {
-                key: { text: "Address" },
+                key: { text: "Location" },
                 value: { text: occurrence.location | formatAddress },
                 actions: { items: [{ href: baseEditUrl + "/location", text: "Change", visuallyHiddenText: "address" }] }
               }
