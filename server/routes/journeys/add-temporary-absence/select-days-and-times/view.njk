@@ -4,6 +4,7 @@
 {% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "partials/shift-preview/macro.njk" import shiftPreview %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
 {% set fullWidth = true %}
 {% set pageTitle = 'Enter absence dates - Add a temporary absence' %}
@@ -15,7 +16,20 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <span class="govuk-caption-l">Create a Temporary Absence</span>
-        <h1 class="govuk-heading-l">Enter absence dates and times for {{ startDate | formatDate('d MMMM') }} to {{ endDate | formatDate('d MMMM') + (' (optional)' if isOptional else '') }}</h1>
+        <h1 class="govuk-heading-l">
+          {% if pageCount === 1 %}
+            Add absence occurrences taking place from {{ startDate | formatDate('cccc d') }} to {{ endDate | formatDate('cccc d MMMM') }}
+          {% else %}
+            Month {{ idx }} of {{ pageCount }}: add absence occurrences taking place from {{ startDate | formatDate('cccc d') }} to {{ endDate | formatDate('cccc d MMMM') + (' (optional)' if isOptional else '') }}
+          {% endif %}
+        </h1>
+
+        <p class="govuk-hint">Add a row for every instance the prisoner will go out in {{ startDate | formatDate('MMMM') }}. For example, if the prisoner is going out 5 times in {{ startDate | formatDate('MMMM') }}, add 5 rows.</p>
+        <p class="govuk-hint">If the prisoner is staying out overnight, set the return date to the next or a later day.</p>
+
+        {{ govukInsetText({
+          html: "<span>This absence period starts on " + start | formatDate + " and ends on " +  end | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="' + ('../' if paramsIdx else '' ) + 'start-end-dates">Go back if you need to change these dates.</a>'
+        }) }}
       </div>
     </div>
 
@@ -87,7 +101,7 @@
                 errorMessage: validationErrors | findError("absences[" + loop.index0 + "][returnDate]"),
                 classes: 'hmpps-datepicker--fixed-width govuk-body',
                 minDate: startDate | formatInputDate,
-                maxDate: (endDate | formatInputDate) if isLastWeek else (endDate | addDaysMonths(1) | formatInputDate),
+                maxDate: (endDate | formatInputDate) if isLastMonth else (endDate | addDaysMonths(1) | formatInputDate),
                 attributes: {
                   "data-id": "absences[%index%][returnDate]",
                   "data-name": "absences[%index%][returnDate]"
@@ -129,7 +143,7 @@
       <div class="moj-button-action">
         {{ govukButton({
           name: "add",
-          text: "Add another absence",
+          text: "Add another occurrence",
           classes: "govuk-button--secondary moj-add-another__add-button govuk-!-margin-bottom-4"
         }) }}
       </div>
