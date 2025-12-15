@@ -94,6 +94,12 @@
                 value: { text: 'Repeating' if result.repeat else 'Single' }
               },
               {
+                key: { text: "Repeating pattern type" },
+                value: {
+                  text: ({ FREEFORM: 'Does not repeat in a regular pattern', WEEKLY: 'Repeats weekly', BIWEEKLY: 'Repeats every 2 weeks', SHIFT: 'Repeats in a custom pattern' })[result.schedule.type]
+                }
+              } if result.schedule.type,
+              {
                 key: { text: "Comments" },
                 value: { text: (result.comments or "Not provided") | escape | nl2br },
                 actions: { items: [{ href: baseEditUrl + "/comments", text: "Change", visuallyHiddenText: "comments", classes: "govuk-link--no-visited-state" }] }

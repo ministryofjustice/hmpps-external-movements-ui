@@ -75,6 +75,12 @@
                 value: { text: 'Repeating' if result.repeat else 'Single' }
               },
               {
+                key: { text: "Repeating pattern type" },
+                value: {
+                  text: ({ FREEFORM: 'Does not repeat in a regular pattern', WEEKLY: 'Repeats weekly', BIWEEKLY: 'Repeats every 2 weeks', SHIFT: 'Repeats in a custom pattern' })[occurrence.scheduleReference.type]
+                }
+              } if occurrence.scheduleReference.type,
+              {
                 key: { text: "Comments" },
                 value: { text: (occurrence.comments or "Not provided") | escape | nl2br },
                 actions: { items: [{ href: baseEditUrl + "/comments", text: "Change", visuallyHiddenText: "comments" }] }
