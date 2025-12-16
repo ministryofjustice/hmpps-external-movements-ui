@@ -188,7 +188,7 @@ test.describe('/temporary-absences/:id', () => {
     await testPage.verifyAnswerNotVisible('Work type')
 
     await testPage.verifyAnswer('Single or repeating absence', 'Repeating')
-    await testPage.verifyAnswer('Repeating pattern type', 'Repeats weekly')
+    await testPage.verifyAnswer('Repeating pattern type', 'Repeat weekly')
     await testPage.verifyAnswer('Comments', 'Not provided')
     await testPage.verifyAnswer('Accompanied or unaccompanied', 'Accompanied')
     await testPage.verifyAnswer('Accompanied by', 'Others')

@@ -68,7 +68,7 @@ test.describe('/add-temporary-absence/repeating-pattern', () => {
 
     // verify validation error
     await testPage.clickContinue()
-    await testPage.link('Select if the absences will take place in a repeating pattern').click()
+    await testPage.link('Select how the occurrences of this absence will repeat').click()
     await expect(testPage.weeklyRadio()).toBeFocused()
 
     // verify next page routing

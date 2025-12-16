@@ -1,51 +1,51 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
 {% set pageTitle = 'Enter repeating pattern - Add a temporary absence' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Create a Temporary Absence</span>
+    <h1 class="govuk-heading-l"><label for="patternType">How do the occurrences of this absence repeat?</label></h1>
+
+    {{ govukInsetText({
+      text: "You can change, cancel and add new occurrences after you have saved this absence. You can also cancel the entire absence and all its occurrences."
+    }) }}
+
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
       {{ govukRadios({
         name: "patternType",
         errorMessage: validationErrors | findError('patternType'),
-        fieldset: {
-          legend: {
-            text: 'How will the occurrences of this absence repeat?',
-            isPageHeading: true,
-            classes: "govuk-fieldset__legend--xl"
-          }
-        },
         items: [
           {
             value: 'WEEKLY',
-            text: "Repeats weekly",
+            text: "Repeat weekly",
             hint: {
-              text: "Enter the days and times for absences that will take place at the same days and times each week."
+              text: "Enter the days and times for absences taking place at the same days and times each week."
             }
           },
           {
             value: 'BIWEEKLY',
-            text: "Repeats every 2 weeks",
+            text: "Repeat every 2 weeks",
             hint: {
-              text: "Enter the days and times for absences that repeat in 2 alternating weeks."
+              text: "Enter the days and times for absences that repeat in alternate weeks."
             }
           },
           {
             value: 'SHIFT',
-            text: "Repeats in a custom pattern",
+            text: "Repeat in a custom pattern",
             hint: {
               text: "Enter the days and times for a shift-type pattern. For example, 3 days on, 3 days off."
             }
           },
           {
             value: 'FREEFORM',
-            text: "Does not repeat in a regular pattern",
+            text: "Do not repeat in a regular pattern",
             hint: {
-              text: "Enter the individual dates and times for each absence occurrence."
+              text: "Enter the dates and times for each absence occurrence individually."
             }
           }
         ] | setCheckedValue(patternType)

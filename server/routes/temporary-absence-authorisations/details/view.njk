@@ -86,13 +86,13 @@
               {
                 key: { text: "Start date" },
                 value: { text: result.start | formatDate },
-                actions: { items: [{ href: baseEditUrl + "/start-end-dates#start", text: "Change", visuallyHiddenText: "start date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
-              },
+                actions: { items: [{ href: baseEditUrl + "/start-end-dates#start", text: "Change", visuallyHiddenText: "start date", classes: "govuk-link--no-visited-state" }] }
+              } if result.repeat,
               {
                 key: { text: "End date" },
                 value: { text: result.end | formatDate },
-                actions: { items: [{ href: baseEditUrl + "/start-end-dates#end", text: "Change", visuallyHiddenText: "end date", classes: "govuk-link--no-visited-state" }] } if result.repeat else null
-              },
+                actions: { items: [{ href: baseEditUrl + "/start-end-dates#end", text: "Change", visuallyHiddenText: "end date", classes: "govuk-link--no-visited-state" }] }
+              } if result.repeat,
               {
                 key: { text: "Single or repeating absence" },
                 value: { text: 'Repeating' if result.repeat else 'Single' }
@@ -100,7 +100,7 @@
               {
                 key: { text: "Repeating pattern type" },
                 value: {
-                  text: ({ FREEFORM: 'Does not repeat in a regular pattern', WEEKLY: 'Repeats weekly', BIWEEKLY: 'Repeats every 2 weeks', SHIFT: 'Repeats in a custom pattern' })[result.schedule.type]
+                  text: ({ FREEFORM: 'Do not repeat in a regular pattern', WEEKLY: 'Repeat weekly', BIWEEKLY: 'Repeat every 2 weeks', SHIFT: 'Repeat in a custom pattern' })[result.schedule.type]
                 }
               } if result.schedule.type,
               {
@@ -158,7 +158,7 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-m" id="view-occurrences">View absence occurrences</h2>
+        <h2 class="govuk-heading-m" id="view-occurrences">{{ "View absence occurrences" if result.repeat else "View absence occurrence" }}</h2>
       </div>
       {% if result.repeat and user | hasPermission('TAP', 'MANAGE') %}
         <div class="govuk-summary-list govuk-summary-list__actions">
