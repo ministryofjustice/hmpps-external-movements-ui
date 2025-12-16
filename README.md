@@ -63,6 +63,11 @@ For local running, start a wiremock instance by:
 docker compose -f docker-compose-test.yml up
 ```
 
+Install Playwright if it has not been installed previously:
+```bash
+npx playwright install
+```
+
 Then run the server in test mode by:
 ```bash
 npm run start-feature:dev
