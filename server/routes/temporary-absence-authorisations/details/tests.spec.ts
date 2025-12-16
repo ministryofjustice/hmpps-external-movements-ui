@@ -102,15 +102,17 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     // verify page content
     const testPage = await new TapAuthorisationDetailsPage(page).verifyContent()
 
+    await testPage.verifyAnswerNotVisible('Number of occurrences')
     await testPage.verifyAnswer('Status', /To be reviewed/)
     await testPage.verifyAnswer('Absence type', 'Restricted ROTL (Release on Temporary Licence)')
     await testPage.verifyAnswer('Absence sub-type', 'RDR (Resettlement Day Release)')
     await testPage.verifyAnswer('Absence reason', 'Paid work')
     await testPage.verifyAnswer('Work type', 'IT and communication')
 
-    await testPage.verifyAnswer('Start date', '1 January 2001')
-    await testPage.verifyAnswer('End date', '1 January 2001')
+    await testPage.verifyAnswerNotVisible('Start date')
+    await testPage.verifyAnswerNotVisible('End date')
     await testPage.verifyAnswer('Single or repeating absence', 'Single')
+    await testPage.verifyAnswerNotVisible('Repeating pattern type')
     await testPage.verifyAnswer('Comments', 'Not provided')
 
     await testPage.verifyAnswer('Accompanied or unaccompanied', 'Unaccompanied')
@@ -184,15 +186,17 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     // verify page content
     const testPage = await new TapAuthorisationDetailsPage(page).verifyContent()
 
+    await testPage.verifyAnswerNotVisible('Number of occurrences')
     await testPage.verifyAnswer('Status', /Approved/)
     await testPage.verifyAnswer('Absence type', 'Police production')
     await testPage.verifyAnswerNotVisible('Absence sub-type')
     await testPage.verifyAnswerNotVisible('Absence reason')
     await testPage.verifyAnswerNotVisible('Work type')
 
-    await testPage.verifyAnswer('Start date', '1 January 2001')
-    await testPage.verifyAnswer('End date', '1 January 2001')
+    await testPage.verifyAnswerNotVisible('Start date')
+    await testPage.verifyAnswerNotVisible('End date')
     await testPage.verifyAnswer('Single or repeating absence', 'Single')
+    await testPage.verifyAnswerNotVisible('Repeating pattern type')
     await testPage.verifyAnswer('Comments', 'Not provided')
 
     await testPage.verifyAnswer('Accompanied or unaccompanied', 'Unaccompanied')
@@ -203,6 +207,75 @@ test.describe('/temporary-absence-authorisations/:id', () => {
 
     await expect(testPage.button('Review this absence')).toHaveCount(0)
     await expect(testPage.button('Cancel this absence')).toBeVisible()
+  })
+
+  test('should show temporary absence details for repeating absence', async ({ page }) => {
+    await signIn(page)
+
+    const authorisationId = uuidV4()
+    await stubGetTapAuthorisation({
+      ...testTapAuthorisation,
+      id: authorisationId,
+      status: { code: 'PENDING', description: 'To be reviewed' },
+      absenceType: {
+        code: 'RR',
+        description: 'Restricted ROTL (Release on Temporary Licence)',
+      },
+      absenceSubType: {
+        code: 'RDR',
+        description: 'RDR (Resettlement Day Release)',
+        hintText: 'For prisoners to carry out activities linked to objectives in their sentence plan.',
+      },
+      absenceReasonCategory: { code: 'PW', description: 'Paid work' },
+      absenceReason: { code: 'R15', description: 'IT and communication' },
+      repeat: true,
+      schedule: { type: 'WEEKLY' },
+      totalOccurrenceCount: 12,
+      start: '2001-01-01',
+      end: '2001-01-21',
+      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      transport: { code: 'CAR', description: 'Car' },
+      locations: [{ uprn: 1001, description: 'Random Street, UK' }],
+      occurrences: [
+        {
+          id: 'occurrence-id',
+          status: { code: 'PENDING', description: 'To be reviewed' },
+          start: '2001-01-01T10:00:00',
+          end: '2001-01-01T17:30:00',
+          location: { uprn: 1001, description: 'Random Street, UK' },
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+          transport: { code: 'CAR', description: 'Car' },
+        },
+      ],
+    })
+    await stubGetTapAuthorisationHistory(authorisationId, { content: [] })
+
+    await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
+
+    // verify page content
+    const testPage = await new TapAuthorisationDetailsPage(page).verifyContent()
+
+    await testPage.verifyAnswer('Number of occurrences', '12')
+    await testPage.verifyAnswer('Status', /To be reviewed/)
+    await testPage.verifyAnswer('Absence type', 'Restricted ROTL (Release on Temporary Licence)')
+    await testPage.verifyAnswer('Absence sub-type', 'RDR (Resettlement Day Release)')
+    await testPage.verifyAnswer('Absence reason', 'Paid work')
+    await testPage.verifyAnswer('Work type', 'IT and communication')
+
+    await testPage.verifyAnswer('Start date', '1 January 2001')
+    await testPage.verifyAnswer('End date', '21 January 2001')
+    await testPage.verifyAnswer('Single or repeating absence', 'Repeating')
+    await testPage.verifyAnswer('Repeating pattern type', 'Repeat weekly')
+    await testPage.verifyAnswer('Comments', 'Not provided')
+
+    await testPage.verifyAnswer('Accompanied or unaccompanied', 'Unaccompanied')
+    await testPage.verifyAnswer('Transport', 'Car')
+    await testPage.verifyAnswer('Location', 'Random Street, UK')
+
+    await testPage.verifyTableRow(1, ['Monday, 1 January at 10:00', 'Monday, 1 January at 17:30', /To be reviewed/])
+
+    await expect(testPage.button('Review this absence')).toBeVisible()
+    await expect(testPage.button('Cancel this absence')).toHaveCount(0)
   })
 
   test('should not show cancel button for view only user', async ({ page }) => {
