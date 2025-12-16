@@ -21,7 +21,9 @@
         name: "reason",
         errorMessage: validationErrors | findError('reason'),
         label: {
-          text: "Enter a reason for cancelling this absence"
+          text: "Enter a reason for cancelling this absence",
+          classes: "govuk-label--m",
+          isPageHeading: false
         },
         value: approveReason
       }) }}
