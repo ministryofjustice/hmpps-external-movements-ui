@@ -13,11 +13,13 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getTapOccurrence']
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     put: operations['applyActions']
@@ -37,11 +39,13 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getTapAuthorisation']
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     put: operations['applyActions_1']
@@ -143,6 +147,7 @@ export interface paths {
     put?: never
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     post: operations['createTapAuthorisation']
@@ -163,6 +168,7 @@ export interface paths {
     put?: never
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     post: operations['createOccurrence']
@@ -181,6 +187,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getTapOccurrenceHistory']
@@ -201,6 +208,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getTapAuthorisationHistory']
@@ -293,6 +301,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['findTapOccurrences']
@@ -313,9 +322,30 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['findTapAuthorisations']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/search/prisons/{prisonCode}/external-movements/schedules': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RO
+     */
+    get: operations['externalMovementSchedules']
     put?: never
     post?: never
     delete?: never
@@ -333,6 +363,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getDomain']
@@ -353,6 +384,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getPrisonerOverview']
@@ -373,6 +405,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getAbsenceCategorisationDomain']
@@ -393,6 +426,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__UI
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getAbsenceCategorisationOptions']
@@ -786,6 +820,10 @@ export interface components {
       contactInformation?: string
       scheduleReference?: components['schemas']['JsonNode']
       comments?: string
+      /** Format: int32 */
+      occurrencePosition: number
+      /** Format: int32 */
+      totalOccurrences: number
     }
     Occurrence: {
       /** Format: uuid */
@@ -820,6 +858,8 @@ export interface components {
       start: string
       /** Format: date */
       end: string
+      /** Format: int64 */
+      totalOccurrenceCount: number
       occurrences: components['schemas']['Occurrence'][]
       locations: components['schemas']['Location'][]
       schedule?: components['schemas']['JsonNode']
@@ -993,6 +1033,37 @@ export interface components {
     TapAuthorisationSearchResponse: {
       content: components['schemas']['TapAuthorisationResult'][]
       metadata: components['schemas']['PageMetadata']
+    }
+    SearchScheduledMovementsRequest: {
+      personIdentifiers: string[]
+      /** Format: date-time */
+      start: string
+      /** Format: date-time */
+      end: string
+      includeSensitive: boolean
+      includeLocation: boolean
+    }
+    Detail: {
+      uiUrl: string
+      requiredRoles: string[]
+    }
+    ScheduledMovement: {
+      /** Format: uuid */
+      id: string
+      personIdentifier: string
+      domain: components['schemas']['CodedDescription']
+      type: components['schemas']['CodedDescription']
+      description: string
+      /** Format: date-time */
+      start: string
+      /** Format: date-time */
+      end: string
+      location: string
+      status: components['schemas']['CodedDescription']
+      detail: components['schemas']['Detail']
+    }
+    ScheduledMovements: {
+      content: components['schemas']['ScheduledMovement'][]
     }
     ReferenceDataResponse: {
       domain: components['schemas']['CodedDescription']
@@ -1532,6 +1603,30 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['TapAuthorisationSearchResponse']
+        }
+      }
+    }
+  }
+  externalMovementSchedules: {
+    parameters: {
+      query: {
+        request: components['schemas']['SearchScheduledMovementsRequest']
+      }
+      header?: never
+      path: {
+        prisonCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ScheduledMovements']
         }
       }
     }

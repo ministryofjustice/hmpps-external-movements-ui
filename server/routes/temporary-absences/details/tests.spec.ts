@@ -98,6 +98,7 @@ test.describe('/temporary-absences/:id', () => {
     // verify page content
     const testPage = await new TapOccurrenceDetailsPage(page).verifyContent()
 
+    await testPage.verifyAnswerNotVisible('Occurrence count')
     await testPage.verifyAnswer('Status', /Scheduled/)
     await testPage.verifyAnswer('Start date and time', 'Monday, 1 January 2001 at 10:00')
     await testPage.verifyAnswer('Return date and time', 'Monday, 1 January 2001 at 17:30')
@@ -157,6 +158,8 @@ test.describe('/temporary-absences/:id', () => {
         ...testTapOccurrence.authorisation,
         repeat: true,
       },
+      occurrencePosition: 2,
+      totalOccurrences: 8,
       absenceType: {
         code: 'PP',
         description: 'Police production',
@@ -175,6 +178,7 @@ test.describe('/temporary-absences/:id', () => {
     // verify page content
     const testPage = await new TapOccurrenceDetailsPage(page).verifyContent()
 
+    await testPage.verifyAnswer('Occurrence count', '2 of 8')
     await testPage.verifyAnswer('Status', /Cancelled/)
     await testPage.verifyAnswer('Start date and time', 'Monday, 1 January 2001 at 10:00')
     await testPage.verifyAnswer('Return date and time', 'Monday, 1 January 2001 at 17:30')

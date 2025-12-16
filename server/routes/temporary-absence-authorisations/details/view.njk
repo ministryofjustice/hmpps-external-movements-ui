@@ -56,6 +56,10 @@
             },
             rows: [
               {
+                key: { text: "Number of occurrences" },
+                value: { text: result.totalOccurrenceCount }
+              } if result.repeat,
+              {
                 key: { text: "Status" },
                 value: { html: absenceStatusTag(result) }
               },
