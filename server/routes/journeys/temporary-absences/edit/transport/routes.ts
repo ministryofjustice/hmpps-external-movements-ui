@@ -9,7 +9,7 @@ export const EditTransportRoutes = ({ externalMovementsService }: Services) => {
   const controller = new EditTransportController(externalMovementsService)
 
   get('/', controller.GET)
-  post('/', validate(schemaFactory(externalMovementsService)), controller.POST)
+  post('/', validate(schemaFactory(externalMovementsService)), controller.submitToApi, controller.POST)
 
   return router
 }
