@@ -41,6 +41,10 @@
             },
             rows: [
               {
+                key: { text: "Occurrence count" },
+                value: { text: occurrence.occurrencePosition + ' of ' + occurrence.totalOccurrences }
+              } if result.repeat,
+              {
                 key: { text: "Status" },
                 value: { html: absenceStatusTag(occurrence) }
               },
