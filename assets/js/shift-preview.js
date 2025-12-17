@@ -115,7 +115,7 @@ export const getUpdatePreviewHandler = (dateFrom, dateTo, shiftIteratorHandler) 
   const table = document.createElement('table')
   table.setAttribute('class', 'govuk-table govuk-!-margin-bottom-6')
   table.innerHTML =
-    '<thead class="govuk-table__head"><tr class="govuk-table__row"><th class="govuk-table__header">Day</th><th class="govuk-table__header">Date</th><th class="govuk-table__header">Time In</th><th class="govuk-table__header">Time Out</th></tr></thead>'
+    '<thead class="govuk-table__head"><tr class="govuk-table__row"><th class="govuk-table__header">Day</th><th class="govuk-table__header">Date</th><th class="govuk-table__header">Start time</th><th class="govuk-table__header">End time</th></tr></thead>'
   const tbody = document.createElement('tbody')
   tbody.setAttribute('class', 'govuk-table__body')
 
