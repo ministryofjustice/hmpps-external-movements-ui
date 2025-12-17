@@ -20,6 +20,7 @@
     <script type="text/javascript" src="/assets/applicationinsights-web.min.js"  nonce="{{ cspNonce }}"></script>
     <script type="text/javascript" src="/assets/applicationinsights-clickanalytics-js.min.js"  nonce="{{ cspNonce }}"></script>
     <script type="text/javascript" nonce="{{ cspNonce }}">
+
       const clickPluginInstance = new Microsoft.ApplicationInsights.ClickAnalyticsPlugin()
       // Click Analytics configuration
       const clickPluginConfig = {
@@ -45,6 +46,7 @@
       appInsights.addTelemetryInitializer(function (envelope) {
         envelope.tags["ai.cloud.role"] = "{{ applicationName }}"
         envelope.tags["ai.application.ver"] = "{{ buildNumber }}"
+        envelope.tags["caseLoadId"] = "{{ user.activeCaseLoad.caseLoadId }}"
       });
       appInsights.trackPageView();
     </script>
