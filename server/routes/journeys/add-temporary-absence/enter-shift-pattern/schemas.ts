@@ -21,7 +21,7 @@ export const schema = createSchema({
         if (!parsedType) {
           ctx.addIssue({
             code: 'custom',
-            message: 'Select the type of working pattern',
+            message: 'Select shift type',
             path: ['type'],
           })
         }

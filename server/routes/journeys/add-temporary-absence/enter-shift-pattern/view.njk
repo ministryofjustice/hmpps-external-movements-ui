@@ -17,10 +17,16 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <span class="govuk-caption-l">Create a Temporary Absence</span>
-      <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Enter the shift pattern for this absence</h1>
-      <p class="govuk-hint">You can add as many rows as you need to cover the entire period of this pattern.</p>
+      <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Enter a shift-type pattern for this absence</h1>
+      <p class="govuk-hint">
+        Add as many rows as you need to cover a single instance of this pattern. For example, if a prisoner is working ‘3 days on, 3 days off’, you should add:
+        <ul class="govuk-list govuk-list--bullet govuk-hint">
+          <li>3 scheduled days</li>
+          <li>3 rest days</li>
+        </ul>
+      </p>
       {{ govukInsetText({
-        html: "<span>This pattern will start on " + startDate | formatDate + " and end on "+ endDate | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="start-end-dates">Go back if you need to change these dates.</a>'
+        html: "<span>This pattern will repeat throughout the absence period, starting from " + startDate | formatDate + " and ending on "+ endDate | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="start-end-dates">Go back if you need to change these dates.</a>'
       }) }}
     </div>
   </div>
@@ -37,14 +43,14 @@
             name: "items[" + loop.index0 + "][type]",
             value: item.type,
             label: {
-              text: 'Working pattern type',
+              text: 'Shift type',
               classes: "govuk-label--m margin-bottom-7-5"
             },
             errorMessage: validationErrors | findError("items[" + loop.index0 + "][type]"),
             items: [
               {
                 value: "",
-                text: "Select the type of working pattern"
+                text: "Select shift type"
               },
               {
                 value: "DAY",
@@ -139,10 +145,14 @@
       </p>
     {% endif %}
 
-    {{ govukWarningText({
-        text: "Make sure you add any rest days that come at the end of the schedule before the next schedule starts.",
-        iconFallbackText: "Warning"
-    }) }}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {{ govukWarningText({
+            text: "Make sure you add any rest days that come at the end of the schedule before the next schedule starts.",
+            iconFallbackText: "Warning"
+        }) }}
+      </div>
+    </div>
 
     <div class="moj-button-action">
       {{ govukButton({
