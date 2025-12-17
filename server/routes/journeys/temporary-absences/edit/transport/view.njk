@@ -3,10 +3,10 @@
 
 {% extends "partials/layout.njk" %}
 
-{% set pageTitle = "Select transport - Manage Temporary Absence" %}
+{% set pageTitle = "Select transport - Edit a temporary absence" %}
 
 {% block innerContent %}
-    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <span class="govuk-caption-l">Edit a Temporary Absences</span>
     <form method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         {{ govukRadios({
@@ -23,7 +23,7 @@
             errorMessage: validationErrors | findError('transport')
         }) }}
         {{ govukButton({
-            text: "Continue",
+            text: "Confirm and save",
             preventDoubleClick: true
         }) }}
     </form>
