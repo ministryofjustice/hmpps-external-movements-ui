@@ -41,7 +41,15 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
 
   get('/start/:prisonNumber', populatePrisonerDetails(services), (req, res) => {
     if (req.middleware?.prisonerData) {
-      req.journeyData.addTemporaryAbsence = {}
+      const lastLandmark = res.locals.breadcrumbs.last()
+
+      req.journeyData.addTemporaryAbsence = {
+        backUrl:
+          lastLandmark && ['temp-page-2', 'temp-page-3', Page.SEARCH_PRISONER].includes(lastLandmark.alias || '')
+            ? lastLandmark.href
+            : `${res.locals.prisonerProfileUrl}/prisoner/${req.journeyData.prisonerDetails!.prisonerNumber}`,
+        historyQuery: String(req.query['history']),
+      }
       req.journeyData.prisonerDetails = toPrisonerDetails(req.middleware.prisonerData)
       res.redirect('../absence-type')
     } else {

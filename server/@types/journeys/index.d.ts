@@ -34,6 +34,8 @@ export type JourneyData = {
 }
 
 export type AddTemporaryAbsenceJourney = Partial<{
+  backUrl: string
+  historyQuery: string
   categorySubJourney: Partial<{
     absenceType: components['schemas']['AbsenceCategorisation']
     absenceSubType: components['schemas']['AbsenceCategorisation']

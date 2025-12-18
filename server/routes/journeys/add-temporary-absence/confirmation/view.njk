@@ -11,11 +11,11 @@
     }) }}
 
     <p class="govuk-body">
-      <a class="govuk-link govuk-link--no-visited-state" href="/add-temporary-absence/start/{{ prisonerDetails.prisonerNumber }}">Add another temporary absence for this prisoner</a>
+      <a class="govuk-link govuk-link--no-visited-state" href="/add-temporary-absence/start/{{ prisonerDetails.prisonerNumber }}?history={{ historyQuery }}">Add another temporary absence for this prisoner</a>
     </p>
 
     <p class="govuk-body">
-      <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?start=&end=&status=">View all temporary absences in {{ user.activeCaseLoad.description }}</a>
+      <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?start=&end=&status=&history={{ historyQuery }}">View all temporary absences in {{ user.activeCaseLoad.description }}</a>
     </p>
 
     <p class="govuk-body">
