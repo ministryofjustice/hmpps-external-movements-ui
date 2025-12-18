@@ -46,7 +46,7 @@
       appInsights.addTelemetryInitializer(function (envelope) {
         envelope.tags["ai.cloud.role"] = "{{ applicationName }}"
         envelope.tags["ai.application.ver"] = "{{ buildNumber }}"
-        envelope.tags["caseLoadId"] = "{{ user.activeCaseLoad.caseLoadId }}"
+        envelope.tags["activeCaseLoadId"] = "{{ user.activeCaseLoad.caseLoadId }}"
       });
       appInsights.trackPageView();
     </script>
