@@ -44,9 +44,13 @@
       const init = new Microsoft.ApplicationInsights.ApplicationInsights(snippet)
       const appInsights = init.loadAppInsights()
       appInsights.addTelemetryInitializer(function (envelope) {
-        envelope.tags["ai.cloud.role"] = "{{ applicationName }}"
+        envelope.tags["ai.cloud.role"] = "{{ appInsightsApplicationName }}"
         envelope.tags["ai.application.ver"] = "{{ buildNumber }}"
-        envelope.tags["activeCaseLoadId"] = "{{ user.activeCaseLoad.caseLoadId }}"
+
+        if (envelope.baseData) {
+          envelope.baseData.properties = envelope.baseData.properties || {}
+          envelope.baseData.properties["activeCaseLoadId"] = '{{ user.activeCaseLoad.caseLoadId }}'
+        }
       });
       appInsights.trackPageView();
     </script>
