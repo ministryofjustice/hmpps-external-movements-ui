@@ -3,6 +3,8 @@ import { Request, Response } from 'express'
 export class AddAbsenceConfirmationController {
   GET = async (req: Request, res: Response) => {
     req.journeyData.journeyCompleted = true
-    res.render('add-temporary-absence/confirmation/view', {})
+    res.render('add-temporary-absence/confirmation/view', {
+      historyQuery: encodeURIComponent(req.journeyData.addTemporaryAbsence!.historyQuery!),
+    })
   }
 }

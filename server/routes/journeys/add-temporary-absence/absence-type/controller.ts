@@ -3,7 +3,6 @@ import ExternalMovementsService from '../../../../services/apis/externalMovement
 import { SchemaType } from './schema'
 import { absenceCategorisationMapper, getCategoryFromJourney } from '../../../common/utils'
 import { AddTapFlowControl } from '../flow'
-import { Page } from '../../../../services/auditService'
 
 export class AbsenceTypeController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -11,13 +10,8 @@ export class AbsenceTypeController {
   GET = async (req: Request, res: Response) => {
     const { absenceType } = getCategoryFromJourney(req.journeyData.addTemporaryAbsence!)
 
-    const lastLandmark = res.locals.breadcrumbs.last()
-
     res.render('add-temporary-absence/absence-type/view', {
-      backUrl:
-        lastLandmark && ['temp-page-2', 'temp-page-3', Page.SEARCH_PRISONER].includes(lastLandmark.alias || '')
-          ? lastLandmark.href
-          : `${res.locals.prisonerProfileUrl}/prisoner/${req.journeyData.prisonerDetails!.prisonerNumber}`,
+      backUrl: req.journeyData.isCheckAnswers ? 'check-answers' : req.journeyData.addTemporaryAbsence!.backUrl,
       options: (await this.externalMovementsService.getAllAbsenceTypes({ res })).items.map(absenceCategorisationMapper),
       absenceType: res.locals.formResponses?.['absenceType'] ?? absenceType?.code,
     })
