@@ -51,6 +51,27 @@
           envelope.baseData.properties = envelope.baseData.properties || {}
           envelope.baseData.properties["activeCaseLoadId"] = '{{ user.activeCaseLoad.caseLoadId }}'
         }
+
+        // Prevent PII leaking into logs:
+        if (envelope.data.baseTypeSource === "ClickEvent"
+          && (
+            envelope.data.targetUri.endsWith("/prisoner/{{ prisonerNumber }}")
+            || envelope.baseData.name.includes("{{ prisonerName?.firstLast }}")
+            || envelope.baseData.name.includes("{{ prisonerName?.lastCommaFirst }}")
+            || envelope.baseData.name.includes("{{ prisonerName?.full }}")
+          )
+        ) {
+          const contentArray = JSON.parse(envelope.data.content);
+          for (let content of contentArray) {
+            if (content.contentName) {
+              let redactedStr = "Prisoner Link (Prisoner Name Redacted)";
+              content.contentName = redactedStr;
+              envelope.baseData.name = redactedStr;
+            }
+          }
+          envelope.data.content = JSON.stringify(contentArray);
+          envelope.data.pageName = envelope.data.pageName.replace(/[a-zA-Z][0-9]{4}[a-zA-Z]{2}/, 'PRISONER_NUMBER')
+        }
       });
       appInsights.trackPageView();
     </script>
