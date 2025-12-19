@@ -4,7 +4,7 @@ import auth, { UserToken } from '../mockApis/auth'
 
 export const signIn = async (
   page: Page,
-  user: UserToken = { roles: ['EXTERNAL_MOVEMENTS__TAP__RO', 'EXTERNAL_MOVEMENTS__TAP__RW'] },
+  user: UserToken = { roles: ['EXTERNAL_MOVEMENTS_TAP_RO', 'EXTERNAL_MOVEMENTS_TAP_RW'] },
 ) => {
   const authCode = uuidV4()
   await auth.stubToken(user, authCode)
