@@ -52,6 +52,10 @@
           envelope.baseData.properties["activeCaseLoadId"] = '{{ user.activeCaseLoad.caseLoadId }}'
         }
 
+        if (envelope.name.includes("Pageview") || envelope.name.includes("PageviewPerformance")) {
+          envelope.baseData.name = envelope.baseData.name.replace(/[a-zA-Z][0-9]{4}[a-zA-Z]{2}/, 'PRISONER_NUMBER')
+        }
+
         // Prevent PII leaking into logs:
         if (envelope.data.baseTypeSource === "ClickEvent"
           && (
