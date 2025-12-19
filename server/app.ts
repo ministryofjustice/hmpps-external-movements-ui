@@ -62,7 +62,7 @@ export default function createApp(services: Services): express.Application {
     },
   )
   app.use(
-    authorisationMiddleware([AuthorisedRoles.EXTERNAL_MOVEMENTS__TAP__RO, AuthorisedRoles.EXTERNAL_MOVEMENTS__TAP__RW]),
+    authorisationMiddleware([AuthorisedRoles.EXTERNAL_MOVEMENTS_TAP_RO, AuthorisedRoles.EXTERNAL_MOVEMENTS_TAP_RW]),
   )
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())

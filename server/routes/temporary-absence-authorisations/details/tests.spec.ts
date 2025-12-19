@@ -279,7 +279,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
   })
 
   test('should not show cancel button for view only user', async ({ page }) => {
-    await signIn(page, { roles: ['EXTERNAL_MOVEMENTS__TAP__RO'] })
+    await signIn(page, { roles: ['EXTERNAL_MOVEMENTS_TAP_RO'] })
 
     const authorisationId = uuidV4()
     await stubGetTapAuthorisation({
@@ -306,7 +306,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
   })
 
   test('should not show review button for view only user', async ({ page }) => {
-    await signIn(page, { roles: ['EXTERNAL_MOVEMENTS__TAP__RO'] })
+    await signIn(page, { roles: ['EXTERNAL_MOVEMENTS_TAP_RO'] })
 
     const authorisationId = uuidV4()
     await stubGetTapAuthorisation({

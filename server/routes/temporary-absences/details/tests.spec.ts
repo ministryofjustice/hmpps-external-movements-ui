@@ -202,7 +202,7 @@ test.describe('/temporary-absences/:id', () => {
   })
 
   test('should not show cancel button for view only user', async ({ page }) => {
-    await signIn(page, { roles: ['EXTERNAL_MOVEMENTS__TAP__RO'] })
+    await signIn(page, { roles: ['EXTERNAL_MOVEMENTS_TAP_RO'] })
     const occurrenceId = uuidV4()
     await stubGetTapOccurrence({ ...testTapOccurrence, id: occurrenceId })
     await stubGetTapOccurrenceHistory(occurrenceId, { content: [] })
