@@ -20,6 +20,6 @@ export class RepeatingPatternPage extends BaseTestPage {
   }
 
   rotatingRadio() {
-    return this.radio('Repeat in a custom pattern')
+    return this.radio('Repeat in a shift-type pattern')
   }
 }
