@@ -26,7 +26,6 @@ export const initShiftPreviewToggle = () => {
   window.getUpdatePreviewHandler = getUpdatePreviewHandler
 }
 
-const DOW_NAMES = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 const MONTH_NAMES = [
   'January',
   'February',
@@ -115,7 +114,7 @@ export const getUpdatePreviewHandler = (dateFrom, dateTo, shiftIteratorHandler) 
   const table = document.createElement('table')
   table.setAttribute('class', 'govuk-table govuk-!-margin-bottom-6')
   table.innerHTML =
-    '<thead class="govuk-table__head"><tr class="govuk-table__row"><th class="govuk-table__header">Day</th><th class="govuk-table__header">Date</th><th class="govuk-table__header">Start time</th><th class="govuk-table__header">End time</th></tr></thead>'
+    '<thead class="govuk-table__head"><tr class="govuk-table__row"><th class="govuk-table__header">Date</th><th class="govuk-table__header">Shift type</th><th class="govuk-table__header">Start time</th><th class="govuk-table__header">End time</th></tr></thead>'
   const tbody = document.createElement('tbody')
   tbody.setAttribute('class', 'govuk-table__body')
 
@@ -125,10 +124,15 @@ export const getUpdatePreviewHandler = (dateFrom, dateTo, shiftIteratorHandler) 
     const row = document.createElement('tr')
     row.setAttribute('class', 'govuk-table__row')
     const time = shiftTime.next().value
-    const date = time ? currentDay.toISOString().substring(0, 10) : ''
-    const startTime = time?.startTime ?? ''
-    const returnTime = time?.returnTime ?? ''
-    row.innerHTML = `<th scope="row" class="govuk-table__header">${DOW_NAMES[currentDay.getDay()]}</th><td class="govuk-table__cell">${date}</td><td class="govuk-table__cell">${startTime}</td><td class="govuk-table__cell">${returnTime}</td>`
+    const date = currentDay.toLocaleDateString(undefined, {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+    const startTime = time?.startTime ?? '-'
+    const returnTime = time?.returnTime ?? '-'
+    row.innerHTML = `<th scope="row" class="govuk-table__header">${date}</th><td class="govuk-table__cell">${{ DAY: 'Scheduled day', NIGHT: 'Scheduled night' }[time?.type] ?? 'Rest day'}</td><td class="govuk-table__cell">${startTime}</td><td class="govuk-table__cell">${returnTime}</td>`
     tbody.appendChild(row)
     currentDay.setDate(currentDay.getDate() + 1)
   }

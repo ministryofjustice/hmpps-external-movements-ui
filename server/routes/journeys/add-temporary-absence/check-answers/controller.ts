@@ -85,7 +85,7 @@ export class AddTapCheckAnswersController {
 
       await this.externalMovementsService.createTap({ res }, req.journeyData.prisonerDetails!.prisonerNumber, request)
       req.journeyData.journeyCompleted = true
-      delete req.journeyData.addTemporaryAbsence
+      req.journeyData.addTemporaryAbsence = { historyQuery: req.journeyData.addTemporaryAbsence!.historyQuery! }
       next()
     } catch (e) {
       next(e)
