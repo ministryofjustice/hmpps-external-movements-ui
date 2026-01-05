@@ -14,8 +14,8 @@ export class AddTapCheckAnswersController {
     delete req.journeyData.addTemporaryAbsence!.accompaniedSubJourney
 
     res.render('add-temporary-absence/check-answers/view', {
-      backUrl: 'approval',
       ...req.journeyData.addTemporaryAbsence!,
+      backUrl: 'approval',
     })
   }
 

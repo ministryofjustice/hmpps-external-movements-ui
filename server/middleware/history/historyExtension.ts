@@ -30,7 +30,12 @@ export const historyExtension: Extension & {
       matches.forEach(match => {
         newBody.push(body.substring(lastIndex, match.index))
         lastIndex = match.index
-        if (match[1]?.startsWith('http') || match[1]?.startsWith('#')) {
+        if (
+          match[1]?.startsWith('http') ||
+          match[1]?.startsWith('#') ||
+          match[1]?.includes('?history=') ||
+          match[1]?.includes('&history=')
+        ) {
           newBody.push(match[0])
         } else if (match[1]?.includes('#')) {
           const [url, hashtag] = match[1].split('#')
