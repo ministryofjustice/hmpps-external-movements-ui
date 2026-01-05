@@ -26,7 +26,6 @@ export const initShiftPreviewToggle = () => {
   window.getUpdatePreviewHandler = getUpdatePreviewHandler
 }
 
-const DOW_NAMES = ['Sunday', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 const MONTH_NAMES = [
   'January',
   'February',
