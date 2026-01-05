@@ -113,12 +113,8 @@
         classes: "govuk-!-margin-bottom-7",
         rows: [
           {
-            key: {
-            text: "Repeating schedule type"
-          },
-            value: {
-            text: ({ FREEFORM: 'Do not repeat in a regular pattern', WEEKLY: 'Repeat weekly', BIWEEKLY: 'Repeat every 2 weeks', SHIFT: 'Repeat in a custom pattern' })[patternType]
-          },
+            key: { text: "Repeating schedule type" },
+            value: { text: patternType | repeatTypeLabel },
             actions: {
             items: [
               {

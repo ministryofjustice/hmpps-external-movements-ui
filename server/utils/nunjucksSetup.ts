@@ -123,4 +123,14 @@ export default function nunjucksSetup(app: express.Express): void {
     (items: { key: unknown; value: unknown; actions: unknown }[], condition: boolean) =>
       condition ? items : items.map(({ actions, ...item }) => item),
   )
+  njkEnv.addFilter(
+    'repeatTypeLabel',
+    (type: 'FREEFORM' | 'WEEKLY' | 'BIWEEKLY' | 'SHIFT') =>
+      ({
+        FREEFORM: 'Do not repeat in a regular pattern',
+        WEEKLY: 'Repeat weekly',
+        BIWEEKLY: 'Repeat every 2 weeks',
+        SHIFT: 'Repeat in a shift-type pattern',
+      })[type],
+  )
 }

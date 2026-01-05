@@ -99,9 +99,7 @@
               },
               {
                 key: { text: "Repeating pattern type" },
-                value: {
-                  text: ({ FREEFORM: 'Do not repeat in a regular pattern', WEEKLY: 'Repeat weekly', BIWEEKLY: 'Repeat every 2 weeks', SHIFT: 'Repeat in a custom pattern' })[result.schedule.type]
-                }
+                value: { text: result.schedule.type | repeatTypeLabel }
               } if result.schedule.type,
               {
                 key: { text: "Comments" },
