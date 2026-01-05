@@ -15,6 +15,71 @@
   {% for css in feComponents.cssIncludes %}
     <link href="{{ css }}" nonce="{{ cspNonce }}" rel="stylesheet"/>
   {% endfor %}
+
+  {% if appInsightsConnectionString %}
+    <script type="text/javascript" src="/assets/applicationinsights-web.min.js"  nonce="{{ cspNonce }}"></script>
+    <script type="text/javascript" src="/assets/applicationinsights-clickanalytics-js.min.js"  nonce="{{ cspNonce }}"></script>
+    <script type="text/javascript" nonce="{{ cspNonce }}">
+
+      const clickPluginInstance = new Microsoft.ApplicationInsights.ClickAnalyticsPlugin()
+      // Click Analytics configuration
+      const clickPluginConfig = {
+        autoCapture: true,
+        dataTags: {
+          useDefaultContentNameOrId: true,
+        },
+      }
+      const snippet = {
+        config: {
+          connectionString: "{{ appInsightsConnectionString }}",
+          extensions: [
+            clickPluginInstance,
+          ],
+          extensionConfig: {
+            [clickPluginInstance.identifier]: clickPluginConfig,
+          },
+          autoTrackPageVisitTime: true,
+        },
+      }
+      const init = new Microsoft.ApplicationInsights.ApplicationInsights(snippet)
+      const appInsights = init.loadAppInsights()
+      appInsights.addTelemetryInitializer(function (envelope) {
+        envelope.tags["ai.cloud.role"] = "{{ appInsightsApplicationName }}"
+        envelope.tags["ai.application.ver"] = "{{ buildNumber }}"
+
+        if (envelope.baseData) {
+          envelope.baseData.properties = envelope.baseData.properties || {}
+          envelope.baseData.properties["activeCaseLoadId"] = '{{ user.activeCaseLoad.caseLoadId }}'
+        }
+
+        if (envelope.name.includes("Pageview") || envelope.name.includes("PageviewPerformance")) {
+          envelope.baseData.name = envelope.baseData.name.replace(/[a-zA-Z][0-9]{4}[a-zA-Z]{2}/, 'PRISONER_NUMBER')
+        }
+
+        // Prevent PII leaking into logs:
+        if (envelope.data.baseTypeSource === "ClickEvent"
+          && (
+            envelope.data.targetUri.endsWith("/prisoner/{{ prisonerNumber }}")
+            || envelope.baseData.name.includes("{{ prisonerName?.firstLast }}")
+            || envelope.baseData.name.includes("{{ prisonerName?.lastCommaFirst }}")
+            || envelope.baseData.name.includes("{{ prisonerName?.full }}")
+          )
+        ) {
+          const contentArray = JSON.parse(envelope.data.content);
+          for (let content of contentArray) {
+            if (content.contentName) {
+              let redactedStr = "Prisoner Link (Prisoner Name Redacted)";
+              content.contentName = redactedStr;
+              envelope.baseData.name = redactedStr;
+            }
+          }
+          envelope.data.content = JSON.stringify(contentArray);
+          envelope.data.pageName = envelope.data.pageName.replace(/[a-zA-Z][0-9]{4}[a-zA-Z]{2}/, 'PRISONER_NUMBER')
+        }
+      });
+      appInsights.trackPageView();
+    </script>
+  {% endif %}
 {% endblock %}
 
 {% block pageTitle %}{{pageTitle or "Reception and External Movements"}} - DPS{% endblock %}

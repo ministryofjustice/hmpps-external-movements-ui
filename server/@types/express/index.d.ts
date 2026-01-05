@@ -84,6 +84,9 @@ export declare global {
       }
       prisonerDetails?: PrisonerDetails
       formResponses?: Record<string, unknown>
+      appInsightsConnectionString?: string
+      appInsightsApplicationName?: string
+      buildNumber?: string
     }
   }
 }

@@ -35,6 +35,7 @@ import {
 import { historyExtension } from '../middleware/history/historyExtension'
 import { convertToSortableColumns } from './convertToSortableColumns'
 import { hasPermissionFilter } from '../middleware/permissions/requirePermissions'
+import applicationInfo from '../applicationInfo'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -43,6 +44,10 @@ export default function nunjucksSetup(app: express.Express): void {
   app.locals.applicationName = 'HMPPS External Movements'
   app.locals.environmentName = config.environmentName
   app.locals.environmentNameColour = config.environmentName === 'PRE-PRODUCTION' ? 'govuk-tag--green' : ''
+  app.locals.appInsightsConnectionString = config.appInsightsConnectionString
+  app.locals.buildNumber = config.buildNumber
+  app.locals.appInsightsApplicationName = applicationInfo().applicationName
+
   let assetManifest: Record<string, string> = {}
 
   try {
