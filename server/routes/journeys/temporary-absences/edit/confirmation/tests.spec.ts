@@ -93,7 +93,7 @@ test.describe('/temporary-absences/edit/confirmation', () => {
     // verify page content
     const testPage = await new EditTapOccurrenceConfirmationPage(page).verifyContent()
 
-    await expect(page.getByText('Absence rescheduled')).toBeVisible()
+    await expect(page.getByText('Absence occurrence rescheduled')).toBeVisible()
 
     await testPage.verifyLink(
       'View this occurrence',
@@ -129,7 +129,7 @@ test.describe('/temporary-absences/edit/confirmation', () => {
     // verify page content
     const testPage = await new EditTapOccurrenceConfirmationPage(page).verifyContent()
 
-    await expect(page.getByText('Absence cancelled')).toBeVisible()
+    await expect(page.getByText('Absence occurrence cancelled')).toBeVisible()
 
     await testPage.verifyLink(
       'View this temporary absence',
@@ -163,7 +163,7 @@ test.describe('/temporary-absences/edit/confirmation', () => {
     // verify page content
     const testPage = await new EditTapOccurrenceConfirmationPage(page).verifyContent()
 
-    await expect(page.getByText('Absence comments changed')).toBeVisible()
+    await expect(page.getByText('Absence occurrence comments changed')).toBeVisible()
 
     await testPage.verifyLink(
       'View this temporary absence',

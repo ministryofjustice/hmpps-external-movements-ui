@@ -9,7 +9,7 @@
 {% block innerContent %}
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Manage Temporary Absences</span>
-    <h1 class="govuk-heading-l">What dates and times will this absence occurrence start and end?</h1>
+    <h1 class="govuk-heading-l">What dates and times will this occurrence start and end?</h1>
 
     {% if repeat %}
       {{ govukInsetText({
@@ -22,7 +22,7 @@
         id: "startDate",
         name: "startDate",
         label: {
-          text: 'What date will this absence occurrence start?',
+          text: 'What date will this occurrence start?',
           classes: "govuk-fieldset__legend--m"
         },
         hint: {
@@ -41,7 +41,7 @@
         classes: 'govuk-!-static-margin-bottom-6',
         fieldset: {
           legend: {
-            text: 'What time will this absence occurrence start?',
+            text: 'What time will this occurrence start?',
             classes: "govuk-fieldset__legend--m"
           }
         },
@@ -57,7 +57,7 @@
         id: "returnDate",
         name: "returnDate",
         label: {
-          text: 'What date will this absence occurrence end?',
+          text: 'What date will this occurrence end?',
           classes: "govuk-fieldset__legend--m"
         },
         hint: {
@@ -76,7 +76,7 @@
         classes: 'govuk-!-static-margin-bottom-6',
         fieldset: {
           legend: {
-            text: 'What time will this absence occurrence end?',
+            text: 'What time will this occurrence end?',
             classes: "govuk-fieldset__legend--m"
           }
         },

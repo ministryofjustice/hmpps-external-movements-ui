@@ -4,12 +4,12 @@
 {% set pageTitle = 'Change temporary absence occurrence confirmation - Manage temporary absences' %}
 
 {% set EVENT_DESCRIPTION = {
-  'person.temporary-absence.rescheduled': 'Absence rescheduled',
-  'person.temporary-absence.comments-changed': 'Absence comments changed',
-  'person.temporary-absence.transport-changed': 'Absence transport changed',
-  'person.temporary-absence.accompaniment-changed': 'Absence accompaniment changed',
-  'person.temporary-absence.recategorised': 'Absence categorisation changed',
-  'person.temporary-absence.relocated': 'Absence location changed'
+  'person.temporary-absence.rescheduled': 'Absence occurrence rescheduled',
+  'person.temporary-absence.comments-changed': 'Absence occurrence comments changed',
+  'person.temporary-absence.transport-changed': 'Absence occurrence transport changed',
+  'person.temporary-absence.accompaniment-changed': 'Absence occurrence accompaniment changed',
+  'person.temporary-absence.recategorised': 'Absence occurrence categorisation changed',
+  'person.temporary-absence.relocated': 'Absence occurrence location changed'
 } %}
 
 {% block innerContent %}
@@ -17,7 +17,7 @@
     {% switch domainEvent %}
     {% case 'person.temporary-absence.cancelled' %}
       {{ govukPanel({
-        titleText: "Absence cancelled",
+        titleText: "Absence occurrence cancelled",
         text: ""
       }) }}
 

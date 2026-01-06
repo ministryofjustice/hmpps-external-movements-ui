@@ -12,7 +12,7 @@ export class AddTapOccurrencePage extends BaseTestPage {
   }
 
   startDateField() {
-    return this.textbox(/What date will this absence occurrence start\?/)
+    return this.textbox(/What date will this occurrence start\?/)
   }
 
   startHourField() {
@@ -24,7 +24,7 @@ export class AddTapOccurrencePage extends BaseTestPage {
   }
 
   endDateField() {
-    return this.textbox(/What date will this absence occurrence end\?/)
+    return this.textbox(/What date will this occurrence end\?/)
   }
 
   endHourField() {
