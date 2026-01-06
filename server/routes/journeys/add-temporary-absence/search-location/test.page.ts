@@ -6,13 +6,13 @@ export class SearchLocationPage extends BaseTestPage {
       pageUrl: /\/add-temporary-absence\/search-location/,
       title: 'Search for a location - Add a temporary absence - DPS',
       caption: 'Create a Temporary Absence',
-      heading: 'Search for a location where this absence will take place',
+      heading: 'Add a location for this absence',
       backUrl: /end-date/,
     })
   }
 
   searchField() {
-    return this.page.getByRole('combobox', { name: 'Search for a location where this absence will take place' }).first()
+    return this.page.getByRole('combobox', { name: 'Add a location for this absence' }).first()
   }
 
   async selectAddress(addressText: string) {

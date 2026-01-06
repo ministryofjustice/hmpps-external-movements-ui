@@ -6,13 +6,13 @@ export class EditTapOccurrenceStartEndDatesPage extends BaseTestPage {
       pageUrl: /\/temporary-absences\/edit\/start-end-dates/,
       title: 'Change occurrence start and end date and time - Manage temporary absences - DPS',
       caption: 'Manage Temporary Absences',
-      heading: 'What dates and times will this absence occurrence start and end?',
+      heading: 'What dates and times will this occurrence start and end?',
       backUrl: /\/temporary-absences\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
     })
   }
 
   startDateField() {
-    return this.textbox(/What date will this absence occurrence start\?/)
+    return this.textbox(/What date will this occurrence start\?/)
   }
 
   startHourField() {
@@ -24,7 +24,7 @@ export class EditTapOccurrenceStartEndDatesPage extends BaseTestPage {
   }
 
   endDateField() {
-    return this.textbox(/What date will this absence occurrence end\?/)
+    return this.textbox(/What date will this occurrence end\?/)
   }
 
   endHourField() {
