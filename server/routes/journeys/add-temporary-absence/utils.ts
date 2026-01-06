@@ -1,6 +1,6 @@
 import { Request } from 'express'
 import { addDays, differenceInDays, format } from 'date-fns'
-import { DayOfWeekTimeSlot, RotatingPatternInterval, ShiftPatternInterval } from '../../../@types/journeys'
+import { DayOfWeekTimeSlot, ShiftPatternInterval } from '../../../@types/journeys'
 
 export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, ResBody, ReqBody, Q>) => {
   const journey = req.journeyData.addTemporaryAbsence!
@@ -51,26 +51,6 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
       .sort((a, b) => a.start.localeCompare(b.start))
   }
 
-  if (journey.patternType === 'ROTATING') {
-    let currentDay = new Date(journey.start!)
-    const rotatingTime = iterateRotatingPattern(journey.rotatingPattern!.intervals)
-
-    while (format(currentDay, 'yyyy-MM-dd') <= journey.end!) {
-      const time = rotatingTime.next().value
-      if (time) {
-        const startDate = format(currentDay, 'yyyy-MM-dd')
-        const returnDate = time.startTime >= time.returnTime ? format(addDays(currentDay, 1), 'yyyy-MM-dd') : startDate
-        if (returnDate <= journey.end!) {
-          occurrencesToMatch.push({
-            start: `${startDate}T${time.startTime}:00`,
-            end: `${returnDate}T${time.returnTime}:00`,
-          })
-        }
-      }
-      currentDay = addDays(currentDay, 1)
-    }
-  }
-
   if (journey.patternType === 'SHIFT') {
     let currentDay = new Date(journey.start!)
     const rotatingTime = iterateShiftPattern(journey.shiftPattern!)
@@ -116,22 +96,6 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
   }
 
   return occurrencesToMatch
-}
-
-function* iterateRotatingPattern(pattern: RotatingPatternInterval[]) {
-  for (;;) {
-    for (const interval of pattern) {
-      if (interval.items) {
-        for (const item of interval.items) {
-          yield item
-        }
-      } else {
-        for (let i = 0; i < interval.count; i += 1) {
-          yield null
-        }
-      }
-    }
-  }
 }
 
 function* iterateShiftPattern(pattern: ShiftPatternInterval[]) {

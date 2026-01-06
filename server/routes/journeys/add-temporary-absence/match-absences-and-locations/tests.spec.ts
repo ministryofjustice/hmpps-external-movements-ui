@@ -115,35 +115,45 @@ test.describe('/add-temporary-absence/match-absences-and-locations', () => {
     await expect(testPage.button('Continue')).toBeVisible()
   })
 
-  test('should show options for ROTATING pattern', async ({ page }) => {
+  test('should show options for SHIFT pattern', async ({ page }) => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId, {
-      patternType: 'ROTATING',
+      patternType: 'SHIFT',
       start: '2001-01-01',
       end: '2001-01-09',
-      rotatingPattern: {
-        isSameTime: false,
-        intervals: [
-          {
-            type: 'Scheduled days',
-            count: 3,
-            items: [
-              { startTime: '10:00', returnTime: '17:00' },
-              { startTime: '11:00', returnTime: '17:00' },
-              { startTime: '12:00', returnTime: '17:00' },
-            ],
-          },
-          {
-            type: 'Scheduled nights',
-            count: 2,
-            items: [
-              { startTime: '23:00', returnTime: '04:30' },
-              { startTime: '23:00', returnTime: '05:30' },
-            ],
-          },
-          { type: 'Rest days', count: 2 },
-        ],
-      },
+      shiftPattern: [
+        {
+          type: 'DAY',
+          count: 1,
+          startTime: '10:00',
+          returnTime: '17:00',
+        },
+        {
+          type: 'DAY',
+          count: 1,
+          startTime: '11:00',
+          returnTime: '17:00',
+        },
+        {
+          type: 'DAY',
+          count: 1,
+          startTime: '12:00',
+          returnTime: '17:00',
+        },
+        {
+          type: 'NIGHT',
+          count: 1,
+          startTime: '23:00',
+          returnTime: '04:30',
+        },
+        {
+          type: 'NIGHT',
+          count: 1,
+          startTime: '23:00',
+          returnTime: '05:30',
+        },
+        { type: 'REST', count: 2 },
+      ],
     })
 
     // verify page content

@@ -69,7 +69,7 @@
       <span class="govuk-caption-l">Create a Temporary Absence</span>
       <h1 class="govuk-heading-l govuk-!-margin-bottom-7"><label for="selectedDays">Enter the days and times for these absences</label></h1>
       {{ govukInsetText({
-        html: "<span>This pattern will start on " + startDate | formatDate + " and end on "+ endDate | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="start-end-dates">Go back if you need to change these dates.</a>'
+        html: "<span>This absence pattern will repeat every week between " + startDate | formatDate + " and "+ endDate | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="start-end-dates">Go back if you need to change these dates.</a>'
       }) }}
     </div>
   </div>

@@ -1,8 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set patternTypeTitle = 'rotating pattern' if patternType === 'ROTATING' else '' %}
-{% set pageTitle = 'Check ' + patternTypeTitle + ' absences - Add a temporary absence' %}
+{% set pageTitle = 'Check absences - Add a temporary absence' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">

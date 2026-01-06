@@ -26,12 +26,8 @@ import { FreeformSelectDaysRoutes } from './select-days-and-times/routes'
 import { CheckPatternRoutes } from './check-absences/routes'
 import { SearchLocationRoutes } from './search-location/routes'
 import { SelectDaysTimesWeeklyRoutes } from './select-days-times-weekly/routes'
-import { EnterRotatingPatternRoutes } from './enter-rotating-pattern/routes'
-import { SelectSameTimesRoutes } from './select-same-times/routes'
 import { SearchLocationsRoutes } from './search-locations/routes'
 import { MatchAbsencesAndLocationsRoute } from './match-absences-and-locations/routes'
-
-import { RotatingReleaseReturnTimesRoutes } from './rotating-release-return-times/routes'
 import { EnterShiftPatternRoutes } from './enter-shift-pattern/routes'
 import { SelectDaysTimesBiWeeklyRoutes } from './select-days-times-biweekly/routes'
 import { EnterLocationRoutes } from './enter-location/routes'
@@ -92,12 +88,9 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/select-days-and-times', FreeformSelectDaysRoutes())
   router.use('/check-absences', CheckPatternRoutes())
   router.use('/select-days-times-weekly', SelectDaysTimesWeeklyRoutes())
-  router.use('/enter-rotating-pattern', EnterRotatingPatternRoutes())
-  router.use('/select-same-times', SelectSameTimesRoutes())
   router.use('/search-locations', SearchLocationsRoutes(services))
   router.use('/match-absences-and-locations', MatchAbsencesAndLocationsRoute())
 
-  router.use('/rotating-release-return-times', RotatingReleaseReturnTimesRoutes())
   router.use('/enter-shift-pattern', EnterShiftPatternRoutes())
   router.use('/select-days-times-biweekly', SelectDaysTimesBiWeeklyRoutes('FIRST'))
   router.use('/select-days-times-biweekly-continued', SelectDaysTimesBiWeeklyRoutes('SECOND'))
