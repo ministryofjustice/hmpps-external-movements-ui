@@ -4,7 +4,7 @@ import { createSchema } from '../../../../middleware/validation/validationMiddle
 const ERROR_MSG = 'Select how the occurrences of this absence will repeat'
 
 export const schema = createSchema({
-  patternType: z.enum(['FREEFORM', 'WEEKLY', 'ROTATING', 'SHIFT', 'BIWEEKLY'], { message: ERROR_MSG }),
+  patternType: z.enum(['FREEFORM', 'WEEKLY', 'SHIFT', 'BIWEEKLY'], { message: ERROR_MSG }),
 })
 
 export type SchemaType = z.infer<typeof schema>

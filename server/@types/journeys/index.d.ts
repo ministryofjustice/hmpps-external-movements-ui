@@ -70,7 +70,7 @@ export type AddTemporaryAbsenceJourney = Partial<{
   requireApproval: boolean
   start: string
   end: string
-  patternType: 'FREEFORM' | 'WEEKLY' | 'ROTATING' | 'SHIFT' | 'BIWEEKLY'
+  patternType: 'FREEFORM' | 'WEEKLY' | 'SHIFT' | 'BIWEEKLY'
   freeFormPattern: {
     startDate: string
     startTime: string
@@ -78,14 +78,6 @@ export type AddTemporaryAbsenceJourney = Partial<{
     returnTime: string
   }[]
   weeklyPattern: DayOfWeekTimeSlot[]
-  rotatingPatternSubJourney: {
-    intervals: RotatingPatternInterval[]
-    isSameTime?: boolean
-  }
-  rotatingPattern: {
-    intervals: RotatingPatternInterval[]
-    isSameTime: boolean
-  }
   shiftPattern: ShiftPatternInterval[]
   biweeklyPattern: {
     weekA: DayOfWeekTimeSlot[]
@@ -103,15 +95,6 @@ export type AddTemporaryAbsenceJourney = Partial<{
     locationIdx: number
   }[]
 }>
-
-export type RotatingPatternInterval = {
-  type: string
-  count: number
-  items?: {
-    startTime: string
-    returnTime: string
-  }[]
-}
 
 export type ShiftPatternInterval =
   | {
