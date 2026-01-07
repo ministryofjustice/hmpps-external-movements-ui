@@ -67,7 +67,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-l">Create a Temporary Absence</span>
-    <h1 class="govuk-heading-l govuk-!-margin-bottom-7"><label for="selectedDays">{{ "Week 1 of 2" if week === 'FIRST' else 'Week 2 of 2' }} : Enter the days and times for these absences</label></h1>
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-7"><label for="selectedDays">{{ "Week 1 of 2" if week === 'FIRST' else 'Week 2 of 2' }}: Enter the days and times for these absences</label></h1>
     {{ govukInsetText({
       html: "<span>The absence pattern will alternate every other week between " + startDate | formatDate + " and "+ endDate | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="start-end-dates">Go back if you need to change these dates.</a>'
     }) }}

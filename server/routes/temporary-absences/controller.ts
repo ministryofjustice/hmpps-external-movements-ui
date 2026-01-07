@@ -50,7 +50,7 @@ export class BrowseTapOccurrencesController {
         resQuery?.validated?.page ?? 1,
         searchResponse?.metadata?.totalElements ?? 0,
         results.length,
-        `?page={page}&${filterQueries}`,
+        `?page={page}&${filterQueries}&sort=${resQuery?.sort ?? 'start,asc'}`,
       )
     } catch (error: unknown) {
       res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
