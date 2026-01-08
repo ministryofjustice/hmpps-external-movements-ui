@@ -4,7 +4,7 @@ import { validateTransformOptionalDate } from '../../utils/validations/validateD
 
 export const schema = createSchema({
   searchTerm: z.string().optional(),
-  status: z.enum(['', 'SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'OVERDUE', 'EXPIRED', 'CANCELLED', 'DENIED']),
+  status: z.enum(['', 'SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'PENDING', 'OVERDUE', 'EXPIRED', 'CANCELLED', 'DENIED']),
   clear: z.string().optional(),
   start: validateTransformOptionalDate('Enter a valid start date from'),
   end: validateTransformOptionalDate('Enter a valid end date to'),
