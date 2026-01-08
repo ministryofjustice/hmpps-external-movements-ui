@@ -88,10 +88,10 @@ export default {
       url: get('EXTERNAL_MOVEMENTS_API_URL', 'http://localhost:8080', requiredInProduction),
       healthPath: '/health/ping',
       timeout: {
-        response: Number(get('EXTERNAL_MOVEMENTS_API_TIMEOUT_RESPONSE', 5000)),
-        deadline: Number(get('EXTERNAL_MOVEMENTS_API_TIMEOUT_DEADLINE', 5000)),
+        response: Number(get('EXTERNAL_MOVEMENTS_API_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('EXTERNAL_MOVEMENTS_API_TIMEOUT_DEADLINE', 10000)),
       },
-      agent: new AgentConfig(Number(get('EXTERNAL_MOVEMENTS_API_TIMEOUT_RESPONSE', 5000))),
+      agent: new AgentConfig(Number(get('EXTERNAL_MOVEMENTS_API_TIMEOUT_RESPONSE', 10000))),
     },
     prisonApi: {
       healthPath: '/health/ping',

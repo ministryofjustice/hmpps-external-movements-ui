@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { SchemaType } from '../select-days-times-weekly/schemas'
+import { SchemaType } from './schemas'
 
 export class SelectDaysTimesBiWeeklyController {
   GET = (week: 'FIRST' | 'SECOND') => async (req: Request, res: Response) => {

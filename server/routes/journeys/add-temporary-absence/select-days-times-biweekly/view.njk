@@ -67,56 +67,51 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-l">Create a Temporary Absence</span>
-    <h1 class="govuk-heading-l govuk-!-margin-bottom-7"><label for="selectedDays">{{ "Week 1" if week === 'FIRST' else 'Week 2' }} : Enter the days and times for these absences</label></h1>
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-7"><label for="selectedDays">{{ "Week 1 of 2" if week === 'FIRST' else 'Week 2 of 2' }}: Enter the days and times for these absences</label></h1>
     {{ govukInsetText({
       html: "<span>The absence pattern will alternate every other week between " + startDate | formatDate + " and "+ endDate | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="start-end-dates">Go back if you need to change these dates.</a>'
     }) }}
-  </div>
-</div>
     <form class="schedule-form" method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-        {% set dayItems = [] %}
-        {% for day in dayData %}
-            {% set dayItems = (dayItems.push({
-                text: day.day | capitalize,
-                value: day.day,
-                checked: days | contains(day.day),
-                conditional: {
-                    html: dayEntry({
-                        i: day.index,
-                        id: day.day,
-                        nextDay: day.nextDay,
-                        releaseHour: day.releaseHour,
-                        releaseMinute: day.releaseMinute,
-                        returnHour: day.returnHour,
-                        returnMinute: day.returnMinute,
-                        overnightHour: day.overnightHour,
-                        overnightMinute: day.overnightMinute,
-                        isOvernight: day.isOvernight
-                    })
-                }
-            }), dayItems) %}
-        {% endfor %}
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-        {{ govukCheckboxes({
-            name: "selectedDays",
-            errorMessage: validationErrors | findError('selectedDays'),
-            hint: {
-                text: "You can select more than one day. When entering times use the 24-hour clock. For example, 09:09 or 17:32."
-            },
-            items: dayItems
-        }) }}
-        </div>
-      </div>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      {% set dayItems = [] %}
+      {% for day in dayData %}
+        {% set dayItems = (dayItems.push({
+          text: day.day | capitalize,
+          value: day.day,
+          checked: days | contains(day.day),
+          conditional: {
+            html: dayEntry({
+              i: day.index,
+              id: day.day,
+              nextDay: day.nextDay,
+              releaseHour: day.releaseHour,
+              releaseMinute: day.releaseMinute,
+              returnHour: day.returnHour,
+              returnMinute: day.returnMinute,
+              overnightHour: day.overnightHour,
+              overnightMinute: day.overnightMinute,
+              isOvernight: day.isOvernight
+            })
+          }
+        }), dayItems) %}
+      {% endfor %}
+      {{ govukCheckboxes({
+        name: "selectedDays",
+        errorMessage: validationErrors | findError('selectedDays'),
+        hint: {
+          text: "You can select more than one day. When entering times use the 24-hour clock. For example, 09:09 or 17:32."
+        },
+        items: dayItems
+      }) }}
 
       {{ govukButton({
         text: "Continue",
         preventDoubleClick: true
       }) }}
-
-      {{ shiftPreview() }}
     </form>
+  </div>
+</div>
+  {{ shiftPreview() }}
 {% endblock %}
 
 {% block pageScripts %}
