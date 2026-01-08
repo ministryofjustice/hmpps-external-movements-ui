@@ -32,9 +32,7 @@ export class BrowseTapOccurrencesController {
             { res },
             resQuery.validated?.start ? format(resQuery.validated.start, 'yyyy-MM-dd') : null,
             resQuery.validated?.end ? format(resQuery.validated.end, 'yyyy-MM-dd') : null,
-            resQuery.validated?.status
-              ? [resQuery.validated.status]
-              : ['SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'OVERDUE', 'EXPIRED', 'CANCELLED', 'DENIED'],
+            resQuery.validated?.status ? [resQuery.validated.status] : [],
             resQuery.validated?.searchTerm?.trim() || null,
             resQuery.validated?.sort ?? 'start,asc',
             resQuery.validated?.page || 1,
