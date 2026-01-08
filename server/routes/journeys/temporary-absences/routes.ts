@@ -13,7 +13,7 @@ export const ManageTemporaryAbsenceRoutes = (services: Services) => {
       const occurrence = await services.externalMovementsService.getTapOccurrence({ res }, req.params.occurrenceId)
 
       if (!isTapOccurrenceEditable(occurrence)) {
-        res.forbidden()
+        res.conflict()
         return
       }
 

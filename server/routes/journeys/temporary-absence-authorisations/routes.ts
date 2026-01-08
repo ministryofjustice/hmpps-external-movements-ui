@@ -19,7 +19,7 @@ export const ManageTapAuthorisationRoutes = (services: Services) => {
         )
 
         if (!isTapAuthorisationEditable(authorisation)) {
-          res.forbidden()
+          res.conflict()
           return
         }
 
@@ -56,7 +56,7 @@ export const ManageTapAuthorisationRoutes = (services: Services) => {
         )
 
         if (!isTapAuthorisationEditable(authorisation)) {
-          res.forbidden()
+          res.conflict()
           return
         }
 
