@@ -59,8 +59,8 @@ export class CheckPatternController {
       })
     }
 
-    const diffFromMonthday = (new Date(req.journeyData.addTemporaryAbsence!.start!).getDay() + 6) % 7
-    const start = format(subDays(req.journeyData.addTemporaryAbsence!.start!, diffFromMonthday), 'yyyy-MM-dd')
+    const diffFromMonday = (new Date(req.journeyData.addTemporaryAbsence!.start!).getDay() + 6) % 7
+    const start = format(subDays(req.journeyData.addTemporaryAbsence!.start!, diffFromMonday), 'yyyy-MM-dd')
     const numberOfWeeks = Math.ceil((differenceInDays(req.journeyData.addTemporaryAbsence!.end!, start) + 2) / 7)
 
     return Array.from(new Array(numberOfWeeks).keys()).map(idx => {
