@@ -9,7 +9,7 @@
         html: absence.startDate | formatDate('cccc, d MMMM') if absence.startDate === absence.returnDate else (absence.startDate | formatDate('cccc, d MMMM') + ' to <br/>' + absence.returnDate | formatDate('cccc, d MMMM'))
       },
       value: {
-        html: 'Release: ' + absence.startTime + '<br/>Return: ' + absence.returnTime
+        html: 'Start time: ' + absence.startTime + '<br/>Return time: ' + absence.returnTime
       }
     }), rows) %}
   {% endfor %}

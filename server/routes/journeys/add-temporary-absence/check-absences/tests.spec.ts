@@ -82,7 +82,7 @@ test.describe('/add-temporary-absence/check-absences', () => {
           description: 'Police production',
         },
         repeat: true,
-        start: '2001-01-01',
+        start: '2001-01-02',
         end: '2001-01-17',
         patternType: 'WEEKLY',
         weeklyPattern: [
@@ -97,12 +97,19 @@ test.describe('/add-temporary-absence/check-absences', () => {
     // verify page content
     const testPage = await new CheckPatternPage(page).verifyContent()
 
-    await testPage.verifyAnswer('Monday, 1 January', /Release: 10:00(.+)?Return: 17:30/)
-    await testPage.verifyAnswer('Monday, 8 January', /Release: 10:00(.+)?Return: 17:30/)
-    await testPage.verifyAnswer('Monday, 15 January', /Release: 10:00(.+)?Return: 17:30/)
+    await expect(page.getByText('Week starting Monday, 1 January 2001')).toBeVisible()
 
-    await testPage.verifyAnswer(/Wednesday, 3 January to(.+)?Thursday, 4 January/, /Release: 23:00(.+)?Return: 04:30/)
-    await testPage.verifyAnswer(/Wednesday, 10 January to(.+)?Thursday, 11 January/, /Release: 23:00(.+)?Return: 04:30/)
+    await testPage.verifyAnswer('Monday, 8 January', /Start time: 10:00(.+)?Return time: 17:30/)
+    await testPage.verifyAnswer('Monday, 15 January', /Start time: 10:00(.+)?Return time: 17:30/)
+
+    await testPage.verifyAnswer(
+      /Wednesday, 3 January to(.+)?Thursday, 4 January/,
+      /Start time: 23:00(.+)?Return time: 04:30/,
+    )
+    await testPage.verifyAnswer(
+      /Wednesday, 10 January to(.+)?Thursday, 11 January/,
+      /Start time: 23:00(.+)?Return time: 04:30/,
+    )
     expect(await page.getByText(/Wednesday, 17 January to(.+)?Thursday, 18 January/)).toHaveCount(0)
 
     await testPage.verifyLink('Go back to change this schedule', /select-days-times-weekly/)
