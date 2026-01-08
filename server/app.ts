@@ -92,6 +92,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use((_req, res, next) => {
     res.notFound = () => res.status(404).render('pages/not-found')
+    res.forbidden = () => res.status(403).render('pages/forbidden')
     next()
   })
 

@@ -126,7 +126,7 @@
                 value: locationValue,
                 actions: { items: [{ href: baseEditUrl + "/location", text: "Change", visuallyHiddenText: "location", classes: "govuk-link--no-visited-state" }] } if not result.repeat else null
               }
-            ] | removeNullish | showChangeLinksIf(user | hasPermission('TAP', 'MANAGE'))
+            ] | removeNullish | showChangeLinksIf(user | hasPermission('TAP', 'MANAGE') and editable)
           }) }}
         {% endset -%}
 
@@ -158,7 +158,7 @@
       <div class="govuk-grid-column-two-thirds">
         <h2 class="govuk-heading-m" id="view-occurrences">{{ "View absence occurrences" if result.repeat else "View absence occurrence" }}</h2>
       </div>
-      {% if result.repeat and user | hasPermission('TAP', 'MANAGE') %}
+      {% if result.repeat and user | hasPermission('TAP', 'MANAGE') and editable %}
         <div class="govuk-summary-list govuk-summary-list__actions">
           <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/start-add-occurrence/{{ result.id }}">Add occurrence</a>
         </div>

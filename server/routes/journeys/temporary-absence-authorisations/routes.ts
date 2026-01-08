@@ -4,6 +4,7 @@ import { BaseRouter } from '../../common/routes'
 import { EditTapAuthorisationRoutes } from './edit/routes'
 import { createBackUrlFor } from '../../../middleware/history/historyMiddleware'
 import { AddTapOccurrenceRoutes } from './add-occurrence/routes'
+import { isTapAuthorisationEditable } from '../../../utils/utils'
 
 export const ManageTapAuthorisationRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -16,6 +17,12 @@ export const ManageTapAuthorisationRoutes = (services: Services) => {
           { res },
           req.params.authorisationId,
         )
+
+        if (!isTapAuthorisationEditable(authorisation)) {
+          res.forbidden()
+          return
+        }
+
         req.journeyData.updateTapAuthorisation = {
           authorisation,
           backUrl: createBackUrlFor(
@@ -47,6 +54,12 @@ export const ManageTapAuthorisationRoutes = (services: Services) => {
           { res },
           req.params.authorisationId,
         )
+
+        if (!isTapAuthorisationEditable(authorisation)) {
+          res.forbidden()
+          return
+        }
+
         req.journeyData.addTapOccurrence = {
           authorisation,
           backUrl: createBackUrlFor(

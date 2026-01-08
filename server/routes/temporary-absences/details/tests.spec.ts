@@ -115,6 +115,8 @@ test.describe('/temporary-absences/:id', () => {
     await testPage.verifyAnswer('Transport', 'Car')
     await testPage.verifyAnswer('Location', 'Random Street, UK')
 
+    await expect(testPage.link('Change comments (Absence information)')).toBeVisible()
+
     await expect(testPage.link('Create a new absence for Prisoner-Name Prisoner-Surname')).toBeVisible()
     await expect(testPage.button('Cancel this occurrence')).toBeVisible()
     await expect(testPage.link('View all occurrences of this absence')).toHaveCount(0)
@@ -195,6 +197,8 @@ test.describe('/temporary-absences/:id', () => {
     await testPage.verifyAnswer('Transport', 'Car')
     await testPage.verifyAnswer('Location', 'Random Street, UK')
 
+    await expect(testPage.link('Change comments (Absence information)')).toHaveCount(0)
+
     await expect(testPage.link('Create a new absence for Prisoner-Name Prisoner-Surname')).toBeVisible()
     await expect(testPage.button('Cancel this occurrence')).toHaveCount(0)
     await expect(testPage.link('View all occurrences of this absence')).toBeVisible()
@@ -211,7 +215,9 @@ test.describe('/temporary-absences/:id', () => {
     // verify page content
     const testPage = await new TapOccurrenceDetailsPage(page).verifyContent()
 
+    await expect(testPage.link('Change comments (Absence information)')).toHaveCount(0)
     await expect(testPage.link('Create a new absence for Prisoner-Name Prisoner-Surname')).toHaveCount(0)
     await expect(testPage.button('Cancel this occurrence')).toHaveCount(0)
+    await expect(testPage.link('Add occurrence')).toHaveCount(0)
   })
 })

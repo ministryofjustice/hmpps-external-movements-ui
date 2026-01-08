@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { HTTPError } from 'superagent'
 import ExternalMovementsService from '../../../services/apis/externalMovementsService'
-import { getApiUserErrorMessage } from '../../../utils/utils'
+import { getApiUserErrorMessage, isTapAuthorisationEditable, isTapOccurrenceEditable } from '../../../utils/utils'
 import { parseAuditHistory } from '../../../utils/parseAuditHistory'
 
 export class TapOccurrenceDetailsController {
@@ -28,6 +28,8 @@ export class TapOccurrenceDetailsController {
         result: occurrence.authorisation,
         occurrence,
         auditedActions: parseAuditHistory(history.content.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt))),
+        editable: isTapOccurrenceEditable(occurrence),
+        authorisationEditable: isTapAuthorisationEditable(occurrence.authorisation),
       })
     } catch (error: unknown) {
       res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }

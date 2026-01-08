@@ -3,6 +3,7 @@ import { Services } from '../../../services'
 import { BaseRouter } from '../../common/routes'
 import { createBackUrlFor } from '../../../middleware/history/historyMiddleware'
 import { EditTapOccurrenceRoutes } from './edit/routes'
+import { isTapOccurrenceEditable } from '../../../utils/utils'
 
 export const ManageTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -10,6 +11,12 @@ export const ManageTemporaryAbsenceRoutes = (services: Services) => {
   get('/start-edit/:occurrenceId/:property', async (req: Request<{ occurrenceId: string; property: string }>, res) => {
     try {
       const occurrence = await services.externalMovementsService.getTapOccurrence({ res }, req.params.occurrenceId)
+
+      if (!isTapOccurrenceEditable(occurrence)) {
+        res.forbidden()
+        return
+      }
+
       const authorisation = await services.externalMovementsService.getTapAuthorisation(
         { res },
         occurrence.authorisation.id,
