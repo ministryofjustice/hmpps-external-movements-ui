@@ -121,6 +121,8 @@ test.describe('/temporary-absence-authorisations/:id', () => {
 
     await testPage.verifyTableRow(1, ['Monday, 1 January at 10:00', 'Monday, 1 January at 17:30', /To be reviewed/])
 
+    await expect(testPage.link('Change comments (Absence information)')).toBeVisible()
+
     await expect(testPage.button('Review this absence')).toBeVisible()
     await expect(testPage.button('Cancel this absence')).toHaveCount(0)
 
@@ -207,6 +209,45 @@ test.describe('/temporary-absence-authorisations/:id', () => {
 
     await expect(testPage.button('Review this absence')).toHaveCount(0)
     await expect(testPage.button('Cancel this absence')).toBeVisible()
+  })
+
+  test('should show temporary absence details for DENIED absence', async ({ page }) => {
+    await signIn(page)
+
+    const authorisationId = uuidV4()
+    await stubGetTapAuthorisation({
+      ...testTapAuthorisation,
+      id: authorisationId,
+      status: { code: 'DENIED', description: 'Denied' },
+      absenceType: { code: 'PP', description: 'Police production' },
+      repeat: false,
+      start: '2001-01-01',
+      end: '2001-01-01',
+      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      transport: { code: 'CAR', description: 'Car' },
+      locations: [{ uprn: 1001, description: 'Random Street, UK' }],
+      occurrences: [
+        {
+          id: 'occurrence-id',
+          status: { code: 'PENDING', description: 'To be reviewed' },
+          start: '2001-01-01T10:00:00',
+          end: '2001-01-01T17:30:00',
+          location: { uprn: 1001, description: 'Random Street, UK' },
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+          transport: { code: 'CAR', description: 'Car' },
+        },
+      ],
+    })
+    await stubGetTapAuthorisationHistory(authorisationId, { content: [] })
+
+    await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
+
+    // verify page content
+    const testPage = await new TapAuthorisationDetailsPage(page).verifyContent()
+
+    await expect(testPage.link('Change comments (Absence information)')).toHaveCount(0)
+    await expect(testPage.button('Review this absence')).toHaveCount(0)
+    await expect(testPage.button('Cancel this absence')).toHaveCount(0)
   })
 
   test('should show temporary absence details for repeating absence', async ({ page }) => {

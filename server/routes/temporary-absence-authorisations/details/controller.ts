@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import type { HTTPError } from 'superagent'
 import { getAuthorisationAndPopulatePrisonerDetails } from '../utils'
 import { ResQuerySchemaType } from './schema'
-import { getApiUserErrorMessage } from '../../../utils/utils'
+import { getApiUserErrorMessage, isTapAuthorisationEditable } from '../../../utils/utils'
 import ExternalMovementsService from '../../../services/apis/externalMovementsService'
 import { parseAuditHistory } from '../../../utils/parseAuditHistory'
 
@@ -30,6 +30,7 @@ export class TapAuthorisationDetailsController {
         dateFrom,
         dateTo,
         auditedActions: parseAuditHistory(history.content.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt))),
+        editable: isTapAuthorisationEditable(authorisation),
       })
     } catch (error: unknown) {
       res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
