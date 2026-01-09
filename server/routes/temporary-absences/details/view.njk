@@ -105,7 +105,7 @@
                 value: { text: occurrence.location | formatAddress },
                 actions: { items: [{ href: baseEditUrl + "/location", text: "Change", visuallyHiddenText: "address" }] }
               }
-            ] | removeNullish | showChangeLinksIf(user | hasPermission('TAP', 'MANAGE'))
+            ] | removeNullish | showChangeLinksIf(user | hasPermission('TAP', 'MANAGE') and editable)
           }) }}
         {% endset -%}
 
@@ -137,7 +137,7 @@
       <p>
         <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}">View all occurrences of this absence</a>
       </p>
-      {% if user | hasPermission('TAP', 'MANAGE') %}
+      {% if user | hasPermission('TAP', 'MANAGE') and authorisationEditable %}
         <p>
           <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/start-add-occurrence/{{ result.id }}">Add occurrence</a>
         </p>

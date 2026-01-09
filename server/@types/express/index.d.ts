@@ -33,6 +33,7 @@ export declare global {
 
     interface Response {
       notFound(): void
+      conflict(): void
       getPageViewEvent(isAttempt: boolean): AuditEvent
       setAuditDetails: {
         prisonNumber(prisonNumber: string): void

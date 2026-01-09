@@ -135,3 +135,9 @@ export const parseAddress = (location: Address) => ({
   ...(location.id ? { uprn: location.id } : {}),
   ...(location.postcode ? { postcode: location.postcode } : {}),
 })
+
+export const isTapAuthorisationEditable = ({ status }: { status: { code: string } }) =>
+  ['PENDING', 'APPROVED'].includes(status.code)
+
+export const isTapOccurrenceEditable = ({ status }: { status: { code: string } }) =>
+  ['PENDING', 'SCHEDULED', 'IN_PROGRESS', 'OVERDUE'].includes(status.code)
