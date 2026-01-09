@@ -2,12 +2,15 @@ import { expect, test } from '@playwright/test'
 import auth from '../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../integration_tests/steps/signIn'
-import { stubSearchTapAuthorisation } from '../../../integration_tests/mockApis/externalMovementsApi'
+import {
+  stubGetAllAbsenceTypes,
+  stubSearchTapAuthorisation,
+} from '../../../integration_tests/mockApis/externalMovementsApi'
 import { BrowseTapAuthorisationsPage } from './test.page'
 
 test.describe('/temporary-absence-authorisations', () => {
   test.beforeAll(async () => {
-    await Promise.all([auth.stubSignIn(), componentsApi.stubComponents()])
+    await Promise.all([auth.stubSignIn(), componentsApi.stubComponents(), stubGetAllAbsenceTypes({ items: [] })])
   })
 
   test.beforeEach(async ({ page }) => {
@@ -67,7 +70,9 @@ test.describe('/temporary-absence-authorisations', () => {
         },
       ],
     })
-    await page.goto(`/temporary-absence-authorisations?searchTerm=test&start=01/01/2001&end=02/01/2001&status=&page=2`)
+    await page.goto(
+      `/temporary-absence-authorisations?searchTerm=test&start=01/01/2001&end=02/01/2001&page=2&status=APPROVED`,
+    )
 
     // verify page content
     const testPage = await new BrowseTapAuthorisationsPage(page).verifyContent()
@@ -79,27 +84,24 @@ test.describe('/temporary-absence-authorisations', () => {
     await expect(testPage.startDateField()).toHaveValue('01/01/2001')
     await expect(testPage.endDateField()).toBeVisible()
     await expect(testPage.endDateField()).toHaveValue('02/01/2001')
-    await expect(testPage.statusDropdown()).toBeVisible()
-    await expect(testPage.statusDropdown()).toHaveValue('')
+    await expect(testPage.statusCheckbox()).toBeChecked()
 
     // verify search results are rendered
     await expect(page.getByText('Showing 26 to 27 of 27 results')).toHaveCount(2)
     await testPage.verifyTableRow(1, [
       /Prisoner-Name Prisoner-Surname(.*)A9965EA/,
+      '1 January 2001',
+      '1 January 2001',
       'Restricted ROTL (Release on Temporary Licence)',
-      'Paid work',
       'Single',
-      '1 January 2001',
-      '1 January 2001',
       'Approved',
     ])
     await testPage.verifyTableRow(2, [
       /Another Name(.*)A9965EB/,
-      'Police production',
-      'None',
-      'Repeating (12 occurrences)',
       '2 January 2001',
       '1 March 2001',
+      'Police production',
+      'Repeating (12 occurrences)',
       'To be reviewed',
     ])
 

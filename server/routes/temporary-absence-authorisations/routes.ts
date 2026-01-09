@@ -11,7 +11,23 @@ export const BrowseTapAuthorisationsRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
   const controller = new BrowseTapAuthorisationsController(externalMovementsService)
 
-  get('/', validateOnGET(schema, 'searchTerm', 'start', 'end', 'status', 'page', 'sort'), controller.GET)
+  get(
+    '/',
+    validateOnGET(
+      schema,
+      'searchTerm',
+      'start',
+      'end',
+      'status',
+      'page',
+      'sort',
+      'type',
+      'subType',
+      'reason',
+      'workType',
+    ),
+    controller.GET,
+  )
   get(
     '/:id',
     validateOnGET(detailsSchema, 'dateFrom', 'dateTo'),

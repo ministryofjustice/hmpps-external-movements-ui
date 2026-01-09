@@ -2,13 +2,16 @@ import { expect, test } from '@playwright/test'
 import auth from '../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../integration_tests/steps/signIn'
-import { stubSearchTapOccurrence } from '../../../integration_tests/mockApis/externalMovementsApi'
+import {
+  stubGetAllAbsenceTypes,
+  stubSearchTapOccurrence,
+} from '../../../integration_tests/mockApis/externalMovementsApi'
 import { BrowseTapOccurrencesPage } from './test.page'
 import { testTapOccurrenceResult } from '../../../integration_tests/data/testData'
 
 test.describe('/temporary-absences', () => {
   test.beforeAll(async () => {
-    await Promise.all([auth.stubSignIn(), componentsApi.stubComponents()])
+    await Promise.all([auth.stubSignIn(), componentsApi.stubComponents(), stubGetAllAbsenceTypes({ items: [] })])
   })
 
   test.beforeEach(async ({ page }) => {
@@ -32,8 +35,7 @@ test.describe('/temporary-absences', () => {
     await expect(testPage.startDateField()).toHaveValue('01/01/2001')
     await expect(testPage.endDateField()).toBeVisible()
     await expect(testPage.endDateField()).toHaveValue('02/01/2001')
-    await expect(testPage.statusDropdown()).toBeVisible()
-    await expect(testPage.statusDropdown()).toHaveValue('SCHEDULED')
+    await expect(testPage.statusCheckbox()).toBeChecked()
 
     // verify search results are rendered
     await expect(page.getByText('Showing 26 to 26 of 26 results')).toHaveCount(2)
@@ -43,8 +45,6 @@ test.describe('/temporary-absences', () => {
       '1 January 2001 at 17:30',
       'Restricted ROTL (Release on Temporary Licence)',
       'Random Street, UK',
-      'Unaccompanied',
-      'Car',
       'Scheduled',
     ])
 

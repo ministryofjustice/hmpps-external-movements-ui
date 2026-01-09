@@ -7,6 +7,8 @@ import { ResQuerySchemaType } from './schema'
 import { components } from '../../@types/externalMovements'
 import { getApiUserErrorMessage } from '../../utils/utils'
 import { setPaginationLocals } from '../../views/partials/simplePagination/utils'
+import { absenceCategorisationMapper } from '../common/utils'
+import { getAbsenceCategorisationsFullSet } from './utils'
 
 export class BrowseTapAuthorisationsController {
   constructor(readonly externalMovementsService: ExternalMovementsService) {}
@@ -15,31 +17,45 @@ export class BrowseTapAuthorisationsController {
 
   GET = async (_req: Request, res: Response) => {
     const resQuery = res.locals['query'] as ResQuerySchemaType
+    if (resQuery) {
+      if (!resQuery.status) {
+        resQuery.status = []
+      } else if (!Array.isArray(resQuery.status)) {
+        resQuery.status = [resQuery.status]
+      }
+    }
+
     const filterQueries = [
       `searchTerm=${resQuery?.searchTerm ?? ''}`,
       `start=${resQuery?.start ?? ''}`,
       `end=${resQuery?.end ?? ''}`,
-      `status=${resQuery?.status ?? ''}`,
+      `type=${resQuery?.type ?? ''}`,
+      `subType=${resQuery?.subType ?? ''}`,
+      `reason=${resQuery?.reason ?? ''}`,
+      `workType=${resQuery?.workType ?? ''}`,
+      ...(resQuery?.status?.map(itm => `status=${itm}`) ?? []),
     ].join('&')
 
     const hasValidationError =
       Object.keys(resQuery).find(key => ['searchTerm', 'start', 'end', 'status'].includes(key)) && !resQuery.validated
+    const missingDateRange = !resQuery?.validated?.start || !resQuery?.validated?.end
 
     let results: components['schemas']['TapAuthorisationResult'][] = []
 
     try {
-      const searchResponse = !hasValidationError
-        ? await this.externalMovementsService.searchTapAuthorisations(
-            { res },
-            resQuery.validated?.start ? format(resQuery.validated.start, 'yyyy-MM-dd') : null,
-            resQuery.validated?.end ? format(resQuery.validated.end, 'yyyy-MM-dd') : null,
-            resQuery.validated?.status ? [resQuery.validated.status] : [],
-            resQuery.validated?.searchTerm?.trim() || null,
-            resQuery.validated?.sort ?? 'start,asc',
-            resQuery.validated?.page || 1,
-            this.PAGE_SIZE,
-          )
-        : undefined
+      const searchResponse =
+        !hasValidationError && !missingDateRange
+          ? await this.externalMovementsService.searchTapAuthorisations(
+              { res },
+              resQuery.validated?.start ? format(resQuery.validated.start, 'yyyy-MM-dd') : null,
+              resQuery.validated?.end ? format(resQuery.validated.end, 'yyyy-MM-dd') : null,
+              resQuery.validated?.status ?? [],
+              resQuery.validated?.searchTerm?.trim() || null,
+              resQuery.validated?.sort ?? 'start,asc',
+              resQuery.validated?.page || 1,
+              this.PAGE_SIZE,
+            )
+          : undefined
       results = searchResponse?.content ?? []
 
       setPaginationLocals(
@@ -54,16 +70,30 @@ export class BrowseTapAuthorisationsController {
       res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
     }
 
+    const { types, subTypes, reasonCategories, reasons } = await getAbsenceCategorisationsFullSet(
+      this.externalMovementsService,
+      res,
+    )
+
     res.render('temporary-absence-authorisations/view', {
       showBreadcrumbs: true,
       searchTerm: resQuery?.searchTerm,
       start: resQuery?.start,
       end: resQuery?.end,
       status: resQuery?.status,
+      type: !resQuery?.workType && !resQuery?.reason && !resQuery?.subType && resQuery?.type,
+      subType: !resQuery?.workType && !resQuery?.reason && resQuery?.subType,
+      reason: !resQuery?.workType && resQuery?.reason,
+      workType: resQuery?.workType,
       results,
       filterQueries,
       sort: resQuery?.sort ?? 'start,asc',
       hasValidationError,
+      missingDateRange,
+      types: types.map(absenceCategorisationMapper),
+      subTypes: subTypes.map(absenceCategorisationMapper),
+      reasons: reasonCategories.map(absenceCategorisationMapper),
+      workTypes: reasons.map(absenceCategorisationMapper),
     })
   }
 }
