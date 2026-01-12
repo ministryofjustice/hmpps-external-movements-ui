@@ -33,14 +33,14 @@ export const validateDateBase = (missingDateErrorMsg: string, invalidDateErrorMs
 type DateChecker = (date: Date) => boolean
 
 export const validateTransformDate = (
-  checker: DateChecker,
+  checker: DateChecker | null,
   missingDateErrorMsg: string,
   invalidDateErrorMsg: string,
-  checkFailErrorMsg: string,
+  checkFailErrorMsg: string = '',
 ) => {
   return validateDateBase(missingDateErrorMsg, invalidDateErrorMsg)
     .check(ctx => {
-      if (!checker(ctx.value)) {
+      if (checker && !checker(ctx.value)) {
         ctx.issues.push({ code: 'custom', message: checkFailErrorMsg, input: ctx.value })
       }
     })

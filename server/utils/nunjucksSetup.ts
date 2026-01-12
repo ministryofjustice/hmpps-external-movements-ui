@@ -133,4 +133,5 @@ export default function nunjucksSetup(app: express.Express): void {
         SHIFT: 'Repeat in a shift-type pattern',
       })[type],
   )
+  njkEnv.addFilter('prependEmptyOption', (list: object[], text: string = '') => [{ value: '', text }, ...list])
 }

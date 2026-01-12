@@ -22,7 +22,7 @@ export class BrowseTapOccurrencesPage extends BaseTestPage {
     return this.textbox('End date to')
   }
 
-  statusDropdown() {
-    return this.dropdown('Absence status')
+  statusCheckbox() {
+    return this.checkbox('Scheduled')
   }
 }
