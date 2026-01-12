@@ -68,10 +68,8 @@ const getSentAuditEvents = async (): Promise<object[]> => {
   })
 }
 
-const getApiBody = async (urlPattern: string): Promise<object[]> => {
-  const wiremockApiResponse: Response = await superagent
-    .post(`${adminUrl}/requests/find`)
-    .send({ method: 'POST', urlPattern })
+const getApiBody = async (urlPattern: string, method: string = 'POST'): Promise<object[]> => {
+  const wiremockApiResponse: Response = await superagent.post(`${adminUrl}/requests/find`).send({ method, urlPattern })
 
   return (wiremockApiResponse.body || '[]').requests.map((itm: { body?: string }) => {
     return itm.body ? JSON.parse(itm.body) : undefined

@@ -1,0 +1,75 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set pageTitle = 'Enter the location of this absence - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <h1 class="govuk-heading-l">Enter the location of this absence</h1>
+
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukInput({
+        id: "description",
+        name: "description",
+        label: { text: "Business or organisation name (optional)" },
+        classes: 'govuk-!-width-two-thirds',
+        errorMessage: validationErrors | findError('description'),
+        value: description,
+        attributes: { autocomplete: "organization" }
+      }) }}
+      {{ govukInput({
+        id: "line1",
+        name: "line1",
+        label: { text: "Address line 1 (optional)" },
+        classes: 'govuk-!-width-two-thirds',
+        errorMessage: validationErrors | findError('line1'),
+        value: line1,
+        attributes: { autocomplete: "address-line1" }
+      }) }}
+      {{ govukInput({
+        id: "line2",
+        name: "line2",
+        label: { text: "Address line 2 (optional)" },
+        classes: 'govuk-!-width-two-thirds',
+        errorMessage: validationErrors | findError('line2'),
+        value: line2,
+        attributes: { autocomplete: "address-line2" }
+      }) }}
+      {{ govukInput({
+        id: "city",
+        name: "city",
+        label: { text: "Town or city" },
+        classes: 'govuk-!-width-one-half',
+        errorMessage: validationErrors | findError('city'),
+        value: city,
+        attributes: { autocomplete: "address-level2" }
+      }) }}
+      {{ govukInput({
+        id: "county",
+        name: "county",
+        label: { text: "County (optional)" },
+        classes: 'govuk-!-width-one-half',
+        errorMessage: validationErrors | findError('county'),
+        value: county,
+        attributes: { autocomplete: "address-level1" }
+      }) }}
+      {{ govukInput({
+        id: "postcode",
+        name: "postcode",
+        label: { text: "Postcode (optional)" },
+        classes: 'govuk-!-width-one-third',
+        errorMessage: validationErrors | findError('postcode'),
+        value: postcode,
+        attributes: { autocomplete: "postal-code" }
+      }) }}
+
+      {{ govukButton({
+        text: "Confirm and save",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}
