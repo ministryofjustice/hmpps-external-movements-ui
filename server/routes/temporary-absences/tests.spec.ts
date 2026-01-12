@@ -38,7 +38,7 @@ test.describe('/temporary-absences', () => {
     await expect(testPage.statusCheckbox()).toBeChecked()
 
     // verify search results are rendered
-    await expect(page.getByText('Showing 26 to 26 of 26 results')).toHaveCount(2)
+    await expect(page.getByText('Showing 26 to 26 of 26 total results')).toHaveCount(2)
     await testPage.verifyTableRow(1, [
       /Prisoner-Name Prisoner-Surname(.*)A9965EA/,
       '1 January 2001 at 10:00',
