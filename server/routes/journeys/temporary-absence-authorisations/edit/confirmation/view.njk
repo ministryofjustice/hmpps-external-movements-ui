@@ -33,7 +33,7 @@
       </p>
 
       <p class="govuk-body">
-        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?start=&end=&status=">View all temporary absences in {{ user.activeCaseLoad.description }}</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?start=&end=">View all temporary absences in {{ user.activeCaseLoad.description }}</a>
       </p>
     {% case 'person.temporary-absence-authorisation.denied' %}
       {{ govukPanel({
@@ -50,7 +50,7 @@
       </p>
 
       <p class="govuk-body">
-        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?start=&end=&status=">View all temporary absences in {{ user.activeCaseLoad.description }}</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?start=&end=">View all temporary absences in {{ user.activeCaseLoad.description }}</a>
       </p>
     {% case 'person.temporary-absence-authorisation.cancelled' %}
       {{ govukPanel({
@@ -59,7 +59,7 @@
       }) }}
 
       <p class="govuk-body">
-        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?start=&end=&status=">View all temporary absences in {{ user.activeCaseLoad.description }}</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?start=&end=">View all temporary absences in {{ user.activeCaseLoad.description }}</a>
       </p>
 
       <p class="govuk-body">
@@ -76,7 +76,7 @@
       </p>
 
       <p class="govuk-body">
-        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?start=&end=&status=">View all temporary absences in {{ user.activeCaseLoad.description }}</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?start=&end=">View all temporary absences in {{ user.activeCaseLoad.description }}</a>
       </p>
     {% endswitch %}
   </div>

@@ -20,6 +20,7 @@ generic-service:
     ENVIRONMENT_NAME: PRE-PRODUCTION
     SENTRY_ENVIRONMENT: PRE-PRODUCTION
     AUDIT_ENABLED: "false"
+    REFERENCE_DATA_CACHE_TIMEOUT: 3600
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-alerts-api-non-prod

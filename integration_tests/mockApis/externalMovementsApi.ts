@@ -114,11 +114,11 @@ export const stubSearchTapAuthorisation = (
     response,
   })
 
-export const stubGetAllAbsenceTypes = () =>
+export const stubGetAllAbsenceTypes = (response: object = testAbsenceTypes) =>
   successStub({
     method: 'GET',
     urlPattern: '/external-movements-api/absence-categorisation/ABSENCE_TYPE',
-    response: testAbsenceTypes,
+    response,
   })
 
 export const stubGetReferenceData = (domain: string) =>

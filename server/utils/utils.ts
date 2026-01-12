@@ -86,9 +86,15 @@ export const setSelectedValue = (items: SelectOption[] | null, selected: string 
   return items.map(entry => ({ ...entry, selected: entry && entry.value === selected }))
 }
 
-export const setCheckedValue = (items: SelectOption[] | null, selected: string | number): SelectOption[] | null => {
+export const setCheckedValue = (
+  items: SelectOption[] | null,
+  selected: (string | number)[] | (string | number),
+): SelectOption[] | null => {
   if (!items) return null
-  return items.map(entry => ({ ...entry, checked: entry && entry.value === selected }))
+  return items.map(entry => ({
+    ...entry,
+    checked: entry && Array.isArray(selected) ? selected.includes(entry.value) : entry.value === selected,
+  }))
 }
 
 export const fromRefData = (items: components['schemas']['CodedDescription'][]) => {

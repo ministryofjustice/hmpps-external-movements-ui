@@ -5,6 +5,7 @@ import config from '../../config'
 import logger from '../../../logger'
 import { components } from '../../@types/externalMovements'
 import { parseQueryParams } from '../../utils/utils'
+import CacheInterface from '../../data/cache/cacheInterface'
 
 export type UpdateTapAuthorisation =
   | components['schemas']['ChangeAuthorisationComments']
@@ -33,7 +34,16 @@ export type UpdateTapOccurrence =
 export default class ExternalMovementsService {
   private externalMovementsApiClient: CustomRestClient
 
-  constructor(authenticationClient: AuthenticationClient) {
+  private categorisationCache: CacheInterface<components['schemas']['AbsenceCategorisations']>
+
+  private referenceDataCache: CacheInterface<components['schemas']['ReferenceDataResponse']>
+
+  private readonly REFERENCE_DATA_CACHE_TIMEOUT = Number(process.env['REFERENCE_DATA_CACHE_TIMEOUT'] ?? 600)
+
+  constructor(
+    authenticationClient: AuthenticationClient,
+    cacheStore: (prefix: string) => CacheInterface<components['schemas']['AbsenceCategorisations']>,
+  ) {
     this.externalMovementsApiClient = new CustomRestClient(
       'External Movements API',
       config.apis.externalMovementsApi,
@@ -49,12 +59,26 @@ export default class ExternalMovementsService {
         return undefined
       },
     )
+    this.categorisationCache = cacheStore('categorisation')
+    this.referenceDataCache = cacheStore('reference-data')
   }
 
   async getAllAbsenceTypes(context: ApiRequestContext) {
-    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['AbsenceCategorisations']>({
-      path: '/absence-categorisation/ABSENCE_TYPE',
-    })
+    const cacheKey = 'TOP'
+    const cached = await this.categorisationCache.get(cacheKey)
+    if (cached) {
+      return cached
+    }
+
+    const result = await this.externalMovementsApiClient
+      .withContext(context)
+      .get<components['schemas']['AbsenceCategorisations']>({
+        path: '/absence-categorisation/ABSENCE_TYPE',
+      })
+
+    await this.categorisationCache.set(cacheKey, result, this.REFERENCE_DATA_CACHE_TIMEOUT)
+
+    return result
   }
 
   async getAbsenceCategories(
@@ -62,9 +86,21 @@ export default class ExternalMovementsService {
     parentDomain: 'ABSENCE_TYPE' | 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY',
     parentCode: string,
   ) {
-    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['AbsenceCategorisations']>({
-      path: `/absence-categorisation/${parentDomain}/${parentCode}`,
-    })
+    const cacheKey = `${parentDomain}.${parentCode}`
+    const cached = await this.categorisationCache.get(cacheKey)
+    if (cached) {
+      return cached
+    }
+
+    const result = await this.externalMovementsApiClient
+      .withContext(context)
+      .get<components['schemas']['AbsenceCategorisations']>({
+        path: `/absence-categorisation/${parentDomain}/${parentCode}`,
+      })
+
+    await this.categorisationCache.set(cacheKey, result, this.REFERENCE_DATA_CACHE_TIMEOUT)
+
+    return result
   }
 
   async createTap(
@@ -79,11 +115,20 @@ export default class ExternalMovementsService {
   }
 
   async getReferenceData(context: ApiRequestContext, domain: string) {
-    return (
-      await this.externalMovementsApiClient.withContext(context).get<components['schemas']['ReferenceDataResponse']>({
+    const cached = await this.categorisationCache.get(domain)
+    if (cached) {
+      return cached.items
+    }
+
+    const result = await this.externalMovementsApiClient
+      .withContext(context)
+      .get<components['schemas']['ReferenceDataResponse']>({
         path: `/reference-data/${domain}`,
       })
-    ).items
+
+    await this.referenceDataCache.set(domain, result, this.REFERENCE_DATA_CACHE_TIMEOUT)
+
+    return result.items
   }
 
   async getTapOverview(context: ApiRequestContext) {

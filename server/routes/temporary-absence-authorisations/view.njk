@@ -7,6 +7,8 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
 {% from "partials/simplePagination/macro.njk" import simplePagination %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set fullWidth = true %}
 {% set pageTitle = 'Manage temporary absences - Manage temporary absences' %}
@@ -20,11 +22,13 @@
       </div>
     </div>
 
-    <div class="block-background govuk-!-padding-6 govuk-!-margin-bottom-7 search-form">
-        <form method="GET">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        <form class="hmpps-side-filter" method="GET">
           {{ hiddenInputs(query | getQueryEntries(['history'])) }}
           <input type="hidden" name="page" value="1"/>
-          <div class="horizontal-form govuk-!-margin-bottom-2">
+          <h2 class="hmpps-side-filter__header">Filter</h2>
+          <div class="hmpps-side-filter__content">
             {{ govukInput({
               name: 'searchTerm',
               classes: "moj-search__input",
@@ -42,7 +46,7 @@
               },
               value: start,
               errorMessage: validationErrors | findError('start'),
-              classes: 'hmpps-datepicker--fixed-width govuk-body moj-search__input'
+              classes: 'hmpps-datepicker--fixed-width'
             }) }}
 
             {{ mojDatePicker({
@@ -53,136 +57,198 @@
               },
               value: end,
               errorMessage: validationErrors | findError('end'),
-              classes: 'hmpps-datepicker--fixed-width govuk-body moj-search__input'
+              classes: 'hmpps-datepicker--fixed-width'
+            }) }}
+
+            {{ govukDetails({
+              summaryHtml: '<strong>Absence status</strong>',
+              open: true,
+              html:govukCheckboxes({
+                fieldset: {
+                  legend: {
+                    text: "Absence status",
+                    classes: "govuk-visually-hidden"
+                  }
+                },
+                id: "status",
+                name: "status",
+                classes: "govuk-checkboxes--small",
+                items: [
+                  {
+                    value: 'PENDING',
+                    text: "To be reviewed"
+                  },
+                  {
+                    value: 'APPROVED',
+                    text: "Approved"
+                  },
+                  {
+                    value: 'EXPIRED',
+                    text: 'Expired'
+                  },
+                  {
+                    value: 'CANCELLED',
+                    text: "Cancelled"
+                  },
+                  {
+                    value: 'DENIED',
+                    text: "Denied"
+                  }
+                ] | setCheckedValue(status or ''),
+                errorMessage: validationErrors | findError('status')
+              })
             }) }}
 
             {{ govukSelect({
               label: {
-                text: "Absence status"
+                text: "Absence type"
               },
-              id: "status",
-              name: "status",
-              items: [
-                {
-                  value: '',
-                  text: "All"
-                },
-                {
-                  value: 'PENDING',
-                  text: "To be reviewed"
-                },
-                {
-                  value: 'APPROVED',
-                  text: "Approved"
-                },
-                {
-                  value: 'EXPIRED',
-                  text: 'Expired'
-                },
-                {
-                  value: 'CANCELLED',
-                  text: "Cancelled"
-                },
-                {
-                  value: 'DENIED',
-                  text: "Denied"
-                }
-              ] | setSelectedValue(status or ''),
-              errorMessage: validationErrors | findError('status')
+              id: "type",
+              name: "type",
+              items: types | prependEmptyOption | setSelectedValue(type or ''),
+              errorMessage: validationErrors | findError('type')
             }) }}
-          </div>
 
-          <div class="horizontal-form">
+            {{ govukSelect({
+              label: {
+                text: "Absence sub-type"
+              },
+              id: "subType",
+              name: "subType",
+              items: subTypes | prependEmptyOption | setSelectedValue(subType or ''),
+              errorMessage: validationErrors | findError('subType')
+            }) }}
+
+            {{ govukSelect({
+              label: {
+                text: "Absence reason"
+              },
+              id: "reason",
+              name: "reason",
+              items: reasons | prependEmptyOption | setSelectedValue(reason or ''),
+              errorMessage: validationErrors | findError('reason')
+            }) }}
+
+            {{ govukSelect({
+              label: {
+                text: "Work type"
+              },
+              id: "workType",
+              name: "workType",
+              items: workTypes | prependEmptyOption | setSelectedValue(workType or ''),
+              errorMessage: validationErrors | findError('workType')
+            }) }}
+
             {{ govukButton({
               text: "Apply filters",
               preventDoubleClick: true
             }) }}
 
-            <a class="govuk-link govuk-link--no-visited-state govuk-body no-label-form-clear-link" href="?clear=true">Clear</a>
+            <p><a class="govuk-link govuk-link--no-visited-state" href="?clear=true">Clear</a></p>
           </div>
         </form>
+      </div>
+      <div class="govuk-grid-column-three-quarters">
+        {% if hasValidationError %}
+          <p class="govuk-!-margin-bottom-6"><strong>Enter a valid filter to search and view temporary absences.</strong></p>
+        {% elseif missingDateRange %}
+          <p class="govuk-!-margin-bottom-6"><strong>Enter a date range to search and view temporary absences.</strong></p>
+        {% elseif not results.length %}
+          <p class="govuk-!-margin-bottom-6"><strong>No temporary absence authorisations match your search.</strong></p>
+        {% else %}
+          {% set rows = [] %}
+          {% for authorisation in results %}
+            {% set rows = (rows.push([
+              {
+                html: '<a class="govuk-link--no-visited-state" href="/temporary-absence-authorisations/' + authorisation.id + '">' + authorisation.person | firstNameSpaceLastName + "</a><br/>" + authorisation.person.personIdentifier
+              },
+              {
+                text: authorisation.start | formatDate
+              },
+              {
+                text: authorisation.end | formatDate
+              },
+              {
+                text: authorisation.absenceType.description
+              },
+              {
+                text: ('Repeating (' + authorisation.occurrenceCount + ' occurrence' + (')' if authorisation.occurrenceCount === 1 else 's)')) if authorisation.repeat else 'Single'
+              },
+              {
+                html: absenceStatusTag(authorisation)
+              }
+            ]), rows) %}
+          {% endfor %}
+
+          {{ simplePagination(paginationParams) }}
+
+          {{ govukTable({
+            firstCellIsHeader: false,
+            classes: 'table-vertical-align-middle govuk-!-margin-top-6 sortable-table',
+            head: [
+              {
+                text: "Name and prison number",
+                key: 'lastName'
+              },
+              {
+                text: "Start date",
+                key: 'start'
+              },
+              {
+                text: "End date",
+                key: 'end'
+              },
+              {
+                text: 'Absence type'
+              },
+              {
+                text: 'Single or repeating'
+              },
+              {
+                text: 'Status'
+              }
+            ] | convertToSortableColumns(sort or 'start,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
+            rows: rows
+          }) }}
+
+          {{ simplePagination(paginationParams) }}
+        {% endif %}
+      </div>
     </div>
-
-    {% if hasValidationError %}
-      <p class="govuk-!-margin-bottom-6"><strong>Enter a valid filter to search and view temporary absences.</strong></p>
-    {% elseif not results.length %}
-      <p class="govuk-!-margin-bottom-6"><strong>No temporary absence authorisations match your search.</strong></p>
-    {% else %}
-      {% set rows = [] %}
-      {% for authorisation in results %}
-        {% set rows = (rows.push([
-          {
-            html: '<a class="govuk-link--no-visited-state" href="' + prisonerProfileUrl + '/prisoner/' + authorisation.person.personIdentifier + '">' + authorisation.person | firstNameSpaceLastName + "</a><br/>" + authorisation.person.personIdentifier
-          },
-          {
-            text: authorisation.absenceType.description
-          },
-          {
-            text: authorisation.absenceReasonCategory.description or authorisation.absenceReason.description or 'None'
-          },
-          {
-            text: ('Repeating (' + authorisation.occurrenceCount + ' occurrence' + (')' if authorisation.occurrenceCount === 1 else 's)')) if authorisation.repeat else 'Single'
-          },
-          {
-            text: authorisation.start | formatDate
-          },
-          {
-            text: authorisation.end | formatDate
-          },
-          {
-            html: absenceStatusTag(authorisation)
-          },
-          {
-            classes: 'govuk-link govuk-link--no-visited-state',
-            html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/' + authorisation.id + '">View<span class="govuk-visually-hidden"> absence authorisation for ' + authorisation.person | firstNameSpaceLastName + '</span></a>',
-            format: "numeric"
-          }
-        ]), rows) %}
-      {% endfor %}
-
-      {{ simplePagination(paginationParams) }}
-
-      {{ govukTable({
-        firstCellIsHeader: false,
-        classes: 'table-vertical-align-middle govuk-!-margin-top-6 sortable-table',
-        head: [
-          {
-            text: "Name and prison number",
-            key: 'lastName'
-          },
-          {
-            text: 'Absence type',
-            key: 'absenceType'
-          },
-          {
-            text: 'Absence reason',
-            key: 'absenceReason'
-          },
-          {
-            text: 'Single or repeating absence',
-            key: 'repeat'
-          },
-          {
-            text: "Start date",
-            key: 'start'
-          },
-          {
-            text: "End date",
-            key: 'end'
-          },
-          {
-            text: 'Status',
-            key: 'status'
-          },
-          {
-            text: "",
-            format: "numeric"
-          }
-        ] | convertToSortableColumns(sort or 'start,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
-        rows: rows
-      }) }}
-
-      {{ simplePagination(paginationParams) }}
-    {% endif %}
   </div>
+{% endblock %}
+
+{% block pageScripts %}
+  <script nonce="{{ cspNonce }}">
+    window.onload = function () {
+      document.querySelector('select[name=type]').addEventListener('change', evt => {
+        if (evt.target.value) {
+          document.querySelector('select[name=subType]').value = ''
+          document.querySelector('select[name=reason]').value = ''
+          document.querySelector('select[name=workType]').value = ''
+        }
+      })
+      document.querySelector('select[name=subType]').addEventListener('change', evt => {
+        if (evt.target.value) {
+          document.querySelector('select[name=type]').value = ''
+          document.querySelector('select[name=reason]').value = ''
+          document.querySelector('select[name=workType]').value = ''
+        }
+      })
+      document.querySelector('select[name=reason]').addEventListener('change', evt => {
+        if (evt.target.value) {
+          document.querySelector('select[name=type]').value = ''
+          document.querySelector('select[name=subType]').value = ''
+          document.querySelector('select[name=workType]').value = ''
+        }
+      })
+      document.querySelector('select[name=workType]').addEventListener('change', evt => {
+        if (evt.target.value) {
+          document.querySelector('select[name=type]').value = ''
+          document.querySelector('select[name=subType]').value = ''
+          document.querySelector('select[name=reason]').value = ''
+        }
+      })
+    }
+  </script>
 {% endblock %}
