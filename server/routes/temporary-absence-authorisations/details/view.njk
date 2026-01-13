@@ -124,7 +124,7 @@
               {
                 key: { text: "Location" if result.locations.length === 1 else "Locations" },
                 value: locationValue,
-                actions: { items: [{ href: baseEditUrl + "/location", text: "Change", visuallyHiddenText: "location", classes: "govuk-link--no-visited-state" }] } if not result.repeat else null
+                actions: { items: [{ href: "/temporary-absences/start-edit/" + result.occurrences[0].id + "/location", text: "Change", visuallyHiddenText: "location", classes: "govuk-link--no-visited-state" }] } if not result.repeat else null
               }
             ] | removeNullish | showChangeLinksIf(user | hasPermission('TAP', 'MANAGE') and editable)
           }) }}

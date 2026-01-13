@@ -126,6 +126,13 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await expect(testPage.button('Review this absence')).toBeVisible()
     await expect(testPage.button('Cancel this absence')).toHaveCount(0)
 
+    // verify short-cut change link for occurrence's location
+    await expect(testPage.link('Change location')).toBeVisible()
+    await expect(testPage.link('Change location')).toHaveAttribute(
+      'href',
+      /\/temporary-absences\/start-edit\/occurrence-id\/location/,
+    )
+
     // verify history tab
     await testPage.clickTab('Absence history')
 
@@ -317,6 +324,8 @@ test.describe('/temporary-absence-authorisations/:id', () => {
 
     await expect(testPage.button('Review this absence')).toBeVisible()
     await expect(testPage.button('Cancel this absence')).toHaveCount(0)
+
+    await expect(testPage.link('Change location')).toHaveCount(0)
   })
 
   test('should not show cancel button for view only user', async ({ page }) => {
