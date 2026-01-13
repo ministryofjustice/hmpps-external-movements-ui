@@ -55,9 +55,6 @@ export type AddTemporaryAbsenceJourney = Partial<{
   startTime: string
   returnDate: string
   returnTime: string
-  confirmLocationSubJourney: {
-    location: Address
-  }
   location: Address
   locations: Address[]
   accompaniedSubJourney: {

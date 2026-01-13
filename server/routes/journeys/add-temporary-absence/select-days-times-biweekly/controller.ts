@@ -49,6 +49,9 @@ export class SelectDaysTimesBiWeeklyController {
   }
 
   POST = (week: 'FIRST' | 'SECOND') => async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
+    // break check-answers bounce back routing if new pattern is submitted
+    delete req.journeyData.isCheckAnswers
+
     if (week === 'FIRST') {
       req.journeyData.addTemporaryAbsence!.biweeklyPattern!.weekA = req.body
       res.redirect('select-days-times-biweekly-continued')

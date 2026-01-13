@@ -33,6 +33,9 @@ export class EnterShiftPatternController {
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
+    // break check-answers bounce back routing if new pattern is submitted
+    delete req.journeyData.isCheckAnswers
+
     req.journeyData.addTemporaryAbsence!.shiftPattern = req.body.items.map(
       ({ count, type, startTimeHour, startTimeMinute, returnTimeHour, returnTimeMinute }) =>
         type === 'REST'

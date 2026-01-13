@@ -34,6 +34,9 @@ export class FreeformSelectDaysController {
   POST = async (req: Request<{ idx?: string }, unknown, SchemaType>, res: Response) => {
     const { startDate: start, endDate: end, nextIdx } = getSelectDayRange(req)
     if (req.body.save !== undefined) {
+      // break check-answers bounce back routing if new pattern is submitted
+      delete req.journeyData.isCheckAnswers
+
       req.journeyData.addTemporaryAbsence!.freeFormPattern ??= []
 
       req.journeyData.addTemporaryAbsence!.freeFormPattern =

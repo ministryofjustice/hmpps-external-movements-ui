@@ -10,6 +10,16 @@
     <span class="govuk-caption-l">Create a Temporary Absence</span>
     <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Check this information before saving this absence</h1>
 
+    {% if repeat %}
+      {{ govukInsetText({
+        text: "These details can still be changed after you have saved this absence. You can also add additional occurrences to this absence or remove them."
+      }) }}
+    {% else %}
+      {{ govukInsetText({
+        text: "These details can still be changed after you have saved this absence."
+      }) }}
+    {% endif %}
+
     <h2 class="govuk-heading-m">Absence information</h2>
     {{ govukSummaryList({
       classes: "govuk-!-margin-bottom-7",
@@ -394,16 +404,6 @@
         }
       ]
     }) }}
-
-    {% if repeat %}
-      {{ govukInsetText({
-        text: "These details can still be changed after you have saved this absence. You can also add additional occurrences to this absence or remove them."
-      }) }}
-    {% else %}
-      {{ govukInsetText({
-        text: "These details can still be changed after you have saved this absence."
-      }) }}
-    {% endif %}
 
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
