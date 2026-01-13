@@ -63,8 +63,11 @@ export class AddTapFlowControl {
         saveCategorySubJourney(req)
       }
       if (data.repeat !== undefined) {
+        if (journey.repeat === data.repeat) return 'check-answers'
         journey.repeat = data.repeat
-        // TODO: implement correct sub-journey flow for repeating answer
+        // break check-answers bounce back routing, and resume normal journey flow
+        delete req.journeyData.isCheckAnswers
+        return data.repeat ? 'start-end-dates' : 'start-date'
       }
       if (data.startDate && data.startTime) {
         if (`${data.startDate}${data.startTime}` >= `${journey.returnDate}${journey.returnTime}`) {
@@ -89,17 +92,12 @@ export class AddTapFlowControl {
       if (data.location) {
         journey.location = data.location
       }
-      if (data.confirmLocationSubJourney) {
-        if (journey.confirmLocationSubJourney) {
-          journey.location = journey.confirmLocationSubJourney.location
-          delete journey.confirmLocationSubJourney
-        }
-      }
       if (data.accompanied !== undefined) {
         if (data.accompanied && !journey.accompaniedBy) {
           journey.accompaniedSubJourney = { accompanied: data.accompanied }
           return 'accompanied'
         }
+        delete journey.accompaniedSubJourney
         journey.accompanied = data.accompanied
       }
       if (data.accompaniedBy) {
@@ -177,18 +175,12 @@ export class AddTapFlowControl {
       journey.location = data.location
       return 'accompanied-or-unaccompanied'
     }
-    if (data.confirmLocationSubJourney) {
-      if (journey.confirmLocationSubJourney) {
-        journey.location = journey.confirmLocationSubJourney.location
-        delete journey.confirmLocationSubJourney
-      }
-      return 'accompanied-or-unaccompanied'
-    }
     if (data.accompanied !== undefined) {
       if (data.accompanied) {
         journey.accompaniedSubJourney = { accompanied: data.accompanied }
         return 'accompanied'
       }
+      delete journey.accompaniedSubJourney
       journey.accompanied = data.accompanied
       return 'transport'
     }
@@ -225,7 +217,55 @@ export class AddTapFlowControl {
 
     // Check answers flow
     if (req.journeyData.isCheckAnswers) {
-      // TODO: add check answer flow
+      if (data.repeat !== undefined) {
+        if (journey.repeat === data.repeat) return 'check-answers'
+        journey.repeat = data.repeat
+        // break check-answers bounce back routing, and resume normal journey flow
+        delete req.journeyData.isCheckAnswers
+        return data.repeat ? 'start-end-dates' : 'start-date'
+      }
+
+      if (data.start && data.end) {
+        if (journey.start === data.start && journey.end === data.end) return 'check-answers'
+        // break check-answers bounce back routing, and resume normal journey flow
+        delete req.journeyData.isCheckAnswers
+      }
+
+      if (data.patternType) {
+        if (journey.patternType === data.patternType) return 'check-answers'
+        // break check-answers bounce back routing, and resume normal journey flow
+        delete req.journeyData.isCheckAnswers
+      }
+
+      if (data.accompanied !== undefined) {
+        if (data.accompanied && !journey.accompaniedBy) {
+          journey.accompaniedSubJourney = { accompanied: data.accompanied }
+          return 'accompanied'
+        }
+        delete journey.accompaniedSubJourney
+        journey.accompanied = data.accompanied
+        return 'check-answers'
+      }
+      if (data.accompaniedBy) {
+        if (journey.accompaniedSubJourney) {
+          journey.accompanied = journey.accompaniedSubJourney.accompanied
+          delete journey.accompaniedSubJourney
+        }
+        journey.accompaniedBy = data.accompaniedBy
+        return 'check-answers'
+      }
+      if (data.transport) {
+        journey.transport = data.transport
+        return 'check-answers'
+      }
+      if (data.comments !== undefined) {
+        journey.comments = data.comments
+        return 'check-answers'
+      }
+      if (data.requireApproval !== undefined) {
+        journey.requireApproval = data.requireApproval
+        return 'check-answers'
+      }
     }
 
     // Normal flow
@@ -272,6 +312,7 @@ export class AddTapFlowControl {
         journey.accompaniedSubJourney = { accompanied: data.accompanied }
         return 'accompanied'
       }
+      delete journey.accompaniedSubJourney
       journey.accompanied = data.accompanied
       return 'transport'
     }

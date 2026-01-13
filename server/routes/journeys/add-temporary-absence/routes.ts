@@ -97,6 +97,23 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   return router
 }
 
+const checkRepeatAbsencesFilled = (req: Request) => {
+  const journey = req.journeyData.addTemporaryAbsence!
+  if (!journey.patternType) return '/repeating-pattern'
+  switch (journey.patternType) {
+    case 'WEEKLY':
+      return journey.weeklyPattern ? undefined : '/select-days-times-weekly'
+    case 'BIWEEKLY':
+      return journey.biweeklyPattern ? undefined : '/select-days-times-biweekly'
+    case 'SHIFT':
+      return journey.shiftPattern ? undefined : '/enter-shift-pattern'
+    case 'FREEFORM':
+      return journey.freeFormPattern ? undefined : '/select-days-and-times'
+    default:
+      return undefined
+  }
+}
+
 const get = (req: Request, category: string, key: keyof AddTemporaryAbsenceJourney) => {
   // @ts-expect-error category is known
   return req.journeyData.addTemporaryAbsence?.[category]?.[key] || req.journeyData.addTemporaryAbsence?.[key]
@@ -155,12 +172,15 @@ const guard = {
   'start-date': (req: Request) => (get(req, '', 'repeat') === undefined ? '/single-or-repeating' : undefined),
   'end-date': (req: Request) => (get(req, 'startDateTimeSubJourney', 'startDate') ? undefined : '/start-date'),
   'search-location': (req: Request) => (get(req, '', 'returnDate') ? undefined : '/end-date'),
-  'enter-location': (req: Request) =>
-    req.journeyData.addTemporaryAbsence!.repeat || get(req, '', 'returnDate') ? undefined : '/end-date',
-  'confirm-location': (req: Request) =>
-    get(req, 'confirmLocationSubJourney', 'location') ? undefined : '/search-location',
-  'accompanied-or-unaccompanied': (req: Request) =>
-    get(req, '', 'repeat') || get(req, '', 'location') ? undefined : '/search-location',
+  'enter-location': (req: Request) => {
+    if (req.journeyData.addTemporaryAbsence!.repeat) return checkRepeatAbsencesFilled(req)
+    return get(req, '', 'returnDate') ? undefined : '/end-date'
+  },
+  'accompanied-or-unaccompanied': (req: Request) => {
+    if (req.journeyData.addTemporaryAbsence!.repeat)
+      return get(req, '', 'occurrences') ? undefined : '/match-absences-and-locations'
+    return get(req, '', 'location') ? undefined : '/search-location'
+  },
   accompanied: (req: Request) =>
     get(req, 'accompaniedSubJourney', 'accompanied') ? undefined : '/accompanied-or-unaccompanied',
   transport: (req: Request) => {
@@ -168,10 +188,29 @@ const guard = {
       return get(req, 'accompaniedSubJourney', 'accompaniedBy') ? undefined : '/accompanied'
     }
 
-    return get(req, 'accompaniedSubJourney', 'accompanied') === false ? undefined : '/accompanied-or-unaccompanied'
+    return req.journeyData.addTemporaryAbsence!.accompanied === false ||
+      req.journeyData.addTemporaryAbsence!.accompaniedSubJourney?.accompanied === false
+      ? undefined
+      : '/accompanied-or-unaccompanied'
   },
   comments: (req: Request) => (get(req, '', 'transport') ? undefined : '/transport'),
   approval: (req: Request) => (get(req, '', 'comments') !== undefined ? undefined : '/comments'),
   'check-answers': (req: Request) => (get(req, '', 'requireApproval') !== undefined ? undefined : '/approval'),
   confirmation: (req: Request) => (req.journeyData.journeyCompleted ? undefined : '/check-answers'),
+
+  'start-end-dates': (req: Request) => (get(req, '', 'repeat') === undefined ? '/single-or-repeating' : undefined),
+  'repeating-pattern': (req: Request) =>
+    get(req, '', 'start') === undefined || get(req, '', 'end') === undefined ? '/start-end-dates' : undefined,
+  'select-days-and-times': (req: Request) =>
+    get(req, '', 'patternType') === undefined ? '/repeating-pattern' : undefined,
+  'select-days-times-weekly': (req: Request) =>
+    get(req, '', 'patternType') === undefined ? '/repeating-pattern' : undefined,
+  'select-days-times-biweekly': (req: Request) =>
+    get(req, '', 'patternType') === undefined ? '/repeating-pattern' : undefined,
+  'enter-shift-pattern': (req: Request) =>
+    get(req, '', 'patternType') === undefined ? '/repeating-pattern' : undefined,
+  'check-absences': checkRepeatAbsencesFilled,
+  'search-locations': checkRepeatAbsencesFilled,
+  'match-absences-and-locations': (req: Request) =>
+    req.journeyData.addTemporaryAbsence!.locations?.length ? undefined : '/search-locations',
 }

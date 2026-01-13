@@ -10,7 +10,6 @@ export class AddTapCheckAnswersController {
     req.journeyData.isCheckAnswers = true
     delete req.journeyData.addTemporaryAbsence!.categorySubJourney
     delete req.journeyData.addTemporaryAbsence!.startDateTimeSubJourney
-    delete req.journeyData.addTemporaryAbsence!.confirmLocationSubJourney
     delete req.journeyData.addTemporaryAbsence!.accompaniedSubJourney
 
     res.render('add-temporary-absence/check-answers/view', {

@@ -45,6 +45,9 @@ export class SelectDaysTimesWeeklyController {
   }
 
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
+    // break check-answers bounce back routing if new pattern is submitted
+    delete req.journeyData.isCheckAnswers
+
     req.journeyData.addTemporaryAbsence!.weeklyPattern = req.body
     res.redirect('check-absences')
   }
