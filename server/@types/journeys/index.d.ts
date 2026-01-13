@@ -126,6 +126,7 @@ export type UpdateTapOccurrenceJourney = {
   startTime: string
   returnDate: string
   returnTime: string
+  locationOption: number | 'NEW'
   location: Address
   transport: components['schemas']['CodedDescription']
   comments: string

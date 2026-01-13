@@ -1,0 +1,60 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set pageTitle = 'Select location for occurrence - Manage temporary absences' %}
+
+{% set options = [] %}
+{% for location in authorisation.locations %}
+  {% set options = (options.push(
+    {
+      value: loop.index0 | string,
+      text: location | formatAddress
+    }
+  ), options) %}
+{% endfor %}
+  {% set options = (options.push(
+    {
+      value: 'NEW',
+      text: 'None of the above, add a new location for this occurrence'
+    }
+  ), options) %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukRadios({
+        name: "locationOption",
+        errorMessage: validationErrors | findError('locationOption'),
+        fieldset: {
+          legend: {
+            text: "Where will this occurrence take place?",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--xl"
+          }
+        },
+        items: options | setCheckedValue(locationOption)
+      }) }}
+
+      {{ govukButton({
+        classes: 'submit-button',
+        text: "Continue" if locationOption === 'NEW' else 'Confirm and save',
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}
+
+{% block pageScripts %}
+<script nonce="{{ cspNonce }}">
+  window.onload = function () {
+    Array.from(document.querySelectorAll('input[name=locationOption]')).map(radio => {
+      radio.addEventListener('change', evt => {
+        document.querySelector('.submit-button').innerHTML = evt.target.value === 'NEW'? 'Continue': 'Confirm and save'
+      })
+    })
+  }
+</script>
+{% endblock %}
