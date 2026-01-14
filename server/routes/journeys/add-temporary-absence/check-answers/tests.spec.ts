@@ -108,10 +108,10 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await testPage.verifyLink('Change absence reason', /reason-category/)
     await testPage.verifyLink('Change work type', /reason$/)
 
-    await testPage.verifyLink('Change start date', /start-date#startDate/)
-    await testPage.verifyLink('Change start time', /start-date#startTimeHour/)
-    await testPage.verifyLink('Change end date', /end-date#returnDate/)
-    await testPage.verifyLink('Change end time', /end-date#returnTimeHour/)
+    await testPage.verifyLink('Change start date', /start-end-dates-and-times#startDate/)
+    await testPage.verifyLink('Change start time', /start-end-dates-and-times#startTimeHour/)
+    await testPage.verifyLink('Change end date', /start-end-dates-and-times#returnDate/)
+    await testPage.verifyLink('Change end time', /start-end-dates-and-times#returnTimeHour/)
 
     await testPage.verifyLink(/Change location$/, /search-location/)
     await testPage.verifyLink(
@@ -178,10 +178,10 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await expect(testPage.link('Change absence sub-type')).toHaveCount(0)
     await expect(testPage.link('Change absence reason')).toHaveCount(0)
 
-    await testPage.verifyLink('Change start date', /start-date#startDate/)
-    await testPage.verifyLink('Change start time', /start-date#startTimeHour/)
-    await testPage.verifyLink('Change end date', /end-date#returnDate/)
-    await testPage.verifyLink('Change end time', /end-date#returnTimeHour/)
+    await testPage.verifyLink('Change start date', /start-end-dates-and-times#startDate/)
+    await testPage.verifyLink('Change start time', /start-end-dates-and-times#startTimeHour/)
+    await testPage.verifyLink('Change end date', /start-end-dates-and-times#returnDate/)
+    await testPage.verifyLink('Change end time', /start-end-dates-and-times#returnTimeHour/)
 
     await testPage.verifyLink(/Change location$/, /search-location/)
     await testPage.verifyLink(

@@ -3,14 +3,48 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
 
-{% set pageTitle = 'Enter absence end date and time - Add a temporary absence' %}
+{% set pageTitle = 'Enter absence dates and times - Add a temporary absence' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Create a Temporary Absence</span>
-    <h1 class="govuk-heading-l">Add absence details</h1>
+    <h1 class="govuk-heading-l">Enter the absence start and end dates and times</h1>
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ mojDatePicker({
+        id: "startDate",
+        name: "startDate",
+        label: {
+          text: 'What date will ' + prisonerDetails | firstNameSpaceLastName | possessiveComma + ' absence start?',
+          classes: "govuk-fieldset__legend--m"
+        },
+        hint: {
+          text: 'For example, 17/5/2024.'
+        },
+        value: startDate,
+        errorMessage: validationErrors | findError('startDate'),
+        classes: 'hmpps-datepicker--fixed-width govuk-body',
+        minDate: inputDate()
+      }) }}
+
+      {{ validatedTimeInput({
+        id: "startTime",
+        name: "startTime",
+        classes: 'govuk-!-static-margin-bottom-6',
+        fieldset: {
+          legend: {
+            text: 'What time will ' + prisonerDetails | firstNameSpaceLastName | possessiveComma + ' absence start?',
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        hint: {
+          text: 'Use the 24-hour clock. For example, 09 08 or 17 32.'
+        },
+        validationErrors: validationErrors,
+        hour: startTimeHour,
+        minute: startTimeMinute
+      }) }}
+
       {{ mojDatePicker({
         id: "returnDate",
         name: "returnDate",
@@ -24,7 +58,7 @@
         value: returnDate,
         errorMessage: validationErrors | findError('returnDate'),
         classes: 'hmpps-datepicker--fixed-width govuk-body',
-        minDate: startDate | formatInputDate
+        minDate: inputDate()
       }) }}
 
       {{ validatedTimeInput({

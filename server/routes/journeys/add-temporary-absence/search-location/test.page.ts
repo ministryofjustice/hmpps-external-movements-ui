@@ -7,7 +7,7 @@ export class SearchLocationPage extends BaseTestPage {
       title: 'Search for a location - Add a temporary absence - DPS',
       caption: 'Create a Temporary Absence',
       heading: 'Add a location for this absence',
-      backUrl: /end-date/,
+      backUrl: /start-end-dates-and-times/,
     })
   }
 

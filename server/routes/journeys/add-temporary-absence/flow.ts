@@ -67,25 +67,11 @@ export class AddTapFlowControl {
         journey.repeat = data.repeat
         // break check-answers bounce back routing, and resume normal journey flow
         delete req.journeyData.isCheckAnswers
-        return data.repeat ? 'start-end-dates' : 'start-date'
+        return data.repeat ? 'start-end-dates' : 'start-end-dates-and-times'
       }
-      if (data.startDate && data.startTime) {
-        if (`${data.startDate}${data.startTime}` >= `${journey.returnDate}${journey.returnTime}`) {
-          journey.startDateTimeSubJourney = {
-            startDate: data.startDate,
-            startTime: data.startTime,
-          }
-          return 'end-date'
-        }
+      if (data.startDate && data.startTime && data.returnDate && data.returnTime) {
         journey.startDate = data.startDate
         journey.startTime = data.startTime
-      }
-      if (data.returnDate && data.returnTime) {
-        if (journey.startDateTimeSubJourney) {
-          journey.startDate = journey.startDateTimeSubJourney.startDate
-          journey.startTime = journey.startDateTimeSubJourney.startTime
-          delete journey.startDateTimeSubJourney
-        }
         journey.returnDate = data.returnDate
         journey.returnTime = data.returnTime
       }
@@ -152,21 +138,11 @@ export class AddTapFlowControl {
     }
     if (data.repeat !== undefined) {
       journey.repeat = data.repeat
-      return data.repeat ? 'start-end-dates' : 'start-date'
+      return data.repeat ? 'start-end-dates' : 'start-end-dates-and-times'
     }
-    if (data.startDate && data.startTime) {
-      journey.startDateTimeSubJourney = {
-        startDate: data.startDate,
-        startTime: data.startTime,
-      }
-      return 'end-date'
-    }
-    if (data.returnDate && data.returnTime) {
-      if (journey.startDateTimeSubJourney) {
-        journey.startDate = journey.startDateTimeSubJourney.startDate
-        journey.startTime = journey.startDateTimeSubJourney.startTime
-        delete journey.startDateTimeSubJourney
-      }
+    if (data.startDate && data.startTime && data.returnDate && data.returnTime) {
+      journey.startDate = data.startDate
+      journey.startTime = data.startTime
       journey.returnDate = data.returnDate
       journey.returnTime = data.returnTime
       return 'search-location'
