@@ -84,7 +84,7 @@ test.describe('/add-temporary-absence/start-end-dates', () => {
     await testPage.endField().fill(`3/3/${nextYear}`)
     await testPage.clickContinue()
 
-    await testPage.link('Last return date must be later than first start date').click()
+    await testPage.link('Return date must be later than the start date').click()
     await expect(testPage.endField()).toBeFocused()
 
     await testPage.startField().fill(`1/1/${nextYear}`)
