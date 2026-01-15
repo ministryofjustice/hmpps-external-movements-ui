@@ -67,25 +67,11 @@ export class AddTapFlowControl {
         journey.repeat = data.repeat
         // break check-answers bounce back routing, and resume normal journey flow
         delete req.journeyData.isCheckAnswers
-        return data.repeat ? 'start-end-dates' : 'start-date'
+        return data.repeat ? 'start-end-dates' : 'start-end-dates-and-times'
       }
-      if (data.startDate && data.startTime) {
-        if (`${data.startDate}${data.startTime}` >= `${journey.returnDate}${journey.returnTime}`) {
-          journey.startDateTimeSubJourney = {
-            startDate: data.startDate,
-            startTime: data.startTime,
-          }
-          return 'end-date'
-        }
+      if (data.startDate && data.startTime && data.returnDate && data.returnTime) {
         journey.startDate = data.startDate
         journey.startTime = data.startTime
-      }
-      if (data.returnDate && data.returnTime) {
-        if (journey.startDateTimeSubJourney) {
-          journey.startDate = journey.startDateTimeSubJourney.startDate
-          journey.startTime = journey.startDateTimeSubJourney.startTime
-          delete journey.startDateTimeSubJourney
-        }
         journey.returnDate = data.returnDate
         journey.returnTime = data.returnTime
       }
@@ -152,21 +138,11 @@ export class AddTapFlowControl {
     }
     if (data.repeat !== undefined) {
       journey.repeat = data.repeat
-      return data.repeat ? 'start-end-dates' : 'start-date'
+      return data.repeat ? 'start-end-dates' : 'start-end-dates-and-times'
     }
-    if (data.startDate && data.startTime) {
-      journey.startDateTimeSubJourney = {
-        startDate: data.startDate,
-        startTime: data.startTime,
-      }
-      return 'end-date'
-    }
-    if (data.returnDate && data.returnTime) {
-      if (journey.startDateTimeSubJourney) {
-        journey.startDate = journey.startDateTimeSubJourney.startDate
-        journey.startTime = journey.startDateTimeSubJourney.startTime
-        delete journey.startDateTimeSubJourney
-      }
+    if (data.startDate && data.startTime && data.returnDate && data.returnTime) {
+      journey.startDate = data.startDate
+      journey.startTime = data.startTime
       journey.returnDate = data.returnDate
       journey.returnTime = data.returnTime
       return 'search-location'
@@ -217,6 +193,38 @@ export class AddTapFlowControl {
 
     // Check answers flow
     if (req.journeyData.isCheckAnswers) {
+      if (data.absenceType) {
+        if (data.absenceType.code === journey.absenceType?.code) return 'check-answers'
+        updateCategorySubJourney(req, 'ABSENCE_TYPE', data.absenceType)
+        if (!data.absenceType.nextDomain) {
+          saveCategorySubJourney(req)
+          return 'check-answers'
+        }
+        return getUrlForNextDomain(data.absenceType.nextDomain)
+      }
+      if (data.absenceSubType) {
+        if (data.absenceSubType.code === journey.absenceSubType?.code) return 'check-answers'
+        updateCategorySubJourney(req, 'ABSENCE_SUB_TYPE', data.absenceSubType)
+        if (!data.absenceSubType.nextDomain) {
+          saveCategorySubJourney(req)
+          return 'check-answers'
+        }
+        return getUrlForNextDomain(data.absenceSubType.nextDomain)
+      }
+      if (data.reasonCategory) {
+        if (data.reasonCategory.code === journey.reasonCategory?.code) return 'check-answers'
+        updateCategorySubJourney(req, 'ABSENCE_REASON_CATEGORY', data.reasonCategory)
+        if (!data.reasonCategory.nextDomain) {
+          saveCategorySubJourney(req)
+          return 'check-answers'
+        }
+        return getUrlForNextDomain(data.reasonCategory.nextDomain)
+      }
+      if (data.reason) {
+        updateCategorySubJourney(req, 'ABSENCE_REASON', data.reason)
+        saveCategorySubJourney(req)
+        return 'check-answers'
+      }
       if (data.repeat !== undefined) {
         if (journey.repeat === data.repeat) return 'check-answers'
         journey.repeat = data.repeat
@@ -269,6 +277,36 @@ export class AddTapFlowControl {
     }
 
     // Normal flow
+    if (data.absenceType) {
+      updateCategorySubJourney(req, 'ABSENCE_TYPE', data.absenceType)
+      if (!data.absenceType.nextDomain) {
+        saveCategorySubJourney(req)
+        return 'single-or-repeating'
+      }
+      return getUrlForNextDomain(data.absenceType.nextDomain)
+    }
+    if (data.absenceSubType) {
+      updateCategorySubJourney(req, 'ABSENCE_SUB_TYPE', data.absenceSubType)
+      if (!data.absenceSubType.nextDomain) {
+        saveCategorySubJourney(req)
+        return 'single-or-repeating'
+      }
+      return getUrlForNextDomain(data.absenceSubType.nextDomain)
+    }
+    if (data.reasonCategory) {
+      updateCategorySubJourney(req, 'ABSENCE_REASON_CATEGORY', data.reasonCategory)
+      if (!data.reasonCategory.nextDomain) {
+        saveCategorySubJourney(req)
+        return 'single-or-repeating'
+      }
+      return getUrlForNextDomain(data.reasonCategory.nextDomain)
+    }
+    if (data.reason) {
+      updateCategorySubJourney(req, 'ABSENCE_REASON', data.reason)
+      saveCategorySubJourney(req)
+      return 'single-or-repeating'
+    }
+
     if (data.repeat !== undefined) {
       journey.repeat = data.repeat
       return data.repeat ? 'start-end-dates' : 'start-date'

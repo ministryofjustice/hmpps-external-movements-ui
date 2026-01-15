@@ -18,8 +18,7 @@ import { AbsenceSubTypePage } from './absence-subtype/test.page'
 import { ReasonCategoryPage } from './reason-category/test.page'
 import { AbsenceReasonPage } from './reason/test.page'
 import { SingleOrRepeatingPage } from './single-or-repeating/test.page'
-import { StartDatePage } from './start-date/test.page'
-import { EndDatePage } from './end-date/test.page'
+import { StartEndDatesTimesPage } from './start-end-dates-and-times/test.page'
 import { AccompaniedOrUnaccompaniedPage } from './accompanied-or-unaccompanied/test.page'
 import { AccompaniedPage } from './accompanied/test.page'
 import { TransportPage } from './transport/test.page'
@@ -234,22 +233,16 @@ test.describe('/add-temporary-absence/e2e', () => {
       await singleOrRepeatingPage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/start-date/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/start-end-dates-and-times/)
 
-      const startDatePage = new StartDatePage(page)
+      const startDatePage = new StartEndDatesTimesPage(page)
       await startDatePage.dateField().fill('10/10/2069')
       await startDatePage.hourField().fill('12')
       await startDatePage.minuteField().fill('30')
+      await startDatePage.endDateField().fill('11/10/2069')
+      await startDatePage.endHourField().fill('12')
+      await startDatePage.endMinuteField().fill('30')
       await startDatePage.clickContinue()
-
-      await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/end-date/)
-
-      const endDatePage = new EndDatePage(page)
-      await endDatePage.dateField().fill('11/10/2069')
-      await endDatePage.hourField().fill('12')
-      await endDatePage.minuteField().fill('30')
-      await endDatePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
       expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/search-location/)
@@ -327,21 +320,16 @@ test.describe('/add-temporary-absence/e2e', () => {
     await singleOrRepeatingPage.singleRadio().click()
     await singleOrRepeatingPage.clickContinue()
 
-    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/start-date/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/start-end-dates-and-times/)
 
-    const startDatePage = new StartDatePage(page)
+    const startDatePage = new StartEndDatesTimesPage(page)
     await startDatePage.dateField().fill('10/10/2069')
     await startDatePage.hourField().fill('12')
     await startDatePage.minuteField().fill('30')
+    await startDatePage.endDateField().fill('11/10/2069')
+    await startDatePage.endHourField().fill('12')
+    await startDatePage.endMinuteField().fill('30')
     await startDatePage.clickContinue()
-
-    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/end-date/)
-
-    const endDatePage = new EndDatePage(page)
-    await endDatePage.dateField().fill('11/10/2069')
-    await endDatePage.hourField().fill('12')
-    await endDatePage.minuteField().fill('30')
-    await endDatePage.clickContinue()
 
     expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/search-location/)
 

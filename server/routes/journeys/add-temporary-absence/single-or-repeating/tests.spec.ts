@@ -97,10 +97,10 @@ test.describe('/add-temporary-absence/single-or-repeating', () => {
     // verify next page routing
     await testPage.singleRadio().click()
     await testPage.clickContinue()
-    expect(page.url()).toMatch(/\/add-temporary-absence\/start-date/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/start-end-dates-and-times/)
     testPage.historyParam(page.url(), [
       /\/add-temporary-absence\/single-or-repeating/,
-      /\/add-temporary-absence\/start-date/,
+      /\/add-temporary-absence\/start-end-dates-and-times/,
     ])
 
     // verify input values are persisted
