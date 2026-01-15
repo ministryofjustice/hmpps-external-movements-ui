@@ -5,13 +5,13 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set fullWidth = true %}
-{% set pageTitle = 'Search prisoner - Create a temporary absence' %}
+{% set pageTitle = 'Search for a prisoner - Add a temporary absence' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <div class="govuk-!-static-margin-bottom-6">
       <span class="govuk-caption-l">Create a Temporary Absence</span>
-      <h1 class="govuk-heading-l">Search for the prisoner</h1>
+      <label for="searchTerm"><h1 class="govuk-heading-l">Search for a prisoner</h1></label>
     </div>
 
     <div class="block-background govuk-!-padding-6 govuk-!-margin-bottom-7">
@@ -24,7 +24,8 @@
             hint: {
               text: "Enter name or prison number. A maximum of 10 results can be returned."
             },
-            value: searchTerm
+            value: searchTerm,
+            errorMessage: validationErrors | findError('searchTerm')
           }) }}
 
           {{ govukButton({
@@ -45,7 +46,7 @@
       {% for prisoner in results %}
         {% set rows = (rows.push([
           {
-            text: prisoner | firstNameSpaceLastName
+            html: '<a class="govuk-link govuk-link--no-visited-state" target="_blank" href="' + prisonerProfileUrl + '/prisoner/' + prisoner.prisonerNumber + '">' + prisoner | firstNameSpaceLastName + '</a>'
           },
           {
             text: prisoner.prisonerNumber
@@ -54,11 +55,8 @@
             text: prisoner.cellLocation
           },
           {
-            text: prisoner.currentIncentive.level.description
-          },
-          {
             classes: 'govuk-link govuk-link--no-visited-state',
-            html: '<a class="govuk-link govuk-link--no-visited-state" href="/add-temporary-absence/start/' + prisoner.prisonerNumber + '">Add a Temporary Absence<span class="govuk-visually-hidden"> (' + prisoner.prisonerNumber + ')</span></a>',
+            html: '<a class="govuk-link govuk-link--no-visited-state" href="/add-temporary-absence/start/' + prisoner.prisonerNumber + '">Add temporary absence<span class="govuk-visually-hidden"> for ' + prisoner | firstNameSpaceLastName + '</span></a>',
             format: "numeric"
           }
         ]), rows) %}
@@ -72,16 +70,13 @@
             text: "Name"
           },
           {
-            text: "Prison Number"
+            text: "Prison number"
           },
           {
             text: 'Location'
           },
           {
-            text: 'Incentive level'
-          },
-          {
-            text: "Action",
+            text: "",
             format: "numeric"
           }
         ],
