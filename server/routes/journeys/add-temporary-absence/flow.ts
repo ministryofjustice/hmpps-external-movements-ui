@@ -230,7 +230,7 @@ export class AddTapFlowControl {
         journey.repeat = data.repeat
         // break check-answers bounce back routing, and resume normal journey flow
         delete req.journeyData.isCheckAnswers
-        return data.repeat ? 'start-end-dates' : 'start-date'
+        return data.repeat ? 'start-end-dates' : 'start-end-dates-and-times'
       }
 
       if (data.start && data.end) {
@@ -309,7 +309,7 @@ export class AddTapFlowControl {
 
     if (data.repeat !== undefined) {
       journey.repeat = data.repeat
-      return data.repeat ? 'start-end-dates' : 'start-date'
+      return data.repeat ? 'start-end-dates' : 'start-end-dates-and-times'
     }
 
     if (data.start && data.end) {
