@@ -169,7 +169,7 @@
                 text: authorisation.end | formatDate
               },
               {
-                text: authorisation.absenceType.description
+                text: authorisation.absenceCategorisation
               },
               {
                 text: ('Repeating (' + authorisation.occurrenceCount + ' occurrence' + (')' if authorisation.occurrenceCount === 1 else 's)')) if authorisation.repeat else 'Single'
