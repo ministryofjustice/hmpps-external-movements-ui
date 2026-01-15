@@ -11,14 +11,14 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set fullWidth = true %}
-{% set pageTitle = 'Manage temporary absences - Manage temporary absences' %}
+{% set pageTitle = 'Manage temporary absence plans - Manage temporary absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <span class="govuk-caption-l">Manage Temporary Absences</span>
-        <h1 class="govuk-heading-l">Manage temporary absences in {{ user.activeCaseLoad.description }}</h1>
+        <h1 class="govuk-heading-l">Manage temporary absence plans in {{ user.activeCaseLoad.description }}</h1>
       </div>
     </div>
 
@@ -150,11 +150,11 @@
       </div>
       <div class="govuk-grid-column-three-quarters">
         {% if hasValidationError %}
-          <p class="govuk-!-margin-bottom-6"><strong>Enter a valid filter to search and view temporary absences.</strong></p>
+          <p class="govuk-!-margin-bottom-6"><strong>Enter a valid filter to search and view temporary absence plans.</strong></p>
         {% elseif missingDateRange %}
-          <p class="govuk-!-margin-bottom-6"><strong>Enter a date range to search and view temporary absences.</strong></p>
+          <p class="govuk-!-margin-bottom-6"><strong>Enter a date range to search and view temporary absence plans.</strong></p>
         {% elseif not results.length %}
-          <p class="govuk-!-margin-bottom-6"><strong>No temporary absence authorisations match your search.</strong></p>
+          <p class="govuk-!-margin-bottom-6"><strong>No temporary absence plans match your search.</strong></p>
         {% else %}
           {% set rows = [] %}
           {% for authorisation in results %}
