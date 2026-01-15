@@ -19,7 +19,7 @@ test.describe('/temporary-absences', () => {
   })
 
   test('should show search TAP occurrences page', async ({ page }) => {
-    await stubSearchTapOccurrence('.*', {
+    await stubSearchTapOccurrence({
       metadata: { totalElements: 26 },
       content: [testTapOccurrenceResult],
     })
@@ -43,7 +43,7 @@ test.describe('/temporary-absences', () => {
       /Prisoner-Name Prisoner-Surname(.*)A9965EA/,
       '1 January 2001 at 10:00',
       '1 January 2001 at 17:30',
-      'Restricted ROTL (Release on Temporary Licence)',
+      'Restricted ROTL (Release on Temporary Licence) > RDR (Resettlement Day Release) > Paid work > IT and communication',
       'Random Street, UK',
       'Scheduled',
     ])

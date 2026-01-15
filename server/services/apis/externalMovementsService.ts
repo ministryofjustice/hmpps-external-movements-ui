@@ -188,55 +188,21 @@ export default class ExternalMovementsService {
     })
   }
 
-  searchTapOccurrences(
-    context: ApiRequestContext,
-    start: string | null | undefined,
-    end: string | null | undefined,
-    status: string[],
-    query: string | null,
-    sort: string,
-    page: number,
-    pageSize: number,
-  ) {
+  searchTapOccurrences(context: ApiRequestContext, request: components['schemas']['TapOccurrenceSearchRequest']) {
     return this.externalMovementsApiClient
-      .withContext(context)
-      .get<components['schemas']['TapOccurrenceSearchResponse']>({
-        path: `/search/temporary-absence-occurrences${parseQueryParams({
-          prisonCode: context.res.locals.user.getActiveCaseloadId(),
-          start,
-          end,
-          status,
-          sort,
-          page,
-          size: pageSize,
-          query,
-        })}`,
+      .withContext({ ...context, readOnly: true })
+      .post<components['schemas']['TapOccurrenceSearchResponse']>({
+        path: '/search/temporary-absence-occurrences',
+        data: request,
       })
   }
 
-  searchTapAuthorisations(
-    context: ApiRequestContext,
-    start: string | null | undefined,
-    end: string | null | undefined,
-    status: string[],
-    query: string | null,
-    sort: string,
-    page: number,
-    pageSize: number,
-  ) {
+  searchTapAuthorisations(context: ApiRequestContext, request: components['schemas']['TapAuthorisationSearchRequest']) {
     return this.externalMovementsApiClient
-      .withContext(context)
-      .get<components['schemas']['TapAuthorisationSearchResponse']>({
-        path: `/search/temporary-absence-authorisations${parseQueryParams({
-          prisonCode: context.res.locals.user.getActiveCaseloadId(),
-          start,
-          end,
-          status,
-          sort,
-          page,
-          size: pageSize,
-          query,
-        })}`,
+      .withContext({ ...context, readOnly: true })
+      .post<components['schemas']['TapAuthorisationSearchResponse']>({
+        path: '/search/temporary-absence-authorisations',
+        data: request,
       })
   }
 }

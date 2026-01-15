@@ -18,7 +18,7 @@ test.describe('/temporary-absence-authorisations', () => {
   })
 
   test('should show search TAP occurrences page', async ({ page }) => {
-    await stubSearchTapAuthorisation('.*', {
+    await stubSearchTapAuthorisation({
       metadata: { totalElements: 27 },
       content: [
         {
@@ -47,6 +47,8 @@ test.describe('/temporary-absence-authorisations', () => {
           end: '2001-01-01',
           locations: [{ uprn: 1001, description: 'Random Street, UK' }],
           occurrenceCount: 1,
+          absenceCategorisation:
+            'Restricted ROTL (Release on Temporary Licence) > RDR (Resettlement Day Release) > Paid work > IT and communication',
         },
         {
           id: 'authorisation-id-2',
@@ -67,6 +69,7 @@ test.describe('/temporary-absence-authorisations', () => {
           end: '2001-03-01',
           locations: [{ uprn: 1001, description: 'Random Street, UK' }],
           occurrenceCount: 12,
+          absenceCategorisation: 'Police production',
         },
       ],
     })
@@ -92,7 +95,7 @@ test.describe('/temporary-absence-authorisations', () => {
       /Prisoner-Name Prisoner-Surname(.*)A9965EA/,
       '1 January 2001',
       '1 January 2001',
-      'Restricted ROTL (Release on Temporary Licence)',
+      'Restricted ROTL (Release on Temporary Licence) > RDR (Resettlement Day Release) > Paid work > IT and communication',
       'Single',
       'Approved',
     ])

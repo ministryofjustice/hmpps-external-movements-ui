@@ -94,23 +94,17 @@ export const stubPutTapOccurrence = (occurrenceId: string, response: components[
     response,
   })
 
-export const stubSearchTapOccurrence = (
-  query: string,
-  response: components['schemas']['TapOccurrenceSearchResponse'],
-) =>
+export const stubSearchTapOccurrence = (response: components['schemas']['TapOccurrenceSearchResponse']) =>
   successStub({
-    method: 'GET',
-    urlPattern: `/external-movements-api/search/temporary-absence-occurrences\\?${query}`,
+    method: 'POST',
+    urlPattern: `/external-movements-api/search/temporary-absence-occurrences`,
     response,
   })
 
-export const stubSearchTapAuthorisation = (
-  query: string,
-  response: components['schemas']['TapAuthorisationSearchResponse'],
-) =>
+export const stubSearchTapAuthorisation = (response: components['schemas']['TapAuthorisationSearchResponse']) =>
   successStub({
-    method: 'GET',
-    urlPattern: `/external-movements-api/search/temporary-absence-authorisations\\?${query}`,
+    method: 'POST',
+    urlPattern: `/external-movements-api/search/temporary-absence-authorisations`,
     response,
   })
 

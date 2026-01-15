@@ -330,6 +330,8 @@ export const testTapOccurrenceResult: components['schemas']['TapOccurrenceResult
   accompaniedBy: { code: 'U', description: 'Unaccompanied' },
   transport: { code: 'CAR', description: 'Car' },
   isCancelled: false,
+  absenceCategorisation:
+    'Restricted ROTL (Release on Temporary Licence) > RDR (Resettlement Day Release) > Paid work > IT and communication',
 }
 
 export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
