@@ -3,6 +3,7 @@
 {% block main %}
 {% addHistory %}
   <div class="govuk-width-container" id="before-content">
+    {% include "partials/phase-banner.njk" %}
     {% if showBreadcrumbs and breadcrumbs and(not backUrl) %}
       <div class="govuk-!-display-none-print">
         <div>
