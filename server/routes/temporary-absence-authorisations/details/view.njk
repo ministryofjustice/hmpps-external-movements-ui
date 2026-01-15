@@ -9,14 +9,14 @@
 {% from "partials/auditHistory/macro.njk" import auditHistory %}
 
 {% set fullWidth = true %}
-{% set pageTitle = 'Manage temporary absence - Manage temporary absences' %}
+{% set pageTitle = 'Manage temporary absence plan - Manage temporary absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <div class="govuk-grid-row govuk-!-margin-bottom-2">
       <div class="govuk-grid-column-two-thirds">
         <span class="govuk-caption-l">Manage Temporary Absences</span>
-        <h1 class="govuk-heading-l">Manage {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence</h1>
+        <h1 class="govuk-heading-l">Manage {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence plan</h1>
 
         {% set baseEditUrl = "/temporary-absence-authorisations/start-edit/" + result.id %}
 
@@ -133,7 +133,7 @@
         {{ govukTabs({
           items: [
             {
-              label: "Manage absence",
+              label: "Manage absence plan",
               id: "view-absence",
               panel: { html: viewAbsenceHtml }
             },

@@ -113,6 +113,6 @@ test.describe('/temporary-absence-authorisations', () => {
     await testPage.clickButton('Apply filters')
     await testPage.link('Enter a valid date range').click()
     await expect(testPage.startDateField()).toBeFocused()
-    await expect(page.getByText('Enter a valid filter to search and view temporary absences.')).toBeVisible()
+    await expect(page.getByText('Enter a valid filter to search and view temporary absence plans.')).toBeVisible()
   })
 })

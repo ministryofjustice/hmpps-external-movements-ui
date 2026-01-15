@@ -39,23 +39,23 @@ export default function routes(services: Services): Router {
       },
       {
         matcher: /temporary-absence-authorisations$/,
-        text: 'Browse absence authorisations',
+        text: 'Browse absence plans',
         alias: 'temp-page-1',
       },
       {
         matcher: /temporary-absence-authorisations\/(\w|-)+$/,
-        text: 'Temporary absence',
+        text: 'Absence plan',
         alias: 'temp-page-2',
       },
       {
-        matcher: /temporary-absence-authorisations\/(\w|-)+\/occurrence\/(\w|-)+$/,
-        text: 'Temporary absence',
+        matcher: /temporary-absences$/,
+        text: 'Browse absence occurrences',
         alias: 'temp-page-3',
       },
       {
-        matcher: /temporary-absences$/,
-        text: 'Browse temporary absences',
-        alias: 'temp-page-3',
+        matcher: /temporary-absences\/(\w|-)+$/,
+        text: 'Absence occurrence',
+        alias: 'temp-page-4',
       },
     ]),
   )
