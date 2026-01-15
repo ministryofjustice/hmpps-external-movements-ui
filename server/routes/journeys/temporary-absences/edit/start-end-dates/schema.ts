@@ -119,7 +119,7 @@ export const schema = async (req: Request, _res: Response) =>
       if (parsedReturnDate.data < parsedStartDate.data) {
         ctx.addIssue({
           code: 'custom',
-          message: 'Return date must be on or before start date',
+          message: 'Return date must be on or after start date',
           path: ['returnDate'],
         })
         return z.NEVER

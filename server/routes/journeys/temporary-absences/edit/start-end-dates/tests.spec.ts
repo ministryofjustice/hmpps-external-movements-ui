@@ -153,7 +153,7 @@ test.describe('/temporary-absences/edit/start-end-dates', () => {
     await testPage.endMinuteField().fill('30')
     await testPage.clickButton('Confirm and save')
 
-    await testPage.link('Return date must be on or before start date').click()
+    await testPage.link('Return date must be on or after start date').click()
     await expect(testPage.endDateField()).toBeFocused()
 
     // verify next page routing
