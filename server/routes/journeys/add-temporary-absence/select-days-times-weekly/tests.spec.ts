@@ -121,7 +121,7 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
     await testPage.timeEntry('monday', 'return', 'Hour').fill('09')
     await testPage.timeEntry('monday', 'return', 'Minute').fill('30')
     await testPage.clickContinue()
-    await expect(testPage.link('The return time must come after the start date and time')).toBeVisible()
+    await expect(testPage.link('Return time must be later than the start time')).toBeVisible()
   }
 
   const validateOvernightTimeAfterReleaseTimeErrorMessage = async (testPage: SelectDaysTimesWeeklyPage) => {

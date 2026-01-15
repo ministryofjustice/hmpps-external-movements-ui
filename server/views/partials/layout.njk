@@ -90,6 +90,8 @@
 {% endblock %}
 
 {% block beforeContent %}
+  {% include "partials/phase-banner.njk" %}
+
   {% if backUrl %}
     {{ govukBackLink({
       text: backLabel or "Back",

@@ -91,7 +91,7 @@ export function addBeforeErrors(
   parsedEndHour: z.ZodSafeParseResult<string>,
   parsedEndMinute: z.ZodSafeParseResult<string>,
   path: (string | number)[] = [],
-  errorMessage: string = 'The return time must come after the start date and time',
+  errorMessage: string = 'Return time must be later than the start time',
 ) {
   const startTime = Number(parsedStartHour!.data) * 60 + Number(parsedStartMinute!.data)
   const endTime = Number(parsedEndHour!.data) * 60 + Number(parsedEndMinute!.data)
@@ -101,6 +101,11 @@ export function addBeforeErrors(
       code: 'custom',
       message: errorMessage,
       path: [...path, 'returnHour'],
+    })
+    ctx.addIssue({
+      code: 'custom',
+      message: '',
+      path: [...path, 'returnMinute'],
     })
   }
 }

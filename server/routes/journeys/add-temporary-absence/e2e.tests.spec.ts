@@ -272,8 +272,8 @@ test.describe('/add-temporary-absence/e2e', () => {
       const transportPage = new TransportPage(page)
 
       // Go back to accompanied or unaccompanied page
-      await transportPage.page.getByRole('link', { name: 'back' }).click()
-      await accompaniedPage.page.getByRole('link', { name: 'back' }).click()
+      await transportPage.page.getByRole('link', { name: /^Back$/ }).click()
+      await accompaniedPage.page.getByRole('link', { name: /^Back$/ }).click()
 
       await accompaniedOrUnaccompaniedPage.noRadio().click()
       await accompaniedOrUnaccompaniedPage.clickContinue()
