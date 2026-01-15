@@ -30,7 +30,7 @@ export const schema = createSchema({
     if (parsedEndDate.data <= parsedStartDate.data) {
       ctx.addIssue({
         code: 'custom',
-        message: 'Last return date must be later than first start date',
+        message: 'Return date must be later than the start date',
         path: ['end'],
       })
       return z.NEVER

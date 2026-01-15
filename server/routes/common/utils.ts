@@ -64,7 +64,14 @@ export const getAbsenceCategoryBackUrl = (
     req.journeyData.addTemporaryAbsence!,
   )
 
-  if ((absenceType?.nextDomain ?? null) === domain) {
+  if (domain === null) {
+    if (reason) return 'reason'
+    if (reasonCategory) return 'reason-category'
+    if (absenceSubType) return 'absence-subtype'
+    if (absenceType) return 'absence-type'
+  }
+
+  if (absenceType?.nextDomain === domain) {
     if (
       req.journeyData.isCheckAnswers &&
       req.journeyData.addTemporaryAbsence!.categorySubJourney?.absenceType?.code ===
@@ -74,7 +81,7 @@ export const getAbsenceCategoryBackUrl = (
     }
     return 'absence-type'
   }
-  if ((absenceSubType?.nextDomain ?? null) === domain) {
+  if (absenceSubType?.nextDomain === domain) {
     if (
       req.journeyData.isCheckAnswers &&
       req.journeyData.addTemporaryAbsence!.categorySubJourney?.absenceSubType?.code ===
@@ -84,7 +91,7 @@ export const getAbsenceCategoryBackUrl = (
     }
     return 'absence-subtype'
   }
-  if (reasonCategory && (reasonCategory?.nextDomain ?? null) === domain) {
+  if (reasonCategory && reasonCategory?.nextDomain === domain) {
     if (
       req.journeyData.isCheckAnswers &&
       req.journeyData.addTemporaryAbsence!.categorySubJourney?.reasonCategory?.code ===
@@ -94,7 +101,7 @@ export const getAbsenceCategoryBackUrl = (
     }
     return 'reason-category'
   }
-  if (reason && (reason?.nextDomain ?? null) === domain) {
+  if (reason && reason?.nextDomain === domain) {
     return 'reason'
   }
 
