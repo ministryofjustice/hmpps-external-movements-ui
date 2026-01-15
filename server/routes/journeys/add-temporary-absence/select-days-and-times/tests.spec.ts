@@ -174,7 +174,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await expect(testPage.returnMinuteField(0)).toBeFocused()
     await testPage.link('Return time must be later than start time').click()
     await expect(testPage.returnHourField(1)).toBeFocused()
-    await testPage.link('Return date must be equal to or later than start date').click()
+    await testPage.link('Return date must be later than the start date').click()
     await expect(testPage.returnDateField(2)).toBeFocused()
     await testPage.link('Return date must be the same day or one day after start date').click()
     await expect(testPage.returnDateField(3)).toBeFocused()

@@ -121,7 +121,7 @@ const absenceDateTimeSchema = (start: string, end: string, maxReturnDate: string
       if (parsedReturnDate.data < parsedStartDate.data) {
         ctx.addIssue({
           code: 'custom',
-          message: 'Return date must be equal to or later than start date',
+          message: 'Return date must be later than the start date',
           path: ['returnDate'],
         })
         return z.NEVER
