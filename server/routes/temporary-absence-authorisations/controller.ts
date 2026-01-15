@@ -40,23 +40,43 @@ export class BrowseTapAuthorisationsController {
       Object.keys(resQuery).find(key => ['searchTerm', 'start', 'end', 'status'].includes(key)) && !resQuery.validated
     const missingDateRange = !resQuery?.validated?.start || !resQuery?.validated?.end
 
+    let searchResponse: components['schemas']['TapAuthorisationSearchResponse'] | undefined
     let results: components['schemas']['TapAuthorisationResult'][] = []
 
     try {
-      const searchResponse =
-        !hasValidationError && !missingDateRange
-          ? await this.externalMovementsService.searchTapAuthorisations(
-              { res },
-              resQuery.validated?.start ? format(resQuery.validated.start, 'yyyy-MM-dd') : null,
-              resQuery.validated?.end ? format(resQuery.validated.end, 'yyyy-MM-dd') : null,
-              resQuery.validated?.status ?? [],
-              resQuery.validated?.searchTerm?.trim() || null,
-              resQuery.validated?.sort ?? 'start,asc',
-              resQuery.validated?.page || 1,
-              this.PAGE_SIZE,
-            )
-          : undefined
-      results = searchResponse?.content ?? []
+      if (!hasValidationError && !missingDateRange && resQuery.validated) {
+        const requestBody: components['schemas']['TapAuthorisationSearchRequest'] = {
+          prisonCode: res.locals.user.getActiveCaseloadId()!,
+          start: format(resQuery.validated.start, 'yyyy-MM-dd'),
+          end: format(resQuery.validated.end, 'yyyy-MM-dd'),
+          status: resQuery.validated?.status ?? [],
+          sort: resQuery.validated?.sort ?? 'start,asc',
+          page: resQuery.validated?.page || 1,
+          size: this.PAGE_SIZE,
+        }
+
+        if (resQuery.validated.searchTerm?.trim()) {
+          requestBody.query = resQuery.validated?.searchTerm?.trim()
+        }
+
+        if (resQuery.validated.workType) {
+          requestBody.absenceCategorisation = { domainCode: 'ABSENCE_REASON', codes: [resQuery.validated.workType] }
+        } else if (resQuery.validated.reason) {
+          requestBody.absenceCategorisation = {
+            domainCode: 'ABSENCE_REASON_CATEGORY',
+            codes: [resQuery.validated.reason],
+          }
+        } else if (resQuery.validated.subType) {
+          requestBody.absenceCategorisation = { domainCode: 'ABSENCE_SUB_TYPE', codes: [resQuery.validated.subType] }
+        } else if (resQuery.validated.type) {
+          requestBody.absenceCategorisation = { domainCode: 'ABSENCE_TYPE', codes: [resQuery.validated.type] }
+        }
+
+        searchResponse = await this.externalMovementsService.searchTapAuthorisations({ res }, requestBody)
+        results = searchResponse?.content ?? []
+      } else {
+        results = []
+      }
 
       setPaginationLocals(
         res,
