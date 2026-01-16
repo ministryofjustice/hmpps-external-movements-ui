@@ -56,10 +56,12 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
   'person.temporary-absence.expired': {
     heading: 'Absence occurrence expired',
     content: 'Temporary absence occurrence expired for <prisoner>',
+    skipUser: true,
   },
   'person.temporary-absence.overdue': {
     heading: 'Absence occurrence overdue',
     content: 'Temporary absence occurrence overdue for <prisoner>',
+    skipUser: true,
   },
   'person.temporary-absence.contact-information-changed': {
     heading: 'Absence occurrence contact information changed',
