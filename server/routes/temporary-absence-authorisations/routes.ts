@@ -5,6 +5,7 @@ import { validateOnGET } from '../../middleware/validation/validationMiddleware'
 import { schema } from './schema'
 import { TapAuthorisationDetailsController } from './details/controller'
 import { schema as detailsSchema } from './details/schema'
+import { Page } from '../../services/auditService'
 
 export const BrowseTapAuthorisationsRoutes = (services: Services) => {
   const { externalMovementsService } = services
@@ -13,6 +14,7 @@ export const BrowseTapAuthorisationsRoutes = (services: Services) => {
 
   get(
     '/',
+    Page.SEARCH_TEMPORARY_ABSENCE_AUTHORISATIONS,
     validateOnGET(
       schema,
       'searchTerm',
@@ -30,6 +32,7 @@ export const BrowseTapAuthorisationsRoutes = (services: Services) => {
   )
   get(
     '/:id',
+    Page.VIEW_TEMPORARY_ABSENCE_AUTHORISATION,
     validateOnGET(detailsSchema, 'dateFrom', 'dateTo'),
     new TapAuthorisationDetailsController(externalMovementsService).GET,
   )

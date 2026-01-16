@@ -16,7 +16,7 @@ export const EditTapOccurrenceRoutes = (services: Services) => {
 
   get(
     '*any',
-    Page.EDIT_TEMPORARY_ABSENCE,
+    Page.EDIT_TEMPORARY_ABSENCE_OCCURRENCE,
     (req, res, next) => {
       if (req.journeyData.prisonerDetails) {
         res.setAuditDetails.prisonNumber(req.journeyData.prisonerDetails.prisonerNumber)

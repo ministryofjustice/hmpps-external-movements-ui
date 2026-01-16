@@ -11,9 +11,9 @@ import {
 } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
-import { getSentAuditEvents } from '../../../../../integration_tests/mockApis/wiremock'
 import { AddTapCYAPage } from './test.page'
 import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+import { verifyAuditEvents } from '../../../../../integration_tests/steps/verifyAuditEvents'
 
 test.describe('/add-temporary-absence/check-answers unauthorised', () => {
   test('should show unauthorised error', async ({ page }) => {
@@ -200,30 +200,28 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await testPage.clickButton('Confirm and save')
     expect(page.url()).toMatch(/\/add-temporary-absence\/confirmation/)
 
-    expect(await getSentAuditEvents()).toEqual(
-      expect.arrayContaining([
-        {
-          what: 'API_CALL_ATTEMPT',
-          subjectId: prisonNumber,
-          subjectType: 'PRISONER_ID',
-          details: `{"apiUrl":"POST /temporary-absence-authorisations/${prisonNumber}","activeCaseLoadId":"LEI"}`,
-          service: 'hmpps-external-movements-ui',
-          who: 'USER1',
-          correlationId: expect.any(String),
-          when: expect.any(String),
-        },
-        {
-          what: 'API_CALL_SUCCESS',
-          subjectId: prisonNumber,
-          subjectType: 'PRISONER_ID',
-          details: `{"apiUrl":"POST /temporary-absence-authorisations/${prisonNumber}","activeCaseLoadId":"LEI"}`,
-          service: 'hmpps-external-movements-ui',
-          who: 'USER1',
-          correlationId: expect.any(String),
-          when: expect.any(String),
-        },
-      ]),
-    )
+    await verifyAuditEvents([
+      {
+        what: 'API_CALL_ATTEMPT',
+        subjectId: prisonNumber,
+        subjectType: 'PRISONER_ID',
+        details: `{"apiUrl":"POST /temporary-absence-authorisations/${prisonNumber}","activeCaseLoadId":"LEI"}`,
+        service: 'hmpps-external-movements-ui',
+        who: 'USER1',
+        correlationId: expect.any(String),
+        when: expect.any(String),
+      },
+      {
+        what: 'API_CALL_SUCCESS',
+        subjectId: prisonNumber,
+        subjectType: 'PRISONER_ID',
+        details: `{"apiUrl":"POST /temporary-absence-authorisations/${prisonNumber}","activeCaseLoadId":"LEI"}`,
+        service: 'hmpps-external-movements-ui',
+        who: 'USER1',
+        correlationId: expect.any(String),
+        when: expect.any(String),
+      },
+    ])
   })
 
   test('should show check answers for repeating TAP', async ({ page }) => {

@@ -7,6 +7,7 @@ import {
   stubSearchTapAuthorisation,
 } from '../../../integration_tests/mockApis/externalMovementsApi'
 import { BrowseTapAuthorisationsPage } from './test.page'
+import { verifyAuditEvents } from '../../../integration_tests/steps/verifyAuditEvents'
 
 test.describe('/temporary-absence-authorisations', () => {
   test.beforeAll(async () => {
@@ -114,5 +115,20 @@ test.describe('/temporary-absence-authorisations', () => {
     await testPage.link('Enter a valid date range').click()
     await expect(testPage.startDateField()).toBeFocused()
     await expect(page.getByText('Enter a valid filter to search and view temporary absence plans.')).toBeVisible()
+
+    // verify audit event
+    await verifyAuditEvents([
+      {
+        what: 'PAGE_VIEW',
+        subjectType: 'SEARCH_TERM',
+        subjectId: 'test',
+        details:
+          '{"pageUrl":"/temporary-absence-authorisations?searchTerm=test&start=01%2F01%2F2001&end=02%2F01%2F2001&page=2&status=APPROVED","pageName":"SEARCH_TEMPORARY_ABSENCE_AUTHORISATIONS","query":"test","activeCaseLoadId":"LEI"}',
+        service: 'hmpps-external-movements-ui',
+        who: 'USER1',
+        correlationId: expect.any(String),
+        when: expect.any(String),
+      },
+    ])
   })
 })

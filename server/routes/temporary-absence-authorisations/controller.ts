@@ -23,6 +23,10 @@ export class BrowseTapAuthorisationsController {
       } else if (!Array.isArray(resQuery.status)) {
         resQuery.status = [resQuery.status]
       }
+
+      if (resQuery.searchTerm?.trim()) {
+        res.setAuditDetails.searchTerm(resQuery.searchTerm.trim())
+      }
     }
 
     const filterQueries = [
