@@ -6,7 +6,7 @@
     {% set rows = (rows.push({
       key: {
         classes: 'half-width',
-        html: absence.startDate | formatDate('cccc, d MMMM') if absence.startDate === absence.returnDate else (absence.startDate | formatDate('cccc, d MMMM') + ' to <br/>' + absence.returnDate | formatDate('cccc, d MMMM'))
+        html: absence.startDate | formatDate('cccc d MMMM') if absence.startDate === absence.returnDate else (absence.startDate | formatDate('cccc d MMMM') + ' to <br/>' + absence.returnDate | formatDate('cccc d MMMM'))
       },
       value: {
         html: 'Start time: ' + absence.startTime + '<br/>Return time: ' + absence.returnTime
@@ -17,7 +17,7 @@
   {{ govukSummaryList({
     card: {
       title: {
-        text: "Week starting " + period.startDate | formatDate('cccc, d MMMM yyyy')
+        text: "Week starting " + period.startDate | formatDate('cccc d MMMM yyyy')
       }
     },
     rows: rows if rows.length else [{ key: { text: "No absence entered" } }]

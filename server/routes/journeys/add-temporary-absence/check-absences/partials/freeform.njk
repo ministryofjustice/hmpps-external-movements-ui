@@ -6,7 +6,7 @@
     {% set rows = (rows.push({
       key: {
         classes: 'half-width',
-        html: absence.startDate | formatDate('cccc, d MMMM') if absence.startDate === absence.returnDate else (absence.startDate | formatDate('cccc, d MMMM') + ' to <br/>' + absence.returnDate | formatDate('cccc, d MMMM'))
+        html: absence.startDate | formatDate('cccc d MMMM') if absence.startDate === absence.returnDate else (absence.startDate | formatDate('cccc d MMMM') + ' to <br/>' + absence.returnDate | formatDate('cccc d MMMM'))
       },
       value: {
         html: 'Start time: ' + absence.startTime + '<br/>Return time: ' + absence.returnTime

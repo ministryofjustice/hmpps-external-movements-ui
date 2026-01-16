@@ -67,28 +67,28 @@ test.describe('/add-temporary-absence/match-absences-and-locations', () => {
     // verify page content
     const testPage = await new MatchAbsencesAndLocationsPage(page).verifyContent()
 
-    await expect(testPage.dropdown('Monday, 1 January (10:00 to 17:30)')).toBeVisible()
-    await expect(testPage.dropdown('Tuesday, 16 January to Wednesday, 17 January (23:00 to 04:30)')).toBeVisible()
+    await expect(testPage.dropdown('Monday 1 January (10:00 to 17:30)')).toBeVisible()
+    await expect(testPage.dropdown('Tuesday 16 January to Wednesday 17 January (23:00 to 04:30)')).toBeVisible()
     await expect(testPage.button('Continue')).toBeVisible()
 
     // verify validation error
     await testPage
-      .dropdown('Tuesday, 16 January to Wednesday, 17 January (23:00 to 04:30)')
+      .dropdown('Tuesday 16 January to Wednesday 17 January (23:00 to 04:30)')
       .selectOption('Address 1, P05T 60D')
     await testPage.clickContinue()
     await testPage.link('Select a location').click()
-    await expect(testPage.dropdown('Monday, 1 January (10:00 to 17:30)')).toBeFocused()
+    await expect(testPage.dropdown('Monday 1 January (10:00 to 17:30)')).toBeFocused()
 
     // verify next page routing
-    await testPage.dropdown('Monday, 1 January (10:00 to 17:30)').selectOption('Address 2, P05T 60D')
+    await testPage.dropdown('Monday 1 January (10:00 to 17:30)').selectOption('Address 2, P05T 60D')
     await testPage.clickContinue()
     expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
 
     // verify input values are persisted
     await page.goBack()
     await page.reload()
-    await expect(testPage.dropdown('Monday, 1 January (10:00 to 17:30)')).toHaveValue('1')
-    await expect(testPage.dropdown('Tuesday, 16 January to Wednesday, 17 January (23:00 to 04:30)')).toHaveValue('0')
+    await expect(testPage.dropdown('Monday 1 January (10:00 to 17:30)')).toHaveValue('1')
+    await expect(testPage.dropdown('Tuesday 16 January to Wednesday 17 January (23:00 to 04:30)')).toHaveValue('0')
   })
 
   test('should show options for WEEKLY pattern', async ({ page }) => {
@@ -106,12 +106,12 @@ test.describe('/add-temporary-absence/match-absences-and-locations', () => {
     // verify page content
     const testPage = await new MatchAbsencesAndLocationsPage(page).verifyContent()
 
-    await expect(testPage.dropdown('Monday, 1 January (10:00 to 17:30)')).toBeVisible()
-    await expect(testPage.dropdown('Thursday, 4 January to Friday, 5 January (23:00 to 04:30)')).toBeVisible()
-    await expect(testPage.dropdown('Monday, 8 January (10:00 to 17:30)')).toBeVisible()
-    await expect(testPage.dropdown('Thursday, 11 January to Friday, 12 January (23:00 to 04:30)')).toBeVisible()
-    await expect(testPage.dropdown('Monday, 15 January (10:00 to 17:30)')).toBeVisible()
-    await expect(testPage.dropdown('Thursday, 18 January to Friday, 19 January (23:00 to 04:30)')).toHaveCount(0)
+    await expect(testPage.dropdown('Monday 1 January (10:00 to 17:30)')).toBeVisible()
+    await expect(testPage.dropdown('Thursday 4 January to Friday 5 January (23:00 to 04:30)')).toBeVisible()
+    await expect(testPage.dropdown('Monday 8 January (10:00 to 17:30)')).toBeVisible()
+    await expect(testPage.dropdown('Thursday 11 January to Friday 12 January (23:00 to 04:30)')).toBeVisible()
+    await expect(testPage.dropdown('Monday 15 January (10:00 to 17:30)')).toBeVisible()
+    await expect(testPage.dropdown('Thursday 18 January to Friday 19 January (23:00 to 04:30)')).toHaveCount(0)
     await expect(testPage.button('Continue')).toBeVisible()
   })
 
@@ -159,14 +159,14 @@ test.describe('/add-temporary-absence/match-absences-and-locations', () => {
     // verify page content
     const testPage = await new MatchAbsencesAndLocationsPage(page).verifyContent()
 
-    await expect(testPage.dropdown('Monday, 1 January (10:00 to 17:00)')).toBeVisible()
-    await expect(testPage.dropdown('Tuesday, 2 January (11:00 to 17:00)')).toBeVisible()
-    await expect(testPage.dropdown('Wednesday, 3 January (12:00 to 17:00)')).toBeVisible()
-    await expect(testPage.dropdown('Thursday, 4 January to Friday, 5 January (23:00 to 04:30)')).toBeVisible()
-    await expect(testPage.dropdown('Friday, 5 January to Saturday, 6 January (23:00 to 05:30)')).toBeVisible()
-    await expect(testPage.dropdown('Monday, 8 January (10:00 to 17:00)')).toBeVisible()
-    await expect(testPage.dropdown('Tuesday, 9 January (11:00 to 17:00)')).toBeVisible()
-    await expect(testPage.dropdown('Wednesday, 10 January (12:00 to 17:00')).toHaveCount(0)
+    await expect(testPage.dropdown('Monday 1 January (10:00 to 17:00)')).toBeVisible()
+    await expect(testPage.dropdown('Tuesday 2 January (11:00 to 17:00)')).toBeVisible()
+    await expect(testPage.dropdown('Wednesday 3 January (12:00 to 17:00)')).toBeVisible()
+    await expect(testPage.dropdown('Thursday 4 January to Friday 5 January (23:00 to 04:30)')).toBeVisible()
+    await expect(testPage.dropdown('Friday 5 January to Saturday 6 January (23:00 to 05:30)')).toBeVisible()
+    await expect(testPage.dropdown('Monday 8 January (10:00 to 17:00)')).toBeVisible()
+    await expect(testPage.dropdown('Tuesday 9 January (11:00 to 17:00)')).toBeVisible()
+    await expect(testPage.dropdown('Wednesday 10 January (12:00 to 17:00')).toHaveCount(0)
     await expect(testPage.button('Continue')).toBeVisible()
   })
 })

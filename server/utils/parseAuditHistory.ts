@@ -56,10 +56,12 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
   'person.temporary-absence.expired': {
     heading: 'Absence occurrence expired',
     content: 'Temporary absence occurrence expired for <prisoner>',
+    skipUser: true,
   },
   'person.temporary-absence.overdue': {
     heading: 'Absence occurrence overdue',
     content: 'Temporary absence occurrence overdue for <prisoner>',
+    skipUser: true,
   },
   'person.temporary-absence.contact-information-changed': {
     heading: 'Absence occurrence contact information changed',
@@ -92,6 +94,24 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
     content: 'Temporary absence occurrence migrated from NOMIS',
     skipUser: true,
   },
+  'person.temporary-absence-authorisation.expired': {
+    heading: 'Absence expired',
+    content: 'Temporary absence expired for <prisoner>',
+    skipUser: true,
+  },
+  'person.temporary-absence.denied': {
+    heading: 'Absence occurrence denied',
+    content: 'Temporary absence occurrence denied for <prisoner>',
+    reasonRequested: true,
+  },
+  'person.temporary-absence.started': {
+    heading: 'Absence occurrence in progress',
+    content: 'Temporary absence occurrence in progress for <prisoner>',
+  },
+  'person.temporary-absence.completed': {
+    heading: 'Absence occurrence completed',
+    content: 'Temporary absence occurrence completed for <prisoner>',
+  },
 }
 
 const CHANGE_PROPERTY_MAP: { [key: string]: string } = {
@@ -105,6 +125,7 @@ const CHANGE_PROPERTY_MAP: { [key: string]: string } = {
   location: 'Location',
   accompaniedBy: 'Escort',
   comments: 'Comments',
+  status: 'Status',
 }
 
 const OCCURRENCE_CHANGE_PROPERTY_MAP: { [key: string]: string } = {
@@ -112,14 +133,15 @@ const OCCURRENCE_CHANGE_PROPERTY_MAP: { [key: string]: string } = {
   end: 'End date and time',
 }
 
-const parseChangedPropertyValue = (domain: string, value: unknown) => {
+const parseChangedPropertyValue = (domain: string, property: string, value: unknown) => {
   if (!value) return 'Not applicable'
 
-  if (domain.endsWith('comments-changed')) return `“${value}”`
+  if (domain.endsWith('comments-changed') && property === 'comments') return `“${value}”`
 
-  if (domain.endsWith('date-range-changed')) return formatDate(String(value))
+  if (domain.endsWith('date-range-changed') && ['start', 'end'].includes(property)) return formatDate(String(value))
 
-  if (domain.endsWith('rescheduled')) return formatDate(String(value), `d MMMM yyyy 'at' HH:mm`)
+  if (domain.endsWith('rescheduled') && ['start', 'end'].includes(property))
+    return formatDate(String(value), `d MMMM yyyy 'at' HH:mm`)
 
   return String(value)
 }
@@ -134,26 +156,28 @@ const parsePropertyName = (domain: string, propertyName: string) => {
 
 export const parseAuditHistory = (history: components['schemas']['AuditedAction'][]) => {
   const result = history
-    .map(action => {
-      const eventText = action.domainEvents[0] && DOMAIN_EVENT_MAP[action.domainEvents[0]]
-      if (!eventText) return null
+    .flatMap(action =>
+      action.domainEvents.map(event => {
+        const eventText = DOMAIN_EVENT_MAP[event]
+        if (!eventText) return null
 
-      if (!eventText.content) {
-        eventText.changes = action.changes
-          .map(
-            change =>
-              `${parsePropertyName(action.domainEvents[0]!, change.propertyName)} was changed from ${parseChangedPropertyValue(action.domainEvents[0]!, change.previous)} to ${parseChangedPropertyValue(action.domainEvents[0]!, change.change)}.`,
-          )
-          .filter(itm => Boolean(itm))
-      }
+        if (!eventText.content) {
+          eventText.changes = action.changes
+            .map(
+              change =>
+                `${parsePropertyName(event, change.propertyName)} was changed from ${parseChangedPropertyValue(event, change.propertyName, change.previous)} to ${parseChangedPropertyValue(event, change.propertyName, change.change)}.`,
+            )
+            .filter(itm => Boolean(itm))
+        }
 
-      return {
-        ...eventText,
-        reason: action.reason,
-        user: eventText.skipUser ? null : action.user,
-        occurredAt: action.occurredAt,
-      }
-    })
+        return {
+          ...eventText,
+          reason: action.reason,
+          user: eventText.skipUser ? null : action.user,
+          occurredAt: action.occurredAt,
+        }
+      }),
+    )
     .filter(itm => Boolean(itm))
 
   if (result[result.length - 1]?.heading === 'Absence approved') {

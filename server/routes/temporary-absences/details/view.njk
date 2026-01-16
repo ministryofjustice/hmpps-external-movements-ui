@@ -50,12 +50,12 @@
               },
               {
                 key: { text: "Start date and time" },
-                value: { text: occurrence.start | formatDate("cccc, d MMMM yyyy 'at' HH:mm") },
+                value: { text: occurrence.start | formatDate("cccc d MMMM yyyy 'at' HH:mm") },
                 actions: { items: [{ href: baseEditUrl + "/start-end-dates#startDate", text: "Change", visuallyHiddenText: "start date and time" }] }
               },
               {
                 key: { text: "Return date and time" },
-                value: { text: occurrence.end | formatDate("cccc, d MMMM yyyy 'at' HH:mm") },
+                value: { text: occurrence.end | formatDate("cccc d MMMM yyyy 'at' HH:mm") },
                 actions: { items: [{ href: baseEditUrl + "/start-end-dates#endDate", text: "Change", visuallyHiddenText: "return date and time" }] }
               },
               {
