@@ -154,26 +154,28 @@ const parsePropertyName = (domain: string, propertyName: string) => {
 
 export const parseAuditHistory = (history: components['schemas']['AuditedAction'][]) => {
   const result = history
-    .map(action => {
-      const eventText = action.domainEvents[0] && DOMAIN_EVENT_MAP[action.domainEvents[0]]
-      if (!eventText) return null
+    .flatMap(action =>
+      action.domainEvents.map(event => {
+        const eventText = DOMAIN_EVENT_MAP[event]
+        if (!eventText) return null
 
-      if (!eventText.content) {
-        eventText.changes = action.changes
-          .map(
-            change =>
-              `${parsePropertyName(action.domainEvents[0]!, change.propertyName)} was changed from ${parseChangedPropertyValue(action.domainEvents[0]!, change.previous)} to ${parseChangedPropertyValue(action.domainEvents[0]!, change.change)}.`,
-          )
-          .filter(itm => Boolean(itm))
-      }
+        if (!eventText.content) {
+          eventText.changes = action.changes
+            .map(
+              change =>
+                `${parsePropertyName(event, change.propertyName)} was changed from ${parseChangedPropertyValue(event, change.previous)} to ${parseChangedPropertyValue(event, change.change)}.`,
+            )
+            .filter(itm => Boolean(itm))
+        }
 
-      return {
-        ...eventText,
-        reason: action.reason,
-        user: eventText.skipUser ? null : action.user,
-        occurredAt: action.occurredAt,
-      }
-    })
+        return {
+          ...eventText,
+          reason: action.reason,
+          user: eventText.skipUser ? null : action.user,
+          occurredAt: action.occurredAt,
+        }
+      }),
+    )
     .filter(itm => Boolean(itm))
 
   if (result[result.length - 1]?.heading === 'Absence approved') {
