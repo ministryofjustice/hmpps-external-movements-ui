@@ -60,16 +60,13 @@ test.describe('/add-temporary-absence/check-absences', () => {
     const testPage = await new CheckPatternPage(page).verifyContent()
 
     await testPage.verifyLink('Change dates and times (Month 1 of 3: January 2001)', /select-days-and-times\/1/)
-    await testPage.verifyAnswer('Monday, 1 January', /Start time: 10:00(.+)?Return time: 17:30/)
+    await testPage.verifyAnswer('Monday 1 January', /Start time: 10:00(.+)?Return time: 17:30/)
 
     await testPage.verifyLink('Add absence occurrence (Month 2 of 3: February 2001)', /select-days-and-times\/2/)
     expect(page.getByText('No absence entered')).toBeVisible()
 
     await testPage.verifyLink('Change dates and times (Month 3 of 3: March 2001)', /select-days-and-times\/3/)
-    await testPage.verifyAnswer(
-      /Friday, 16 March to(.+)?Saturday, 17 March/,
-      /Start time: 23:00(.+)?Return time: 04:30/,
-    )
+    await testPage.verifyAnswer(/Friday 16 March to(.+)?Saturday 17 March/, /Start time: 23:00(.+)?Return time: 04:30/)
   })
 
   test('should show weekly absences', async ({ page }) => {
@@ -97,20 +94,20 @@ test.describe('/add-temporary-absence/check-absences', () => {
     // verify page content
     const testPage = await new CheckPatternPage(page).verifyContent()
 
-    await expect(page.getByText('Week starting Monday, 1 January 2001')).toBeVisible()
+    await expect(page.getByText('Week starting Monday 1 January 2001')).toBeVisible()
 
-    await testPage.verifyAnswer('Monday, 8 January', /Start time: 10:00(.+)?Return time: 17:30/)
-    await testPage.verifyAnswer('Monday, 15 January', /Start time: 10:00(.+)?Return time: 17:30/)
+    await testPage.verifyAnswer('Monday 8 January', /Start time: 10:00(.+)?Return time: 17:30/)
+    await testPage.verifyAnswer('Monday 15 January', /Start time: 10:00(.+)?Return time: 17:30/)
 
     await testPage.verifyAnswer(
-      /Wednesday, 3 January to(.+)?Thursday, 4 January/,
+      /Wednesday 3 January to(.+)?Thursday 4 January/,
       /Start time: 23:00(.+)?Return time: 04:30/,
     )
     await testPage.verifyAnswer(
-      /Wednesday, 10 January to(.+)?Thursday, 11 January/,
+      /Wednesday 10 January to(.+)?Thursday 11 January/,
       /Start time: 23:00(.+)?Return time: 04:30/,
     )
-    expect(await page.getByText(/Wednesday, 17 January to(.+)?Thursday, 18 January/)).toHaveCount(0)
+    expect(await page.getByText(/Wednesday 17 January to(.+)?Thursday 18 January/)).toHaveCount(0)
 
     await testPage.verifyLink('Go back to change this schedule', /select-days-times-weekly/)
   })

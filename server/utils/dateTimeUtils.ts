@@ -29,7 +29,7 @@ export const inputDate = (plusDays: number = 0, plusMonth: number = 0) => {
 
 export const absenceTimeRange = ({ start, end }: { start: string; end: string }) => {
   if (start.substring(0, 10) === end.substring(0, 10)) {
-    return `${format(start, 'cccc, d MMMM')} (${format(start, 'HH:mm')} to ${format(end, 'HH:mm')})`
+    return `${format(start, 'cccc d MMMM')} (${format(start, 'HH:mm')} to ${format(end, 'HH:mm')})`
   }
-  return `${format(start, 'cccc, d MMMM')} to ${format(end, 'cccc, d MMMM')} (${format(start, 'HH:mm')} to ${format(end, 'HH:mm')})`
+  return `${format(start, 'cccc d MMMM')} to ${format(end, 'cccc d MMMM')} (${format(start, 'HH:mm')} to ${format(end, 'HH:mm')})`
 }

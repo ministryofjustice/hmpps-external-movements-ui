@@ -119,7 +119,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await testPage.verifyAnswer('Transport', 'Car')
     await testPage.verifyAnswer('Location', 'Random Street, UK')
 
-    await testPage.verifyTableRow(1, ['Monday, 1 January at 10:00', 'Monday, 1 January at 17:30', /To be reviewed/])
+    await testPage.verifyTableRow(1, ['Monday 1 January at 10:00', 'Monday 1 January at 17:30', /To be reviewed/])
 
     await expect(testPage.link('Change comments (Absence information)')).toBeVisible()
 
@@ -212,7 +212,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await testPage.verifyAnswer('Transport', 'Car')
     await testPage.verifyAnswer('Location', 'Random Street, UK')
 
-    await testPage.verifyTableRow(1, ['Monday, 1 January at 10:00', 'Monday, 1 January at 17:30', /To be reviewed/])
+    await testPage.verifyTableRow(1, ['Monday 1 January at 10:00', 'Monday 1 January at 17:30', /To be reviewed/])
 
     await expect(testPage.button('Review this absence')).toHaveCount(0)
     await expect(testPage.button('Cancel this absence')).toBeVisible()
@@ -320,7 +320,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await testPage.verifyAnswer('Transport', 'Car')
     await testPage.verifyAnswer('Location', 'Random Street, UK')
 
-    await testPage.verifyTableRow(1, ['Monday, 1 January at 10:00', 'Monday, 1 January at 17:30', /To be reviewed/])
+    await testPage.verifyTableRow(1, ['Monday 1 January at 10:00', 'Monday 1 January at 17:30', /To be reviewed/])
 
     await expect(testPage.button('Review this absence')).toBeVisible()
     await expect(testPage.button('Cancel this absence')).toHaveCount(0)

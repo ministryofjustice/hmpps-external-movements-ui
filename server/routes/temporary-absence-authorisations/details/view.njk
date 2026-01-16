@@ -204,11 +204,11 @@
     {% for occurrence in result.occurrences | sort(false, false, 'start') %}
       {% set rows = (rows.push([
         {
-          text: occurrence.start | formatDate("cccc, d MMMM 'at' HH:mm"),
+          text: occurrence.start | formatDate("cccc d MMMM 'at' HH:mm"),
           attributes: { "data-sort-value": occurrence.start }
         },
         {
-          text: occurrence.end | formatDate("cccc, d MMMM 'at' HH:mm"),
+          text: occurrence.end | formatDate("cccc d MMMM 'at' HH:mm"),
           attributes: { "data-sort-value": occurrence.end }
         },
         {
@@ -217,7 +217,7 @@
         },
         {
           classes: 'govuk-link govuk-link--no-visited-state',
-          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">View<span class="govuk-visually-hidden"> occurrence on ' + occurrence.start | formatDate("cccc, d MMMM yyyy 'at' HH:mm") + '</span></a>',
+          html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">View<span class="govuk-visually-hidden"> occurrence on ' + occurrence.start | formatDate("cccc d MMMM yyyy 'at' HH:mm") + '</span></a>',
           format: "numeric"
         }
       ] | removeNullish), rows) %}
