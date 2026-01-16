@@ -125,6 +125,7 @@ const CHANGE_PROPERTY_MAP: { [key: string]: string } = {
   location: 'Location',
   accompaniedBy: 'Escort',
   comments: 'Comments',
+  status: 'Status',
 }
 
 const OCCURRENCE_CHANGE_PROPERTY_MAP: { [key: string]: string } = {
@@ -132,14 +133,15 @@ const OCCURRENCE_CHANGE_PROPERTY_MAP: { [key: string]: string } = {
   end: 'End date and time',
 }
 
-const parseChangedPropertyValue = (domain: string, value: unknown) => {
+const parseChangedPropertyValue = (domain: string, property: string, value: unknown) => {
   if (!value) return 'Not applicable'
 
-  if (domain.endsWith('comments-changed')) return `“${value}”`
+  if (domain.endsWith('comments-changed') && property === 'comments') return `“${value}”`
 
-  if (domain.endsWith('date-range-changed')) return formatDate(String(value))
+  if (domain.endsWith('date-range-changed') && ['start', 'end'].includes(property)) return formatDate(String(value))
 
-  if (domain.endsWith('rescheduled')) return formatDate(String(value), `d MMMM yyyy 'at' HH:mm`)
+  if (domain.endsWith('rescheduled') && ['start', 'end'].includes(property))
+    return formatDate(String(value), `d MMMM yyyy 'at' HH:mm`)
 
   return String(value)
 }
@@ -163,7 +165,7 @@ export const parseAuditHistory = (history: components['schemas']['AuditedAction'
           eventText.changes = action.changes
             .map(
               change =>
-                `${parsePropertyName(event, change.propertyName)} was changed from ${parseChangedPropertyValue(event, change.previous)} to ${parseChangedPropertyValue(event, change.change)}.`,
+                `${parsePropertyName(event, change.propertyName)} was changed from ${parseChangedPropertyValue(event, change.propertyName, change.previous)} to ${parseChangedPropertyValue(event, change.propertyName, change.change)}.`,
             )
             .filter(itm => Boolean(itm))
         }
