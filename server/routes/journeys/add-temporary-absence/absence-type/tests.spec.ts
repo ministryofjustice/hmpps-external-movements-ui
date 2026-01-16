@@ -1,6 +1,5 @@
 import { v4 as uuidV4 } from 'uuid'
 import { expect, test } from '@playwright/test'
-import { getSentAuditEvents } from '../../../../../integration_tests/mockApis/wiremock'
 import auth from '../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../../integration_tests/steps/signIn'
@@ -10,6 +9,7 @@ import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApi
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { AbsenceTypePage } from './test.page'
 import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+import { verifyAuditEvents } from '../../../../../integration_tests/steps/verifyAuditEvents'
 
 test.describe('/add-temporary-absence/absence-type unauthorised', () => {
   test('should show unauthorised error', async ({ page }) => {
@@ -48,30 +48,28 @@ test.describe('/add-temporary-absence/absence-type', () => {
     await expect(testPage.button('Continue')).toBeVisible()
 
     // verify audit events
-    expect(await getSentAuditEvents()).toEqual(
-      expect.arrayContaining([
-        {
-          what: 'PAGE_VIEW',
-          subjectType: 'PRISONER_ID',
-          subjectId: prisonNumber,
-          details: `{"pageUrl":"/${journeyId}/add-temporary-absence/absence-type","pageName":"ADD_TEMPORARY_ABSENCE","activeCaseLoadId":"LEI"}`,
-          service: 'hmpps-external-movements-ui',
-          who: 'USER1',
-          correlationId: expect.any(String),
-          when: expect.any(String),
-        },
-        {
-          what: 'PAGE_VIEW_ACCESS_ATTEMPT',
-          subjectType: 'PRISONER_ID',
-          subjectId: prisonNumber,
-          details: `{"pageUrl":"/${journeyId}/add-temporary-absence/absence-type","pageName":"ADD_TEMPORARY_ABSENCE","activeCaseLoadId":"LEI"}`,
-          service: 'hmpps-external-movements-ui',
-          who: 'USER1',
-          correlationId: expect.any(String),
-          when: expect.any(String),
-        },
-      ]),
-    )
+    await verifyAuditEvents([
+      {
+        what: 'PAGE_VIEW',
+        subjectType: 'PRISONER_ID',
+        subjectId: prisonNumber,
+        details: `{"pageUrl":"/${journeyId}/add-temporary-absence/absence-type","pageName":"ADD_TEMPORARY_ABSENCE","activeCaseLoadId":"LEI"}`,
+        service: 'hmpps-external-movements-ui',
+        who: 'USER1',
+        correlationId: expect.any(String),
+        when: expect.any(String),
+      },
+      {
+        what: 'PAGE_VIEW_ACCESS_ATTEMPT',
+        subjectType: 'PRISONER_ID',
+        subjectId: prisonNumber,
+        details: `{"pageUrl":"/${journeyId}/add-temporary-absence/absence-type","pageName":"ADD_TEMPORARY_ABSENCE","activeCaseLoadId":"LEI"}`,
+        service: 'hmpps-external-movements-ui',
+        who: 'USER1',
+        correlationId: expect.any(String),
+        when: expect.any(String),
+      },
+    ])
 
     // verify validation error
     await testPage.clickContinue()

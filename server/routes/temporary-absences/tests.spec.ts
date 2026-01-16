@@ -8,6 +8,7 @@ import {
 } from '../../../integration_tests/mockApis/externalMovementsApi'
 import { BrowseTapOccurrencesPage } from './test.page'
 import { testTapOccurrenceResult } from '../../../integration_tests/data/testData'
+import { verifyAuditEvents } from '../../../integration_tests/steps/verifyAuditEvents'
 
 test.describe('/temporary-absences', () => {
   test.beforeAll(async () => {
@@ -54,5 +55,20 @@ test.describe('/temporary-absences', () => {
     await testPage.link('Enter a valid date range').click()
     await expect(testPage.startDateField()).toBeFocused()
     await expect(page.getByText('Enter a valid filter to search and view temporary absences.')).toBeVisible()
+
+    // verify audit event
+    await verifyAuditEvents([
+      {
+        what: 'PAGE_VIEW',
+        subjectType: 'SEARCH_TERM',
+        subjectId: 'test',
+        details:
+          '{"pageUrl":"/temporary-absences?searchTerm=test&start=01%2F01%2F2001&end=02%2F01%2F2001&status=SCHEDULED&page=2","pageName":"SEARCH_TEMPORARY_ABSENCE_OCCURRENCES","query":"test","activeCaseLoadId":"LEI"}',
+        service: 'hmpps-external-movements-ui',
+        who: 'USER1',
+        correlationId: expect.any(String),
+        when: expect.any(String),
+      },
+    ])
   })
 })
