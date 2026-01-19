@@ -47,7 +47,7 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
       uprn: val.uprn!,
       addressString: address.addressString,
       postcode: address.postcode,
-      description: address.subBuildingName,
+      description: address.organisationName,
     }
   })
 
