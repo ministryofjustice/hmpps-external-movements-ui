@@ -91,6 +91,7 @@ export type AddTemporaryAbsenceJourney = Partial<{
     end: string
     locationIdx: number
   }[]
+  createdId?: string
 }>
 
 export type ShiftPatternInterval =

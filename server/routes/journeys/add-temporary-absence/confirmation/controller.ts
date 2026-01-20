@@ -5,6 +5,7 @@ export class AddAbsenceConfirmationController {
     req.journeyData.journeyCompleted = true
     res.render('add-temporary-absence/confirmation/view', {
       historyQuery: encodeURIComponent(req.journeyData.addTemporaryAbsence!.historyQuery!),
+      createdId: req.journeyData.addTemporaryAbsence!.createdId,
     })
   }
 }

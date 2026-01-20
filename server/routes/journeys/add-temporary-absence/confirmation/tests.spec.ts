@@ -9,6 +9,7 @@ import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApi
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { AddAbsenceConfirmationPage } from './test.page'
 import { testNotAuthorisedPage } from '../../../../../integration_tests/steps/testNotAuthorisedPage'
+import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 
 test.describe('/add-temporary-absence/confirmation unauthorised', () => {
   test('should show unauthorised error', async ({ page }) => {
@@ -35,6 +36,7 @@ test.describe('/add-temporary-absence/confirmation', () => {
 
   const startJourney = async (page: Page, journeyId: string) => {
     await page.goto(`/${journeyId}/add-temporary-absence/start/${prisonNumber}`)
+    await injectJourneyData(page, journeyId, { addTemporaryAbsence: { historyQuery: 'history', createdId: 'authorisation-id' } })
     await page.goto(`/${journeyId}/add-temporary-absence/confirmation`)
   }
 
@@ -45,6 +47,7 @@ test.describe('/add-temporary-absence/confirmation', () => {
     // verify page content
     const testPage = await new AddAbsenceConfirmationPage(page).verifyContent()
 
+    await testPage.verifyLink('View and manage this temporary absence', /temporary-absence-authorisations\/authorisation-id/)
     await testPage.verifyLink('Add another temporary absence for this prisoner', /add-temporary-absence\/start\//)
     await testPage.verifyLink(
       'View upcoming temporary absences in your establishment',
