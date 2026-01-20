@@ -13,7 +13,7 @@ export const stubSearchAddresses = (query: string, addresses: OsAddress[]) =>
 export const stubGetAddress = (uprn: string, address: OsAddress) =>
   successStub({
     method: 'GET',
-    url: `/os-places-api/uprn?uprn=${uprn}&key=apikey&dataset=DPA%2CLPI`,
+    url: `/os-places-api/uprn?uprn=${uprn}&key=apikey&dataset=LPI`,
     response: {
       results: [parseAddress(address)],
     },
