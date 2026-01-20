@@ -82,9 +82,16 @@ export class AddTapCheckAnswersController {
         }
       }
 
-      const result = await this.externalMovementsService.createTap({ res }, req.journeyData.prisonerDetails!.prisonerNumber, request)
+      const result = await this.externalMovementsService.createTap(
+        { res },
+        req.journeyData.prisonerDetails!.prisonerNumber,
+        request,
+      )
       req.journeyData.journeyCompleted = true
-      req.journeyData.addTemporaryAbsence = { historyQuery: req.journeyData.addTemporaryAbsence!.historyQuery!, createdId: result.id }
+      req.journeyData.addTemporaryAbsence = {
+        historyQuery: req.journeyData.addTemporaryAbsence!.historyQuery!,
+        createdId: result.id,
+      }
       next()
     } catch (e) {
       next(e)

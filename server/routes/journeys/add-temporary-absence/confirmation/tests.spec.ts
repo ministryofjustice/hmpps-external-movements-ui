@@ -36,7 +36,9 @@ test.describe('/add-temporary-absence/confirmation', () => {
 
   const startJourney = async (page: Page, journeyId: string) => {
     await page.goto(`/${journeyId}/add-temporary-absence/start/${prisonNumber}`)
-    await injectJourneyData(page, journeyId, { addTemporaryAbsence: { historyQuery: 'history', createdId: 'authorisation-id' } })
+    await injectJourneyData(page, journeyId, {
+      addTemporaryAbsence: { historyQuery: 'history', createdId: 'authorisation-id' },
+    })
     await page.goto(`/${journeyId}/add-temporary-absence/confirmation`)
   }
 
@@ -47,7 +49,10 @@ test.describe('/add-temporary-absence/confirmation', () => {
     // verify page content
     const testPage = await new AddAbsenceConfirmationPage(page).verifyContent()
 
-    await testPage.verifyLink('View and manage this temporary absence', /temporary-absence-authorisations\/authorisation-id/)
+    await testPage.verifyLink(
+      'View and manage this temporary absence',
+      /temporary-absence-authorisations\/authorisation-id/,
+    )
     await testPage.verifyLink('Add another temporary absence for this prisoner', /add-temporary-absence\/start\//)
     await testPage.verifyLink(
       'View upcoming temporary absences in your establishment',
