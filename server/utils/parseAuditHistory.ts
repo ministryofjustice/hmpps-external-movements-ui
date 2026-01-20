@@ -112,6 +112,10 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
     heading: 'Absence occurrence completed',
     content: 'Temporary absence occurrence completed for <prisoner>',
   },
+  'person.temporary-absence-authorisation.deferred': {
+    heading: 'Absence deferred',
+    content: 'Temporary absence sent back for review for <prisoner>',
+  },
 }
 
 const CHANGE_PROPERTY_MAP: { [key: string]: string } = {
