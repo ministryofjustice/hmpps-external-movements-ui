@@ -5,7 +5,7 @@
 {% set pageTitle = 'Change comments - Manage Temporary Absence' %}
 
 {% block innerContent %}
-  <div class="govuk-width-container govuk-button">
+  <div class="govuk-width-container">
     <span class="govuk-caption-l">Manage Temporary Absences</span>
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -26,7 +26,6 @@
       }) }}
 
       {{ govukButton({
-        classes: 'govuk-button--inverse',
         text: "Continue",
         preventDoubleClick: true
       }) }}
