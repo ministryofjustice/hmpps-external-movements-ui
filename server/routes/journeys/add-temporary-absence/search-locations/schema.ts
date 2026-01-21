@@ -26,7 +26,9 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
       return z.NEVER
     }
 
-    const address = val.uprn ? await osPlacesAddressService.getAddressByUprn(val.uprn) : null
+    const address = val.uprn
+      ? await osPlacesAddressService.getAddressByUprn(val.uprn, { osPlacesQueryParamOverrides: { dataset: 'LPI' } })
+      : null
 
     if (!address) {
       ctx.addIssue({ code: 'custom', message: ERROR_MSG, path: ['address-autosuggest-input'] })
