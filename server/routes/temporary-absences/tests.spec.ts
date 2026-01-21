@@ -4,7 +4,6 @@ import componentsApi from '../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../integration_tests/steps/signIn'
 import {
   stubGetAbsenceCategoriesInUse,
-  stubGetAllAbsenceTypes,
   stubSearchTapOccurrence,
 } from '../../../integration_tests/mockApis/externalMovementsApi'
 import { BrowseTapOccurrencesPage } from './test.page'
@@ -16,7 +15,6 @@ test.describe('/temporary-absences', () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
-      stubGetAllAbsenceTypes({ items: [] }),
       stubGetAbsenceCategoriesInUse({
         types: [],
         subTypes: [],

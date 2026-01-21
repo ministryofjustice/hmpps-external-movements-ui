@@ -20,7 +20,6 @@ generic-service:
     ENVIRONMENT_NAME: DEV
     SENTRY_ENVIRONMENT: DEV
     AUDIT_ENABLED: "true"
-    REFERENCE_DATA_CACHE_TIMEOUT: 600
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-alerts-api-non-prod

@@ -7,8 +7,6 @@ import ExternalMovementsService from './apis/externalMovementsService'
 import config from '../config'
 import PrisonerSearchApiService from './apis/prisonerSearchService'
 import PrisonApiService from './apis/prisonApiService'
-import CacheInterface from '../data/cache/cacheInterface'
-import InMemoryCache from '../data/cache/inMemoryCache'
 
 export const services = () => {
   const { applicationInfo, hmppsAuditClient, osPlacesApiClient, telemetryClient, authenticationClient, cacheStore } =
@@ -17,10 +15,7 @@ export const services = () => {
   return {
     applicationInfo,
     auditService: new AuditService(hmppsAuditClient),
-    externalMovementsService: new ExternalMovementsService(
-      authenticationClient,
-      <T>(prefix: string): CacheInterface<T> => new InMemoryCache<T>(prefix),
-    ),
+    externalMovementsService: new ExternalMovementsService(authenticationClient),
     prisonerSearchService: new PrisonerSearchApiService(authenticationClient),
     prisonApiService: new PrisonApiService(authenticationClient),
     osPlacesAddressService: new OsPlacesAddressService(logger, osPlacesApiClient),

@@ -8,7 +8,6 @@ import { components } from '../../@types/externalMovements'
 import { getApiUserErrorMessage } from '../../utils/utils'
 import { setPaginationLocals } from '../../views/partials/simplePagination/utils'
 import { absenceCategorisationMapper } from '../common/utils'
-import { getAbsenceCategorisationsFullSet } from '../temporary-absence-authorisations/utils'
 
 export class BrowseTapOccurrencesController {
   constructor(readonly externalMovementsService: ExternalMovementsService) {}
@@ -93,10 +92,8 @@ export class BrowseTapOccurrencesController {
       res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
     }
 
-    const { types, subTypes, reasonCategories, reasons } = await getAbsenceCategorisationsFullSet(
-      this.externalMovementsService,
-      res,
-    )
+    const { types, subTypes, reasonCategories, reasons } =
+      await this.externalMovementsService.getAbsenceCategoriesInUse({ res })
 
     res.render('temporary-absences/view', {
       showBreadcrumbs: true,
