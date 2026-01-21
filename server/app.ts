@@ -71,7 +71,10 @@ export default function createApp(services: Services): express.Application {
 
   app.get('/api/addresses/find/:query', async (req: Request<{ query: string }>, res: Response) => {
     try {
-      const results = await services.osPlacesAddressService.getAddressesMatchingQuery(req.params.query)
+      const results = await services.osPlacesAddressService.getAddressesMatchingQuery(req.params.query, {
+        osPlacesQueryParamOverrides: { dataset: 'LPI' },
+        fuzzyMatchOptionOverrides: {},
+      })
       res.json({ status: 200, results })
     } catch (e) {
       const error = e as { status?: number; message: string }
