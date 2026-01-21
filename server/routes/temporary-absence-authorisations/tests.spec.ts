@@ -3,6 +3,7 @@ import auth from '../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../integration_tests/steps/signIn'
 import {
+  stubGetAbsenceCategoriesInUse,
   stubGetAllAbsenceTypes,
   stubSearchTapAuthorisation,
 } from '../../../integration_tests/mockApis/externalMovementsApi'
@@ -11,7 +12,17 @@ import { verifyAuditEvents } from '../../../integration_tests/steps/verifyAuditE
 
 test.describe('/temporary-absence-authorisations', () => {
   test.beforeAll(async () => {
-    await Promise.all([auth.stubSignIn(), componentsApi.stubComponents(), stubGetAllAbsenceTypes({ items: [] })])
+    await Promise.all([
+      auth.stubSignIn(),
+      componentsApi.stubComponents(),
+      stubGetAllAbsenceTypes({ items: [] }),
+      stubGetAbsenceCategoriesInUse({
+        types: [],
+        subTypes: [],
+        reasonCategories: [],
+        reasons: [],
+      }),
+    ])
   })
 
   test.beforeEach(async ({ page }) => {

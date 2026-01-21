@@ -103,6 +103,14 @@ export default class ExternalMovementsService {
     return result
   }
 
+  async getAbsenceCategoriesInUse(context: ApiRequestContext) {
+    return this.externalMovementsApiClient
+      .withContext(context)
+      .get<components['schemas']['PrisonAbsenceCategorisations']>({
+        path: `/prisons/${context.res.locals.user.getActiveCaseloadId()}/absence-categorisations`,
+      })
+  }
+
   async createTap(
     context: ApiRequestContext,
     prisonNumber: string,

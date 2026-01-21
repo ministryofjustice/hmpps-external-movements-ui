@@ -25,7 +25,11 @@ export const getAbsenceCategorisationsFullSet = async (
   externalMovementsService: ExternalMovementsService,
   res: Response,
 ) => {
-  const types = (await externalMovementsService.getAllAbsenceTypes({ res })).items
+  const prisonAbsenceCategorisations = await externalMovementsService.getAbsenceCategoriesInUse({ res })
+
+  const types = (await externalMovementsService.getAllAbsenceTypes({ res })).items.filter(itm =>
+    prisonAbsenceCategorisations.types.find(itmInUse => itmInUse.code === itm.code),
+  )
   const subTypes = dedupRef(
     (
       await Promise.all(
@@ -34,7 +38,7 @@ export const getAbsenceCategorisationsFullSet = async (
           .map(async itm => externalMovementsService.getAbsenceCategories({ res }, 'ABSENCE_TYPE', itm.code)),
       )
     ).flatMap(itm => itm.items),
-  )
+  ).filter(itm => prisonAbsenceCategorisations.subTypes.find(itmInUse => itmInUse.code === itm.code))
   const reasonCategories = dedupRef(
     (
       await Promise.all(
@@ -43,7 +47,7 @@ export const getAbsenceCategorisationsFullSet = async (
           .map(async itm => externalMovementsService.getAbsenceCategories({ res }, 'ABSENCE_SUB_TYPE', itm.code)),
       )
     ).flatMap(itm => itm.items),
-  )
+  ).filter(itm => prisonAbsenceCategorisations.reasonCategories.find(itmInUse => itmInUse.code === itm.code))
   const reasons = dedupRef(
     (
       await Promise.all(
@@ -62,7 +66,7 @@ export const getAbsenceCategorisationsFullSet = async (
           }),
       )
     ).flatMap(itm => itm.items),
-  )
+  ).filter(itm => prisonAbsenceCategorisations.reasons.find(itmInUse => itmInUse.code === itm.code))
 
   return { types, subTypes, reasonCategories, reasons }
 }

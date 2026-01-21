@@ -115,6 +115,13 @@ export const stubGetAllAbsenceTypes = (response: object = testAbsenceTypes) =>
     response,
   })
 
+export const stubGetAbsenceCategoriesInUse = (response: components['schemas']['PrisonAbsenceCategorisations']) =>
+  successStub({
+    method: 'GET',
+    urlPattern: '/external-movements-api/prisons/LEI/absence-categorisations',
+    response,
+  })
+
 export const stubGetReferenceData = (domain: string) =>
   successStub({
     method: 'GET',
