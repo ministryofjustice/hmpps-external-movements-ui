@@ -10,7 +10,9 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
     uprn: z.string().optional(),
   }).transform(async ({ uprn, ...val }, ctx) => {
     const address =
-      val['address-autosuggest-input'] && uprn ? await osPlacesAddressService.getAddressByUprn(uprn) : null
+      val['address-autosuggest-input'] && uprn
+        ? await osPlacesAddressService.getAddressByUprn(uprn, { osPlacesQueryParamOverrides: { dataset: 'LPI' } })
+        : null
 
     if (address) {
       return {
