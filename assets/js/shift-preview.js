@@ -59,7 +59,7 @@ function* iterateCalendarDays(dateFrom, dateTo) {
     }
   }
 
-  while (currentDay.toISOString().substring(0, 10) <= dateTo) {
+  while (currentDay.toLocaleDateString('en-CA') <= dateTo) {
     if (currentDay.getMonth() !== currentMonth) {
       let padStartLength = (currentDay.getDay() + 6) % 7
       if (padStartLength) {
@@ -98,7 +98,7 @@ function* iterateCalendarDays(dateFrom, dateTo) {
         const day = new Date(dateTo)
         day.setDate(day.getDate() + i)
         yield {
-          month: day.getMonth(),
+          month: lastDate.getMonth(),
           date: day.getMonth() === lastDate.getMonth() ? day.getDate() : '',
           inRange: false,
         }
@@ -120,7 +120,7 @@ export const getUpdatePreviewHandler = (dateFrom, dateTo, shiftIteratorHandler) 
 
   let currentDay = new Date(dateFrom)
   let shiftTime = shiftIterator()
-  while (currentDay.toISOString().substring(0, 10) <= dateTo) {
+  while (currentDay.toLocaleDateString('en-CA') <= dateTo) {
     const row = document.createElement('tr')
     row.setAttribute('class', 'govuk-table__row')
     const time = shiftTime.next().value

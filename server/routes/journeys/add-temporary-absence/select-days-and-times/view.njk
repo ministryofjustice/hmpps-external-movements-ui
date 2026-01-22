@@ -178,8 +178,8 @@
       }))
 
       const currentDay = new Date(dateFrom)
-      while (currentDay.toISOString().substring(0, 10) <= dateTo) {
-        yield mappedPattern.find(({startDate}) => currentDay.toISOString().startsWith(startDate))
+      while (currentDay.toLocaleDateString('en-CA') <= dateTo) {
+        yield mappedPattern.find(({startDate}) => currentDay.toLocaleDateString('en-CA').startsWith(startDate))
         currentDay.setDate(currentDay.getDate() + 1)
       }
       for (;;) yield null
@@ -223,7 +223,7 @@
     const parseDate = (date) => {
       const parsedDate = new Date(date.split('/').reverse().join('-'))
       if (isNaN(parsedDate)) return null
-      return parsedDate.toISOString().substring(0, 10)
+      return parsedDate.toLocaleDateString('en-CA')
     }
 
     const parseHourMinute = (hour, minute) => {
