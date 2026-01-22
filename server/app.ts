@@ -28,6 +28,7 @@ import PrisonerImageRoutes from './routes/prisonerImageRoutes'
 import { handleApiError } from './middleware/validation/handleApiError'
 import { permissionsMiddleware } from './middleware/permissions/permissionsMiddleware'
 import { AuthorisedRoles } from './middleware/permissions/populateUserPermissions'
+import { handleJsonErrorResponse, jsonErrorMiddleware } from './middleware/handleJsonErrorResponse'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -66,6 +67,7 @@ export default function createApp(services: Services): express.Application {
   )
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
+  app.use(jsonErrorMiddleware)
 
   app.get('/prisoner-image/:prisonNumber', new PrisonerImageRoutes(services.prisonApiService).GET)
 
@@ -82,10 +84,8 @@ export default function createApp(services: Services): express.Application {
         },
       })
       res.json({ status: 200, results })
-    } catch (e) {
-      const error = e as { status?: number; message: string }
-      const status: number = 'status' in error && typeof error.status === 'number' ? error.status : 500
-      res.status(status).json({ status, error: error.message })
+    } catch (error) {
+      res.jsonError(error as { status?: number; message: string })
     }
   })
 
@@ -118,6 +118,9 @@ export default function createApp(services: Services): express.Application {
   if (config.sentry.dsn) Sentry.setupExpressErrorHandler(app)
 
   app.use((_req, res) => res.notFound())
+
+  // Error handlers must go after `Sentry.setupExpressErrorHandler(app)` for errors to be captured by Sentry
+  app.use(handleJsonErrorResponse)
   app.use(handleApiError)
   app.use(errorHandler(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'e2e-test'))
 
