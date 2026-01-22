@@ -65,23 +65,23 @@
               },
               {
                 key: { text: "Absence type" },
-                value: { text: result.absenceType.description },
+                value: { text: result.absenceType.description or 'Not provided' },
                 actions: { items: [{ href: baseEditUrl + "/absence-type", text: "Change", visuallyHiddenText: "absence type", classes: "govuk-link--no-visited-state" }] }
               },
               {
                 key: { text: "Absence sub-type" },
                 value: { text: result.absenceSubType.description },
-                actions: { items: [{ href: baseEditUrl + "/absence-subtype", text: "Change", visuallyHiddenText: "absence sub-type", classes: "govuk-link--no-visited-state" }] }
+                actions: { items: [{ href: baseEditUrl + "/absence-subtype", text: "Change", visuallyHiddenText: "absence sub-type", classes: "govuk-link--no-visited-state" }] } if result.absenceType
               } if result.absenceSubType,
               {
                 key: { text: "Absence reason" },
                 value: { text: result.absenceReasonCategory.description },
-                actions: { items: [{ href: baseEditUrl + "/reason-category", text: "Change", visuallyHiddenText: "absence reason", classes: "govuk-link--no-visited-state" }] }
+                actions: { items: [{ href: baseEditUrl + "/reason-category", text: "Change", visuallyHiddenText: "absence reason", classes: "govuk-link--no-visited-state" }] } if result.absenceType
               } if result.absenceReasonCategory,
               {
                 key: { text: "Work type" if result.absenceReasonCategory else "Absence reason" },
                 value: { text: result.absenceReason.description },
-                actions: { items: [{ href: baseEditUrl + "/reason", text: "Change", visuallyHiddenText: "work type" if result.absenceReasonCategory else "absence reason", classes: "govuk-link--no-visited-state" }] }
+                actions: { items: [{ href: baseEditUrl + "/reason", text: "Change", visuallyHiddenText: "work type" if result.absenceReasonCategory else "absence reason", classes: "govuk-link--no-visited-state" }] } if result.absenceType
               } if result.absenceReason,
               {
                 key: { text: "Start date" },
