@@ -41,6 +41,7 @@ export declare global {
         suppress(suppress: boolean): void
       }
       sendApiEvent?: (apiUrl: string, isAttempt: boolean) => void
+      jsonError: (error: { status?: number; message: string }) => void
     }
 
     interface Locals {
@@ -88,6 +89,7 @@ export declare global {
       appInsightsConnectionString?: string
       appInsightsApplicationName?: string
       buildNumber?: string
+      jsonError?: { status: number; error: string }
     }
   }
 }
