@@ -5,7 +5,6 @@ import config from '../../config'
 import logger from '../../../logger'
 import { components } from '../../@types/externalMovements'
 import { parseQueryParams } from '../../utils/utils'
-import CacheInterface from '../../data/cache/cacheInterface'
 
 export type UpdateTapAuthorisation =
   | components['schemas']['ChangeAuthorisationComments']
@@ -34,16 +33,7 @@ export type UpdateTapOccurrence =
 export default class ExternalMovementsService {
   private externalMovementsApiClient: CustomRestClient
 
-  private categorisationCache: CacheInterface<components['schemas']['AbsenceCategorisations']>
-
-  private referenceDataCache: CacheInterface<components['schemas']['ReferenceDataResponse']>
-
-  private readonly REFERENCE_DATA_CACHE_TIMEOUT = Number(process.env['REFERENCE_DATA_CACHE_TIMEOUT'] ?? 600)
-
-  constructor(
-    authenticationClient: AuthenticationClient,
-    cacheStore: (prefix: string) => CacheInterface<components['schemas']['AbsenceCategorisations']>,
-  ) {
+  constructor(authenticationClient: AuthenticationClient) {
     this.externalMovementsApiClient = new CustomRestClient(
       'External Movements API',
       config.apis.externalMovementsApi,
@@ -59,26 +49,12 @@ export default class ExternalMovementsService {
         return undefined
       },
     )
-    this.categorisationCache = cacheStore('categorisation')
-    this.referenceDataCache = cacheStore('reference-data')
   }
 
   async getAllAbsenceTypes(context: ApiRequestContext) {
-    const cacheKey = 'TOP'
-    const cached = await this.categorisationCache.get(cacheKey)
-    if (cached) {
-      return cached
-    }
-
-    const result = await this.externalMovementsApiClient
-      .withContext(context)
-      .get<components['schemas']['AbsenceCategorisations']>({
-        path: '/absence-categorisation/ABSENCE_TYPE',
-      })
-
-    await this.categorisationCache.set(cacheKey, result, this.REFERENCE_DATA_CACHE_TIMEOUT)
-
-    return result
+    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['AbsenceCategorisations']>({
+      path: '/absence-categorisation/ABSENCE_TYPE',
+    })
   }
 
   async getAbsenceCategories(
@@ -86,21 +62,17 @@ export default class ExternalMovementsService {
     parentDomain: 'ABSENCE_TYPE' | 'ABSENCE_SUB_TYPE' | 'ABSENCE_REASON_CATEGORY',
     parentCode: string,
   ) {
-    const cacheKey = `${parentDomain}.${parentCode}`
-    const cached = await this.categorisationCache.get(cacheKey)
-    if (cached) {
-      return cached
-    }
+    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['AbsenceCategorisations']>({
+      path: `/absence-categorisation/${parentDomain}/${parentCode}`,
+    })
+  }
 
-    const result = await this.externalMovementsApiClient
+  async getAbsenceCategoryFilters(context: ApiRequestContext) {
+    return this.externalMovementsApiClient
       .withContext(context)
-      .get<components['schemas']['AbsenceCategorisations']>({
-        path: `/absence-categorisation/${parentDomain}/${parentCode}`,
+      .get<components['schemas']['AbsenceCategorisationFilters']>({
+        path: '/absence-categorisation/filters',
       })
-
-    await this.categorisationCache.set(cacheKey, result, this.REFERENCE_DATA_CACHE_TIMEOUT)
-
-    return result
   }
 
   async createTap(
@@ -115,20 +87,11 @@ export default class ExternalMovementsService {
   }
 
   async getReferenceData(context: ApiRequestContext, domain: string) {
-    const cached = await this.categorisationCache.get(domain)
-    if (cached) {
-      return cached.items
-    }
-
-    const result = await this.externalMovementsApiClient
-      .withContext(context)
-      .get<components['schemas']['ReferenceDataResponse']>({
+    return (
+      await this.externalMovementsApiClient.withContext(context).get<components['schemas']['ReferenceDataResponse']>({
         path: `/reference-data/${domain}`,
       })
-
-    await this.referenceDataCache.set(domain, result, this.REFERENCE_DATA_CACHE_TIMEOUT)
-
-    return result.items
+    ).items
   }
 
   async getTapOverview(context: ApiRequestContext) {

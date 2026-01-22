@@ -201,11 +201,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /**
-     * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
-     */
-    get: operations['findTapOccurrences']
+    get?: never
     put?: never
     /**
      * @description Requires one of the following roles:
@@ -225,11 +221,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /**
-     * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
-     */
-    get: operations['findTapAuthorisations']
+    get?: never
     put?: never
     /**
      * @description Requires one of the following roles:
@@ -408,6 +400,26 @@ export interface paths {
      * @description Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
      */
+    get: operations['countTemporaryAbsences']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/reconciliation-detail/{personIdentifier}/temporary-absences': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
+     */
     get: operations['getTemporaryAbsences']
     put?: never
     post?: never
@@ -471,6 +483,26 @@ export interface paths {
      *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
      */
     get: operations['getAbsenceCategorisationOptions']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/absence-categorisation/filters': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
+    get: operations['getAbsenceCategorisationFilters']
     put?: never
     post?: never
     delete?: never
@@ -1082,6 +1114,7 @@ export interface components {
       absenceSubTypeCode?: string
       absenceReasonCode: string
       accompaniedByCode: string
+      transportCode: string
       repeat: boolean
       /** Format: date */
       start: string
@@ -1168,6 +1201,16 @@ export interface components {
       occurrences: components['schemas']['PersonOccurrenceCount']
       movements: components['schemas']['PersonMovementsCount']
     }
+    Movement: {
+      /** Format: uuid */
+      id: string
+      /** @enum {string} */
+      direction: 'IN' | 'OUT'
+    }
+    PersonTapDetail: {
+      scheduledAbsences: components['schemas']['Authorisation'][]
+      unscheduledMovements: components['schemas']['Movement'][]
+    }
     Configuration: {
       tapEnabled: boolean
       courtMovementsEnabled: boolean
@@ -1204,6 +1247,25 @@ export interface components {
     AbsenceCategorisations: {
       domain: components['schemas']['CodedDescription']
       items: components['schemas']['AbsenceCategorisation'][]
+    }
+    AbsenceCategorisationFilters: {
+      types: components['schemas']['Option'][]
+      subTypes: components['schemas']['Option'][]
+      reasons: components['schemas']['Option'][]
+      workTypes: components['schemas']['Option'][]
+    }
+    Option: {
+      domainCode:
+        | 'ABSENCE_TYPE'
+        | 'ABSENCE_SUB_TYPE'
+        | 'ABSENCE_REASON_CATEGORY'
+        | 'ABSENCE_REASON'
+        | 'ACCOMPANIED_BY'
+        | 'TRANSPORT'
+        | 'TAP_AUTHORISATION_STATUS'
+        | 'TAP_OCCURRENCE_STATUS'
+      code: string
+      description: string
     }
   }
   responses: never
@@ -1516,28 +1578,6 @@ export interface operations {
       }
     }
   }
-  findTapOccurrences: {
-    parameters: {
-      query: {
-        request: components['schemas']['TapOccurrenceSearchRequest']
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['TapOccurrenceSearchResponse']
-        }
-      }
-    }
-  }
   searchTapOccurrences: {
     parameters: {
       query?: never
@@ -1558,28 +1598,6 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['TapOccurrenceSearchResponse']
-        }
-      }
-    }
-  }
-  findTapAuthorisations: {
-    parameters: {
-      query: {
-        request: components['schemas']['TapAuthorisationSearchRequest']
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['TapAuthorisationSearchResponse']
         }
       }
     }
@@ -1833,7 +1851,7 @@ export interface operations {
       }
     }
   }
-  getTemporaryAbsences: {
+  countTemporaryAbsences: {
     parameters: {
       query?: never
       header?: never
@@ -1851,6 +1869,28 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['PersonTapCounts']
+        }
+      }
+    }
+  }
+  getTemporaryAbsences: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        personIdentifier: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PersonTapDetail']
         }
       }
     }
@@ -1920,6 +1960,26 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['AbsenceCategorisations']
+        }
+      }
+    }
+  }
+  getAbsenceCategorisationFilters: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['AbsenceCategorisationFilters']
         }
       }
     }

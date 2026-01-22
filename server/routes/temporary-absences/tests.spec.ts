@@ -3,7 +3,7 @@ import auth from '../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../integration_tests/steps/signIn'
 import {
-  stubGetAllAbsenceTypes,
+  stubGetAbsenceCategoryFilters,
   stubSearchTapOccurrence,
 } from '../../../integration_tests/mockApis/externalMovementsApi'
 import { BrowseTapOccurrencesPage } from './test.page'
@@ -12,7 +12,16 @@ import { verifyAuditEvents } from '../../../integration_tests/steps/verifyAuditE
 
 test.describe('/temporary-absences', () => {
   test.beforeAll(async () => {
-    await Promise.all([auth.stubSignIn(), componentsApi.stubComponents(), stubGetAllAbsenceTypes({ items: [] })])
+    await Promise.all([
+      auth.stubSignIn(),
+      componentsApi.stubComponents(),
+      stubGetAbsenceCategoryFilters({
+        types: [],
+        subTypes: [],
+        reasons: [],
+        workTypes: [],
+      }),
+    ])
   })
 
   test.beforeEach(async ({ page }) => {

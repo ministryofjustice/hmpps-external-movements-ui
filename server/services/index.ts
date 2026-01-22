@@ -15,7 +15,7 @@ export const services = () => {
   return {
     applicationInfo,
     auditService: new AuditService(hmppsAuditClient),
-    externalMovementsService: new ExternalMovementsService(authenticationClient, cacheStore),
+    externalMovementsService: new ExternalMovementsService(authenticationClient),
     prisonerSearchService: new PrisonerSearchApiService(authenticationClient),
     prisonApiService: new PrisonApiService(authenticationClient),
     osPlacesAddressService: new OsPlacesAddressService(logger, osPlacesApiClient),

@@ -115,6 +115,13 @@ export const stubGetAllAbsenceTypes = (response: object = testAbsenceTypes) =>
     response,
   })
 
+export const stubGetAbsenceCategoryFilters = (response: components['schemas']['AbsenceCategorisationFilters']) =>
+  successStub({
+    method: 'GET',
+    urlPattern: '/external-movements-api/absence-categorisation/filters',
+    response,
+  })
+
 export const stubGetReferenceData = (domain: string) =>
   successStub({
     method: 'GET',
