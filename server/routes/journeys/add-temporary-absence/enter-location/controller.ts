@@ -23,6 +23,7 @@ export class EnterLocationController {
     const address: Address = req.body
 
     if (req.journeyData.addTemporaryAbsence!.repeat) {
+      delete req.journeyData.isCheckAnswers // break check-answers bounce back routing if locations are changed
       req.journeyData.addTemporaryAbsence!.locations ??= []
       req.journeyData.addTemporaryAbsence!.locations.push(address)
       res.redirect('search-locations')
