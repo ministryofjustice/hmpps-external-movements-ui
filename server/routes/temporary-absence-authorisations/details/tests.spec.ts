@@ -257,6 +257,53 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await expect(testPage.button('Cancel this absence')).toHaveCount(0)
   })
 
+  test('should handle edge case for legacy records', async ({ page }) => {
+    await signIn(page)
+
+    const authorisationId = uuidV4()
+
+    const { absenceType, ...authorisation } = testTapAuthorisation
+
+    await stubGetTapAuthorisation({
+      ...authorisation,
+      id: authorisationId,
+      status: { code: 'APPROVED', description: 'Approved' },
+      absenceReason: { code: 'PP', description: 'Police production' },
+      repeat: false,
+      start: '2001-01-01',
+      end: '2001-01-01',
+      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      transport: { code: 'CAR', description: 'Car' },
+      locations: [{ uprn: 1001, description: 'Random Street, UK' }],
+      occurrences: [
+        {
+          id: 'occurrence-id',
+          status: { code: 'PENDING', description: 'To be reviewed' },
+          start: '2001-01-01T10:00:00',
+          end: '2001-01-01T17:30:00',
+          location: { uprn: 1001, description: 'Random Street, UK' },
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+          transport: { code: 'CAR', description: 'Car' },
+        },
+      ],
+    })
+    await stubGetTapAuthorisationHistory(authorisationId, { content: [] })
+
+    await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
+
+    // verify page content
+    const testPage = await new TapAuthorisationDetailsPage(page).verifyContent()
+
+    await testPage.verifyAnswer('Absence type', 'Not provided')
+    await testPage.verifyAnswer('Absence reason', 'Police production')
+
+    await testPage.verifyLink(
+      'Change absence type',
+      /temporary-absence-authorisations\/start-edit\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/absence-type/,
+    )
+    await expect(testPage.link('Change absence reason')).toHaveCount(0)
+  })
+
   test('should show temporary absence details for repeating absence', async ({ page }) => {
     await signIn(page)
 
