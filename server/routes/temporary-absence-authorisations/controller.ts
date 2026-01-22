@@ -39,6 +39,13 @@ export class BrowseTapAuthorisationsController {
       ...(resQuery?.status?.map(itm => `status=${itm}`) ?? []),
     ].join('&')
 
+    const {
+      types,
+      subTypes,
+      reasons: reasonCategories,
+      workTypes: reasons,
+    } = await this.externalMovementsService.getAbsenceCategoryFilters({ res })
+
     const hasValidationError =
       Object.keys(resQuery).find(key => ['searchTerm', 'start', 'end', 'status'].includes(key)) && !resQuery.validated
     const missingDateRange = !resQuery?.validated?.start || !resQuery?.validated?.end
@@ -63,16 +70,25 @@ export class BrowseTapAuthorisationsController {
         }
 
         if (resQuery.validated.workType) {
-          requestBody.absenceCategorisation = { domainCode: 'ABSENCE_REASON', codes: [resQuery.validated.workType] }
+          requestBody.absenceCategorisation = {
+            domainCode: reasons.find(({ code }) => code === resQuery.validated!.workType)!.domainCode,
+            codes: [resQuery.validated.workType],
+          }
         } else if (resQuery.validated.reason) {
           requestBody.absenceCategorisation = {
-            domainCode: 'ABSENCE_REASON_CATEGORY',
+            domainCode: reasonCategories.find(({ code }) => code === resQuery.validated!.reason)!.domainCode,
             codes: [resQuery.validated.reason],
           }
         } else if (resQuery.validated.subType) {
-          requestBody.absenceCategorisation = { domainCode: 'ABSENCE_SUB_TYPE', codes: [resQuery.validated.subType] }
+          requestBody.absenceCategorisation = {
+            domainCode: subTypes.find(({ code }) => code === resQuery.validated!.subType)!.domainCode,
+            codes: [resQuery.validated.subType],
+          }
         } else if (resQuery.validated.type) {
-          requestBody.absenceCategorisation = { domainCode: 'ABSENCE_TYPE', codes: [resQuery.validated.type] }
+          requestBody.absenceCategorisation = {
+            domainCode: types.find(({ code }) => code === resQuery.validated!.type)!.domainCode,
+            codes: [resQuery.validated.type],
+          }
         }
 
         searchResponse = await this.externalMovementsService.searchTapAuthorisations({ res }, requestBody)
@@ -92,9 +108,6 @@ export class BrowseTapAuthorisationsController {
     } catch (error: unknown) {
       res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
     }
-
-    const { types, subTypes, reasonCategories, reasons } =
-      await this.externalMovementsService.getAbsenceCategoriesInUse({ res })
 
     res.render('temporary-absence-authorisations/view', {
       showBreadcrumbs: true,

@@ -67,11 +67,11 @@ export default class ExternalMovementsService {
     })
   }
 
-  async getAbsenceCategoriesInUse(context: ApiRequestContext) {
+  async getAbsenceCategoryFilters(context: ApiRequestContext) {
     return this.externalMovementsApiClient
       .withContext(context)
-      .get<components['schemas']['PrisonAbsenceCategorisations']>({
-        path: `/prisons/${context.res.locals.user.getActiveCaseloadId()}/absence-categorisations`,
+      .get<components['schemas']['AbsenceCategorisationFilters']>({
+        path: '/absence-categorisation/filters',
       })
   }
 

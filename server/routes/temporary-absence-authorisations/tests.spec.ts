@@ -3,7 +3,7 @@ import auth from '../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../integration_tests/steps/signIn'
 import {
-  stubGetAbsenceCategoriesInUse,
+  stubGetAbsenceCategoryFilters,
   stubSearchTapAuthorisation,
 } from '../../../integration_tests/mockApis/externalMovementsApi'
 import { BrowseTapAuthorisationsPage } from './test.page'
@@ -14,11 +14,11 @@ test.describe('/temporary-absence-authorisations', () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
-      stubGetAbsenceCategoriesInUse({
+      stubGetAbsenceCategoryFilters({
         types: [],
         subTypes: [],
-        reasonCategories: [],
         reasons: [],
+        workTypes: [],
       }),
     ])
   })

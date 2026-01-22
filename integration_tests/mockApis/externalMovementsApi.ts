@@ -115,10 +115,10 @@ export const stubGetAllAbsenceTypes = (response: object = testAbsenceTypes) =>
     response,
   })
 
-export const stubGetAbsenceCategoriesInUse = (response: components['schemas']['PrisonAbsenceCategorisations']) =>
+export const stubGetAbsenceCategoryFilters = (response: components['schemas']['AbsenceCategorisationFilters']) =>
   successStub({
     method: 'GET',
-    urlPattern: '/external-movements-api/prisons/LEI/absence-categorisations',
+    urlPattern: '/external-movements-api/absence-categorisation/filters',
     response,
   })
 
