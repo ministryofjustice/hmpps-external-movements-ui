@@ -46,7 +46,7 @@
       {% for prisoner in results %}
         {% set rows = (rows.push([
           {
-            html: '<a class="govuk-link govuk-link--no-visited-state" target="_blank" href="' + prisonerProfileUrl + '/prisoner/' + prisoner.prisonerNumber + '">' + prisoner | firstNameSpaceLastName + '</a>'
+            html: '<a class="govuk-link govuk-link--no-visited-state" href="' + prisoner.backLink + '">' + prisoner | firstNameSpaceLastName + '</a>'
           },
           {
             text: prisoner.prisonerNumber

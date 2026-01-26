@@ -2,6 +2,7 @@ import type { HTTPError } from 'superagent'
 import { components } from '../@types/externalMovements'
 import { Address } from '../@types/journeys'
 import { trimAddress } from './formatUtils'
+import config from '../config'
 
 const properCase = (word: string): string => (word[0] ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word)
 
@@ -141,3 +142,12 @@ export const isTapAuthorisationEditable = ({ status }: { status: { code: string 
 
 export const isTapOccurrenceEditable = ({ status }: { status: { code: string } }) =>
   ['PENDING', 'SCHEDULED', 'IN_PROGRESS', 'OVERDUE'].includes(status.code)
+
+export const prisonerProfileBacklink = (originalUrl: string, personIdentifier: string, suffix: string = '') => {
+  const searchParams = new URLSearchParams({
+    service: 'external-movements',
+    redirectPath: `/prisoner/${personIdentifier}${suffix}`,
+    returnPath: `/${originalUrl.split('/').slice(1).join('/')}`,
+  })
+  return `${config.serviceUrls.prisonerProfile}/save-backlink?${searchParams.toString()}`
+}

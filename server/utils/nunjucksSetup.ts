@@ -10,6 +10,7 @@ import {
   fromRefData,
   getQueryEntries,
   initialiseName,
+  prisonerProfileBacklink,
   setCheckedValue,
   setSelectedValue,
 } from './utils'
@@ -84,6 +85,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addExtension('HistoryExtension', historyExtension)
 
   njkEnv.addGlobal('inputDate', inputDate)
+  njkEnv.addGlobal('prisonerProfileBacklink', prisonerProfileBacklink)
 
   const { date, mojDate } = MojFilter()
   njkEnv.addFilter('date', date)
