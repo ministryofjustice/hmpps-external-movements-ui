@@ -15,11 +15,11 @@ export class BrowseTapOccurrencesPage extends BaseTestPage {
   }
 
   startDateField() {
-    return this.textbox('Start date from')
+    return this.textbox('Show absences between')
   }
 
   endDateField() {
-    return this.textbox('End date to')
+    return this.textbox('and')
   }
 
   statusCheckbox() {
