@@ -171,6 +171,21 @@
 
     const freeFormPattern = {{ freeFormPattern | dump | safe }}
 
+    const getShift = (mappedPattern, currentDay) => {
+      const shifts = mappedPattern.filter(({startDate}) => currentDay.startsWith(startDate))
+      if (shifts.length === 0) return null
+      if (shifts.length === 1) return shifts[0]
+
+      const startTime = shifts.sort((a, b) => a.startTime.localeCompare(b.startTime))[0].startTime
+      const nightShifts = shifts.filter(({type}) => type === 'NIGHT')
+      const returnTime = (nightShifts.length? nightShifts : shifts).sort((a, b) => b.returnTime.localeCompare(a.returnTime))[0].returnTime
+      return {
+        type: 'MULTI',
+        startTime,
+        returnTime,
+      }
+    }
+
     function* iterateFreeformPattern(pattern) {
       const mappedPattern = pattern.map(itm => ({
         ...itm,
@@ -179,7 +194,7 @@
 
       const currentDay = new Date(dateFrom)
       while (currentDay.toLocaleDateString('en-CA') <= dateTo) {
-        yield mappedPattern.find(({startDate}) => currentDay.toLocaleDateString('en-CA').startsWith(startDate))
+        yield getShift(mappedPattern, currentDay.toLocaleDateString('en-CA'))
         currentDay.setDate(currentDay.getDate() + 1)
       }
       for (;;) yield null
