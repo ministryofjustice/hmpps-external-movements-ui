@@ -133,6 +133,43 @@
       </div>
     </div>
 
+    {% if user | featureEnabled('RECORDED_MOVEMENTS') %}
+      <div class="placeholder-background">
+        <h2 class="govuk-heading-m">Recorded movements</h2>
+        {% if occurrence.movements.length %}
+          {% set movementRows = [] %}
+          {% for movement in occurrence.movements %}
+            {% set movementRows = (movementRows.push([
+              {
+                text: movement.direction
+              },
+              {
+                text: movement.occurredAt | formatDate("d MMMM yyyy 'at' HH:mm")
+              }
+            ]), movementRows) %}
+          {% endfor %}
+
+          {{ govukTable({
+            firstCellIsHeader: false,
+            head: [
+              {
+                text: "Direction"
+              },
+              {
+                text: "Date and time"
+              },
+              {
+                text: ''
+              }
+            ],
+            rows: movementRows
+          }) }}
+        {% else %}
+          <p>No movements recorded for this absence occurrence.</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
     {% if result.repeat %}
       <p>
         <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ result.id }}">View all occurrences of this absence</a>

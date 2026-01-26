@@ -126,6 +126,9 @@ export default {
   },
   ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
+  featureToggles: {
+    enableRecordedMovements: get('ENABLE_RECORDED_MOVEMENTS', '').split(','),
+  },
   appInsightsConnectionString: get('APPLICATIONINSIGHTS_CONNECTION_STRING', '', requiredInProduction),
   sentry: {
     dsn: process.env['SENTRY_DSN'],

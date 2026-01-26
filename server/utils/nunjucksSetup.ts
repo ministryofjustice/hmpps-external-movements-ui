@@ -36,6 +36,7 @@ import { historyExtension } from '../middleware/history/historyExtension'
 import { convertToSortableColumns } from './convertToSortableColumns'
 import { hasPermissionFilter } from '../middleware/permissions/requirePermissions'
 import applicationInfo from '../applicationInfo'
+import { featureEnabled } from './featureFlag'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -118,6 +119,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatAddress', formatAddress)
   njkEnv.addFilter('convertToSortableColumns', convertToSortableColumns)
   njkEnv.addFilter('hasPermission', hasPermissionFilter)
+  njkEnv.addFilter('featureEnabled', featureEnabled)
   njkEnv.addFilter(
     'showChangeLinksIf',
     (items: { key: unknown; value: unknown; actions: unknown }[], condition: boolean) =>
