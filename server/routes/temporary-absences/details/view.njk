@@ -145,6 +145,14 @@
               },
               {
                 text: movement.occurredAt | formatDate("d MMMM yyyy 'at' HH:mm")
+              },
+              {
+                text: movement.location | formatAddress
+              },
+              {
+                classes: 'govuk-link govuk-link--no-visited-state',
+                html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-movements/' + movement.id + '">View<span class="govuk-visually-hidden"> movement occurred at ' + movement.occurredAt | formatDate("cccc d MMMM yyyy 'at' HH:mm") + '</span></a>',
+                format: "numeric"
               }
             ]), movementRows) %}
           {% endfor %}
@@ -157,6 +165,9 @@
               },
               {
                 text: "Date and time"
+              },
+              {
+                text: "Location"
               },
               {
                 text: ''
