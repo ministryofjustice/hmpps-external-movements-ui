@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from 'uuid'
-import { expect, test, Page } from '@playwright/test'
+import { expect, test, Page, chromium } from '@playwright/test'
 import auth from '../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../../integration_tests/steps/signIn'
@@ -201,6 +201,87 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await expect(testPage.returnDateField(0)).toHaveValue('1/1/2001')
     await expect(testPage.returnHourField(0)).toHaveValue('17')
     await expect(testPage.returnMinuteField(0)).toHaveValue('30')
+  })
+
+  test('should try input validation and persistence with no-js', async () => {
+    const browser = await chromium.launch()
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+    })
+    const page = await context.newPage()
+    await signIn(page)
+
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    // verify page content
+    const testPage = new FreeformSelectDaysPage(page)
+    await expect(testPage.releaseDateField(0)).toBeVisible()
+    await expect(testPage.releaseDateField(0)).toHaveValue('')
+    await expect(testPage.releaseHourField(0)).toBeVisible()
+    await expect(testPage.releaseHourField(0)).toHaveValue('')
+    await expect(testPage.releaseMinuteField(0)).toBeVisible()
+    await expect(testPage.releaseMinuteField(0)).toHaveValue('')
+    await expect(testPage.returnDateField(0)).toBeVisible()
+    await expect(testPage.returnDateField(0)).toHaveValue('')
+    await expect(testPage.returnHourField(0)).toBeVisible()
+    await expect(testPage.returnHourField(0)).toHaveValue('')
+    await expect(testPage.returnMinuteField(0)).toBeVisible()
+    await expect(testPage.returnMinuteField(0)).toHaveValue('')
+    await expect(testPage.button('Add another occurrence')).toBeVisible()
+    await expect(testPage.button('Continue')).toBeVisible()
+    await expect(testPage.button('Remove')).toHaveCount(0)
+
+    // verify validation error
+    await testPage.clickButton('Add another occurrence')
+
+    await expect(testPage.releaseDateField(1)).toBeVisible()
+
+    await testPage.releaseDateField(0).fill('31/12/2000')
+    await testPage.releaseHourField(0).fill('x')
+    await testPage.releaseMinuteField(0).fill('00')
+    await testPage.returnDateField(0).fill('2/2/2001')
+    await testPage.returnHourField(0).fill('10')
+    await testPage.returnMinuteField(0).fill('')
+
+    await testPage.releaseDateField(1).fill('1/1/2001')
+    await testPage.releaseHourField(1).fill('10')
+    await testPage.releaseMinuteField(1).fill('00')
+    await testPage.returnDateField(1).fill('1/1/2001')
+    await testPage.returnHourField(1).fill('10')
+    await testPage.returnMinuteField(1).fill('00')
+
+    await testPage.clickContinue()
+
+    await testPage.link('Start date must be between 1/1/2001 and 31/1/2001').click()
+    await expect(testPage.releaseDateField(0)).toBeFocused()
+    await testPage.link('Return date must be between 1/1/2001 and 1/2/2001').click()
+    await expect(testPage.returnDateField(0)).toBeFocused()
+    await testPage.link('Start time hour must be 00 to 23').click()
+    await expect(testPage.releaseHourField(0)).toBeFocused()
+    await testPage.link('Enter a return time').click()
+    await expect(testPage.returnMinuteField(0)).toBeFocused()
+    await testPage.link('Return time must be later than start time').click()
+    await expect(testPage.returnHourField(1)).toBeFocused()
+
+    // verify next page routing
+    await testPage.returnMinuteField(1).fill('30')
+    await testPage.button('Remove').nth(0).click()
+    await expect(testPage.button('Remove')).toHaveCount(0)
+    await testPage.clickContinue()
+    expect(page.url()).toMatch(/select-days-and-times\/2/)
+
+    // verify input values are persisted
+    await page.goBack()
+    await page.reload()
+    await expect(testPage.releaseDateField(0)).toHaveValue('1/1/2001')
+    await expect(testPage.releaseHourField(0)).toHaveValue('10')
+    await expect(testPage.releaseMinuteField(0)).toHaveValue('00')
+    await expect(testPage.returnDateField(0)).toHaveValue('1/1/2001')
+    await expect(testPage.returnHourField(0)).toHaveValue('10')
+    await expect(testPage.returnMinuteField(0)).toHaveValue('30')
+
+    await browser.close()
   })
 
   test('should try page routing in the middle', async ({ page }) => {

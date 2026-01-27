@@ -42,7 +42,7 @@ export class FreeformSelectDaysController {
 
   POST = async (req: Request<{ idx?: string }, unknown, SchemaType>, res: Response) => {
     const { startDate: start, endDate: end, nextIdx } = getSelectDayRange(req)
-    if (req.body.save !== undefined && req.body.absences) {
+    if (req.body.save !== undefined) {
       // break check-answers bounce back routing if new pattern is submitted
       delete req.journeyData.isCheckAnswers
 
@@ -53,16 +53,17 @@ export class FreeformSelectDaysController {
           ({ startDate }) => !(startDate >= start && startDate <= end),
         )
 
-      req.journeyData.addTemporaryAbsence!.freeFormPattern.push(
-        ...req.body.absences.map(
-          ({ startDate, startTimeHour, startTimeMinute, returnDate, returnTimeHour, returnTimeMinute }) => ({
-            startDate,
-            startTime: `${startTimeHour}:${startTimeMinute}`,
-            returnDate,
-            returnTime: `${returnTimeHour}:${returnTimeMinute}`,
-          }),
-        ),
-      )
+      if (req.body.absences)
+        req.journeyData.addTemporaryAbsence!.freeFormPattern.push(
+          ...req.body.absences.map(
+            ({ startDate, startTimeHour, startTimeMinute, returnDate, returnTimeHour, returnTimeMinute }) => ({
+              startDate,
+              startTime: `${startTimeHour}:${startTimeMinute}`,
+              returnDate,
+              returnTime: `${returnTimeHour}:${returnTimeMinute}`,
+            }),
+          ),
+        )
 
       if (nextIdx && !req.journeyData.addTemporaryAbsence!.isCheckPattern) {
         return res.redirect(req.params.idx === undefined ? `select-days-and-times/${nextIdx}` : nextIdx)
