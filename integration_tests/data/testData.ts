@@ -361,6 +361,7 @@ export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
   location: { uprn: 1001, description: 'Random Street, UK' },
   accompaniedBy: { code: 'U', description: 'Unaccompanied' },
   transport: { code: 'CAR', description: 'Car' },
+  movements: [],
 }
 
 export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {

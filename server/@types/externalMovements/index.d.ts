@@ -255,6 +255,46 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/temporary-absence-movements/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
+    get: operations['getTapMovement']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/temporary-absence-movements/{id}/history': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
+    get: operations['getTapMovementHistory']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/temporary-absence-authorisations/{id}/history': {
     parameters: {
       query?: never
@@ -673,7 +713,7 @@ export interface components {
       /** Format: date-time */
       at: string
       by: string
-      prisonCode: string
+      prisonCode?: string
     }
     SyncWriteTapMovement: {
       /** Format: uuid */
@@ -684,6 +724,7 @@ export interface components {
       occurredAt: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
+      prisonCode?: string
       absenceReasonCode: string
       location: components['schemas']['Location']
       accompaniedByCode: string
@@ -770,6 +811,7 @@ export interface components {
       occurredAt: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
+      prisonCode?: string
       absenceReasonCode: string
       location: components['schemas']['Location']
       accompaniedByCode: string
@@ -996,6 +1038,14 @@ export interface components {
       repeat: boolean
       comments?: string
     }
+    Movement: {
+      /** Format: uuid */
+      id: string
+      /** Format: date-time */
+      occurredAt: string
+      /** @enum {string} */
+      direction: 'IN' | 'OUT'
+    }
     TapOccurrence: {
       /** Format: uuid */
       id: string
@@ -1019,22 +1069,35 @@ export interface components {
       occurrencePosition: number
       /** Format: int32 */
       totalOccurrences: number
+      movements: components['schemas']['Movement'][]
     }
     Occurrence: {
       /** Format: uuid */
       id: string
-      status: components['schemas']['CodedDescription']
       absenceType?: components['schemas']['CodedDescription']
       absenceSubType?: components['schemas']['CodedDescription']
       absenceReasonCategory?: components['schemas']['CodedDescription']
       absenceReason?: components['schemas']['CodedDescription']
+      status: components['schemas']['CodedDescription']
       /** Format: date-time */
       start: string
       /** Format: date-time */
       end: string
+    }
+    TapMovement: {
+      /** Format: uuid */
+      id: string
+      person: components['schemas']['Person']
+      occurrence?: components['schemas']['Occurrence']
+      /** Format: date-time */
+      occurredAt: string
+      /** @enum {string} */
+      direction: 'IN' | 'OUT'
+      prisonCode: string
+      absenceReason: components['schemas']['CodedDescription']
       location: components['schemas']['Location']
       accompaniedBy: components['schemas']['CodedDescription']
-      transport: components['schemas']['CodedDescription']
+      accompaniedByComments?: string
       comments?: string
     }
     TapAuthorisation: {
@@ -1096,6 +1159,7 @@ export interface components {
       occurredAt: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
+      prisonCode: string
       absenceReasonCode: string
       location: components['schemas']['Location']
       accompaniedByCode: string
@@ -1201,15 +1265,32 @@ export interface components {
       occurrences: components['schemas']['PersonOccurrenceCount']
       movements: components['schemas']['PersonMovementsCount']
     }
-    Movement: {
+    PersonTapDetail: {
+      scheduledAbsences: components['schemas']['ReconciliationAuthorisation'][]
+      unscheduledMovements: components['schemas']['ReconciliationMovement'][]
+    }
+    ReconciliationAuthorisation: {
+      /** Format: uuid */
+      id: string
+      /** @enum {string} */
+      statusCode: 'PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED' | 'EXPIRED'
+      prisonCode: string
+      occurrences: components['schemas']['ReconciliationOccurrence'][]
+    }
+    ReconciliationMovement: {
       /** Format: uuid */
       id: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
+      directionPrisonCode: string
     }
-    PersonTapDetail: {
-      scheduledAbsences: components['schemas']['Authorisation'][]
-      unscheduledMovements: components['schemas']['Movement'][]
+    ReconciliationOccurrence: {
+      /** Format: uuid */
+      id: string
+      /** @enum {string} */
+      statusCode: 'PENDING' | 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'OVERDUE' | 'EXPIRED' | 'CANCELLED' | 'DENIED'
+      prisonCode: string
+      movements: components['schemas']['ReconciliationMovement'][]
     }
     Configuration: {
       tapEnabled: boolean
@@ -1255,6 +1336,7 @@ export interface components {
       workTypes: components['schemas']['Option'][]
     }
     Option: {
+      /** @enum {string} */
       domainCode:
         | 'ABSENCE_TYPE'
         | 'ABSENCE_SUB_TYPE'
@@ -1627,6 +1709,50 @@ export interface operations {
     }
   }
   getTapOccurrenceHistory: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['AuditHistory']
+        }
+      }
+    }
+  }
+  getTapMovement: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['TapMovement']
+        }
+      }
+    }
+  }
+  getTapMovementHistory: {
     parameters: {
       query?: never
       header?: never
