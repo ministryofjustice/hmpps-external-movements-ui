@@ -20,7 +20,7 @@ generic-service:
     ENVIRONMENT_NAME: DEV
     SENTRY_ENVIRONMENT: DEV
     AUDIT_ENABLED: "true"
-    ENABLE_RECORDED_MOVEMENTS: MDI
+    DEV_LED_FEATURE_PRISONS: MDI
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-alerts-api-non-prod

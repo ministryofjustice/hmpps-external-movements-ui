@@ -2,13 +2,13 @@ import { HmppsUser } from '../interfaces/hmppsUser'
 import config from '../config'
 
 export enum Feature {
-  RECORDED_MOVEMENTS = 'RECORDED_MOVEMENTS',
+  DEV_LED = 'DEV_LED',
 }
 
 export const featureEnabled = (user: HmppsUser, feature: Feature) => {
   switch (feature) {
-    case Feature.RECORDED_MOVEMENTS:
-      return config.featureToggles.enableRecordedMovements.includes(user.getActiveCaseloadId() ?? '')
+    case Feature.DEV_LED:
+      return config.featureToggles.enableDevLedFeatures.includes(user.getActiveCaseloadId() ?? '')
     default:
       return false
   }

@@ -17,7 +17,7 @@ generic-service:
     EXTERNAL_MOVEMENTS_API_URL: 'https://external-movements-api.hmpps.service.justice.gov.uk'
     SENTRY_ENVIRONMENT: PRODUCTION
     AUDIT_ENABLED: "false"
-    ENABLE_RECORDED_MOVEMENTS: ""
+    DEV_LED_FEATURE_PRISONS: ""
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-alerts-api-prod

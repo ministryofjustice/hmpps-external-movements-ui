@@ -133,7 +133,7 @@
       </div>
     </div>
 
-    {% if user | featureEnabled('RECORDED_MOVEMENTS') %}
+    {% if user | featureEnabled('DEV_LED') %}
       <div class="placeholder-background">
         <h2 class="govuk-heading-m">Recorded movements</h2>
         {% if occurrence.movements.length %}

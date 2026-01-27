@@ -20,7 +20,7 @@ generic-service:
     ENVIRONMENT_NAME: PRE-PRODUCTION
     SENTRY_ENVIRONMENT: PRE-PRODUCTION
     AUDIT_ENABLED: "false"
-    ENABLE_RECORDED_MOVEMENTS: ""
+    DEV_LED_FEATURE_PRISONS: ""
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-alerts-api-non-prod
