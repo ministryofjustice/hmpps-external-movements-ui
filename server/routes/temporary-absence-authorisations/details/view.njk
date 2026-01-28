@@ -21,31 +21,43 @@
 
         {% set baseEditUrl = "/temporary-absence-authorisations/start-edit/" + result.id %}
 
-        <div class="govuk-button-group">
-          {% if result.status.code === 'PENDING' and user | hasPermission('TAP', 'MANAGE') and editable %}
-            {{ govukButton({
-              text: "Review this absence",
-              href: baseEditUrl + "/review",
-              preventDoubleClick: true
-            }) }}
+        {% if user | hasPermission('TAP', 'MANAGE') %}
+          {% if editable %}
+            <div class="govuk-button-group">
+              {% if result.status.code === 'PENDING' %}
+                {{ govukButton({
+                  text: "Review this absence",
+                  href: baseEditUrl + "/review",
+                  preventDoubleClick: true
+                }) }}
+              {% endif %}
+              {% if result.status.code === 'APPROVED' %}
+                {{ govukButton({
+                  classes: "govuk-button--warning",
+                  text: "Cancel this absence",
+                  href: baseEditUrl + "/cancel",
+                  preventDoubleClick: true
+                }) }}
+              {% endif %}
+            </div>
+          {% else %}
+            {% if result.status.code === 'PENDING' %}
+              {{ mojAlert({
+                variant: "warning",
+                title: "Please manage and approve this temporary absence in NOMIS",
+                showTitleAsHeading: false,
+                dismissible: false
+              }) }}
+            {% endif %}
+            {% if result.status.code === 'APPROVED' %}
+              {{ mojAlert({
+                variant: "warning",
+                title: "Please manage this temporary absence in NOMIS",
+                showTitleAsHeading: false,
+                dismissible: false
+              }) }}
+            {% endif %}
           {% endif %}
-          {% if result.status.code === 'APPROVED' and user | hasPermission('TAP', 'MANAGE') and editable %}
-            {{ govukButton({
-              classes: "govuk-button--warning",
-              text: "Cancel this absence",
-              href: baseEditUrl + "/cancel",
-              preventDoubleClick: true
-            }) }}
-          {% endif %}
-        </div>
-
-        {% if result.status.code === 'PENDING' and not editable %}
-          {{ mojAlert({
-            variant: "warning",
-            title: "Please manage and approve this temporary absence in NOMIS",
-            showTitleAsHeading: false,
-            dismissible: false
-          }) }}
         {% endif %}
 
         {% set locationRows = [] %}
