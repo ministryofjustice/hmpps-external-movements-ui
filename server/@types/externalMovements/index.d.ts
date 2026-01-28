@@ -709,12 +709,6 @@ export interface components {
       at: string
       by: string
     }
-    SyncAtAndByWithPrison: {
-      /** Format: date-time */
-      at: string
-      by: string
-      prisonCode?: string
-    }
     SyncWriteTapMovement: {
       /** Format: uuid */
       id?: string
@@ -724,13 +718,13 @@ export interface components {
       occurredAt: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
-      prisonCode?: string
+      prisonCode: string
       absenceReasonCode: string
       location: components['schemas']['Location']
       accompaniedByCode: string
       accompaniedByComments?: string
       comments?: string
-      created: components['schemas']['SyncAtAndByWithPrison']
+      created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
       legacyId: string
     }
@@ -811,13 +805,13 @@ export interface components {
       occurredAt: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
-      prisonCode?: string
+      prisonCode: string
       absenceReasonCode: string
       location: components['schemas']['Location']
       accompaniedByCode: string
       accompaniedByComments?: string
       comments?: string
-      created: components['schemas']['SyncAtAndByWithPrison']
+      created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
       legacyId: string
     }
@@ -1045,6 +1039,7 @@ export interface components {
       occurredAt: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
+      location: components['schemas']['Location']
     }
     TapOccurrence: {
       /** Format: uuid */
@@ -1165,7 +1160,7 @@ export interface components {
       accompaniedByCode: string
       accompaniedByComments?: string
       comments?: string
-      created: components['schemas']['SyncAtAndByWithPrison']
+      created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
     }
     SyncReadTapAuthorisation: {

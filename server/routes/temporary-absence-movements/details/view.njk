@@ -1,0 +1,81 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
+{% from "partials/hiddenInputs/macro.njk" import hiddenInputs %}
+{% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "partials/auditHistory/macro.njk" import auditHistory %}
+
+{% set fullWidth = true %}
+{% set pageTitle = 'View temporary absence movement - Manage temporary absences' %}
+
+{% set bodyClasses = 'placeholder-background' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row govuk-!-margin-bottom-2">
+      <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Manage Temporary Absences</span>
+        <h1 class="govuk-heading-l">View {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence movement</h1>
+
+        {% set viewMovementHtml %}
+          {{ govukSummaryList({
+            card: {
+              classes: "govuk-!-margin-bottom-2",
+              title: {
+                text: "Movement information"
+              }
+            },
+            rows: [
+              {
+                key: { text: "Direction" },
+                value: { text: result.direction }
+              },
+              {
+                key: { text: "Date and time" },
+                value: { text: result.occurredAt | formatDate("d MMMM yyyy 'at' HH:mm") }
+              },
+              {
+                key: { text: "Absence reason" },
+                value: { text: result.absenceReason.description }
+              },
+              {
+                key: { text: "Comments" },
+                value: { text: result.comments or 'Not provided' }
+              },
+              {
+                key: { text: "Accompanied or unaccompanied" },
+                value: { text: result.accompaniedBy.description + ((' (' + result.accompaniedByComments + ')') if accompaniedByComments) }
+              },
+              {
+                key: { text: "Location" },
+                value: { text: result.location | formatAddress }
+              }
+            ] | removeNullish
+          }) }}
+        {% endset -%}
+
+        {{ govukTabs({
+          items: [
+            {
+              label: "Manage absence plan",
+              id: "view-absence",
+              panel: { html: viewMovementHtml }
+            },
+            {
+              label: "Absence history",
+              id: "absence-history",
+              panel: { html: auditHistory({ actions: auditedActions, prisonerName: prisonerDetails | firstNameSpaceLastName }) }
+            }
+          ]
+        }) }}
+      </div>
+    </div>
+
+    <p>
+      <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/{{ result.occurrence.id }}">View absence occurrence information</a>
+    </p>
+  </div>
+{% endblock %}
