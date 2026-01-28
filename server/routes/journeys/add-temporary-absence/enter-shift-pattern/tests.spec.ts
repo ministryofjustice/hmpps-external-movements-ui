@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from 'uuid'
-import { expect, test, Page } from '@playwright/test'
+import { expect, test, Page, chromium } from '@playwright/test'
 import auth from '../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../../integration_tests/steps/signIn'
@@ -139,5 +139,95 @@ test.describe('/add-temporary-absence/enter-shift-pattern', () => {
     await expect(testPage.returnMinuteField(0)).toHaveValue('02')
     await expect(testPage.shiftType(1)).toHaveValue('REST')
     await expect(testPage.numberInput(1)).toHaveValue('1')
+  })
+
+  test('should try no-js support', async () => {
+    const browser = await chromium.launch()
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+    })
+    const page = await context.newPage()
+    await signIn(page)
+
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    // verify page content
+    const testPage = new EnterShiftPatternPage(page)
+
+    await expect(testPage.shiftType(0)).toBeVisible()
+    await expect(testPage.shiftType(0)).toHaveValue('DAY')
+    await expect(testPage.numberInput(0)).toBeVisible()
+    await expect(testPage.numberInput(0)).toHaveValue('')
+    await expect(testPage.startHourField(0)).toBeVisible()
+    await expect(testPage.startHourField(0)).toHaveValue('')
+    await expect(testPage.startMinuteField(0)).toBeVisible()
+    await expect(testPage.startMinuteField(0)).toHaveValue('')
+    await expect(testPage.returnHourField(0)).toBeVisible()
+    await expect(testPage.returnHourField(0)).toHaveValue('')
+    await expect(testPage.returnMinuteField(0)).toBeVisible()
+    await expect(testPage.returnMinuteField(0)).toHaveValue('')
+
+    await expect(testPage.shiftType(1)).toBeVisible()
+    await expect(testPage.shiftType(1)).toHaveValue('REST')
+    await expect(testPage.numberInput(1)).toBeVisible()
+    await expect(testPage.numberInput(1)).toHaveValue('')
+    await expect(testPage.startHourField(1)).toBeVisible()
+    await expect(testPage.startHourField(1)).toHaveValue('')
+    await expect(testPage.startMinuteField(1)).toBeVisible()
+    await expect(testPage.startMinuteField(1)).toHaveValue('')
+    await expect(testPage.returnHourField(1)).toBeVisible()
+    await expect(testPage.returnHourField(1)).toHaveValue('')
+    await expect(testPage.returnMinuteField(1)).toBeVisible()
+    await expect(testPage.returnMinuteField(1)).toHaveValue('')
+
+    await expect(testPage.button('Add another row')).toBeVisible()
+    await expect(testPage.button('Continue')).toBeVisible()
+    await expect(testPage.button('Remove')).toHaveCount(2)
+
+    // verify validation error
+    await testPage.remove(0).click()
+    await expect(testPage.button('Remove')).toHaveCount(0)
+    await testPage.numberInput(0).fill('1')
+    await testPage.clickContinue()
+    await testPage.clickLink('Add at least two rows to the schedule')
+    await expect(testPage.addAnother()).toBeFocused()
+
+    await testPage.addAnother().click()
+    await expect(testPage.shiftType(1)).toBeVisible()
+    await testPage.clickContinue()
+    await testPage.clickLink('Select shift type')
+    await expect(testPage.shiftType(1)).toBeFocused()
+
+    // verify next page routing
+    await testPage.shiftType(0).selectOption('NIGHT')
+    await testPage.startHourField(0).fill('3')
+    await testPage.startMinuteField(0).fill('3')
+    await testPage.returnHourField(0).fill('2')
+    await testPage.returnMinuteField(0).fill('2')
+    await testPage.shiftType(1).selectOption('REST')
+    await testPage.numberInput(1).fill('5')
+    await testPage.startHourField(1).fill('1')
+    await testPage.startMinuteField(1).fill('1')
+    await testPage.clickContinue()
+    expect(page.url()).toMatch(/check-absences/)
+
+    // verify input values are persisted
+    await page.goBack()
+    await page.reload()
+    await expect(testPage.shiftType(0)).toHaveValue('NIGHT')
+    await expect(testPage.numberInput(0)).toHaveValue('1')
+    await expect(testPage.startHourField(0)).toHaveValue('03')
+    await expect(testPage.startMinuteField(0)).toHaveValue('03')
+    await expect(testPage.returnHourField(0)).toHaveValue('02')
+    await expect(testPage.returnMinuteField(0)).toHaveValue('02')
+    await expect(testPage.shiftType(1)).toHaveValue('REST')
+    await expect(testPage.numberInput(1)).toHaveValue('5')
+    await expect(testPage.startHourField(1)).toHaveValue('')
+    await expect(testPage.startMinuteField(1)).toHaveValue('')
+    await expect(testPage.returnHourField(1)).toHaveValue('')
+    await expect(testPage.returnMinuteField(1)).toHaveValue('')
+
+    await browser.close()
   })
 })
