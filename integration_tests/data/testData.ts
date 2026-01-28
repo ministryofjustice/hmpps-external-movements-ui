@@ -382,5 +382,13 @@ export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
   accompaniedBy: { code: 'U', description: 'Unaccompanied' },
   transport: { code: 'CAR', description: 'Car' },
   locations: [{ uprn: 1001, description: 'Random Street, UK' }],
-  occurrences: [],
+  occurrences: [
+    {
+      id: 'occurrence-id',
+      absenceType: { code: 'PP', description: 'Police production' },
+      start: '2001-01-01T10:00:00',
+      end: '2001-01-01T17:30:00',
+      status: { code: 'PENDING', description: 'To be reviewed' },
+    },
+  ],
 }

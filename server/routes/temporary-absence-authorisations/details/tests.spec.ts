@@ -406,4 +406,25 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await expect(testPage.button('Review this absence')).toHaveCount(0)
     await expect(testPage.button('Cancel this absence')).toHaveCount(0)
   })
+
+  test('should not show review button for TAP authorisation without occurrences', async ({ page }) => {
+    await signIn(page)
+
+    const authorisationId = uuidV4()
+    await stubGetTapAuthorisation({
+      ...testTapAuthorisation,
+      id: authorisationId,
+      status: { code: 'PENDING', description: 'To be reviewed' },
+      occurrences: [],
+    })
+    await stubGetTapAuthorisationHistory(authorisationId, { content: [] })
+
+    await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
+
+    // verify page content
+    const testPage = await new TapAuthorisationDetailsPage(page).verifyContent()
+
+    await expect(testPage.button('Review this absence')).toHaveCount(0)
+    await expect(testPage.button('Cancel this absence')).toHaveCount(0)
+  })
 })
