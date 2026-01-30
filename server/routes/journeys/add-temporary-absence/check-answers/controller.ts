@@ -76,9 +76,9 @@ export class AddTapCheckAnswersController {
       if (repeat) {
         request.schedule = {
           type: journeyData.patternType,
-          weeklyPattern: journeyData.weeklyPattern,
-          biweeklyPattern: journeyData.biweeklyPattern,
-          shiftPattern: journeyData.shiftPattern,
+          weeklyPattern: journeyData.patternType === 'WEEKLY' ? journeyData.weeklyPattern : undefined,
+          biweeklyPattern: journeyData.patternType === 'BIWEEKLY' ? journeyData.biweeklyPattern : undefined,
+          shiftPattern: journeyData.patternType === 'SHIFT' ? journeyData.shiftPattern : undefined,
         }
       }
 
