@@ -18,4 +18,8 @@ export class AddTapOccurrenceSearchLocationPage extends BaseTestPage {
   async selectAddress(addressText: string) {
     await this.page.getByText(addressText).first().click()
   }
+
+  async clickEnterManually() {
+    await this.link('Enter a location manually').click()
+  }
 }
