@@ -4,6 +4,15 @@ import { SchemaType } from './schema'
 import { AddTemporaryAbsenceJourney } from '../../../../@types/journeys'
 import { formatInputDate } from '../../../../utils/dateTimeUtils'
 
+const emptyInputs = {
+  startDate: '',
+  startTimeHour: '',
+  startTimeMinute: '',
+  returnDate: '',
+  returnTimeHour: '',
+  returnTimeMinute: '',
+}
+
 export class FreeformSelectDaysController {
   GET = async (req: Request<{ idx?: string }>, res: Response) => {
     const { startDate, endDate, outOfRange, previousIdx, nextIdx, isOptional, pageCount, idx } = getSelectDayRange(req)
@@ -44,16 +53,17 @@ export class FreeformSelectDaysController {
           ({ startDate }) => !(startDate >= start && startDate <= end),
         )
 
-      req.journeyData.addTemporaryAbsence!.freeFormPattern.push(
-        ...req.body.absences.map(
-          ({ startDate, startTimeHour, startTimeMinute, returnDate, returnTimeHour, returnTimeMinute }) => ({
-            startDate,
-            startTime: `${startTimeHour}:${startTimeMinute}`,
-            returnDate,
-            returnTime: `${returnTimeHour}:${returnTimeMinute}`,
-          }),
-        ),
-      )
+      if (req.body.absences)
+        req.journeyData.addTemporaryAbsence!.freeFormPattern.push(
+          ...req.body.absences.map(
+            ({ startDate, startTimeHour, startTimeMinute, returnDate, returnTimeHour, returnTimeMinute }) => ({
+              startDate,
+              startTime: `${startTimeHour}:${startTimeMinute}`,
+              returnDate,
+              returnTime: `${returnTimeHour}:${returnTimeMinute}`,
+            }),
+          ),
+        )
 
       if (nextIdx && !req.journeyData.addTemporaryAbsence!.isCheckPattern) {
         return res.redirect(req.params.idx === undefined ? `select-days-and-times/${nextIdx}` : nextIdx)
@@ -62,8 +72,17 @@ export class FreeformSelectDaysController {
       return res.redirect(req.params.idx === undefined ? 'check-absences' : '../check-absences')
     }
 
-    // TODO: handle add and remove actions for no-js support
-    return res.redirect('')
+    // fallback no-js handling for add/remove actions
+    req.body.absences ??= [emptyInputs]
+    if (req.body.add !== undefined) {
+      req.body.absences.push(emptyInputs)
+    } else if (req.body.remove !== undefined) {
+      req.body.absences.splice(Number(req.body.remove), 1)
+    }
+    // Always redirect back to input even if we didn't find an action, which should be impossible but there is a small
+    // possibility if JS is disabled after a page load or the user somehow removes all identities.
+    req.flash('formResponses', JSON.stringify(req.body))
+    return res.redirect(req.originalUrl)
   }
 
   private getAbsencesFromJourney = (journey: AddTemporaryAbsenceJourney, from: string, to: string) => {
