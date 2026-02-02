@@ -48,22 +48,24 @@ export class BrowseTapAuthorisationsController {
 
     const hasValidationError =
       Object.keys(resQuery).find(key => ['searchTerm', 'start', 'end', 'status'].includes(key)) && !resQuery.validated
-    const missingDateRange = !resQuery?.validated?.start || !resQuery?.validated?.end
+    const missingDateRange =
+      !resQuery.validated?.searchTerm?.match(/[a-zA-Z][0-9]{4}[a-zA-Z]{2}/) &&
+      (!resQuery?.validated?.start || !resQuery?.validated?.end)
 
     let searchResponse: components['schemas']['TapAuthorisationSearchResponse'] | undefined
     let results: components['schemas']['TapAuthorisationResult'][] = []
 
     try {
-      if (!hasValidationError && !missingDateRange && resQuery.validated) {
+      if (!hasValidationError && resQuery.validated) {
         const requestBody: components['schemas']['TapAuthorisationSearchRequest'] = {
           prisonCode: res.locals.user.getActiveCaseloadId()!,
-          start: format(resQuery.validated.start, 'yyyy-MM-dd'),
-          end: format(resQuery.validated.end, 'yyyy-MM-dd'),
           status: resQuery.validated?.status ?? [],
           sort: resQuery.validated?.sort ?? 'start,asc',
           page: resQuery.validated?.page || 1,
           size: this.PAGE_SIZE,
-        }
+        } as components['schemas']['TapAuthorisationSearchRequest'] // TODO: remove unnecessary type case after API change
+        if (resQuery.validated.start) requestBody.start = format(resQuery.validated.start, 'yyyy-MM-dd')
+        if (resQuery.validated.end) requestBody.end = format(resQuery.validated.end, 'yyyy-MM-dd')
 
         if (resQuery.validated.searchTerm?.trim()) {
           requestBody.query = resQuery.validated?.searchTerm?.trim()
