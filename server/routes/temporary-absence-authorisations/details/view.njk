@@ -40,23 +40,13 @@
                 }) }}
               {% endif %}
             </div>
-          {% else %}
-            {% if result.status.code === 'PENDING' %}
-              {{ mojAlert({
-                variant: "warning",
-                title: "Please manage and approve this temporary absence in NOMIS",
-                showTitleAsHeading: false,
-                dismissible: false
-              }) }}
-            {% endif %}
-            {% if result.status.code === 'APPROVED' %}
-              {{ mojAlert({
-                variant: "warning",
-                title: "Please manage this temporary absence in NOMIS",
-                showTitleAsHeading: false,
-                dismissible: false
-              }) }}
-            {% endif %}
+          {% elseif result.status.code === 'PENDING' or result.status.code === 'APPROVED' %}
+            {{ mojAlert({
+              variant: "warning",
+              title: "Use NOMIS to manage this temporary absence",
+              showTitleAsHeading: false,
+              dismissible: false
+            }) }}
           {% endif %}
         {% endif %}
 
