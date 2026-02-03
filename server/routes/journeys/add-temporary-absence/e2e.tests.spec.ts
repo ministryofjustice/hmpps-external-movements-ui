@@ -3,7 +3,7 @@ import { expect, test, Page } from '@playwright/test'
 import auth from '../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../integration_tests/steps/signIn'
-import { randomPrisonNumber } from '../../../../integration_tests/data/testData'
+import { randomPrisonNumber, testSearchAddressResults } from '../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetPrisonerImage } from '../../../../integration_tests/mockApis/prisonApi'
 import {
@@ -33,19 +33,6 @@ test.describe('/add-temporary-absence/e2e', () => {
   const prisonNumber = randomPrisonNumber()
 
   test.beforeAll(async () => {
-    const address = {
-      addressString: 'Address',
-      buildingName: '',
-      subBuildingName: '',
-      thoroughfareName: 'Random Street',
-      dependentLocality: '',
-      postTown: '',
-      county: '',
-      postcode: 'RS1 34T',
-      country: 'E',
-      uprn: 2001,
-    }
-
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
@@ -59,9 +46,9 @@ test.describe('/add-temporary-absence/e2e', () => {
       stubGetAbsenceCategory('ABSENCE_REASON_CATEGORY', 'PW'),
       stubGetReferenceData('accompanied-by'),
       stubGetReferenceData('transport'),
-      stubSearchAddresses('qwerty', [address]),
-      stubSearchAddresses('SW1H%209AJ', [address]), // query used by the module to check OS Places API availability
-      stubGetAddress('2001', address),
+      stubSearchAddresses('qwerty', testSearchAddressResults),
+      stubSearchAddresses('SW1H%209AJ', testSearchAddressResults), // query used by the module to check OS Places API availability
+      stubGetAddress('1001', testSearchAddressResults[0]!),
       stubPostCreateTap(prisonNumber),
     ])
   })
@@ -430,7 +417,7 @@ test.describe('/add-temporary-absence/e2e', () => {
         occurrences: [
           {
             location: {
-              uprn: 2001,
+              uprn: 1001,
               address: 'Address',
               postcode: 'RS1 34T',
             },

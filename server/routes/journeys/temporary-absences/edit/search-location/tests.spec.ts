@@ -5,6 +5,7 @@ import componentsApi from '../../../../../../integration_tests/mockApis/componen
 import { signIn } from '../../../../../../integration_tests/steps/signIn'
 import {
   randomPrisonNumber,
+  testSearchAddressResults,
   testTapAuthorisation,
   testTapOccurrence,
 } from '../../../../../../integration_tests/data/testData'
@@ -51,28 +52,15 @@ test.describe('/temporary-absences/edit/search-location', () => {
   }
 
   test.beforeAll(async () => {
-    const address = {
-      addressString: 'Address',
-      buildingName: '',
-      subBuildingName: '',
-      thoroughfareName: 'Random Street',
-      dependentLocality: '',
-      postTown: '',
-      county: '',
-      postcode: 'RS1 34T',
-      country: 'E',
-      uprn: 1001,
-    }
-
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetTapAuthorisation(authorisation),
-      stubSearchAddresses('random', [address]),
-      stubSearchAddresses('SW1H%209AJ', [address]), // query used by the module to check OS Places API availability
-      stubGetAddress('1001', address),
+      stubSearchAddresses('random', testSearchAddressResults),
+      stubSearchAddresses('SW1H%209AJ', testSearchAddressResults), // query used by the module to check OS Places API availability
+      stubGetAddress('1001', testSearchAddressResults[0]!),
       stubGetTapOccurrence(occurrence),
       stubPutTapOccurrence(occurrenceId, {
         content: [

@@ -392,3 +392,42 @@ export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
     },
   ],
 }
+
+export const testSearchAddressResults = [
+  {
+    addressString: 'Address',
+    buildingName: '',
+    subBuildingName: '',
+    thoroughfareName: 'Random Street',
+    dependentLocality: '',
+    postTown: '',
+    county: '',
+    postcode: 'RS1 34T',
+    country: 'E',
+    uprn: 1001,
+  },
+  {
+    addressString: 'Address 2',
+    buildingName: '',
+    subBuildingName: '',
+    thoroughfareName: 'Random Street',
+    dependentLocality: '',
+    postTown: '',
+    county: '',
+    postcode: 'RS1 34T',
+    country: 'E',
+    uprn: 1002,
+  },
+  {
+    addressString: 'Address 3',
+    buildingName: '',
+    subBuildingName: '',
+    thoroughfareName: 'Random Street',
+    dependentLocality: '',
+    postTown: '',
+    county: '',
+    postcode: 'RS1 34T',
+    country: 'E',
+    uprn: 1003,
+  },
+]
