@@ -20,7 +20,7 @@ export class EditAbsenceCommentsController {
     try {
       journey.result = await this.externalMovementsService.updateTapOccurrence({ res }, journey.occurrence.id, {
         type: 'ChangeOccurrenceComments',
-        comments: req.body.comments,
+        ...(req.body.comments ? { comments: req.body.comments } : {}),
       })
       next()
     } catch (e) {

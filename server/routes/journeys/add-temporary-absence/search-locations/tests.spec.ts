@@ -3,7 +3,7 @@ import { expect, test, Page } from '@playwright/test'
 import auth from '../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../../integration_tests/steps/signIn'
-import { randomPrisonNumber } from '../../../../../integration_tests/data/testData'
+import { randomPrisonNumber, testSearchAddressResults } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
@@ -22,43 +22,17 @@ test.describe('/add-temporary-absence/search-locations', () => {
   const prisonNumber = randomPrisonNumber()
 
   test.beforeAll(async () => {
-    const address = {
-      addressString: 'Address',
-      buildingName: '',
-      subBuildingName: '',
-      thoroughfareName: 'Random Street',
-      dependentLocality: '',
-      postTown: '',
-      county: '',
-      postcode: 'RS1 34T',
-      country: 'E',
-      uprn: 1001,
-    }
-
-    const address2 = {
-      addressString: 'Address 2',
-      buildingName: '',
-      subBuildingName: '',
-      thoroughfareName: 'Random Street',
-      dependentLocality: '',
-      postTown: '',
-      county: '',
-      postcode: 'RS1 34T',
-      country: 'E',
-      uprn: 1002,
-    }
-
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetAllAbsenceTypes(),
-      stubSearchAddresses('random', [address, address2]),
+      stubSearchAddresses('random', testSearchAddressResults),
       stubSearchAddresses('xxx', []),
-      stubSearchAddresses('SW1H%209AJ', [address]), // query used by the module to check OS Places API availability
-      stubGetAddress('1001', address),
-      stubGetAddress('1002', address2),
+      stubSearchAddresses('SW1H%209AJ', testSearchAddressResults), // query used by the module to check OS Places API availability
+      stubGetAddress('1001', testSearchAddressResults[0]!),
+      stubGetAddress('1002', testSearchAddressResults[1]!),
     ])
   })
 

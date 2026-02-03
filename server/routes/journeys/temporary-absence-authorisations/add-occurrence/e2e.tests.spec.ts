@@ -1,6 +1,10 @@
 import { expect, Page, test } from '@playwright/test'
 import { v4 as uuidV4 } from 'uuid'
-import { randomPrisonNumber, testTapAuthorisation } from '../../../../../integration_tests/data/testData'
+import {
+  randomPrisonNumber,
+  testSearchAddressResults,
+  testTapAuthorisation,
+} from '../../../../../integration_tests/data/testData'
 import auth from '../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../integration_tests/mockApis/componentsApi'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
@@ -40,19 +44,6 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     locations: [{ uprn: 1001, description: 'Random Street, UK' }],
   }
 
-  const address = {
-    addressString: 'Address',
-    buildingName: '',
-    subBuildingName: '',
-    thoroughfareName: 'Random Street',
-    dependentLocality: '',
-    postTown: '',
-    county: '',
-    postcode: 'RS1 34T',
-    country: 'E',
-    uprn: 1003,
-  }
-
   test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
@@ -61,9 +52,9 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetTapAuthorisation(authorisation),
       stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
-      stubSearchAddresses('random', [address]),
-      stubSearchAddresses('SW1H%209AJ', [address]), // query used by the module to check OS Places API availability
-      stubGetAddress('1003', address),
+      stubSearchAddresses('random', testSearchAddressResults),
+      stubSearchAddresses('SW1H%209AJ', testSearchAddressResults), // query used by the module to check OS Places API availability
+      stubGetAddress('1003', testSearchAddressResults[2]!),
     ])
   })
 
@@ -137,7 +128,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
 
     const searchLocationPage = await new AddTapOccurrenceSearchLocationPage(page).verifyContent()
     await searchLocationPage.searchField().fill('random')
-    await searchLocationPage.selectAddress('Address, RS1 34T')
+    await searchLocationPage.selectAddress('Address 3, RS1 34T')
     await searchLocationPage.clickContinue()
 
     const commentsPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/search-location/)
@@ -156,7 +147,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
         start: '2001-01-03T12:00:00',
         end: '2001-01-03T13:30:00',
         location: {
-          address: 'Address',
+          address: 'Address 3',
           postcode: 'RS1 34T',
           uprn: 1003,
         },

@@ -153,7 +153,7 @@ export type UpdateTapAuthorisationJourney = {
   absenceSubType: components['schemas']['AbsenceCategorisation']
   reasonCategory: components['schemas']['AbsenceCategorisation']
   reason: components['schemas']['AbsenceCategorisation']
-  comments: string
+  comments: string | null
   location: Address
   accompanied: boolean
   accompaniedBy: components['schemas']['CodedDescription']
