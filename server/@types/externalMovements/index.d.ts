@@ -566,7 +566,7 @@ export interface components {
     ChangeOccurrenceComments: {
       type: 'ChangeOccurrenceComments'
     } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      comments: string
+      comments?: string
     })
     ChangeOccurrenceContactInformation: {
       type: 'ChangeOccurrenceContactInformation'
@@ -666,7 +666,7 @@ export interface components {
     ChangeAuthorisationComments: {
       type: 'ChangeAuthorisationComments'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
-      comments: string
+      comments?: string
     })
     ChangeAuthorisationDateRange: {
       type: 'ChangeAuthorisationDateRange'
@@ -916,11 +916,11 @@ export interface components {
       codes: string[]
     }
     TapOccurrenceSearchRequest: {
-      prisonCode: string
+      prisonCode?: string
       /** Format: date */
-      start: string
+      start?: string
       /** Format: date */
-      end: string
+      end?: string
       status: ('PENDING' | 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'OVERDUE' | 'EXPIRED' | 'CANCELLED' | 'DENIED')[]
       absenceCategorisation?: components['schemas']['AbsenceCategorisationFilter']
       query?: string
@@ -982,11 +982,11 @@ export interface components {
       metadata: components['schemas']['PageMetadata']
     }
     TapAuthorisationSearchRequest: {
-      prisonCode: string
+      prisonCode?: string
       /** Format: date */
-      start: string
+      start?: string
       /** Format: date */
-      end: string
+      end?: string
       status: ('PENDING' | 'APPROVED' | 'CANCELLED' | 'DENIED' | 'EXPIRED')[]
       absenceCategorisation?: components['schemas']['AbsenceCategorisationFilter']
       query?: string
