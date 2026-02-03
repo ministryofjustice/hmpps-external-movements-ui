@@ -20,4 +20,4 @@ generic-service:
     DEV_LED_FEATURE_PRISONS: ""
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-alerts-api-prod
+  alertSeverity: move-and-improve-alerts
