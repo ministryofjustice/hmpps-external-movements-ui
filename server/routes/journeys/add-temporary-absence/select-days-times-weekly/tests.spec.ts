@@ -118,7 +118,7 @@ test.describe('/add-temporary-absence/select-days-times-weekly', () => {
     await testPage.timeEntry('monday', 'release', 'Hour').fill('10')
     await testPage.timeEntry('monday', 'release', 'Minute').fill('30')
 
-    await testPage.timeEntry('monday', 'return', 'Hour').fill('09')
+    await testPage.timeEntry('monday', 'return', 'Hour').fill('10')
     await testPage.timeEntry('monday', 'return', 'Minute').fill('30')
     await testPage.clickContinue()
     await expect(testPage.link('Return time must be later than the start time')).toBeVisible()
