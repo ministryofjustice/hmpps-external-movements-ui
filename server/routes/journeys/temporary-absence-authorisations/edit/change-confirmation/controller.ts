@@ -101,7 +101,7 @@ export class EditTapAuthorisationChangeConfirmationController {
         } else if (comments !== undefined) {
           requestBody = {
             type: 'ChangeAuthorisationComments',
-            comments: comments ?? '',
+            ...(comments ? { comments } : {}),
           }
         } else if (transport) {
           requestBody = {
