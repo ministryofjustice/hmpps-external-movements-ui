@@ -80,12 +80,16 @@ test.describe('/temporary-absence-authorisations/add-occurrence/enter-location',
     await expect(testPage.button('Continue')).toBeVisible()
 
     // verify validation error
+    await testPage.organisationNameField().fill('n'.repeat(41))
     await testPage.line1Field().fill('1 Manual Street')
     await testPage.clickContinue()
+    await testPage.link('Description must be 40 characters or fewer').click()
+    await expect(testPage.organisationNameField()).toBeFocused()
     await testPage.link('Enter town or city').click()
     await expect(testPage.cityField()).toBeFocused()
 
     // verify next page routing
+    await testPage.organisationNameField().fill('n'.repeat(40))
     await testPage.cityField().fill('Manual City')
     await testPage.clickContinue()
     expect(page.url()).toMatch(/\/comments/)
@@ -93,6 +97,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/enter-location',
     // verify input values are persisted
     await page.goBack()
     await page.reload()
+    await expect(testPage.organisationNameField()).toHaveValue('n'.repeat(40))
     await expect(testPage.line1Field()).toHaveValue('1 Manual Street')
     await expect(testPage.cityField()).toHaveValue('Manual City')
   })

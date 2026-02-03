@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { AddTapFlowControl } from '../flow'
-import { SchemaType } from './schema'
+import { EnterLocationSchemaType } from './schema'
 import { Address } from '../../../../@types/journeys'
 
 export class EnterLocationController {
@@ -19,7 +19,7 @@ export class EnterLocationController {
     })
   }
 
-  POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
+  POST = async (req: Request<unknown, unknown, EnterLocationSchemaType>, res: Response) => {
     const address: Address = req.body
 
     if (req.journeyData.addTemporaryAbsence!.repeat) {

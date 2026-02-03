@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import { SchemaType } from './schema'
 import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
 import { parseAddress } from '../../../../../utils/utils'
+import { EnterLocationSchemaType } from '../../../add-temporary-absence/enter-location/schema'
 
 export class EditTapOccurrenceEnterLocationController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -18,7 +18,7 @@ export class EditTapOccurrenceEnterLocationController {
     })
   }
 
-  submitToApi = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
+  submitToApi = async (req: Request<unknown, unknown, EnterLocationSchemaType>, res: Response, next: NextFunction) => {
     const journey = req.journeyData.updateTapOccurrence!
 
     try {
