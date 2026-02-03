@@ -929,7 +929,6 @@ export interface components {
       /** Format: int32 */
       size: number
       sort: string
-      isPersonIdentifier: boolean
     }
     CodedDescription: {
       code: string
@@ -996,7 +995,6 @@ export interface components {
       /** Format: int32 */
       size: number
       sort: string
-      isPersonIdentifier: boolean
     }
     TapAuthorisationResult: {
       /** Format: uuid */
