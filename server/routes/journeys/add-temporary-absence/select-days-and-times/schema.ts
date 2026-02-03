@@ -235,7 +235,7 @@ export const schema = async (
   }).transform(val => ({
     ...val,
     absences: isAllBlank
-      ? []
+      ? undefined
       : val.absences.map(
           ({ startDate, startTimeHour, startTimeMinute, returnDate, returnTimeHour, returnTimeMinute }) => ({
             startDate: startDate!,

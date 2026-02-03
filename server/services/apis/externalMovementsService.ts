@@ -168,4 +168,16 @@ export default class ExternalMovementsService {
         data: request,
       })
   }
+
+  async getTapMovement(context: ApiRequestContext, id: string) {
+    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapMovement']>({
+      path: `/temporary-absence-movements/${id}`,
+    })
+  }
+
+  async getTapMovementHistory(context: ApiRequestContext, id: string) {
+    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['AuditHistory']>({
+      path: `/temporary-absence-movements/${id}/history`,
+    })
+  }
 }

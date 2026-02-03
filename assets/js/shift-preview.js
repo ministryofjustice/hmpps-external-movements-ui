@@ -132,7 +132,7 @@ export const getUpdatePreviewHandler = (dateFrom, dateTo, shiftIteratorHandler) 
     })
     const startTime = time?.startTime ?? '-'
     const returnTime = time?.returnTime ?? '-'
-    row.innerHTML = `<th scope="row" class="govuk-table__header">${date}</th><td class="govuk-table__cell">${{ DAY: 'Scheduled day', NIGHT: 'Scheduled night' }[time?.type] ?? 'Rest day'}</td><td class="govuk-table__cell">${startTime}</td><td class="govuk-table__cell">${returnTime}</td>`
+    row.innerHTML = `<th scope="row" class="govuk-table__header">${date}</th><td class="govuk-table__cell">${{ DAY: 'Scheduled day', NIGHT: 'Scheduled night', MULTI: 'Multiple shifts' }[time?.type] ?? 'Rest day'}</td><td class="govuk-table__cell">${startTime}</td><td class="govuk-table__cell">${returnTime}</td>`
     tbody.appendChild(row)
     currentDay.setDate(currentDay.getDate() + 1)
   }
@@ -174,7 +174,7 @@ export const getUpdatePreviewHandler = (dateFrom, dateTo, shiftIteratorHandler) 
     const time = day.inRange ? shiftTime.next().value : undefined
     if (time) {
       weekRow.push(
-        `<td><div>${day.date}</div><div class="middle">${{ DAY: 'Day shift', NIGHT: 'Night shift' }[time.type] ?? ''}</div><div class="middle">${time.startTime} - ${time.returnTime}</div></td>`,
+        `<td><div>${day.date}</div><div class="middle">${{ DAY: 'Day shift', NIGHT: 'Night shift', MULTI: 'Multiple shifts' }[time.type] ?? ''}</div><div class="middle">${time.startTime} - ${time.returnTime}</div></td>`,
       )
     } else {
       weekRow.push(`<td>${day.date}</td>`)

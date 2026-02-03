@@ -7,6 +7,7 @@
 {% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {% from "partials/auditHistory/macro.njk" import auditHistory %}
+{%- from "moj/components/alert/macro.njk" import mojAlert -%}
 
 {% set fullWidth = true %}
 {% set pageTitle = 'Manage temporary absence plan - Manage temporary absences' %}
@@ -20,23 +21,34 @@
 
         {% set baseEditUrl = "/temporary-absence-authorisations/start-edit/" + result.id %}
 
-        <div class="govuk-button-group">
-          {% if result.status.code === 'PENDING' and user | hasPermission('TAP', 'MANAGE') %}
-            {{ govukButton({
-              text: "Review this absence",
-              href: baseEditUrl + "/review",
-              preventDoubleClick: true
+        {% if user | hasPermission('TAP', 'MANAGE') %}
+          {% if editable %}
+            <div class="govuk-button-group">
+              {% if result.status.code === 'PENDING' %}
+                {{ govukButton({
+                  text: "Review this absence",
+                  href: baseEditUrl + "/review",
+                  preventDoubleClick: true
+                }) }}
+              {% endif %}
+              {% if result.status.code === 'APPROVED' %}
+                {{ govukButton({
+                  classes: "govuk-button--warning",
+                  text: "Cancel this absence",
+                  href: baseEditUrl + "/cancel",
+                  preventDoubleClick: true
+                }) }}
+              {% endif %}
+            </div>
+          {% elseif result.status.code === 'PENDING' or result.status.code === 'APPROVED' %}
+            {{ mojAlert({
+              variant: "warning",
+              title: "Use NOMIS to manage this temporary absence",
+              showTitleAsHeading: false,
+              dismissible: false
             }) }}
           {% endif %}
-          {% if result.status.code === 'APPROVED' and user | hasPermission('TAP', 'MANAGE') %}
-            {{ govukButton({
-              classes: "govuk-button--warning",
-              text: "Cancel this absence",
-              href: baseEditUrl + "/cancel",
-              preventDoubleClick: true
-            }) }}
-          {% endif %}
-        </div>
+        {% endif %}
 
         {% set locationRows = [] %}
 

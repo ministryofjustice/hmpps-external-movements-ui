@@ -119,3 +119,9 @@
     transform: translateY(75px);
   }
 }
+
+.placeholder-background {
+  background-color: #e5e5f710;
+  background-image: radial-gradient( ellipse farthest-corner at 10px 10px , #444cf710, #444cf710 50%, #e5e5f710 50%);
+  background-size: 10px 10px;
+}

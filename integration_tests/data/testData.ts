@@ -361,6 +361,7 @@ export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
   location: { uprn: 1001, description: 'Random Street, UK' },
   accompaniedBy: { code: 'U', description: 'Unaccompanied' },
   transport: { code: 'CAR', description: 'Car' },
+  movements: [],
 }
 
 export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
@@ -381,5 +382,52 @@ export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
   accompaniedBy: { code: 'U', description: 'Unaccompanied' },
   transport: { code: 'CAR', description: 'Car' },
   locations: [{ uprn: 1001, description: 'Random Street, UK' }],
-  occurrences: [],
+  occurrences: [
+    {
+      id: 'occurrence-id',
+      absenceType: { code: 'PP', description: 'Police production' },
+      start: '2001-01-01T10:00:00',
+      end: '2001-01-01T17:30:00',
+      status: { code: 'PENDING', description: 'To be reviewed' },
+    },
+  ],
 }
+
+export const testSearchAddressResults = [
+  {
+    addressString: 'Address',
+    buildingName: '',
+    subBuildingName: '',
+    thoroughfareName: 'Random Street',
+    dependentLocality: '',
+    postTown: '',
+    county: '',
+    postcode: 'RS1 34T',
+    country: 'E',
+    uprn: 1001,
+  },
+  {
+    addressString: 'Address 2',
+    buildingName: '',
+    subBuildingName: '',
+    thoroughfareName: 'Random Street',
+    dependentLocality: '',
+    postTown: '',
+    county: '',
+    postcode: 'RS1 34T',
+    country: 'E',
+    uprn: 1002,
+  },
+  {
+    addressString: 'Address 3',
+    buildingName: '',
+    subBuildingName: '',
+    thoroughfareName: 'Random Street',
+    dependentLocality: '',
+    postTown: '',
+    county: '',
+    postcode: 'RS1 34T',
+    country: 'E',
+    uprn: 1003,
+  },
+]

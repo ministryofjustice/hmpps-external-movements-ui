@@ -14,6 +14,8 @@ import { FLASH_KEY__SUCCESS_BANNER } from '../utils/constants'
 import { populateUserPermissions } from '../middleware/permissions/populateUserPermissions'
 import { requirePermissions } from '../middleware/permissions/requirePermissions'
 import { UserPermissionLevel } from '../interfaces/hmppsUser'
+import { BrowseTapMovementsRoutes } from './temporary-absence-movements/routes'
+import { Feature, requireFeatureFlag } from '../utils/featureFlag'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
@@ -98,6 +100,12 @@ export default function routes(services: Services): Router {
     '/temporary-absences',
     requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
     BrowseTapOccurrencesRoutes(services),
+  )
+  router.use(
+    '/temporary-absence-movements',
+    requireFeatureFlag(Feature.DEV_LED),
+    requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
+    BrowseTapMovementsRoutes(services),
   )
 
   router.use(insertJourneyIdentifier())
