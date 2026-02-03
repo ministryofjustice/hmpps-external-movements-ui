@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { SchemaType } from './schema'
+import { EnterLocationSchemaType } from '../../../add-temporary-absence/enter-location/schema'
 
 export class AddTapOccurrenceEnterLocationController {
   GET = async (req: Request, res: Response) => {
@@ -17,7 +17,7 @@ export class AddTapOccurrenceEnterLocationController {
     })
   }
 
-  POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
+  POST = async (req: Request<unknown, unknown, EnterLocationSchemaType>, res: Response) => {
     req.journeyData.addTapOccurrence!.location = req.body
     res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'comments')
   }

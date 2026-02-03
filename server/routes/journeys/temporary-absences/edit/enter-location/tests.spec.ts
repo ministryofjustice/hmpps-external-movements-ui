@@ -95,12 +95,16 @@ test.describe('/temporary-absences/edit/enter-location', () => {
     await expect(testPage.button('Confirm and save')).toBeVisible()
 
     // verify validation error
+    await testPage.organisationNameField().fill('n'.repeat(41))
     await testPage.line1Field().fill('1 Manual Street')
     await testPage.clickButton('Confirm and save')
+    await testPage.link('Description must be 40 characters or fewer').click()
+    await expect(testPage.organisationNameField()).toBeFocused()
     await testPage.link('Enter town or city').click()
     await expect(testPage.cityField()).toBeFocused()
 
     // verify next page routing
+    await testPage.organisationNameField().fill('n'.repeat(40))
     await testPage.cityField().fill('Manual City')
     await testPage.clickButton('Confirm and save')
     expect(page.url()).toMatch(/\/temporary-absences\/edit\/confirmation/)
@@ -109,6 +113,7 @@ test.describe('/temporary-absences/edit/enter-location', () => {
       {
         type: 'ChangeOccurrenceLocation',
         location: {
+          description: 'n'.repeat(40),
           address: '1 Manual Street, Manual City',
         },
       },
