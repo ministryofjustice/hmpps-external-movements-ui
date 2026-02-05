@@ -74,5 +74,10 @@ test.describe('/temporary-absence-authorisations/edit/comments', () => {
     await testPage.clickContinue()
 
     expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/change-confirmation/)
+
+    // verify input values are persisted
+    await page.goBack()
+    await page.reload()
+    await expect(testPage.commentsField()).toHaveValue('new comments')
   })
 })
