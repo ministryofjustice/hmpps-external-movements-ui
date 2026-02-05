@@ -7,8 +7,9 @@ export class EditAbsenceCommentsController {
       backUrl: req.journeyData.updateTapAuthorisation!.backUrl,
       comments:
         res.locals.formResponses?.['comments'] ??
-        req.journeyData.updateTapAuthorisation!.comments ??
-        req.journeyData.updateTapAuthorisation!.authorisation.comments,
+        (req.journeyData.updateTapAuthorisation!.comments !== undefined
+          ? req.journeyData.updateTapAuthorisation!.comments
+          : req.journeyData.updateTapAuthorisation!.authorisation.comments),
     })
   }
 
