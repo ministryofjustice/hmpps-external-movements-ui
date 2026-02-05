@@ -6,7 +6,9 @@ export class EditAbsenceCommentsController {
     res.render('temporary-absence-authorisations/edit/comments/view', {
       backUrl: req.journeyData.updateTapAuthorisation!.backUrl,
       comments:
-        res.locals.formResponses?.['comments'] ?? req.journeyData.updateTapAuthorisation!.authorisation.comments,
+        res.locals.formResponses?.['comments'] ??
+        req.journeyData.updateTapAuthorisation!.comments ??
+        req.journeyData.updateTapAuthorisation!.authorisation.comments,
     })
   }
 
