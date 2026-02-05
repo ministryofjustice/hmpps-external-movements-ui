@@ -79,7 +79,7 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.978.0",
+    "@aws-sdk/client-sqs": "^3.980.0",
     "@axe-core/playwright": "^4.11.0",
     "@microsoft/applicationinsights-clickanalytics-js": "3.3.11",
     "@microsoft/applicationinsights-web": "3.3.11",
@@ -90,7 +90,7 @@
     "@ministryofjustice/hmpps-monitoring": "^1.0.1",
     "@ministryofjustice/hmpps-prison-permissions-lib": "^1.1.2",
     "@ministryofjustice/hmpps-rest-client": "^1.0.0",
-    "@sentry/node": "^10.37.0",
+    "@sentry/node": "^10.38.0",
     "applicationinsights": "^2.9.7",
     "body-parser": "^2.2.2",
     "bunyan": "^1.8.15",
@@ -120,7 +120,7 @@
     "@ministryofjustice/eslint-config-hmpps": "^1.0.2",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "@ministryofjustice/hmpps-precommit-hooks": "^1.0.2",
-    "@playwright/test": "^1.58.0",
+    "@playwright/test": "^1.58.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@tsconfig/node22": "^22.0.5",
     "@types/bunyan": "^1.8.11",
