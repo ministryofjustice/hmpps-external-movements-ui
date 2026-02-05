@@ -17,6 +17,7 @@ import {
 import { signIn } from '../../../../../../integration_tests/steps/signIn'
 import { EditAbsenceCommentsPage } from './test.page'
 import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
+import { getApiBody } from '../../../../../../integration_tests/mockApis/wiremock'
 
 test.describe('/temporary-absences/edit/comments', () => {
   test('should show unauthorised error', async ({ page }) => {
@@ -106,6 +107,13 @@ test.describe('/temporary-absences/edit/comments', () => {
     await testPage.commentsField().fill(`Test text`)
     await testPage.clickButton('Continue')
     expect(page.url()).toMatch(/\/temporary-absences\/edit\/confirmation/)
+
+    expect(await getApiBody(`/external-movements-api/temporary-absence-occurrences/${occurrenceId}`, 'PUT')).toEqual([
+      {
+        type: 'ChangeOccurrenceComments',
+        comments: 'Test text',
+      },
+    ])
   })
 
   test('should allow empty comments', async ({ page }) => {
@@ -122,6 +130,12 @@ test.describe('/temporary-absences/edit/comments', () => {
     await testPage.commentsField().clear()
     await testPage.clickButton('Continue')
     expect(page.url()).toMatch(/\/temporary-absences\/edit\/confirmation/)
+
+    expect(await getApiBody(`/external-movements-api/temporary-absence-occurrences/${occurrenceId}`, 'PUT')).toEqual([
+      {
+        type: 'ChangeOccurrenceComments',
+      },
+    ])
   })
 
   test('should not allow more than 4000 characters', async ({ page }) => {
