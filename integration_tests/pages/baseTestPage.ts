@@ -31,6 +31,7 @@ export class BaseTestPage {
 
     const accessibilityScanResults = await new AxeBuilder({ page: this.page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .disableRules(['aria-allowed-attr']) // Temporary rule whilst this issue is resolved https://github.com/w3c/aria/issues/1404
       .analyze()
     expect(accessibilityScanResults.violations).toHaveLength(0)
     return this

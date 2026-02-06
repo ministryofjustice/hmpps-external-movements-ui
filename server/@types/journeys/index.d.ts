@@ -68,6 +68,7 @@ export type AddTemporaryAbsenceJourney = Partial<{
   start: string
   end: string
   patternType: 'FREEFORM' | 'WEEKLY' | 'SHIFT' | 'BIWEEKLY'
+  absencesPerDay: number
   freeFormPattern: {
     startDate: string
     startTime: string

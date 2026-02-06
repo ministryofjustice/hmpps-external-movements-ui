@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { SchemaType } from './schemas'
+import { Feature } from '../../../../utils/featureFlag'
 
 export class SelectDaysTimesBiWeeklyController {
   GET = (week: 'FIRST' | 'SECOND') => async (req: Request, res: Response) => {
@@ -38,13 +39,19 @@ export class SelectDaysTimesBiWeeklyController {
     }
 
     res.render('add-temporary-absence/select-days-times-biweekly/view', {
-      backUrl: week === 'FIRST' ? 'repeating-pattern' : 'select-days-times-biweekly',
+      // eslint-disable-next-line no-nested-ternary
+      backUrl: req.middleware?.enabledFeatures?.includes(Feature.INTRA_DAY)
+        ? 'multi-absences-per-day'
+        : week === 'FIRST'
+          ? 'repeating-pattern'
+          : 'select-days-times-biweekly',
       days: res.locals.formResponses?.['selectedDays'] ?? pattern?.map(o => weekDays[o.day]) ?? [],
       dayData: [...Array(7).keys()].map(i => getDayTimes(i)),
       week,
       startDate: start,
       endDate: end,
       biweeklyPattern,
+      absencesPerDay: req.journeyData.addTemporaryAbsence!.absencesPerDay ?? 1,
     })
   }
 

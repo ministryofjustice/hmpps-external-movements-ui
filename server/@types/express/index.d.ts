@@ -2,6 +2,7 @@ import { HmppsUser } from '../../interfaces/hmppsUser'
 import { Breadcrumbs } from '../../middleware/history/breadcrumbs'
 import Prisoner from '../../services/apis/model/prisoner'
 import { PrisonerDetails, JourneyData } from '../journeys'
+import { Feature } from '../../utils/featureFlag'
 
 export declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
@@ -28,6 +29,7 @@ export declare global {
 
       middleware?: {
         prisonerData?: Prisoner
+        enabledFeatures?: Feature[]
       }
     }
 

@@ -3,6 +3,7 @@ import { AddTemporaryAbsenceJourney } from '../../../@types/journeys'
 import logger from '../../../../logger'
 import { saveCategorySubJourney, updateCategorySubJourney } from '../../common/utils'
 import { components } from '../../../@types/externalMovements'
+import { Feature } from '../../../utils/featureFlag'
 
 export class AddTapFlowControl {
   static getBackUrl<T, ResBody, ReqBody, Q>(req: Request<T, ResBody, ReqBody, Q>, normalPreviousPage: string): string {
@@ -245,6 +246,11 @@ export class AddTapFlowControl {
         delete req.journeyData.isCheckAnswers
       }
 
+      if (data.absencesPerDay) {
+        // break check-answers bounce back routing, and resume normal journey flow
+        delete req.journeyData.isCheckAnswers
+      }
+
       if (data.accompanied !== undefined) {
         if (data.accompanied && !journey.accompaniedBy) {
           journey.accompaniedSubJourney = { accompanied: data.accompanied }
@@ -327,6 +333,12 @@ export class AddTapFlowControl {
 
       if (journey.isCheckPattern) return 'check-absences'
 
+      if (
+        req.middleware?.enabledFeatures?.includes(Feature.INTRA_DAY) &&
+        ['WEEKLY', 'BIWEEKLY'].includes(data.patternType)
+      ) {
+        return 'multi-absences-per-day'
+      }
       switch (data.patternType) {
         case 'FREEFORM':
           return 'select-days-and-times'
@@ -338,6 +350,20 @@ export class AddTapFlowControl {
           return 'enter-shift-pattern'
         default:
           throw new Error(`Unknown pattern type ${data.patternType}`)
+      }
+    }
+
+    if (data.absencesPerDay) {
+      if (journey.absencesPerDay !== data.absencesPerDay) delete journey.isCheckPattern
+      journey.absencesPerDay = data.absencesPerDay
+
+      switch (journey.patternType) {
+        case 'WEEKLY':
+          return 'select-days-times-weekly'
+        case 'BIWEEKLY':
+          return 'select-days-times-biweekly'
+        default:
+          throw new Error(`Non-applicable pattern type ${data.patternType} for multi-absences per day`)
       }
     }
 

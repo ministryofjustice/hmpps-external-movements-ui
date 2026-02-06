@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const parseNumber = (value: string, min: number, max: number, length: number) =>
+export const parseNumber = (value: string, min: number, max: number, length: number) =>
   z
     .string()
     .regex(new RegExp(`^[0-9]{1,${length}}$`))

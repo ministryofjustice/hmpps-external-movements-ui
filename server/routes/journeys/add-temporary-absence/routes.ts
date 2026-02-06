@@ -29,6 +29,7 @@ import { EnterShiftPatternRoutes } from './enter-shift-pattern/routes'
 import { SelectDaysTimesBiWeeklyRoutes } from './select-days-times-biweekly/routes'
 import { EnterLocationRoutes } from './enter-location/routes'
 import { guard } from './stateRules'
+import { MultiAbsencesPerDayRoutes } from './multi-absences-per-day/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -82,6 +83,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
 
   router.use('/start-end-dates', StartEndDatesRoutes())
   router.use('/repeating-pattern', RepeatingPatternRoutes())
+  router.use('/multi-absences-per-day', MultiAbsencesPerDayRoutes())
   router.use('/select-days-and-times', FreeformSelectDaysRoutes())
   router.use('/check-absences', CheckPatternRoutes())
   router.use('/select-days-times-weekly', SelectDaysTimesWeeklyRoutes())

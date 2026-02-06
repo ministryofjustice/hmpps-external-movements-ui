@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { SchemaType } from './schemas'
+import { Feature } from '../../../../utils/featureFlag'
 
 export class SelectDaysTimesWeeklyController {
   GET = async (req: Request, res: Response) => {
@@ -33,7 +34,9 @@ export class SelectDaysTimesWeeklyController {
     }
 
     res.render('add-temporary-absence/select-days-times-weekly/view', {
-      backUrl: 'repeating-pattern',
+      backUrl: req.middleware?.enabledFeatures?.includes(Feature.INTRA_DAY)
+        ? 'multi-absences-per-day'
+        : 'repeating-pattern',
       days:
         res.locals.formResponses?.['selectedDays'] ??
         req.journeyData.addTemporaryAbsence?.weeklyPattern?.map(o => weekDays[o.day]) ??
@@ -41,6 +44,7 @@ export class SelectDaysTimesWeeklyController {
       dayData: [...Array(7).keys()].map(i => getDayTimes(i)),
       startDate: req.journeyData.addTemporaryAbsence!.start,
       endDate: req.journeyData.addTemporaryAbsence!.end,
+      absencesPerDay: req.journeyData.addTemporaryAbsence!.absencesPerDay ?? 1,
     })
   }
 

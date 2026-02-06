@@ -28,9 +28,17 @@
   {% case 'SHIFT' %}
     {% set changeLink = "enter-shift-pattern" %}
   {% case 'WEEKLY' %}
-    {% set changeLink = "select-days-times-weekly" %}
+    {% if user | featureEnabled('INTRA_DAY') %}
+      {% set changeLink = "multi-absences-per-day" %}
+    {% else %}
+      {% set changeLink = "select-days-times-weekly" %}
+    {% endif %}
   {% case 'BIWEEKLY' %}
-    {% set changeLink = "select-days-times-biweekly" %}
+    {% if user | featureEnabled('INTRA_DAY') %}
+      {% set changeLink = "multi-absences-per-day" %}
+    {% else %}
+      {% set changeLink = "select-days-times-biweekly" %}
+    {% endif %}
   {% default %}
     {% set changeLink = '' %}
   {% endswitch %}

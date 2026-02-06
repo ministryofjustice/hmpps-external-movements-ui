@@ -61,6 +61,10 @@
     hour: opts.returnHour,
     minute: opts.returnMinute
   }) }}
+
+  {% if absencesPerDay !== 1 %}
+    <p class="govuk-!-margin-top-5">There will be {{ absencesPerDay }} movements in this time slot</p>
+  {% endif %}
 {% endmacro %}
 
 {% block innerContent %}
@@ -123,10 +127,18 @@
 
     function* iterateBiweeklyPattern(firstWeek, secondWeek) {
       const weekOne = Array.from(new Array(7).keys()).map(dayOfWeek => firstWeek.find(({ day }) => day === dayOfWeek)).map(itm => {
-        return itm? { ...itm, type: itm.overnight ? 'NIGHT' : 'DAY' } : null
+        {% if absencesPerDay === 1 %}
+          return itm? { ...itm, type: itm.overnight ? 'NIGHT' : 'DAY' } : null
+        {% else %}
+          return itm? { ...itm, type: 'MULTI' } : null
+        {% endif %}
       })
       const weekTwo = Array.from(new Array(7).keys()).map(dayOfWeek => secondWeek.find(({ day }) => day === dayOfWeek)).map(itm => {
-        return itm? { ...itm, type: itm.overnight ? 'NIGHT' : 'DAY' } : null
+        {% if absencesPerDay === 1 %}
+          return itm? { ...itm, type: itm.overnight ? 'NIGHT' : 'DAY' } : null
+        {% else %}
+          return itm? { ...itm, type: 'MULTI' } : null
+        {% endif %}
       })
 
       const numberOfDaysToSkip = (new Date(dateFrom).getDay() + 6) % 7
