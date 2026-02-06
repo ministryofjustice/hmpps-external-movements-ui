@@ -65,7 +65,8 @@ export default function routes(services: Services): Router {
   router.use(populateValidationErrors())
 
   get('*any', (req, res, next) => {
-    res.locals['query'] = req.query
+    res.locals['originalUrl'] = req.originalUrl // for use by prisoner profile backlink
+    res.locals['query'] = req.query // for use by getQueryEntries nunjucks filter
     const successBanner = req.flash(FLASH_KEY__SUCCESS_BANNER)
     res.locals['successBanner'] = successBanner?.[0] ? successBanner[0] : undefined
     next()
