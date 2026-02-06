@@ -96,7 +96,7 @@ export function addBeforeErrors(
   const startTime = Number(parsedStartHour!.data) * 60 + Number(parsedStartMinute!.data)
   const endTime = Number(parsedEndHour!.data) * 60 + Number(parsedEndMinute!.data)
 
-  if (endTime < startTime) {
+  if (endTime <= startTime) {
     ctx.addIssue({
       code: 'custom',
       message: errorMessage,
