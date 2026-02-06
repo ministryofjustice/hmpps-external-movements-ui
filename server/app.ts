@@ -29,6 +29,7 @@ import { handleApiError } from './middleware/validation/handleApiError'
 import { permissionsMiddleware } from './middleware/permissions/permissionsMiddleware'
 import { AuthorisedRoles } from './middleware/permissions/populateUserPermissions'
 import { handleJsonErrorResponse, jsonErrorMiddleware } from './middleware/handleJsonErrorResponse'
+import { populateEnabledFeatures } from './utils/featureFlag'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -111,6 +112,7 @@ export default function createApp(services: Services): express.Application {
       prisonApiConfig: config.apis.prisonApi,
     }),
   )
+  app.use(populateEnabledFeatures)
 
   app.get(/(.*)/, permissionsMiddleware)
   app.use(routes(services))

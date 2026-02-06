@@ -1,6 +1,7 @@
 import { Request } from 'express'
-import { addDays, differenceInDays, format } from 'date-fns'
+import { addDays, differenceInDays, format, differenceInMinutes, addMinutes } from 'date-fns'
 import { DayOfWeekTimeSlot, ShiftPatternInterval } from '../../../@types/journeys'
+import { Feature } from '../../../utils/featureFlag'
 
 export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, ResBody, ReqBody, Q>) => {
   const journey = req.journeyData.addTemporaryAbsence!
@@ -93,6 +94,22 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
       }
       currentDay = addDays(currentDay, 1)
     }
+  }
+
+  if (
+    req.middleware?.enabledFeatures?.includes(Feature.INTRA_DAY) &&
+    ['WEEKLY', 'BIWEEKLY'].includes(journey.patternType!) &&
+    journey.absencesPerDay! > 1
+  ) {
+    return occurrencesToMatch
+      .map(slot => {
+        const minutesPerAbsence = differenceInMinutes(slot.end, slot.start) / journey.absencesPerDay!
+        return Array.from(new Array(journey.absencesPerDay!).keys()).map(i => ({
+          start: addMinutes(slot.start, i * minutesPerAbsence).toISOString(),
+          end: addMinutes(slot.start, (i + 1) * minutesPerAbsence).toISOString(),
+        }))
+      })
+      .flat()
   }
 
   return occurrencesToMatch

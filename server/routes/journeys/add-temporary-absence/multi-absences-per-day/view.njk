@@ -1,0 +1,52 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Will the prisoner have multiple absences in the same day? - Add a temporary absence' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create a Temporary Absence</span>
+
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukRadios({
+        name: "isMulti",
+        errorMessage: validationErrors | findError('isMulti'),
+        fieldset: {
+          legend: {
+            text: "Will the prisoner have multiple absences in the same day?",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--l"
+          }
+        },
+        items: [
+          {
+            value: 'YES',
+            text: "Yes",
+            conditional: {
+              html: govukInput({
+                name: "absencesPerDay",
+                classes: "govuk-input--width-10",
+                label: { text: "How many absences will there be each day?" },
+                hint: { text: 'Each day will be split into equal slots' },
+                errorMessage: validationErrors | findError('absencesPerDay'),
+                value: absencesPerDay
+              })
+            }
+          },
+          {
+            value: 'NO',
+            text: "No"
+          }
+        ] | setCheckedValue(isMulti)
+      }) }}
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

@@ -21,6 +21,7 @@ generic-service:
     SENTRY_ENVIRONMENT: DEV
     AUDIT_ENABLED: "true"
     DEV_LED_FEATURE_PRISONS: MDI
+    FEAT_INTRA_DAY_SCHEDULING_PRISONS: MDI
 
 generic-prometheus-alerts:
   alertSeverity: move-and-improve-alerts-non-prod
