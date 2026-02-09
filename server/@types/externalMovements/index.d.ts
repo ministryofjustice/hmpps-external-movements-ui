@@ -676,6 +676,11 @@ export interface components {
       /** Format: date */
       end: string
     })
+    ChangeAuthorisationLocations: {
+      type: 'ChangeAuthorisationLocations'
+    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
+      locations: components['schemas']['Location'][]
+    })
     ChangeAuthorisationTransport: {
       type: 'ChangeAuthorisationTransport'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
@@ -747,6 +752,9 @@ export interface components {
       start: string
       /** Format: date */
       end: string
+      startTime?: string
+      endTime?: string
+      location?: components['schemas']['Location']
       comments?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
@@ -793,6 +801,9 @@ export interface components {
       start: string
       /** Format: date */
       end: string
+      startTime?: string
+      endTime?: string
+      location?: components['schemas']['Location']
       comments?: string
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
@@ -1019,32 +1030,10 @@ export interface components {
       content: components['schemas']['TapAuthorisationResult'][]
       metadata: components['schemas']['PageMetadata']
     }
-    Authorisation: {
-      /** Format: uuid */
-      id: string
-      person: components['schemas']['Person']
-      status: components['schemas']['CodedDescription']
-      absenceType?: components['schemas']['CodedDescription']
-      absenceSubType?: components['schemas']['CodedDescription']
-      absenceReasonCategory?: components['schemas']['CodedDescription']
-      absenceReason?: components['schemas']['CodedDescription']
-      accompaniedBy: components['schemas']['CodedDescription']
-      repeat: boolean
-      comments?: string
-    }
-    Movement: {
-      /** Format: uuid */
-      id: string
-      /** Format: date-time */
-      occurredAt: string
-      /** @enum {string} */
-      direction: 'IN' | 'OUT'
-      location: components['schemas']['Location']
-    }
     TapOccurrence: {
       /** Format: uuid */
       id: string
-      authorisation: components['schemas']['Authorisation']
+      authorisation: components['schemas']['TapOccurrence.Authorisation']
       absenceType?: components['schemas']['CodedDescription']
       absenceSubType?: components['schemas']['CodedDescription']
       absenceReasonCategory?: components['schemas']['CodedDescription']
@@ -1064,9 +1053,47 @@ export interface components {
       occurrencePosition: number
       /** Format: int32 */
       totalOccurrences: number
-      movements: components['schemas']['Movement'][]
+      movements: components['schemas']['TapOccurrence.Movement'][]
     }
-    Occurrence: {
+    'TapOccurrence.Authorisation': {
+      /** Format: uuid */
+      id: string
+      person: components['schemas']['Person']
+      status: components['schemas']['CodedDescription']
+      absenceType?: components['schemas']['CodedDescription']
+      absenceSubType?: components['schemas']['CodedDescription']
+      absenceReasonCategory?: components['schemas']['CodedDescription']
+      absenceReason?: components['schemas']['CodedDescription']
+      accompaniedBy: components['schemas']['CodedDescription']
+      repeat: boolean
+      comments?: string
+    }
+    'TapOccurrence.Movement': {
+      /** Format: uuid */
+      id: string
+      /** Format: date-time */
+      occurredAt: string
+      /** @enum {string} */
+      direction: 'IN' | 'OUT'
+      location: components['schemas']['Location']
+    }
+    TapMovement: {
+      /** Format: uuid */
+      id: string
+      person: components['schemas']['Person']
+      occurrence?: components['schemas']['TapMovement.Occurrence']
+      /** Format: date-time */
+      occurredAt: string
+      /** @enum {string} */
+      direction: 'IN' | 'OUT'
+      prisonCode: string
+      absenceReason: components['schemas']['CodedDescription']
+      location: components['schemas']['Location']
+      accompaniedBy: components['schemas']['CodedDescription']
+      accompaniedByComments?: string
+      comments?: string
+    }
+    'TapMovement.Occurrence': {
       /** Format: uuid */
       id: string
       absenceType?: components['schemas']['CodedDescription']
@@ -1078,22 +1105,6 @@ export interface components {
       start: string
       /** Format: date-time */
       end: string
-    }
-    TapMovement: {
-      /** Format: uuid */
-      id: string
-      person: components['schemas']['Person']
-      occurrence?: components['schemas']['Occurrence']
-      /** Format: date-time */
-      occurredAt: string
-      /** @enum {string} */
-      direction: 'IN' | 'OUT'
-      prisonCode: string
-      absenceReason: components['schemas']['CodedDescription']
-      location: components['schemas']['Location']
-      accompaniedBy: components['schemas']['CodedDescription']
-      accompaniedByComments?: string
-      comments?: string
     }
     TapAuthorisation: {
       /** Format: uuid */
@@ -1113,9 +1124,26 @@ export interface components {
       end: string
       /** Format: int64 */
       totalOccurrenceCount: number
-      occurrences: components['schemas']['Occurrence'][]
+      occurrences: components['schemas']['TapAuthorisation.Occurrence'][]
       locations: components['schemas']['Location'][]
       schedule?: components['schemas']['JsonNode']
+      comments?: string
+    }
+    'TapAuthorisation.Occurrence': {
+      /** Format: uuid */
+      id: string
+      status: components['schemas']['CodedDescription']
+      absenceType?: components['schemas']['CodedDescription']
+      absenceSubType?: components['schemas']['CodedDescription']
+      absenceReasonCategory?: components['schemas']['CodedDescription']
+      absenceReason?: components['schemas']['CodedDescription']
+      /** Format: date-time */
+      start: string
+      /** Format: date-time */
+      end: string
+      location: components['schemas']['Location']
+      accompaniedBy: components['schemas']['CodedDescription']
+      transport: components['schemas']['CodedDescription']
       comments?: string
     }
     SyncReadTapOccurrence: {
@@ -1457,6 +1485,7 @@ export interface operations {
           | components['schemas']['ChangeAuthorisationAccompaniment']
           | components['schemas']['ChangeAuthorisationComments']
           | components['schemas']['ChangeAuthorisationDateRange']
+          | components['schemas']['ChangeAuthorisationLocations']
           | components['schemas']['ChangeAuthorisationTransport']
           | components['schemas']['ChangePrisonPerson']
           | components['schemas']['DeferAuthorisation']
