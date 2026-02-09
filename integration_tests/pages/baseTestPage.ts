@@ -1,5 +1,5 @@
 import { Page, expect } from '@playwright/test'
-import AxeBuilder from '@axe-core/playwright'
+import { AxeBuilder } from '@axe-core/playwright'
 import { deserialiseHistory } from '../../server/middleware/history/historyMiddleware'
 
 export class BaseTestPage {
