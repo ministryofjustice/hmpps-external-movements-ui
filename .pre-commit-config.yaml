@@ -18,23 +18,17 @@ repos:
       - id: lint
         name: linting code
         language: system
-        entry: ./node_modules/.bin/lint-staged
-        types_or: [ts,javascript,css]
-        require_serial: true
+        entry: npm run lint
         pass_filenames: false
       - id: typecheck
         name: verify types
         language: system
         entry: npm run typecheck
-        types: [ts]
-        require_serial: true
         pass_filenames: false
       - id: test
         name: running tests
         language: system
         entry: npm run test
-        types: [ts]
-        require_serial: true
         pass_filenames: false
   - repo: builtin
     hooks:
