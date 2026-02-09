@@ -55,6 +55,9 @@ test.describe('/temporary-absence-authorisations/:id', () => {
           status: { code: 'PENDING', description: 'To be reviewed' },
           start: '2001-01-01T10:00:00',
           end: '2001-01-01T17:30:00',
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+          transport: { code: 'CAR', description: 'Car' },
+          location: { uprn: 1001, description: 'Random Street, UK' },
         },
       ],
     })
@@ -179,6 +182,9 @@ test.describe('/temporary-absence-authorisations/:id', () => {
           status: { code: 'PENDING', description: 'To be reviewed' },
           start: '2001-01-01T10:00:00',
           end: '2001-01-01T17:30:00',
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+          transport: { code: 'CAR', description: 'Car' },
+          location: { uprn: 1001, description: 'Random Street, UK' },
         },
       ],
     })
@@ -233,6 +239,9 @@ test.describe('/temporary-absence-authorisations/:id', () => {
           status: { code: 'PENDING', description: 'To be reviewed' },
           start: '2001-01-01T10:00:00',
           end: '2001-01-01T17:30:00',
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+          transport: { code: 'CAR', description: 'Car' },
+          location: { uprn: 1001, description: 'Random Street, UK' },
         },
       ],
     })
@@ -272,6 +281,9 @@ test.describe('/temporary-absence-authorisations/:id', () => {
           status: { code: 'PENDING', description: 'To be reviewed' },
           start: '2001-01-01T10:00:00',
           end: '2001-01-01T17:30:00',
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+          transport: { code: 'CAR', description: 'Car' },
+          location: { uprn: 1001, description: 'Random Street, UK' },
         },
       ],
     })
@@ -325,6 +337,9 @@ test.describe('/temporary-absence-authorisations/:id', () => {
           status: { code: 'PENDING', description: 'To be reviewed' },
           start: '2001-01-01T10:00:00',
           end: '2001-01-01T17:30:00',
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+          transport: { code: 'CAR', description: 'Car' },
+          location: { uprn: 1001, description: 'Random Street, UK' },
         },
       ],
     })

@@ -142,7 +142,7 @@ export const isTapAuthorisationEditable = ({
   occurrences,
 }: {
   status: { code: string }
-  occurrences?: components['schemas']['Occurrence'][]
+  occurrences?: components['schemas']['TapAuthorisation.Occurrence'][]
 }) => ['PENDING', 'APPROVED'].includes(status.code) && !(occurrences?.length === 0)
 
 export const isTapOccurrenceEditable = ({ status }: { status: { code: string } }) =>
