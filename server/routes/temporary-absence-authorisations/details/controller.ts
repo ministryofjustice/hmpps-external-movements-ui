@@ -1,21 +1,26 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import type { HTTPError } from 'superagent'
 import { getAuthorisationAndPopulatePrisonerDetails } from '../utils'
 import { ResQuerySchemaType } from './schema'
 import { getApiUserErrorMessage, isTapAuthorisationEditable } from '../../../utils/utils'
 import ExternalMovementsService from '../../../services/apis/externalMovementsService'
 import { parseAuditHistory } from '../../../utils/parseAuditHistory'
+import PrisonerSearchApiService from '../../../services/apis/prisonerSearchService'
 
 export class TapAuthorisationDetailsController {
-  constructor(readonly externalMovementsService: ExternalMovementsService) {}
+  constructor(
+    readonly externalMovementsService: ExternalMovementsService,
+    readonly prisonerSearchApiService: PrisonerSearchApiService,
+  ) {}
 
-  GET = async (req: Request<{ id: string }>, res: Response) => {
+  GET = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     try {
       const { dateFrom, dateTo, validated } = (res.locals['query'] ?? {}) as ResQuerySchemaType
 
       const [authorisation, history] = await Promise.all([
         getAuthorisationAndPopulatePrisonerDetails(
           this.externalMovementsService,
+          this.prisonerSearchApiService,
           req,
           res,
           validated?.dateFrom,
@@ -33,8 +38,12 @@ export class TapAuthorisationDetailsController {
         editable: isTapAuthorisationEditable(authorisation),
       })
     } catch (error: unknown) {
-      res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
-      res.notFound()
+      if ((error as { message?: string }).message) {
+        next(error)
+      } else {
+        res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
+        res.notFound()
+      }
     }
   }
 }

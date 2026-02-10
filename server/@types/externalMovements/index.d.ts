@@ -1033,6 +1033,7 @@ export interface components {
     TapOccurrence: {
       /** Format: uuid */
       id: string
+      prisonCode: string
       authorisation: components['schemas']['TapOccurrence.Authorisation']
       absenceType?: components['schemas']['CodedDescription']
       absenceSubType?: components['schemas']['CodedDescription']
@@ -1109,6 +1110,7 @@ export interface components {
     TapAuthorisation: {
       /** Format: uuid */
       id: string
+      prisonCode: string
       person: components['schemas']['Person']
       status: components['schemas']['CodedDescription']
       absenceType?: components['schemas']['CodedDescription']

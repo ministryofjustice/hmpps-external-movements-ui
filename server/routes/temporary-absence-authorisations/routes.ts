@@ -8,7 +8,7 @@ import { schema as detailsSchema } from './details/schema'
 import { Page } from '../../services/auditService'
 
 export const BrowseTapAuthorisationsRoutes = (services: Services) => {
-  const { externalMovementsService } = services
+  const { externalMovementsService, prisonerSearchService } = services
   const { router, get } = BaseRouter()
   const controller = new BrowseTapAuthorisationsController(externalMovementsService)
 
@@ -34,7 +34,7 @@ export const BrowseTapAuthorisationsRoutes = (services: Services) => {
     '/:id',
     Page.VIEW_TEMPORARY_ABSENCE_AUTHORISATION,
     validateOnGET(detailsSchema, 'dateFrom', 'dateTo'),
-    new TapAuthorisationDetailsController(externalMovementsService).GET,
+    new TapAuthorisationDetailsController(externalMovementsService, prisonerSearchService).GET,
   )
 
   return router
