@@ -163,10 +163,45 @@ const parsePropertyName = (domain: string, propertyName: string) => {
   return CHANGE_PROPERTY_MAP[propertyName] ?? propertyName
 }
 
+const parseTapAuthorisationLocationChange = (action: components['schemas']['AuditedAction']) => {
+  const change = action.changes[0]!.change as string[]
+  const previous = action.changes[0]!.previous as string[]
+
+  let eventText: DomainEventText
+
+  if (change.length === previous.length) {
+    eventText = {
+      heading: change.length === 1 ? 'Absence location changed' : 'Absence locations changed',
+    }
+    eventText.changes = change.map((val, idx) => `Location was changed from ${previous[idx]} to ${val}.`)
+  } else if (change.length > previous.length) {
+    const newItems = change.filter(val => !previous.includes(val))
+    eventText = {
+      heading: newItems.length === 1 ? 'Absence location added' : 'Absence locations added',
+    }
+    eventText.changes = newItems.map(val => `Location ${val} was added.`)
+  } else {
+    const deletedItems = previous.filter(val => !change.includes(val))
+    eventText = {
+      heading: deletedItems.length === 1 ? 'Absence location removed' : 'Absence locations removed',
+    }
+    eventText.changes = deletedItems.map(val => `Location ${val} was removed.`)
+  }
+
+  return {
+    ...eventText,
+    user: action.user,
+    occurredAt: action.occurredAt,
+  }
+}
+
 export const parseAuditHistory = (history: components['schemas']['AuditedAction'][]) => {
   const result = history
     .flatMap(action =>
       action.domainEvents.map(event => {
+        if (event === 'person.temporary-absence-authorisation.relocated') {
+          return parseTapAuthorisationLocationChange(action)
+        }
         const eventText = DOMAIN_EVENT_MAP[event]
         if (!eventText) return null
 
