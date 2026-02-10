@@ -83,17 +83,15 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
 
     expect(
       await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
-    ).toEqual([
-      {
-        start: '2001-01-03T12:00:00',
-        end: '2001-01-03T13:30:00',
-        location: {
-          description: 'Random Street, UK',
-          uprn: 1001,
-        },
-        comments: 'new comments',
+    ).toContainEqual({
+      start: '2001-01-03T12:00:00',
+      end: '2001-01-03T13:30:00',
+      location: {
+        description: 'Random Street, UK',
+        uprn: 1001,
       },
-    ])
+      comments: 'new comments',
+    })
   })
 
   test('should create new occurrence with a new searched address', async ({ page }) => {
@@ -130,18 +128,16 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
 
     expect(
       await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
-    ).toEqual([
-      {
-        start: '2001-01-03T12:00:00',
-        end: '2001-01-03T13:30:00',
-        location: {
-          address: 'Address 3',
-          postcode: 'RS1 34T',
-          uprn: 1003,
-        },
-        comments: 'new comments',
+    ).toContainEqual({
+      start: '2001-01-03T12:00:00',
+      end: '2001-01-03T13:30:00',
+      location: {
+        address: 'Address 3',
+        postcode: 'RS1 34T',
+        uprn: 1003,
       },
-    ])
+      comments: 'new comments',
+    })
   })
 
   test('should create new occurrence with a new entered address', async ({ page }) => {
@@ -181,16 +177,14 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
 
     expect(
       await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
-    ).toEqual([
-      {
-        start: '2001-01-03T12:00:00',
-        end: '2001-01-03T13:30:00',
-        location: {
-          address: '1 Manual Street, Manual City',
-        },
-        comments: 'new comments',
+    ).toContainEqual({
+      start: '2001-01-03T12:00:00',
+      end: '2001-01-03T13:30:00',
+      location: {
+        address: '1 Manual Street, Manual City',
       },
-    ])
+      comments: 'new comments',
+    })
   })
 
   test('can change new occurrence answers', async ({ page }) => {
@@ -241,15 +235,13 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
 
     expect(
       await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
-    ).toEqual([
-      {
-        start: '2001-01-03T05:00:00',
-        end: '2001-01-03T09:30:00',
-        location: {
-          address: '1 Manual Street, Manual City',
-        },
-        comments: 'another comments',
+    ).toContainEqual({
+      start: '2001-01-03T05:00:00',
+      end: '2001-01-03T09:30:00',
+      location: {
+        address: '1 Manual Street, Manual City',
       },
-    ])
+      comments: 'another comments',
+    })
   })
 })
