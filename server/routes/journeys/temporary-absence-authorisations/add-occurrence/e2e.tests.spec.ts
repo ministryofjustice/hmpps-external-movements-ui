@@ -1,10 +1,6 @@
 import { expect, Page, test } from '@playwright/test'
 import { v4 as uuidV4 } from 'uuid'
-import {
-  randomPrisonNumber,
-  testSearchAddressResults,
-  testTapAuthorisation,
-} from '../../../../../integration_tests/data/testData'
+import { testSearchAddressResults, testTapAuthorisation } from '../../../../../integration_tests/data/testData'
 import auth from '../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../integration_tests/mockApis/componentsApi'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
@@ -25,19 +21,11 @@ import { getApiBody } from '../../../../../integration_tests/mockApis/wiremock'
 import { AddTapOccurrenceEnterLocationPage } from './enter-location/test.page'
 
 test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
-  const prisonNumber = randomPrisonNumber()
   const authorisationId = uuidV4()
 
   const authorisation = {
     ...testTapAuthorisation,
     id: authorisationId,
-    person: {
-      personIdentifier: prisonNumber,
-      firstName: 'PRISONER-NAME',
-      lastName: 'PRISONER-SURNAME',
-      dateOfBirth: '1990-01-01',
-      cellLocation: '2-1-005',
-    },
     repeat: true,
     start: '2001-01-02',
     end: '2001-01-05',
@@ -49,7 +37,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
       auth.stubSignIn(),
       componentsApi.stubComponents(),
       stubGetPrisonerImage(),
-      stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
+      stubGetPrisonerDetails({ prisonerNumber: testTapAuthorisation.person.personIdentifier }),
       stubGetTapAuthorisation(authorisation),
       stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
       stubSearchAddresses('random', testSearchAddressResults),

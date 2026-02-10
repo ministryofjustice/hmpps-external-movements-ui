@@ -6,7 +6,7 @@ import { schema } from './schema'
 import { TapOccurrenceDetailsController } from './details/controller'
 import { Page } from '../../services/auditService'
 
-export const BrowseTapOccurrencesRoutes = ({ externalMovementsService }: Services) => {
+export const BrowseTapOccurrencesRoutes = ({ externalMovementsService, prisonerSearchService }: Services) => {
   const { router, get } = BaseRouter()
   const controller = new BrowseTapOccurrencesController(externalMovementsService)
 
@@ -17,7 +17,11 @@ export const BrowseTapOccurrencesRoutes = ({ externalMovementsService }: Service
     controller.GET,
   )
 
-  get('/:id', Page.VIEW_TEMPORARY_ABSENCE_OCCURRENCE, new TapOccurrenceDetailsController(externalMovementsService).GET)
+  get(
+    '/:id',
+    Page.VIEW_TEMPORARY_ABSENCE_OCCURRENCE,
+    new TapOccurrenceDetailsController(externalMovementsService, prisonerSearchService).GET,
+  )
 
   return router
 }

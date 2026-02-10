@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 import auth from '../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../integration_tests/steps/signIn'
-import { randomPrisonNumber, testTapOccurrence } from '../../../../integration_tests/data/testData'
+import { testTapOccurrence } from '../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetPrisonerImage } from '../../../../integration_tests/mockApis/prisonApi'
 import { TapOccurrenceDetailsPage } from './test.page'
@@ -11,17 +11,30 @@ import {
   stubGetTapOccurrence,
   stubGetTapOccurrenceHistory,
 } from '../../../../integration_tests/mockApis/externalMovementsApi'
+import { NotAuthorisedPage } from '../../../../integration_tests/pages/NotAuthorisedPage'
 
 test.describe('/temporary-absences/:id', () => {
-  const prisonNumber = randomPrisonNumber()
-
   test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
       stubGetPrisonerImage(),
-      stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
+      stubGetPrisonerDetails({ prisonerNumber: testTapOccurrence.authorisation.person.personIdentifier }),
     ])
+  })
+
+  test('should show 403 error if TAP occurrence is outside the user caseloads', async ({ page }) => {
+    await signIn(page)
+
+    const occurrenceId = uuidV4()
+    await stubGetTapOccurrence({
+      ...testTapOccurrence,
+      id: occurrenceId,
+      prisonCode: 'OUT',
+    })
+    await stubGetTapOccurrenceHistory(occurrenceId, { content: [] })
+    await page.goto(`/temporary-absences/${occurrenceId}`)
+    await new NotAuthorisedPage(page).verifyContent()
   })
 
   test('should show temporary absence details for single SCHEDULED absence', async ({ page }) => {

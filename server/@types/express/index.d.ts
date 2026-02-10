@@ -35,6 +35,7 @@ export declare global {
 
     interface Response {
       notFound(): void
+      notAuthorised(): void
       conflict(): void
       getPageViewEvent(isAttempt: boolean): AuditEvent
       setAuditDetails: {

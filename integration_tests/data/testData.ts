@@ -336,6 +336,7 @@ export const testTapOccurrenceResult: components['schemas']['TapOccurrenceResult
 
 export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
   id: 'occurrence-id',
+  prisonCode: 'LEI',
   authorisation: {
     id: uuidV4(),
     person: {
@@ -366,6 +367,7 @@ export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
 
 export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
   id: 'authorisation-id',
+  prisonCode: 'LEI',
   person: {
     personIdentifier: 'A9965EA',
     firstName: 'PRISONER-NAME',

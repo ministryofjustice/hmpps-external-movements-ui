@@ -5,9 +5,13 @@ import { ResQuerySchemaType } from './schema'
 import { getApiUserErrorMessage, isTapAuthorisationEditable } from '../../../utils/utils'
 import ExternalMovementsService from '../../../services/apis/externalMovementsService'
 import { parseAuditHistory } from '../../../utils/parseAuditHistory'
+import PrisonerSearchApiService from '../../../services/apis/prisonerSearchService'
 
 export class TapAuthorisationDetailsController {
-  constructor(readonly externalMovementsService: ExternalMovementsService) {}
+  constructor(
+    readonly externalMovementsService: ExternalMovementsService,
+    readonly prisonerSearchApiService: PrisonerSearchApiService,
+  ) {}
 
   GET = async (req: Request<{ id: string }>, res: Response) => {
     try {
@@ -16,6 +20,7 @@ export class TapAuthorisationDetailsController {
       const [authorisation, history] = await Promise.all([
         getAuthorisationAndPopulatePrisonerDetails(
           this.externalMovementsService,
+          this.prisonerSearchApiService,
           req,
           res,
           validated?.dateFrom,
@@ -23,6 +28,11 @@ export class TapAuthorisationDetailsController {
         ),
         this.externalMovementsService.getTapAuthorisationHistory({ res }, req.params.id),
       ])
+
+      if (!res.locals.user.caseLoads?.find(caseLoad => caseLoad.caseLoadId === authorisation.prisonCode)) {
+        res.notAuthorised()
+        return
+      }
 
       res.render('temporary-absence-authorisations/details/view', {
         showBreadcrumbs: true,
