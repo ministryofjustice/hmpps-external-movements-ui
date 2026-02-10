@@ -103,9 +103,17 @@ export default class ExternalMovementsService {
   }
 
   async getTapOccurrence(context: ApiRequestContext, id: string) {
-    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapOccurrence']>({
-      path: `/temporary-absence-occurrences/${id}`,
-    })
+    const response = await this.externalMovementsApiClient
+      .withContext(context)
+      .get<components['schemas']['TapOccurrence']>({
+        path: `/temporary-absence-occurrences/${id}`,
+      })
+
+    if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prisonCode)) {
+      throw new Error('NOT_AUTHORISED')
+    }
+
+    return response
   }
 
   async getTapOccurrenceHistory(context: ApiRequestContext, id: string) {
@@ -133,9 +141,17 @@ export default class ExternalMovementsService {
   }
 
   async getTapAuthorisation(context: ApiRequestContext, id: string, start?: string | null, end?: string | null) {
-    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapAuthorisation']>({
-      path: `/temporary-absence-authorisations/${id}${parseQueryParams({ start, end })}`,
-    })
+    const response = await this.externalMovementsApiClient
+      .withContext(context)
+      .get<components['schemas']['TapAuthorisation']>({
+        path: `/temporary-absence-authorisations/${id}${parseQueryParams({ start, end })}`,
+      })
+
+    if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prisonCode)) {
+      throw new Error('NOT_AUTHORISED')
+    }
+
+    return response
   }
 
   async getTapAuthorisationHistory(context: ApiRequestContext, id: string) {
@@ -170,9 +186,17 @@ export default class ExternalMovementsService {
   }
 
   async getTapMovement(context: ApiRequestContext, id: string) {
-    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapMovement']>({
-      path: `/temporary-absence-movements/${id}`,
-    })
+    const response = await this.externalMovementsApiClient
+      .withContext(context)
+      .get<components['schemas']['TapMovement']>({
+        path: `/temporary-absence-movements/${id}`,
+      })
+
+    if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prisonCode)) {
+      throw new Error('NOT_AUTHORISED')
+    }
+
+    return response
   }
 
   async getTapMovementHistory(context: ApiRequestContext, id: string) {

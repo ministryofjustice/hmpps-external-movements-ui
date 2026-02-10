@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { HTTPError } from 'superagent'
 import ExternalMovementsService from '../../../services/apis/externalMovementsService'
 import { getApiUserErrorMessage, isTapAuthorisationEditable, isTapOccurrenceEditable } from '../../../utils/utils'
@@ -11,17 +11,12 @@ export class TapOccurrenceDetailsController {
     readonly prisonerSearchApiService: PrisonerSearchApiService,
   ) {}
 
-  GET = async (req: Request<{ id: string }>, res: Response) => {
+  GET = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     try {
       const [occurrence, history] = await Promise.all([
         this.externalMovementsService.getTapOccurrence({ res }, req.params.id),
         this.externalMovementsService.getTapOccurrenceHistory({ res }, req.params.id),
       ])
-
-      if (!res.locals.user.caseLoads?.find(caseLoad => caseLoad.caseLoadId === occurrence.prisonCode)) {
-        res.notAuthorised()
-        return
-      }
 
       res.locals.prisonerDetails = await this.prisonerSearchApiService.getPrisonerDetails(
         { res },
@@ -37,8 +32,12 @@ export class TapOccurrenceDetailsController {
         authorisationEditable: isTapAuthorisationEditable(occurrence.authorisation),
       })
     } catch (error: unknown) {
-      res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
-      res.notFound()
+      if ((error as { message?: string }).message) {
+        next(error)
+      } else {
+        res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
+        res.notFound()
+      }
     }
   }
 }
