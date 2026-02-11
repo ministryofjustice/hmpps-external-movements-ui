@@ -336,6 +336,7 @@ export const testTapOccurrenceResult: components['schemas']['TapOccurrenceResult
 
 export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
   id: 'occurrence-id',
+  prisonCode: 'LEI',
   authorisation: {
     id: uuidV4(),
     person: {
@@ -366,6 +367,7 @@ export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
 
 export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
   id: 'authorisation-id',
+  prisonCode: 'LEI',
   person: {
     personIdentifier: 'A9965EA',
     firstName: 'PRISONER-NAME',
@@ -389,8 +391,29 @@ export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
       start: '2001-01-01T10:00:00',
       end: '2001-01-01T17:30:00',
       status: { code: 'PENDING', description: 'To be reviewed' },
+      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      transport: { code: 'CAR', description: 'Car' },
+      location: { uprn: 1001, description: 'Random Street, UK' },
     },
   ],
+}
+
+export const testTapMovement: components['schemas']['TapMovement'] = {
+  id: 'movement-id',
+  prisonCode: 'LEI',
+  person: {
+    personIdentifier: 'A9965EA',
+    firstName: 'PRISONER-NAME',
+    lastName: 'PRISONER-SURNAME',
+    dateOfBirth: '1990-01-01',
+    cellLocation: '2-1-005',
+  },
+  absenceReason: { code: 'PP', description: 'Police production' },
+  accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+  direction: 'OUT',
+  location: { uprn: 1001, description: 'Random Street, UK' },
+  occurredAt: '2001-01-01T10:00:00',
+  occurrence: testTapOccurrence,
 }
 
 export const testSearchAddressResults = [

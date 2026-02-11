@@ -17,7 +17,7 @@ export const requirePermissions =
       return next()
     }
 
-    return res.render('pages/not-authorised', { serviceName: SERVICE_NAMES[service] })
+    return res.render('pages/service-not-authorised', { serviceName: SERVICE_NAMES[service] })
   }
 
 export const hasPermissionFilter = (

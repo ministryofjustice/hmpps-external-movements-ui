@@ -159,7 +159,7 @@
       </div>
 
       <div class="govuk-grid-column-one-quarter align-right">
-        {% if user | hasPermission('TAP', 'MANAGE') %}
+        {% if user | hasPermission('TAP', 'MANAGE') and prisonerDetails.prisonId === user.activeCaseLoad.caseLoadId %}
           <h2 class="govuk-heading-m">Related tasks</h2>
           <p><a class="govuk-link govuk-link--no-visited-state" href="/add-temporary-absence/start/{{ prisonerDetails.prisonerNumber }}">Create a new absence for {{ prisonerDetails | firstNameSpaceLastName }}</a></p>
         {% endif %}

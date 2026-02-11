@@ -15,7 +15,6 @@ import { populateUserPermissions } from '../middleware/permissions/populateUserP
 import { requirePermissions } from '../middleware/permissions/requirePermissions'
 import { UserPermissionLevel } from '../interfaces/hmppsUser'
 import { BrowseTapMovementsRoutes } from './temporary-absence-movements/routes'
-import { Feature, requireFeatureFlag } from '../utils/featureFlag'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
@@ -103,7 +102,6 @@ export default function routes(services: Services): Router {
   )
   router.use(
     '/temporary-absence-movements',
-    requireFeatureFlag(Feature.DEV_LED),
     requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
     BrowseTapMovementsRoutes(services),
   )

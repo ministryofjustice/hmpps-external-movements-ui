@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 import auth from '../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../integration_tests/steps/signIn'
-import { randomPrisonNumber, testTapOccurrence } from '../../../../integration_tests/data/testData'
+import { testTapOccurrence } from '../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetPrisonerImage } from '../../../../integration_tests/mockApis/prisonApi'
 import { TapOccurrenceDetailsPage } from './test.page'
@@ -11,17 +11,30 @@ import {
   stubGetTapOccurrence,
   stubGetTapOccurrenceHistory,
 } from '../../../../integration_tests/mockApis/externalMovementsApi'
+import { NotAuthorisedPage } from '../../../../integration_tests/pages/NotAuthorisedPage'
 
 test.describe('/temporary-absences/:id', () => {
-  const prisonNumber = randomPrisonNumber()
-
   test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
       stubGetPrisonerImage(),
-      stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
+      stubGetPrisonerDetails({ prisonerNumber: testTapOccurrence.authorisation.person.personIdentifier }),
     ])
+  })
+
+  test('should show 403 error if TAP occurrence is outside the user caseloads', async ({ page }) => {
+    await signIn(page)
+
+    const occurrenceId = uuidV4()
+    await stubGetTapOccurrence({
+      ...testTapOccurrence,
+      id: occurrenceId,
+      prisonCode: 'OUT',
+    })
+    await stubGetTapOccurrenceHistory(occurrenceId, { content: [] })
+    await page.goto(`/temporary-absences/${occurrenceId}`)
+    await new NotAuthorisedPage(page).verifyContent()
   })
 
   test('should show temporary absence details for single SCHEDULED absence', async ({ page }) => {
@@ -60,6 +73,17 @@ test.describe('/temporary-absences/:id', () => {
       location: { uprn: 1001, description: 'Random Street, UK' },
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       transport: { code: 'CAR', description: 'Car' },
+      movements: [
+        {
+          id: 'movement-id',
+          occurredAt: '2001-01-01T10:05:00',
+          direction: 'OUT',
+          location: {
+            uprn: 1001,
+            description: 'Random Street, UK',
+          },
+        },
+      ],
     })
     await stubGetTapOccurrenceHistory(occurrenceId, {
       content: [
@@ -121,6 +145,12 @@ test.describe('/temporary-absences/:id', () => {
     await expect(testPage.button('Cancel this occurrence')).toBeVisible()
     await expect(testPage.link('View all occurrences of this absence')).toHaveCount(0)
     await expect(testPage.link('Add occurrence')).toHaveCount(0)
+
+    await testPage.verifyTableRow(1, ['OUT', '1 January 2001 at 10:05', 'Random Street, UK'])
+    await expect(testPage.link(/View movement occurred at Monday 1 January 2001 at 10:05/)).toHaveAttribute(
+      'href',
+      /\/temporary-absence-movements\/movement-id/,
+    )
 
     // verify history tab
     await testPage.clickTab('Occurrence history')
@@ -203,6 +233,8 @@ test.describe('/temporary-absences/:id', () => {
     await expect(testPage.button('Cancel this occurrence')).toHaveCount(0)
     await expect(testPage.link('View all occurrences of this absence')).toBeVisible()
     await expect(testPage.link('Add occurrence')).toBeVisible()
+
+    await expect(page.getByText('No movements recorded for this absence occurrence.')).toBeVisible()
   })
 
   test('should not show cancel button for view only user', async ({ page }) => {

@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import { getFrontendComponents, retrieveCaseLoadData } from '@ministryofjustice/hmpps-connect-dps-components'
 import * as Sentry from '@sentry/node'
 import './sentry'
@@ -102,6 +102,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use((_req, res, next) => {
     res.notFound = () => res.status(404).render('pages/not-found')
+    res.notAuthorised = () => res.status(403).render('pages/not-authorised')
     res.conflict = () => res.status(409).render('pages/conflict')
     next()
   })
@@ -123,6 +124,13 @@ export default function createApp(services: Services): express.Application {
 
   // Error handlers must go after `Sentry.setupExpressErrorHandler(app)` for errors to be captured by Sentry
   app.use(handleJsonErrorResponse)
+  app.use((error: { message?: string }, _req: Request, res: Response, next: NextFunction) => {
+    if (error?.message === 'NOT_AUTHORISED') {
+      res.notAuthorised()
+    } else {
+      next(error)
+    }
+  })
   app.use(handleApiError)
   app.use(errorHandler(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'e2e-test'))
 

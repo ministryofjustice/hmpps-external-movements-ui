@@ -126,60 +126,58 @@
       </div>
 
       <div class="govuk-grid-column-one-quarter align-right">
-        {% if user | hasPermission('TAP', 'MANAGE') %}
+        {% if user | hasPermission('TAP', 'MANAGE') and prisonerDetails.prisonId === user.activeCaseLoad.caseLoadId %}
           <h2 class="govuk-heading-m">Related tasks</h2>
           <p><a class="govuk-link govuk-link--no-visited-state" href="/add-temporary-absence/start/{{ prisonerDetails.prisonerNumber }}">Create a new absence for {{ prisonerDetails | firstNameSpaceLastName }}</a></p>
         {% endif %}
       </div>
     </div>
 
-    {% if user | featureEnabled('DEV_LED') %}
-      <div class="placeholder-background">
-        <h2 class="govuk-heading-m">Recorded movements</h2>
-        {% if occurrence.movements.length %}
-          {% set movementRows = [] %}
-          {% for movement in occurrence.movements %}
-            {% set movementRows = (movementRows.push([
-              {
-                text: movement.direction
-              },
-              {
-                text: movement.occurredAt | formatDate("d MMMM yyyy 'at' HH:mm")
-              },
-              {
-                text: movement.location | formatAddress
-              },
-              {
-                classes: 'govuk-link govuk-link--no-visited-state',
-                html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-movements/' + movement.id + '">View<span class="govuk-visually-hidden"> movement occurred at ' + movement.occurredAt | formatDate("cccc d MMMM yyyy 'at' HH:mm") + '</span></a>',
-                format: "numeric"
-              }
-            ]), movementRows) %}
-          {% endfor %}
+    <div>
+      <h2 class="govuk-heading-m">Recorded movements</h2>
+      {% if occurrence.movements.length %}
+        {% set movementRows = [] %}
+        {% for movement in occurrence.movements %}
+          {% set movementRows = (movementRows.push([
+            {
+              text: movement.direction
+            },
+            {
+              text: movement.occurredAt | formatDate("d MMMM yyyy 'at' HH:mm")
+            },
+            {
+              text: movement.location | formatAddress
+            },
+            {
+              classes: 'govuk-link govuk-link--no-visited-state',
+              html: '<a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-movements/' + movement.id + '">View<span class="govuk-visually-hidden"> movement occurred at ' + movement.occurredAt | formatDate("cccc d MMMM yyyy 'at' HH:mm") + '</span></a>',
+              format: "numeric"
+            }
+          ]), movementRows) %}
+        {% endfor %}
 
-          {{ govukTable({
-            firstCellIsHeader: false,
-            head: [
-              {
-                text: "Direction"
-              },
-              {
-                text: "Date and time"
-              },
-              {
-                text: "Location"
-              },
-              {
-                text: ''
-              }
-            ],
-            rows: movementRows
-          }) }}
-        {% else %}
-          <p>No movements recorded for this absence occurrence.</p>
-        {% endif %}
-      </div>
-    {% endif %}
+        {{ govukTable({
+          firstCellIsHeader: false,
+          head: [
+            {
+              text: "Direction"
+            },
+            {
+              text: "Date and time"
+            },
+            {
+              text: "Location"
+            },
+            {
+              text: ''
+            }
+          ],
+          rows: movementRows
+        }) }}
+      {% else %}
+        <p>No movements recorded for this absence occurrence.</p>
+      {% endif %}
+    </div>
 
     {% if result.repeat %}
       <p>

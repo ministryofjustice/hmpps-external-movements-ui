@@ -30,14 +30,10 @@ export const ManageTemporaryAbsenceRoutes = (services: Services) => {
           `/temporary-absences/${occurrence.id}`,
         ),
       }
-      req.journeyData.prisonerDetails = {
-        prisonerNumber: authorisation.person.personIdentifier,
-        lastName: authorisation.person.lastName,
-        firstName: authorisation.person.firstName,
-        dateOfBirth: authorisation.person.dateOfBirth,
-        prisonName: res.locals.user.activeCaseLoad?.description,
-        cellLocation: authorisation.person.cellLocation,
-      }
+      req.journeyData.prisonerDetails = await services.prisonerSearchService.getPrisonerDetails(
+        { res },
+        authorisation.person.personIdentifier,
+      )
       res.redirect(`../../edit/${req.params.property}`)
     } catch {
       res.notFound()
