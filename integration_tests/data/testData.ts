@@ -398,6 +398,24 @@ export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
   ],
 }
 
+export const testTapMovement: components['schemas']['TapMovement'] = {
+  id: 'movement-id',
+  prisonCode: 'LEI',
+  person: {
+    personIdentifier: 'A9965EA',
+    firstName: 'PRISONER-NAME',
+    lastName: 'PRISONER-SURNAME',
+    dateOfBirth: '1990-01-01',
+    cellLocation: '2-1-005',
+  },
+  absenceReason: { code: 'PP', description: 'Police production' },
+  accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+  direction: 'OUT',
+  location: { uprn: 1001, description: 'Random Street, UK' },
+  occurredAt: '2001-01-01T10:00:00',
+  occurrence: testTapOccurrence,
+}
+
 export const testSearchAddressResults = [
   {
     addressString: 'Address',

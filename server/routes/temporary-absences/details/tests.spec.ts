@@ -73,6 +73,17 @@ test.describe('/temporary-absences/:id', () => {
       location: { uprn: 1001, description: 'Random Street, UK' },
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       transport: { code: 'CAR', description: 'Car' },
+      movements: [
+        {
+          id: 'movement-id',
+          occurredAt: '2001-01-01T10:05:00',
+          direction: 'OUT',
+          location: {
+            uprn: 1001,
+            description: 'Random Street, UK',
+          },
+        },
+      ],
     })
     await stubGetTapOccurrenceHistory(occurrenceId, {
       content: [
@@ -134,6 +145,12 @@ test.describe('/temporary-absences/:id', () => {
     await expect(testPage.button('Cancel this occurrence')).toBeVisible()
     await expect(testPage.link('View all occurrences of this absence')).toHaveCount(0)
     await expect(testPage.link('Add occurrence')).toHaveCount(0)
+
+    await testPage.verifyTableRow(1, ['OUT', '1 January 2001 at 10:05', 'Random Street, UK'])
+    await expect(testPage.link(/View movement occurred at Monday 1 January 2001 at 10:05/)).toHaveAttribute(
+      'href',
+      /\/temporary-absence-movements\/movement-id/,
+    )
 
     // verify history tab
     await testPage.clickTab('Occurrence history')
@@ -216,6 +233,8 @@ test.describe('/temporary-absences/:id', () => {
     await expect(testPage.button('Cancel this occurrence')).toHaveCount(0)
     await expect(testPage.link('View all occurrences of this absence')).toBeVisible()
     await expect(testPage.link('Add occurrence')).toBeVisible()
+
+    await expect(page.getByText('No movements recorded for this absence occurrence.')).toBeVisible()
   })
 
   test('should not show cancel button for view only user', async ({ page }) => {
