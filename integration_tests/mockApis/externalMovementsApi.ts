@@ -87,6 +87,20 @@ export const stubGetTapOccurrenceHistory = (occurrenceId: string, response: comp
     response,
   })
 
+export const stubGetTapMovement = (response: components['schemas']['TapMovement']) =>
+  successStub({
+    method: 'GET',
+    urlPattern: `/external-movements-api/temporary-absence-movements/${response.id}`,
+    response,
+  })
+
+export const stubGetTapMovementHistory = (movementId: string, response: components['schemas']['AuditHistory']) =>
+  successStub({
+    method: 'GET',
+    urlPattern: `/external-movements-api/temporary-absence-movements/${movementId}/history`,
+    response,
+  })
+
 export const stubPutTapOccurrence = (occurrenceId: string, response: components['schemas']['AuditHistory']) =>
   successStub({
     method: 'PUT',
