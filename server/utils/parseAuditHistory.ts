@@ -164,8 +164,9 @@ const parsePropertyName = (domain: string, propertyName: string) => {
 }
 
 const parseTapAuthorisationLocationChange = (action: components['schemas']['AuditedAction']) => {
-  const change = (action.changes[0]?.change ?? []) as string[]
-  const previous = (action.changes[0]?.previous ?? []) as string[]
+  const changes = action.changes.find(change => change.propertyName === 'locations')
+  const change = (changes?.change ?? []) as string[]
+  const previous = (changes?.previous ?? []) as string[]
 
   let eventText: DomainEventText
 
