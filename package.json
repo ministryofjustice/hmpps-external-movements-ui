@@ -85,7 +85,7 @@
     "@ministryofjustice/hmpps-connect-dps-components": "^5.2.3",
     "@ministryofjustice/hmpps-connect-dps-shared-items": "^3.5.2",
     "@ministryofjustice/hmpps-monitoring": "^1.0.2",
-    "@ministryofjustice/hmpps-prison-permissions-lib": "^1.1.2",
+    "@ministryofjustice/hmpps-prison-permissions-lib": "^2.2.0",
     "@ministryofjustice/hmpps-rest-client": "^1.0.1",
     "@sentry/node": "^10.38.0",
     "applicationinsights": "^2.9.7",
