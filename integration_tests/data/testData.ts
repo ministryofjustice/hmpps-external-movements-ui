@@ -1,4 +1,5 @@
 import { v4 as uuidV4 } from 'uuid'
+import { addDays, format } from 'date-fns'
 import { components } from '../../server/@types/externalMovements'
 
 const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -349,7 +350,7 @@ export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
     },
     status: { code: 'APPROVED', description: 'Approved' },
     start: '2001-01-01',
-    end: '2001-01-01',
+    end: format(addDays(new Date(), 2), 'yyyy-MM-dd'),
     absenceType: {
       code: 'RR',
       description: 'Restricted ROTL (Release on Temporary Licence)',
@@ -384,7 +385,7 @@ export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
   repeat: false,
   totalOccurrenceCount: 1,
   start: '2001-01-01',
-  end: '2001-01-01',
+  end: format(addDays(new Date(), 2), 'yyyy-MM-dd'),
   accompaniedBy: { code: 'U', description: 'Unaccompanied' },
   transport: { code: 'CAR', description: 'Car' },
   locations: [{ uprn: 1001, description: 'Random Street, UK' }],
