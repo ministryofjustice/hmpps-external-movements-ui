@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { differenceInDays } from 'date-fns'
 import { createSchema } from '../../middleware/validation/validationMiddleware'
 import { validateTransformOptionalDate } from '../../utils/validations/validateDatePicker'
+import { isPrisonNumber } from '../../utils/utils'
 
 const statusEnum = z.enum([
   'SCHEDULED',
@@ -36,7 +37,7 @@ export const schema = createSchema({
     }),
 }).check(ctx => {
   const { start, end, searchTerm } = ctx.value
-  if (!searchTerm?.match(/[a-zA-Z][0-9]{4}[a-zA-Z]{2}/)) {
+  if (!isPrisonNumber(searchTerm)) {
     if (!start) {
       ctx.issues.push({
         code: 'custom',

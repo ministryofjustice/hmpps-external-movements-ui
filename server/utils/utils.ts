@@ -156,3 +156,6 @@ export const prisonerProfileBacklink = (originalUrl: string, personIdentifier: s
   })
   return `${config.serviceUrls.prisonerProfile}/save-backlink?${searchParams.toString()}`
 }
+
+export const isPrisonNumber = (val?: string | null, allowPrecedingAndTrailingSpace: boolean = true) =>
+  val ? !!(allowPrecedingAndTrailingSpace ? val.trim() : val).match(/^[a-zA-Z][0-9]{4}[a-zA-Z]{2}$/) : false

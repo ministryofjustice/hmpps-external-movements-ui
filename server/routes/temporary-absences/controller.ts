@@ -5,7 +5,7 @@ import type { HTTPError } from 'superagent'
 import ExternalMovementsService from '../../services/apis/externalMovementsService'
 import { ResQuerySchemaType } from './schema'
 import { components } from '../../@types/externalMovements'
-import { getApiUserErrorMessage } from '../../utils/utils'
+import { getApiUserErrorMessage, isPrisonNumber } from '../../utils/utils'
 import { setPaginationLocals } from '../../views/partials/simplePagination/utils'
 import { absenceCategorisationMapper } from '../common/utils'
 
@@ -49,8 +49,7 @@ export class BrowseTapOccurrencesController {
     const hasValidationError =
       Object.keys(resQuery).find(key => ['searchTerm', 'start', 'end', 'status'].includes(key)) && !resQuery.validated
     const missingDateRange =
-      !resQuery.validated?.searchTerm?.match(/[a-zA-Z][0-9]{4}[a-zA-Z]{2}/) &&
-      (!resQuery?.validated?.start || !resQuery?.validated?.end)
+      !isPrisonNumber(resQuery.validated?.searchTerm) && (!resQuery?.validated?.start || !resQuery?.validated?.end)
 
     let searchResponse: components['schemas']['TapOccurrenceSearchResponse'] | undefined
     let results: components['schemas']['TapOccurrenceResult'][] = []

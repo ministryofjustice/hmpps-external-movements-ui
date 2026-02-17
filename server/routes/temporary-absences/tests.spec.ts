@@ -80,4 +80,36 @@ test.describe('/temporary-absences', () => {
       },
     ])
   })
+
+  test('should not search TAP occurrence if start and end date are missing and the search term is not a invalid prison number', async ({
+    page,
+  }) => {
+    await page.goto(`/temporary-absences?searchTerm=AA1234BB&start=&end=&page=2&status=SCHEDULED`)
+
+    // verify page content
+    const testPage = new BrowseTapOccurrencesPage(page)
+
+    // verify validation errors
+    await testPage.link('Enter or select a start date from').click()
+    await expect(testPage.startDateField()).toBeFocused()
+    await testPage.link('Enter or select a end date to').click()
+    await expect(testPage.endDateField()).toBeFocused()
+
+    await expect(page.getByText('Enter a valid filter to search and view temporary absences.')).toBeVisible()
+  })
+
+  test('should not search TAP occurrence if date range is over 31 days and the search term is not a invalid prison number', async ({
+    page,
+  }) => {
+    await page.goto(`/temporary-absences?searchTerm=&start=01/01/2001&end=01/03/2001&page=2&status=SCHEDULED`)
+
+    // verify page content
+    const testPage = new BrowseTapOccurrencesPage(page)
+
+    // verify validation errors
+    await testPage.link('Enter a date range less than 31 days').click()
+    await expect(testPage.endDateField()).toBeFocused()
+
+    await expect(page.getByText('Enter a valid filter to search and view temporary absences.')).toBeVisible()
+  })
 })
