@@ -1,4 +1,12 @@
-import { convertToTitleCase, initialiseName } from './utils'
+import { addDays, format, subDays } from 'date-fns'
+import {
+  convertToTitleCase,
+  initialiseName,
+  isPrisonNumber,
+  isTapAuthorisationEditable,
+  isTapOccurrenceEditable,
+} from './utils'
+import { components } from '../@types/externalMovements'
 
 describe('convert to title case', () => {
   it.each([
@@ -26,5 +34,75 @@ describe('initialise name', () => {
     ['Double barrelled', 'Robert-John Smith-Jones-Wilson', 'R. Smith-Jones-Wilson'],
   ])('%s initialiseName(%s, %s)', (_, a, expected) => {
     expect(initialiseName(a)).toEqual(expected)
+  })
+})
+
+describe('isTapAuthorisationEditable', () => {
+  it('returns true if TAP authorisation is in applicable status', () => {
+    expect(
+      isTapAuthorisationEditable({
+        status: { code: 'APPROVED' },
+        occurrences: [{} as components['schemas']['TapAuthorisation.Occurrence']],
+        end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+      }),
+    ).toBeTruthy()
+  })
+
+  it('returns true if TAP authorisation is in non-applicable status', () => {
+    expect(
+      isTapAuthorisationEditable({
+        status: { code: 'DENIED' },
+        occurrences: [{} as components['schemas']['TapAuthorisation.Occurrence']],
+        end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+      }),
+    ).toBeFalsy()
+  })
+
+  it('returns false if TAP authorisation does not have an occurrence', () => {
+    expect(
+      isTapAuthorisationEditable({
+        status: { code: 'APPROVED' },
+        occurrences: [],
+        end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+      }),
+    ).toBeFalsy()
+  })
+
+  it('returns true if TAP authorisation is in the past', () => {
+    expect(
+      isTapAuthorisationEditable({
+        status: { code: 'APPROVED' },
+        occurrences: [{} as components['schemas']['TapAuthorisation.Occurrence']],
+        end: format(subDays(new Date(), 1), 'yyyy-MM-dd'),
+      }),
+    ).toBeFalsy()
+  })
+})
+
+describe('isTapOccurrenceEditable', () => {
+  it('returns true if TAP occurrence is in applicable status', () => {
+    expect(isTapOccurrenceEditable({ status: { code: 'SCHEDULED' } })).toBeTruthy()
+  })
+
+  it('returns true if TAP occurrence is in non-applicable status', () => {
+    expect(isTapOccurrenceEditable({ status: { code: 'OVERDUE' } })).toBeFalsy()
+  })
+})
+
+describe('isPrisonNumber', () => {
+  it('returns true if value is in the correct format of a prison number', () => {
+    expect(isPrisonNumber('A1234BB', false)).toBeTruthy()
+  })
+
+  it('returns true allowing preceding and trailing whitespaces', () => {
+    expect(isPrisonNumber('  A1234BB  ', true)).toBeTruthy()
+  })
+
+  it('returns false not allowing preceding and trailing whitespaces', () => {
+    expect(isPrisonNumber('  A1234BB  ', false)).toBeFalsy()
+  })
+
+  it('returns false if value contains extra characters', () => {
+    expect(isPrisonNumber('A1234EXTRA', true)).toBeFalsy()
   })
 })
