@@ -1,4 +1,5 @@
 import { v4 as uuidV4 } from 'uuid'
+import { addDays, format } from 'date-fns'
 import { components } from '../../server/@types/externalMovements'
 
 const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -337,6 +338,7 @@ export const testTapOccurrenceResult: components['schemas']['TapOccurrenceResult
 export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
   id: 'occurrence-id',
   prisonCode: 'LEI',
+  prison: { code: 'LEI', name: 'Leeds' },
   authorisation: {
     id: uuidV4(),
     person: {
@@ -347,6 +349,8 @@ export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
       cellLocation: '2-1-005',
     },
     status: { code: 'APPROVED', description: 'Approved' },
+    start: '2001-01-01',
+    end: format(addDays(new Date(), 2), 'yyyy-MM-dd'),
     absenceType: {
       code: 'RR',
       description: 'Restricted ROTL (Release on Temporary Licence)',
@@ -368,6 +372,7 @@ export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
 export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
   id: 'authorisation-id',
   prisonCode: 'LEI',
+  prison: { code: 'LEI', name: 'Leeds' },
   person: {
     personIdentifier: 'A9965EA',
     firstName: 'PRISONER-NAME',
@@ -380,7 +385,7 @@ export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
   repeat: false,
   totalOccurrenceCount: 1,
   start: '2001-01-01',
-  end: '2001-01-01',
+  end: format(addDays(new Date(), 2), 'yyyy-MM-dd'),
   accompaniedBy: { code: 'U', description: 'Unaccompanied' },
   transport: { code: 'CAR', description: 'Car' },
   locations: [{ uprn: 1001, description: 'Random Street, UK' }],
@@ -401,6 +406,7 @@ export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
 export const testTapMovement: components['schemas']['TapMovement'] = {
   id: 'movement-id',
   prisonCode: 'LEI',
+  prison: { code: 'LEI', name: 'Leeds' },
   person: {
     personIdentifier: 'A9965EA',
     firstName: 'PRISONER-NAME',

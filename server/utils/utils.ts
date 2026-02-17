@@ -1,4 +1,5 @@
 import type { HTTPError } from 'superagent'
+import { format } from 'date-fns'
 import { components } from '../@types/externalMovements'
 import { Address } from '../@types/journeys'
 import { trimAddress } from './formatUtils'
@@ -140,13 +141,18 @@ export const parseAddress = (location: Address) => ({
 export const isTapAuthorisationEditable = ({
   status,
   occurrences,
+  end,
 }: {
   status: { code: string }
   occurrences?: components['schemas']['TapAuthorisation.Occurrence'][]
-}) => ['PENDING', 'APPROVED'].includes(status.code) && !(occurrences?.length === 0)
+  end: string
+}) =>
+  ['PENDING', 'APPROVED'].includes(status.code) &&
+  !(occurrences?.length === 0) &&
+  end >= format(new Date(), 'yyyy-MM-dd')
 
 export const isTapOccurrenceEditable = ({ status }: { status: { code: string } }) =>
-  ['PENDING', 'SCHEDULED', 'IN_PROGRESS', 'OVERDUE'].includes(status.code)
+  ['PENDING', 'SCHEDULED', 'IN_PROGRESS'].includes(status.code)
 
 export const prisonerProfileBacklink = (originalUrl: string, personIdentifier: string, suffix: string = '') => {
   const searchParams = new URLSearchParams({

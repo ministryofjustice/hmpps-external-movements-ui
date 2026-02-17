@@ -44,6 +44,7 @@ test.describe('/temporary-absences/:id', () => {
       ...testTapOccurrence,
       id: occurrenceId,
       authorisation: {
+        ...testTapOccurrence.authorisation,
         id: uuidV4(),
         person: {
           personIdentifier: 'A9965EA',

@@ -114,6 +114,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/resync/temporary-absences/{personIdentifier}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
+     */
+    put: operations['migrateTemporaryAbsences']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/move/temporary-absences': {
     parameters: {
       query?: never
@@ -146,7 +166,7 @@ export interface paths {
      * @description Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__SYNC__RW
      */
-    put: operations['migrateTemporaryAbsences']
+    put: operations['migrateTemporaryAbsences_1']
     post?: never
     delete?: never
     options?: never
@@ -782,12 +802,6 @@ export interface components {
       /** Format: int64 */
       legacyId: number
     }
-    MoveTemporaryAbsencesRequest: {
-      fromPersonIdentifier: string
-      toPersonIdentifier: string
-      authorisationIds: string[]
-      unscheduledMovementIds: string[]
-    }
     MigrateTapAuthorisation: {
       prisonCode: string
       statusCode: string
@@ -809,6 +823,8 @@ export interface components {
       updated?: components['schemas']['SyncAtAndBy']
       /** Format: int64 */
       legacyId: number
+      /** Format: uuid */
+      id?: string
       occurrences: components['schemas']['MigrateTapOccurrence'][]
     }
     MigrateTapMovement: {
@@ -825,6 +841,8 @@ export interface components {
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy']
       legacyId: string
+      /** Format: uuid */
+      id?: string
     }
     MigrateTapOccurrence: {
       isCancelled: boolean
@@ -844,6 +862,8 @@ export interface components {
       updated?: components['schemas']['SyncAtAndBy']
       /** Format: int64 */
       legacyId: number
+      /** Format: uuid */
+      id?: string
       movements: components['schemas']['MigrateTapMovement'][]
     }
     MigrateTapRequest: {
@@ -872,6 +892,12 @@ export interface components {
       /** Format: uuid */
       id: string
       movements: components['schemas']['MigratedMovement'][]
+    }
+    MoveTemporaryAbsencesRequest: {
+      fromPersonIdentifier: string
+      toPersonIdentifier: string
+      authorisationIds: string[]
+      unscheduledMovementIds: string[]
     }
     CreateTapAuthorisationRequest: {
       absenceTypeCode: string
@@ -1030,10 +1056,15 @@ export interface components {
       content: components['schemas']['TapAuthorisationResult'][]
       metadata: components['schemas']['PageMetadata']
     }
+    Prison: {
+      code: string
+      name: string
+    }
     TapOccurrence: {
       /** Format: uuid */
       id: string
       prisonCode: string
+      prison: components['schemas']['Prison']
       authorisation: components['schemas']['TapOccurrence.Authorisation']
       absenceType?: components['schemas']['CodedDescription']
       absenceSubType?: components['schemas']['CodedDescription']
@@ -1061,6 +1092,10 @@ export interface components {
       id: string
       person: components['schemas']['Person']
       status: components['schemas']['CodedDescription']
+      /** Format: date */
+      start: string
+      /** Format: date */
+      end: string
       absenceType?: components['schemas']['CodedDescription']
       absenceSubType?: components['schemas']['CodedDescription']
       absenceReasonCategory?: components['schemas']['CodedDescription']
@@ -1088,6 +1123,7 @@ export interface components {
       /** @enum {string} */
       direction: 'IN' | 'OUT'
       prisonCode: string
+      prison: components['schemas']['Prison']
       absenceReason: components['schemas']['CodedDescription']
       location: components['schemas']['Location']
       accompaniedBy: components['schemas']['CodedDescription']
@@ -1111,6 +1147,7 @@ export interface components {
       /** Format: uuid */
       id: string
       prisonCode: string
+      prison: components['schemas']['Prison']
       person: components['schemas']['Person']
       status: components['schemas']['CodedDescription']
       absenceType?: components['schemas']['CodedDescription']
@@ -1586,6 +1623,32 @@ export interface operations {
       }
     }
   }
+  migrateTemporaryAbsences: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        personIdentifier: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['MigrateTapRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['MigrateTapResponse']
+        }
+      }
+    }
+  }
   moveTemporaryAbsences: {
     parameters: {
       query?: never
@@ -1608,7 +1671,7 @@ export interface operations {
       }
     }
   }
-  migrateTemporaryAbsences: {
+  migrateTemporaryAbsences_1: {
     parameters: {
       query?: never
       header?: never

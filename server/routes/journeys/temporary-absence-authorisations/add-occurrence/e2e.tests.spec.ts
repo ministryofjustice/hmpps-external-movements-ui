@@ -28,7 +28,6 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     id: authorisationId,
     repeat: true,
     start: '2001-01-02',
-    end: '2001-01-05',
     locations: [{ uprn: 1001, description: 'Random Street, UK' }],
   }
 

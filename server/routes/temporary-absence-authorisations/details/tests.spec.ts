@@ -1,5 +1,6 @@
 import { v4 as uuidV4 } from 'uuid'
 import { expect, test } from '@playwright/test'
+import { format } from 'date-fns'
 import auth from '../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../integration_tests/steps/signIn'
@@ -57,8 +58,6 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       absenceReasonCategory: { code: 'PW', description: 'Paid work' },
       absenceReason: { code: 'R15', description: 'IT and communication' },
       repeat: false,
-      start: '2001-01-01',
-      end: '2001-01-01',
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       transport: { code: 'CAR', description: 'Car' },
       locations: [{ uprn: 1001, description: 'Random Street, UK' }],
@@ -184,8 +183,6 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       status: { code: 'APPROVED', description: 'Approved' },
       absenceType: { code: 'PP', description: 'Police production' },
       repeat: false,
-      start: '2001-01-01',
-      end: '2001-01-01',
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       transport: { code: 'CAR', description: 'Car' },
       locations: [{ uprn: 1001, description: 'Random Street, UK' }],
@@ -283,8 +280,6 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       status: { code: 'APPROVED', description: 'Approved' },
       absenceReason: { code: 'PP', description: 'Police production' },
       repeat: false,
-      start: '2001-01-01',
-      end: '2001-01-01',
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       transport: { code: 'CAR', description: 'Car' },
       locations: [{ uprn: 1001, description: 'Random Street, UK' }],
@@ -339,8 +334,6 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       repeat: true,
       schedule: { type: 'WEEKLY' },
       totalOccurrenceCount: 12,
-      start: '2001-01-01',
-      end: '2001-01-21',
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       transport: { code: 'CAR', description: 'Car' },
       locations: [{ uprn: 1001, description: 'Random Street, UK' }],
@@ -371,7 +364,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await testPage.verifyAnswer('Work type', 'IT and communication')
 
     await testPage.verifyAnswer('Start date', '1 January 2001')
-    await testPage.verifyAnswer('End date', '21 January 2001')
+    await testPage.verifyAnswer('End date', format(testTapAuthorisation.end, 'd MMMM yyyy'))
     await testPage.verifyAnswer('Single or repeating absence', 'Repeating')
     await testPage.verifyAnswer('Repeating pattern type', 'Repeat weekly')
     await testPage.verifyAnswer('Comments', 'Not provided')
