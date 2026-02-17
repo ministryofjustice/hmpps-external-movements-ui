@@ -50,8 +50,8 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await signIn(page)
   })
 
-  const startJourney = async (page: Page, journeyId: string) => {
-    await page.goto(`/${journeyId}/temporary-absence-authorisations/start-add-occurrence/${authorisationId}`)
+  const startJourney = async (page: Page, journeyId: string, authId: string = authorisationId) => {
+    await page.goto(`/${journeyId}/temporary-absence-authorisations/start-add-occurrence/${authId}`)
   }
 
   test('should create new occurrence with an existing address', async ({ page }) => {
@@ -188,8 +188,12 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
   })
 
   test('can change new occurrence answers', async ({ page }) => {
+    const authId = uuidV4()
+    await stubGetTapAuthorisation({ ...authorisation, id: authId })
+    await stubPostTapOccurrence(authId, { id: 'occurrence-id' })
+
     const journeyId = uuidV4()
-    await startJourney(page, journeyId)
+    await startJourney(page, journeyId, authId)
 
     // verify page content
     const startPage = await new AddTapOccurrencePage(page).verifyContent()
@@ -234,7 +238,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await new AddTapOccurrenceConfirmationPage(page).verifyContent()
 
     expect(
-      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
+      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authId}/occurrences`),
     ).toContainEqual({
       start: '2001-01-03T05:00:00',
       end: '2001-01-03T09:30:00',
