@@ -54,6 +54,7 @@ test.describe('/add-temporary-absence/confirmation', () => {
       /temporary-absence-authorisations\/authorisation-id/,
     )
     await testPage.verifyLink('Add another temporary absence for this prisoner', /add-temporary-absence\/start\//)
+    await testPage.verifyLink('Add another temporary absence for a different prisoner', /search-prisoner/)
     await testPage.verifyLink(
       'View upcoming temporary absences in your establishment',
       /temporary-absence-authorisations\?/,
