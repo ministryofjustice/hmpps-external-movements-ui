@@ -76,7 +76,7 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.989.0",
+    "@aws-sdk/client-sqs": "^3.992.0",
     "@axe-core/playwright": "^4.11.1",
     "@microsoft/applicationinsights-clickanalytics-js": "3.3.11",
     "@microsoft/applicationinsights-web": "3.3.11",
@@ -161,6 +161,9 @@
     "typescript": "^5.9.3"
   },
   "overrides": {
+    "@aws-sdk/client-sqs": {
+      "fast-xml-parser": "^5.3.6"
+    },
     "@jgoz/esbuild-plugin-typecheck": {
       "esbuild": "$esbuild"
     },
