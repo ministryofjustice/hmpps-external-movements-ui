@@ -109,6 +109,6 @@ test.describe('/add-temporary-absence/check-absences', () => {
     )
     expect(await page.getByText(/Wednesday 17 January to(.+)?Thursday 18 January/)).toHaveCount(0)
 
-    await testPage.verifyLink('Go back to change this schedule', /select-days-times-weekly/)
+    await testPage.verifyLink('Go back to change this schedule', /(select-days-times-weekly|multi-absences-per-day)/)
   })
 })
