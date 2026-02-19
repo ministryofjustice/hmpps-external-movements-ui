@@ -105,12 +105,8 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
       .map(slot => {
         const minutesPerAbsence = differenceInMinutes(slot.end, slot.start) / journey.absencesPerDay!
         return Array.from(new Array(journey.absencesPerDay!).keys()).map(i => ({
-          start: addMinutes(slot.start, i * minutesPerAbsence)
-            .toISOString()
-            .substring(0, 19),
-          end: addMinutes(slot.start, (i + 1) * minutesPerAbsence)
-            .toISOString()
-            .substring(0, 19),
+          start: format(addMinutes(slot.start, i * minutesPerAbsence), `yyyy-MM-dd'T'HH:mm:00`),
+          end: format(addMinutes(slot.start, (i + 1) * minutesPerAbsence), `yyyy-MM-dd'T'HH:mm:00`),
         }))
       })
       .flat()
