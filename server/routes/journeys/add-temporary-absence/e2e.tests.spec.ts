@@ -28,6 +28,12 @@ import { AddTapCYAPage } from './check-answers/test.page'
 import { getApiBody } from '../../../../integration_tests/mockApis/wiremock'
 import { stubGetAddress, stubSearchAddresses } from '../../../../integration_tests/mockApis/osPlacesApi'
 import { SearchLocationPage } from './search-location/test.page'
+import { StartEndDatesPage } from './start-end-dates/test.page'
+import { RepeatingPatternPage } from './repeating-pattern/test.page'
+import { MultiAbsencesPerDayPage } from './multi-absences-per-day/test.page'
+import { SelectDaysTimesWeeklyPage } from './select-days-times-weekly/test.page'
+import { CheckPatternPage } from './check-absences/test.page'
+import { SearchLocationsPage } from './search-locations/test.page'
 
 test.describe('/add-temporary-absence/e2e', () => {
   const prisonNumber = randomPrisonNumber()
@@ -428,6 +434,170 @@ test.describe('/add-temporary-absence/e2e', () => {
         repeat: false,
         statusCode: 'PENDING',
         end: '2069-10-11',
+      },
+    ])
+  })
+
+  test('E2E repeating TAP', async ({ page }) => {
+    const pNumber = randomPrisonNumber()
+    await stubGetPrisonerDetails({ prisonerNumber: pNumber })
+    await stubPostCreateTap(pNumber)
+
+    const journeyId = uuidV4()
+    await page.goto(`/${journeyId}/add-temporary-absence/start/${pNumber}`)
+
+    const absencePage = new AbsenceTypePage(page)
+    await absencePage.ppRadio().click()
+    await absencePage.clickContinue()
+
+    const singleOrRepeatingPage = new SingleOrRepeatingPage(page)
+    await singleOrRepeatingPage.repeatingRadio().click()
+    await singleOrRepeatingPage.clickContinue()
+
+    const startDatePage = new StartEndDatesPage(page)
+    await startDatePage.startField().fill('30/03/2069') // GMT timezone
+    await startDatePage.endField().fill('02/04/2069') // BST timezone
+    await startDatePage.clickContinue()
+
+    const patternPage = new RepeatingPatternPage(page)
+    await patternPage.weeklyRadio().click()
+    await patternPage.clickContinue()
+
+    const absencePerDayPage = new MultiAbsencesPerDayPage(page)
+    await absencePerDayPage.yesRadio().click()
+    await absencePerDayPage.absencesPerDayInput().fill('2')
+    await absencePerDayPage.clickContinue()
+
+    const weeklySchedulePage = new SelectDaysTimesWeeklyPage(page)
+    await weeklySchedulePage.checkbox('Sunday').check()
+    await weeklySchedulePage.checkbox('Monday').check()
+    await weeklySchedulePage.timeEntry('monday', 'release', 'Hour').fill('04')
+    await weeklySchedulePage.timeEntry('monday', 'release', 'Minute').fill('00')
+    await weeklySchedulePage.timeEntry('monday', 'return', 'Hour').fill('08')
+    await weeklySchedulePage.timeEntry('monday', 'return', 'Minute').fill('00')
+    await weeklySchedulePage.timeEntry('sunday', 'release', 'Hour').fill('04')
+    await weeklySchedulePage.timeEntry('sunday', 'release', 'Minute').fill('00')
+    await weeklySchedulePage.timeEntry('sunday', 'return', 'Hour').fill('08')
+    await weeklySchedulePage.timeEntry('sunday', 'return', 'Minute').fill('00')
+    await weeklySchedulePage.clickContinue()
+
+    const checkAbsencePage = new CheckPatternPage(page)
+    await checkAbsencePage.clickContinue()
+
+    const searchLocationPage = new SearchLocationsPage(page)
+    await searchLocationPage.searchField().fill('qwerty')
+    await searchLocationPage.selectAddress('Address, RS1 34T')
+    await searchLocationPage.clickButton('Add location')
+    await searchLocationPage.clickContinue()
+
+    const accompaniedOrUnaccompaniedPage = new AccompaniedOrUnaccompaniedPage(page)
+    await accompaniedOrUnaccompaniedPage.noRadio().click()
+    await accompaniedOrUnaccompaniedPage.clickContinue()
+
+    const transportPage = new TransportPage(page)
+    await transportPage.transportTypeRadio().click()
+    await transportPage.clickContinue()
+
+    const commentsPage = new AbsenceCommentsPage(page)
+    await commentsPage.clickContinue()
+
+    const approvalPage = new AbsenceApprovalPage(page)
+    await approvalPage.noRadio().click()
+    await approvalPage.clickContinue()
+
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/check-answers/)
+
+    const checkAnswersPage = new AddTapCYAPage(page)
+    await checkAnswersPage.verifyAnswer('Absence type', 'Police production')
+    await checkAnswersPage.verifyAnswerNotVisible('Absence sub-type')
+    await checkAnswersPage.verifyAnswerNotVisible('Absence reason')
+    await checkAnswersPage.verifyAnswer('Single or repeating absence', 'Repeating')
+
+    await checkAnswersPage.clickButton('Confirm and save')
+
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/confirmation/)
+
+    await page.goBack()
+
+    expect(page.url().split('?')[0]).toMatch(/\/$/)
+
+    expect(await getApiBody(`/external-movements-api/temporary-absence-authorisations/${pNumber}`)).toEqual([
+      {
+        absenceTypeCode: 'PP',
+        start: '2069-03-30',
+        end: '2069-04-02',
+        accompaniedByCode: 'U',
+        transportCode: 'AMB',
+        occurrences: [
+          {
+            start: '2069-03-31T04:00:00',
+            end: '2069-03-31T06:00:00',
+            location: {
+              address: 'Address',
+              postcode: 'RS1 34T',
+              uprn: 1001,
+            },
+            scheduleReference: {
+              type: 'WEEKLY',
+            },
+          },
+          {
+            start: '2069-03-31T06:00:00',
+            end: '2069-03-31T08:00:00',
+            location: {
+              address: 'Address',
+              postcode: 'RS1 34T',
+              uprn: 1001,
+            },
+            scheduleReference: {
+              type: 'WEEKLY',
+            },
+          },
+          {
+            start: '2069-04-01T04:00:00',
+            end: '2069-04-01T06:00:00',
+            location: {
+              address: 'Address',
+              postcode: 'RS1 34T',
+              uprn: 1001,
+            },
+            scheduleReference: {
+              type: 'WEEKLY',
+            },
+          },
+          {
+            start: '2069-04-01T06:00:00',
+            end: '2069-04-01T08:00:00',
+            location: {
+              address: 'Address',
+              postcode: 'RS1 34T',
+              uprn: 1001,
+            },
+            scheduleReference: {
+              type: 'WEEKLY',
+            },
+          },
+        ],
+        repeat: true,
+        statusCode: 'APPROVED',
+        schedule: {
+          absencesPerDay: 2,
+          type: 'WEEKLY',
+          weeklyPattern: [
+            {
+              day: 0,
+              overnight: false,
+              returnTime: '08:00',
+              startTime: '04:00',
+            },
+            {
+              day: 6,
+              overnight: false,
+              returnTime: '08:00',
+              startTime: '04:00',
+            },
+          ],
+        },
       },
     ])
   })

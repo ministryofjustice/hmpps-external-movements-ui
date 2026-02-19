@@ -10,7 +10,7 @@ export class SelectDaysTimesWeeklyPage extends BaseTestPage {
       title: 'Enter absence dates and times - Add a temporary absence - DPS',
       caption: 'Create a Temporary Absence',
       heading: 'Enter the days and times for these absences',
-      backUrl: /repeating-pattern/,
+      backUrl: /(repeating-pattern|multi-absences-per-day)/,
     })
   }
 
