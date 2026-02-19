@@ -19,7 +19,7 @@ import { BrowseTapMovementsRoutes } from './temporary-absence-movements/routes'
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
 
-  router.use(populateUserPermissions(services.prisonPermissionsService))
+  router.use(populateUserPermissions)
   router.use(breadcrumbs())
   router.use(
     historyMiddleware(() => [

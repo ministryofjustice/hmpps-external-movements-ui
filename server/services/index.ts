@@ -12,19 +12,21 @@ export const services = () => {
   const { applicationInfo, hmppsAuditClient, osPlacesApiClient, telemetryClient, authenticationClient, cacheStore } =
     dataAccess()
 
+  const prisonPermissionsService = PermissionsService.create({
+    prisonerSearchConfig: config.apis.prisonerSearchApi,
+    authenticationClient,
+    logger,
+    telemetryClient,
+  })
+
   return {
     applicationInfo,
     auditService: new AuditService(hmppsAuditClient),
     externalMovementsService: new ExternalMovementsService(authenticationClient),
-    prisonerSearchService: new PrisonerSearchApiService(authenticationClient),
+    prisonerSearchService: new PrisonerSearchApiService(authenticationClient, prisonPermissionsService),
     prisonApiService: new PrisonApiService(authenticationClient),
     osPlacesAddressService: new OsPlacesAddressService(logger, osPlacesApiClient),
-    prisonPermissionsService: PermissionsService.create({
-      prisonerSearchConfig: config.apis.prisonerSearchApi,
-      authenticationClient,
-      logger,
-      telemetryClient,
-    }),
+    prisonPermissionsService,
     authenticationClient,
     cacheStore,
     telemetryClient,
