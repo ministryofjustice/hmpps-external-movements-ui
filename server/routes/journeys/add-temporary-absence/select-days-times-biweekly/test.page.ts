@@ -4,7 +4,7 @@ type Day = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturda
 const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 export class SelectDaysTimesBiweeklyPage extends BaseTestPage {
-  async verifyContent(backUrl: RegExp = /repeating-pattern/) {
+  async verifyContent(backUrl: RegExp = /(repeating-pattern|multi-absences-per-day)/) {
     return this.verify({
       pageUrl: /\/add-temporary-absence\/select-days-times-biweekly/,
       title: 'Enter absence dates and times - Add a temporary absence - DPS',
