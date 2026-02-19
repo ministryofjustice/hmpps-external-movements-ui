@@ -79,6 +79,7 @@ export class AddTapCheckAnswersController {
           weeklyPattern: journeyData.patternType === 'WEEKLY' ? journeyData.weeklyPattern : undefined,
           biweeklyPattern: journeyData.patternType === 'BIWEEKLY' ? journeyData.biweeklyPattern : undefined,
           shiftPattern: journeyData.patternType === 'SHIFT' ? journeyData.shiftPattern : undefined,
+          absencesPerDay: journeyData.absencesPerDay ?? 1,
         }
       }
 
