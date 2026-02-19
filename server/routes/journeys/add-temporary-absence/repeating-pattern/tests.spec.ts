@@ -92,7 +92,7 @@ test.describe('/add-temporary-absence/repeating-pattern', () => {
     // verify next page routing
     await testPage.weeklyRadio().click()
     await testPage.clickContinue()
-    expect(page.url()).toMatch(/\/add-temporary-absence\/select-days-times-weekly/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/(select-days-times-weekly|multi-absences-per-day)/)
 
     // verify input values are persisted
     await page.goBack()

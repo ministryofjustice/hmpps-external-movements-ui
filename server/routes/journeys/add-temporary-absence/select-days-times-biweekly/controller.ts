@@ -39,12 +39,13 @@ export class SelectDaysTimesBiWeeklyController {
     }
 
     res.render('add-temporary-absence/select-days-times-biweekly/view', {
-      // eslint-disable-next-line no-nested-ternary
-      backUrl: req.middleware?.enabledFeatures?.includes(Feature.INTRA_DAY)
-        ? 'multi-absences-per-day'
-        : week === 'FIRST'
-          ? 'repeating-pattern'
-          : 'select-days-times-biweekly',
+      backUrl:
+        // eslint-disable-next-line no-nested-ternary
+        week === 'SECOND'
+          ? 'select-days-times-biweekly'
+          : req.middleware?.enabledFeatures?.includes(Feature.INTRA_DAY)
+            ? 'multi-absences-per-day'
+            : 'repeating-pattern',
       days: res.locals.formResponses?.['selectedDays'] ?? pattern?.map(o => weekDays[o.day]) ?? [],
       dayData: [...Array(7).keys()].map(i => getDayTimes(i)),
       week,
