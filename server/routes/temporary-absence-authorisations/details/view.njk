@@ -24,7 +24,7 @@
         {% if user | hasPermission('TAP', 'MANAGE') %}
           {% if editable %}
             <div class="govuk-button-group">
-              {% if result.status.code === 'PENDING' %}
+              {% if result.status.code === 'PENDING' and approvable %}
                 {{ govukButton({
                   text: "Review this absence",
                   href: baseEditUrl + "/review",
@@ -40,10 +40,11 @@
                 }) }}
               {% endif %}
             </div>
-          {% elseif result.status.code === 'PENDING' or result.status.code === 'APPROVED' %}
+          {% endif %}
+          {% if result.status.code === 'PENDING' and not approvable %}
             {{ mojAlert({
               variant: "warning",
-              title: "Use NOMIS to manage this temporary absence",
+              title: "A location must be added before this temporary absence can be approved",
               showTitleAsHeading: false,
               dismissible: false
             }) }}
