@@ -113,7 +113,7 @@
               {
                 key: { text: "Repeating pattern type" },
                 value: { text: result.schedule.type | repeatTypeLabel }
-              } if result.schedule.type,
+              } if result.repeat,
               {
                 key: { text: "Comments" },
                 value: { text: (result.comments or "Not provided") | escape | nl2br },
