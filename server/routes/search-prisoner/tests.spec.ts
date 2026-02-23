@@ -30,6 +30,7 @@ test.describe('/search-prisoner', () => {
             dateOfBirth: '',
             status: '',
             prisonName: '',
+            restrictedPatient: false,
           },
           {
             prisonerNumber: 'A2345EA',
@@ -40,6 +41,7 @@ test.describe('/search-prisoner', () => {
             dateOfBirth: '',
             status: '',
             prisonName: '',
+            restrictedPatient: false,
           },
         ],
       }),
