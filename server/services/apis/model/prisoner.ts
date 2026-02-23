@@ -7,4 +7,11 @@ export default interface Prisoner {
   dateOfBirth: string
   status: string
   prisonName: string
+
+  restrictedPatient: boolean
+  supportingPrisonId?: string
+  previousPrisonId?: string
+  previousPrisonLeavingDate?: string
+  lastPrisonId?: string
+  releaseDate?: string
 }
