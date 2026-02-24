@@ -29,13 +29,23 @@ export class TapAuthorisationDetailsController {
         this.externalMovementsService.getTapAuthorisationHistory({ res }, req.params.id),
       ])
 
+      const editable = isTapAuthorisationEditable(authorisation)
+      const approvable =
+        authorisation.status.code === 'PENDING' &&
+        editable &&
+        authorisation.locations.find(
+          ({ uprn, address, description, postcode }) =>
+            uprn || description?.length || address?.length || postcode?.length,
+        )
+
       res.render('temporary-absence-authorisations/details/view', {
         showBreadcrumbs: true,
         result: authorisation,
         dateFrom,
         dateTo,
         auditedActions: parseAuditHistory(history.content.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt))),
-        editable: isTapAuthorisationEditable(authorisation),
+        editable,
+        approvable,
       })
     } catch (error: unknown) {
       if ((error as { message?: string }).message) {

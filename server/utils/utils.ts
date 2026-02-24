@@ -140,16 +140,18 @@ export const parseAddress = (location: Address) => ({
 
 export const isTapAuthorisationEditable = ({
   status,
-  occurrences,
   end,
+  occurrences,
+  repeat,
 }: {
   status: { code: string }
-  occurrences?: components['schemas']['TapAuthorisation.Occurrence'][]
   end: string
+  occurrences?: components['schemas']['TapAuthorisation.Occurrence'][]
+  repeat: boolean
 }) =>
   ['PENDING', 'APPROVED'].includes(status.code) &&
-  !(occurrences?.length === 0) &&
-  end >= format(new Date(), 'yyyy-MM-dd')
+  end >= format(new Date(), 'yyyy-MM-dd') &&
+  (repeat || !(occurrences?.length === 0))
 
 export const isTapOccurrenceEditable = ({ status }: { status: { code: string } }) =>
   ['PENDING', 'SCHEDULED', 'IN_PROGRESS'].includes(status.code)

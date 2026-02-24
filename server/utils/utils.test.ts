@@ -44,36 +44,51 @@ describe('isTapAuthorisationEditable', () => {
         status: { code: 'APPROVED' },
         occurrences: [{} as components['schemas']['TapAuthorisation.Occurrence']],
         end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+        repeat: true,
       }),
     ).toBeTruthy()
   })
 
-  it('returns true if TAP authorisation is in non-applicable status', () => {
+  it('returns false if TAP authorisation is in non-applicable status', () => {
     expect(
       isTapAuthorisationEditable({
         status: { code: 'DENIED' },
         occurrences: [{} as components['schemas']['TapAuthorisation.Occurrence']],
         end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+        repeat: true,
       }),
     ).toBeFalsy()
   })
 
-  it('returns false if TAP authorisation does not have an occurrence', () => {
-    expect(
-      isTapAuthorisationEditable({
-        status: { code: 'APPROVED' },
-        occurrences: [],
-        end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
-      }),
-    ).toBeFalsy()
-  })
-
-  it('returns true if TAP authorisation is in the past', () => {
+  it('returns false if TAP authorisation is in the past', () => {
     expect(
       isTapAuthorisationEditable({
         status: { code: 'APPROVED' },
         occurrences: [{} as components['schemas']['TapAuthorisation.Occurrence']],
         end: format(subDays(new Date(), 1), 'yyyy-MM-dd'),
+        repeat: true,
+      }),
+    ).toBeFalsy()
+  })
+
+  it('returns true if repeating TAP authorisation does not have an occurrence', () => {
+    expect(
+      isTapAuthorisationEditable({
+        status: { code: 'APPROVED' },
+        occurrences: [],
+        end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+        repeat: true,
+      }),
+    ).toBeTruthy()
+  })
+
+  it('returns false if single TAP authorisation does not have an occurrence', () => {
+    expect(
+      isTapAuthorisationEditable({
+        status: { code: 'APPROVED' },
+        occurrences: [],
+        end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+        repeat: false,
       }),
     ).toBeFalsy()
   })
@@ -84,7 +99,7 @@ describe('isTapOccurrenceEditable', () => {
     expect(isTapOccurrenceEditable({ status: { code: 'SCHEDULED' } })).toBeTruthy()
   })
 
-  it('returns true if TAP occurrence is in non-applicable status', () => {
+  it('returns false if TAP occurrence is in non-applicable status', () => {
     expect(isTapOccurrenceEditable({ status: { code: 'OVERDUE' } })).toBeFalsy()
   })
 })

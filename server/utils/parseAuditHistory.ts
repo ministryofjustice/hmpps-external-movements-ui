@@ -209,10 +209,15 @@ export const parseAuditHistory = (history: components['schemas']['AuditedAction'
 
         if (!eventText.content) {
           eventText.changes = action.changes
-            .map(
-              change =>
-                `${parsePropertyName(event, change.propertyName)} ${change.propertyName === 'comments' ? 'were' : 'was'} changed from ${parseChangedPropertyValue(event, change.propertyName, change.previous)} to ${parseChangedPropertyValue(event, change.propertyName, change.change)}.`,
-            )
+            .map(change => {
+              if (change.propertyName === 'location') {
+                if (!change.previous && change.change) return `Location was set to ${change.change}.`
+                if (change.previous && !change.change)
+                  return `Location was removed, and was previously ${change.previous}.`
+              }
+
+              return `${parsePropertyName(event, change.propertyName)} ${change.propertyName === 'comments' ? 'were' : 'was'} changed from ${parseChangedPropertyValue(event, change.propertyName, change.previous)} to ${parseChangedPropertyValue(event, change.propertyName, change.change)}.`
+            })
             .filter(itm => Boolean(itm))
         }
 

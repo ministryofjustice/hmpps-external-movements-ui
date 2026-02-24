@@ -24,7 +24,7 @@
         {% if user | hasPermission('TAP', 'MANAGE') %}
           {% if editable %}
             <div class="govuk-button-group">
-              {% if result.status.code === 'PENDING' %}
+              {% if approvable %}
                 {{ govukButton({
                   text: "Review this absence",
                   href: baseEditUrl + "/review",
@@ -40,10 +40,18 @@
                 }) }}
               {% endif %}
             </div>
-          {% elseif result.status.code === 'PENDING' or result.status.code === 'APPROVED' %}
+          {% elseif not result.repeat and result.totalOccurrenceCount === 0 and (result.status.code === 'APPROVED' or result.status.code === 'PENDING') %}
             {{ mojAlert({
               variant: "warning",
               title: "Use NOMIS to manage this temporary absence",
+              showTitleAsHeading: false,
+              dismissible: false
+            }) }}
+          {% endif %}
+          {% if result.status.code === 'PENDING' and editable and not approvable %}
+            {{ mojAlert({
+              variant: "warning",
+              title: "A location must be added before this temporary absence can be approved",
               showTitleAsHeading: false,
               dismissible: false
             }) }}
@@ -112,7 +120,7 @@
               {
                 key: { text: "Repeating pattern type" },
                 value: { text: result.schedule.type | repeatTypeLabel }
-              } if result.schedule.type,
+              } if result.repeat,
               {
                 key: { text: "Comments" },
                 value: { text: (result.comments or "Not provided") | escape | nl2br },
