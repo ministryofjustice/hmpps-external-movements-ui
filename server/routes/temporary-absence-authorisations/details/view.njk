@@ -24,7 +24,7 @@
         {% if user | hasPermission('TAP', 'MANAGE') %}
           {% if editable %}
             <div class="govuk-button-group">
-              {% if result.status.code === 'PENDING' and approvable %}
+              {% if approvable %}
                 {{ govukButton({
                   text: "Review this absence",
                   href: baseEditUrl + "/review",

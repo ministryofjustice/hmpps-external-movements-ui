@@ -49,7 +49,7 @@ describe('isTapAuthorisationEditable', () => {
     ).toBeTruthy()
   })
 
-  it('returns true if TAP authorisation is in non-applicable status', () => {
+  it('returns false if TAP authorisation is in non-applicable status', () => {
     expect(
       isTapAuthorisationEditable({
         status: { code: 'DENIED' },
@@ -60,7 +60,7 @@ describe('isTapAuthorisationEditable', () => {
     ).toBeFalsy()
   })
 
-  it('returns true if TAP authorisation is in the past', () => {
+  it('returns false if TAP authorisation is in the past', () => {
     expect(
       isTapAuthorisationEditable({
         status: { code: 'APPROVED' },
@@ -99,7 +99,7 @@ describe('isTapOccurrenceEditable', () => {
     expect(isTapOccurrenceEditable({ status: { code: 'SCHEDULED' } })).toBeTruthy()
   })
 
-  it('returns true if TAP occurrence is in non-applicable status', () => {
+  it('returns false if TAP occurrence is in non-applicable status', () => {
     expect(isTapOccurrenceEditable({ status: { code: 'OVERDUE' } })).toBeFalsy()
   })
 })
