@@ -6,6 +6,7 @@ import {
   isTapAuthorisationEditable,
   isTapOccurrenceEditable,
 } from './utils'
+import { components } from '../@types/externalMovements'
 
 describe('convert to title case', () => {
   it.each([
@@ -41,7 +42,9 @@ describe('isTapAuthorisationEditable', () => {
     expect(
       isTapAuthorisationEditable({
         status: { code: 'APPROVED' },
+        occurrences: [{} as components['schemas']['TapAuthorisation.Occurrence']],
         end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+        repeat: true,
       }),
     ).toBeTruthy()
   })
@@ -50,7 +53,9 @@ describe('isTapAuthorisationEditable', () => {
     expect(
       isTapAuthorisationEditable({
         status: { code: 'DENIED' },
+        occurrences: [{} as components['schemas']['TapAuthorisation.Occurrence']],
         end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+        repeat: true,
       }),
     ).toBeFalsy()
   })
@@ -59,7 +64,31 @@ describe('isTapAuthorisationEditable', () => {
     expect(
       isTapAuthorisationEditable({
         status: { code: 'APPROVED' },
+        occurrences: [{} as components['schemas']['TapAuthorisation.Occurrence']],
         end: format(subDays(new Date(), 1), 'yyyy-MM-dd'),
+        repeat: true,
+      }),
+    ).toBeFalsy()
+  })
+
+  it('returns true if repeating TAP authorisation does not have an occurrence', () => {
+    expect(
+      isTapAuthorisationEditable({
+        status: { code: 'APPROVED' },
+        occurrences: [],
+        end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+        repeat: true,
+      }),
+    ).toBeTruthy()
+  })
+
+  it('returns false if single TAP authorisation does not have an occurrence', () => {
+    expect(
+      isTapAuthorisationEditable({
+        status: { code: 'APPROVED' },
+        occurrences: [],
+        end: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+        repeat: false,
       }),
     ).toBeFalsy()
   })

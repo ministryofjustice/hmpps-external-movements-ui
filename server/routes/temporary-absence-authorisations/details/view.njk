@@ -40,8 +40,15 @@
                 }) }}
               {% endif %}
             </div>
+          {% elseif not result.repeat and result.totalOccurrenceCount === 0 and (result.status.code === 'APPROVED' or result.status.code === 'PENDING') %}
+            {{ mojAlert({
+              variant: "warning",
+              title: "Use NOMIS to manage this temporary absence",
+              showTitleAsHeading: false,
+              dismissible: false
+            }) }}
           {% endif %}
-          {% if result.status.code === 'PENDING' and not approvable %}
+          {% if result.status.code === 'PENDING' and editable and not approvable %}
             {{ mojAlert({
               variant: "warning",
               title: "A location must be added before this temporary absence can be approved",
