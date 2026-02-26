@@ -109,7 +109,7 @@ export default class ExternalMovementsService {
         path: `/temporary-absence-occurrences/${id}`,
       })
 
-    if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prisonCode)) {
+    if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prison.code)) {
       throw new Error('NOT_AUTHORISED')
     }
 
@@ -147,7 +147,7 @@ export default class ExternalMovementsService {
         path: `/temporary-absence-authorisations/${id}${parseQueryParams({ start, end })}`,
       })
 
-    if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prisonCode)) {
+    if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prison.code)) {
       throw new Error('NOT_AUTHORISED')
     }
 
@@ -192,7 +192,7 @@ export default class ExternalMovementsService {
         path: `/temporary-absence-movements/${id}`,
       })
 
-    if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prisonCode)) {
+    if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prison.code)) {
       throw new Error('NOT_AUTHORISED')
     }
 

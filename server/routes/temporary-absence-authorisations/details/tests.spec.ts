@@ -31,7 +31,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await stubGetTapAuthorisation({
       ...testTapAuthorisation,
       id: authorisationId,
-      prisonCode: 'OUT',
+      prison: { code: 'OUT', name: 'OUT' },
     })
     await stubGetTapAuthorisationHistory(authorisationId, { content: [] })
     await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
