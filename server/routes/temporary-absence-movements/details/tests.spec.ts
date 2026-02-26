@@ -30,7 +30,7 @@ test.describe('/temporary-absence-movements/:id', () => {
     await stubGetTapMovement({
       ...testTapMovement,
       id: movementId,
-      prisonCode: 'OUT',
+      prison: { code: 'OUT', name: 'OUT' },
     })
     await stubGetTapMovementHistory(movementId, { content: [] })
     await page.goto(`/temporary-absence-movements/${movementId}`)

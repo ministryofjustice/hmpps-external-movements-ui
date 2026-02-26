@@ -30,7 +30,7 @@ test.describe('/temporary-absences/:id', () => {
     await stubGetTapOccurrence({
       ...testTapOccurrence,
       id: occurrenceId,
-      prisonCode: 'OUT',
+      prison: { code: 'OUT', name: 'OUT' },
     })
     await stubGetTapOccurrenceHistory(occurrenceId, { content: [] })
     await page.goto(`/temporary-absences/${occurrenceId}`)
