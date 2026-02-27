@@ -12,6 +12,8 @@
 {% set overnightReturnLabel = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday'] %}
 
 {% macro dayEntry(opts) %}
+  <div class="copy-times-link govuk-link govuk-!-display-none" role="button">Copy times from previous selected day</div>
+
     {{ validatedTimeInput({
         id: "release",
         name: "release",
@@ -196,6 +198,33 @@
       const updatePreview = window.getUpdatePreviewHandler(dateFrom, dateTo, () => {
         const selectedDays = Array.from(document.querySelector('.schedule-form').querySelectorAll('input[name^=selectedDays]')).map((itm, idx) => itm.checked? idx : null).filter(itm => itm !== null)
         const dayDetails = document.querySelector('.schedule-form').querySelectorAll('input[name^=days]')
+
+        const copyTimesLinks = document.querySelectorAll('.copy-times-link')
+        const filledDays = []
+        for (const day of [0,1,2,3,4,5]) {
+          if (selectedDays.includes(day) && dayDetails[day * 5].value && dayDetails[day * 5 + 1].value && dayDetails[day * 5 + 3].value && dayDetails[day * 5 + 4].value) {
+            filledDays.push(day)
+          }
+        }
+        for (const linkDay of [1,2,3,4,5,6]) {
+          const previousFilledDays = filledDays.filter(d => d < linkDay)
+
+          if (previousFilledDays.length) {
+            const closestDay = Math.max(...previousFilledDays)
+            copyTimesLinks[linkDay].classList.remove('govuk-!-display-none')
+
+            copyTimesLinks[linkDay].addEventListener('click', () => {
+              dayDetails[linkDay * 5].value = dayDetails[closestDay * 5].value
+              dayDetails[linkDay * 5 + 1].value = dayDetails[closestDay * 5 + 1].value
+              dayDetails[linkDay * 5 + 3].value = dayDetails[closestDay * 5 + 3].value
+              dayDetails[linkDay * 5 + 4].value = dayDetails[closestDay * 5 + 4].value
+              dayDetails[linkDay * 5 + 2].checked = dayDetails[closestDay * 5 + 2].checked
+              updatePreview()
+            })
+          } else {
+            copyTimesLinks[linkDay].classList.add('govuk-!-display-none')
+          }
+        }
 
         const weekPattern = selectedDays.map(day => ({
           day,
