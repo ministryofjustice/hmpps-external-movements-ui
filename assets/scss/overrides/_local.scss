@@ -125,3 +125,9 @@
   background-image: radial-gradient( ellipse farthest-corner at 10px 10px , #444cf710, #444cf710 50%, #e5e5f710 50%);
   background-size: 10px 10px;
 }
+
+.copy-times-link {
+  color: govuk-colour("blue");
+  cursor: pointer;
+  margin-bottom: 20px;
+}
