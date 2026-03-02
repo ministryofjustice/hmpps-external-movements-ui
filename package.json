@@ -80,7 +80,7 @@
     "@axe-core/playwright": "^4.11.1",
     "@microsoft/applicationinsights-clickanalytics-js": "3.3.11",
     "@microsoft/applicationinsights-web": "3.3.11",
-    "@ministryofjustice/frontend": "^8.0.1",
+    "@ministryofjustice/frontend": "^9.0.0",
     "@ministryofjustice/hmpps-auth-clients": "^1.0.2",
     "@ministryofjustice/hmpps-connect-dps-components": "^5.3.2",
     "@ministryofjustice/hmpps-connect-dps-shared-items": "^3.6.0",
