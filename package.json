@@ -161,6 +161,9 @@
     "typescript": "^5.9.3"
   },
   "overrides": {
+    "@aws-sdk/xml-builder": {
+      "fast-xml-parser": "^5.3.8"
+    },
     "@jgoz/esbuild-plugin-typecheck": {
       "esbuild": "$esbuild"
     },
