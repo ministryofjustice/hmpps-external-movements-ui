@@ -8,7 +8,7 @@
 }
 
 .block-background {
-  background-color: govuk-colour("light-grey");
+  background-color: govuk-colour("black", $variant: "tint-95");
   padding: 30px 15px;
 }
 
