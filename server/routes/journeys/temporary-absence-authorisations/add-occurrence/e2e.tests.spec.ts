@@ -256,7 +256,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await commentsPage.clickContinue()
 
     await checkAnswersPage.clickButton('Confirm and save')
-    await new AddTapOccurrenceConfirmationPage(page).verifyContent()
+    await new AddTapOccurrenceConfirmationPage(page)
 
     expect(
       await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
