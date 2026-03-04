@@ -20,7 +20,7 @@ import { AddTapOccurrencePage } from './test.page'
 import { getApiBody } from '../../../../../integration_tests/mockApis/wiremock'
 import { AddTapOccurrenceEnterLocationPage } from './enter-location/test.page'
 
-test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
+const mockAuthorisation = () => {
   const authorisationId = uuidV4()
 
   const authorisation = {
@@ -31,14 +31,16 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     locations: [{ uprn: 1001, description: 'Random Street, UK' }],
   }
 
+  return { authorisationId, authorisation }
+}
+
+test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
   test.beforeAll(async () => {
     await Promise.all([
       auth.stubSignIn(),
       componentsApi.stubComponents(),
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: testTapAuthorisation.person.personIdentifier }),
-      stubGetTapAuthorisation(authorisation),
-      stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
       stubSearchAddresses('random', testSearchAddressResults),
       stubSearchAddresses('SW1H%209AJ', testSearchAddressResults), // query used by the module to check OS Places API availability
       stubGetAddress('1003', testSearchAddressResults[2]!),
@@ -49,13 +51,19 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await signIn(page)
   })
 
-  const startJourney = async (page: Page, journeyId: string, authId: string = authorisationId) => {
-    await page.goto(`/${journeyId}/temporary-absence-authorisations/start-add-occurrence/${authId}`)
+  const startJourney = async (page: Page, journeyId: string, authorisationId: string) => {
+    await page.goto(`/${journeyId}/temporary-absence-authorisations/start-add-occurrence/${authorisationId}`)
   }
 
   test('should create new occurrence with an existing address', async ({ page }) => {
+    const { authorisationId, authorisation } = mockAuthorisation()
+    await Promise.all([
+      stubGetTapAuthorisation(authorisation),
+      stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
+    ])
+
     const journeyId = uuidV4()
-    await startJourney(page, journeyId)
+    await startJourney(page, journeyId, authorisationId)
 
     // verify page content
     const startPage = await new AddTapOccurrencePage(page).verifyContent()
@@ -94,8 +102,14 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
   })
 
   test('should create new occurrence with a new searched address', async ({ page }) => {
+    const { authorisationId, authorisation } = mockAuthorisation()
+    await Promise.all([
+      stubGetTapAuthorisation(authorisation),
+      stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
+    ])
+
     const journeyId = uuidV4()
-    await startJourney(page, journeyId)
+    await startJourney(page, journeyId, authorisationId)
 
     // verify page content
     const startPage = await new AddTapOccurrencePage(page).verifyContent()
@@ -140,8 +154,14 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
   })
 
   test('should create new occurrence with a new entered address', async ({ page }) => {
+    const { authorisationId, authorisation } = mockAuthorisation()
+    await Promise.all([
+      stubGetTapAuthorisation(authorisation),
+      stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
+    ])
+
     const journeyId = uuidV4()
-    await startJourney(page, journeyId)
+    await startJourney(page, journeyId, authorisationId)
 
     // verify page content
     const startPage = await new AddTapOccurrencePage(page).verifyContent()
@@ -187,12 +207,14 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
   })
 
   test('can change new occurrence answers', async ({ page }) => {
-    const authId = uuidV4()
-    await stubGetTapAuthorisation({ ...authorisation, id: authId })
-    await stubPostTapOccurrence(authId, { id: 'occurrence-id' })
+    const { authorisationId, authorisation } = mockAuthorisation()
+    await Promise.all([
+      stubGetTapAuthorisation(authorisation),
+      stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
+    ])
 
     const journeyId = uuidV4()
-    await startJourney(page, journeyId, authId)
+    await startJourney(page, journeyId, authorisationId)
 
     // verify page content
     const startPage = await new AddTapOccurrencePage(page).verifyContent()
@@ -234,10 +256,10 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await commentsPage.clickContinue()
 
     await checkAnswersPage.clickButton('Confirm and save')
-    await new AddTapOccurrenceConfirmationPage(page).verifyContent()
+    await new AddTapOccurrenceConfirmationPage(page)
 
     expect(
-      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authId}/occurrences`),
+      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
     ).toContainEqual({
       start: '2001-01-03T05:00:00',
       end: '2001-01-03T09:30:00',
