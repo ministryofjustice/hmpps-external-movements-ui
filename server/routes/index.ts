@@ -15,6 +15,8 @@ import { populateUserPermissions } from '../middleware/permissions/populateUserP
 import { requirePermissions } from '../middleware/permissions/requirePermissions'
 import { UserPermissionLevel } from '../interfaces/hmppsUser'
 import { BrowseTapMovementsRoutes } from './temporary-absence-movements/routes'
+import { CreateDocumentsRoutes } from './create-documents/routes'
+import { Feature, requireFeatureFlag } from '../utils/featureFlag'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
@@ -104,6 +106,12 @@ export default function routes(services: Services): Router {
     '/temporary-absence-movements',
     requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
     BrowseTapMovementsRoutes(services),
+  )
+  router.use(
+    '/create-documents',
+    requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
+    requireFeatureFlag(Feature.DEV_LED),
+    CreateDocumentsRoutes(services),
   )
 
   router.use(insertJourneyIdentifier())

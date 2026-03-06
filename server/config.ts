@@ -50,6 +50,7 @@ export default {
   serviceUrls: {
     digitalPrison: get('DPS_HOME_PAGE_URL', 'http://localhost:3001', requiredInProduction),
     prisonerProfile: get('PRISONER_PROFILE_URL', 'http://localhost:3001', requiredInProduction),
+    documentGeneration: get('DOCUMENT_GENERATION_UI_URL', 'http://localhost:3001', requiredInProduction),
   },
   apis: {
     hmppsAuth: {
@@ -119,6 +120,15 @@ export default {
         deadline: Number(get('OS_PLACES_API_TIMEOUT_DEADLINE', 3000)),
       },
       agent: new AgentConfig(Number(get('OS_PLACES_API_TIMEOUT_DEADLINE', 3000))),
+    },
+    documentGenerationApi: {
+      url: get('DOCUMENT_GENERATION_API_URL', 'http://localhost:8080', requiredInProduction),
+      healthPath: '/health/ping',
+      timeout: {
+        response: Number(get('DOCUMENT_GENERATION_API_TIMEOUT_RESPONSE', 5000)),
+        deadline: Number(get('DOCUMENT_GENERATION_API_TIMEOUT_DEADLINE', 5000)),
+      },
+      agent: new AgentConfig(Number(get('DOCUMENT_GENERATION_API_TIMEOUT_RESPONSE', 5000))),
     },
   },
   sqs: {
