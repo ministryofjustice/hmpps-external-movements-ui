@@ -249,6 +249,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     const enterLocationPage = await new AddTapOccurrenceEnterLocationPage(page).verifyContent()
     await enterLocationPage.line1Field().fill('1 Manual Street')
     await enterLocationPage.cityField().fill('Manual City')
+    await enterLocationPage.postcodeField().fill('W1TH SP4C3 ')
     await enterLocationPage.clickContinue()
 
     await checkAnswersPage.clickLink('Change comments')
@@ -265,6 +266,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
       end: '2001-01-03T09:30:00',
       location: {
         address: '1 Manual Street, Manual City',
+        postcode: 'W1TH SP4C3',
       },
       comments: 'another comments',
     })
