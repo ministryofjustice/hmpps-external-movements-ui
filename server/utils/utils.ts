@@ -133,9 +133,9 @@ export const parseQueryParams = (queries: {
 
 export const parseAddress = (location: Address) => ({
   address: trimAddress(location),
-  ...(location.description ? { description: location.description } : {}),
+  ...(location.description ? { description: location.description.trim() } : {}),
   ...(location.id ? { uprn: location.id } : {}),
-  ...(location.postcode ? { postcode: location.postcode } : {}),
+  ...(location.postcode ? { postcode: location.postcode.trim() } : {}),
 })
 
 export const isTapAuthorisationEditable = ({

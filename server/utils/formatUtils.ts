@@ -112,7 +112,10 @@ export const initialiseName = (fullName?: string): string | null => {
 export const joinAddress = ({ line1, line2, city, county, postcode, address, description }: Address) => {
   if (address) return address
   return (
-    [description, line1, line2, city, county].filter(itm => !!itm?.trim()).join(', ') + (postcode ? ` ${postcode}` : '')
+    [description, line1, line2, city, county]
+      .map(itm => itm?.trim())
+      .filter(Boolean)
+      .join(', ') + (postcode ? ` ${postcode}` : '')
   )
 }
 
@@ -122,7 +125,10 @@ export const trimAddress = ({ line1, line2, city, county, postcode, address, des
     if (description) result = result.replace(`${description}, `, '')
     return result
   }
-  return [line1, line2, city, county].filter(itm => !!itm?.trim()).join(', ')
+  return [line1, line2, city, county]
+    .map(itm => itm?.trim())
+    .filter(Boolean)
+    .join(', ')
 }
 
 export const formatAddress = ({
@@ -134,4 +140,8 @@ export const formatAddress = ({
   address?: string
   postcode?: string
   uprn?: number
-}) => [description, address, postcode].filter(itm => !!itm?.trim()).join(', ')
+}) =>
+  [description, address, postcode]
+    .map(itm => itm?.trim())
+    .filter(Boolean)
+    .join(', ')
