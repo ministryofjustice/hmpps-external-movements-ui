@@ -7,6 +7,7 @@ import ExternalMovementsService from './apis/externalMovementsService'
 import config from '../config'
 import PrisonerSearchApiService from './apis/prisonerSearchService'
 import PrisonApiService from './apis/prisonApiService'
+import DocumentGenerationService from './apis/documentGenerationService'
 
 export const services = () => {
   const { applicationInfo, hmppsAuditClient, osPlacesApiClient, telemetryClient, authenticationClient, cacheStore } =
@@ -25,6 +26,7 @@ export const services = () => {
     externalMovementsService: new ExternalMovementsService(authenticationClient),
     prisonerSearchService: new PrisonerSearchApiService(authenticationClient, prisonPermissionsService),
     prisonApiService: new PrisonApiService(authenticationClient),
+    documentGenerationService: new DocumentGenerationService(authenticationClient),
     osPlacesAddressService: new OsPlacesAddressService(logger, osPlacesApiClient),
     prisonPermissionsService,
     authenticationClient,

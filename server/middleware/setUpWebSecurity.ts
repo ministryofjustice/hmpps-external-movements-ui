@@ -38,7 +38,7 @@ export default function setUpWebSecurity(): Router {
           ],
           workerSrc: ["'self' blob:"],
           fontSrc: ["'self'"],
-          formAction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],
+          formAction: [`'self' ${config.apis.hmppsAuth.externalUrl} ${config.serviceUrls.documentGeneration}`],
           ...(config.production ? {} : { upgradeInsecureRequests: null }),
         },
       },
