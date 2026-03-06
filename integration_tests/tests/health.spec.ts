@@ -5,6 +5,7 @@ import tokenVerification from '../mockApis/tokenVerification'
 import { stubExternalMovementsPing } from '../mockApis/externalMovementsApi'
 import { stubPrisonApiHealth } from '../mockApis/prisonApi'
 import { stubPrisonerSearchPing } from '../mockApis/prisonerSearchApi'
+import { stubDocumentGenerationPing } from '../mockApis/documentGenerationApi'
 
 test.describe('Healthcheck', () => {
   test.describe('All healthy', () => {
@@ -16,6 +17,7 @@ test.describe('Healthcheck', () => {
         componentsApi.stubComponents(),
         stubPrisonApiHealth(),
         stubPrisonerSearchPing(),
+        stubDocumentGenerationPing(),
       ])
     })
 

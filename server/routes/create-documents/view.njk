@@ -1,0 +1,36 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% set pageTitle = 'Create and download documents - External movements' %}
+
+{% set mainClasses = "app-container govuk-body placeholder-background" %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <div class="govuk-!-static-margin-bottom-6">
+      <span class="govuk-caption-l">Create and download documents</span>
+      <h1 class="govuk-heading-l">Document details</h1>
+    </div>
+
+    <p>LOREM IPSUM - Use this form to create a document for a prisoner. You must record all risk assessments, destination or residency details, and any specific conditions the prisoner must follow. Once complete, print the document for the prisoner to carry with them.</p>
+
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukSelect({
+        label: {
+          text: "Select a document type"
+        },
+        id: "template",
+        name: "template",
+        items: templates | prependEmptyOption('Select a template'),
+        errorMessage: validationErrors | findError('template')
+      }) }}
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}
