@@ -38,7 +38,7 @@ export class CreateDocumentsController {
           prisonId: entity.prison.code,
           prisonNumber: entity.person.personIdentifier,
           absenceId: entity.id,
-          returnTo: encodeURIComponent(config.ingressUrl + req.originalUrl),
+          returnTo: config.ingressUrl + req.originalUrl,
         }).toString()}`,
       )
     }
