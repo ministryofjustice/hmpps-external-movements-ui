@@ -32,6 +32,7 @@ export const historyExtension: Extension & {
         lastIndex = match.index
         if (
           match[1]?.startsWith('http') ||
+          match[1]?.startsWith('mailto:') ||
           match[1]?.startsWith('#') ||
           match[1]?.includes('?history=') ||
           match[1]?.includes('&history=')
