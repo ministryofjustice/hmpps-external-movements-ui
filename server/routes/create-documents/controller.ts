@@ -23,7 +23,6 @@ export class CreateDocumentsController {
 
     res.render('create-documents/view', {
       showBreadcrumbs: true,
-      documentType: this.documentType,
       templates: templates.map(({ id: value, name: text }) => ({ value, text })),
       entity,
     })

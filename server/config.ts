@@ -139,6 +139,7 @@ export default {
   featureToggles: {
     enableDevLedFeatures: get('DEV_LED_FEATURE_PRISONS', '').split(','),
     enableIntraDayScheduling: get('FEAT_INTRA_DAY_SCHEDULING_PRISONS', '').split(','),
+    enabledDocumentGeneration: get('FEAT_DOCUMENT_GENERATION_PRISONS', '').split(','),
   },
   appInsightsConnectionString: get('APPLICATIONINSIGHTS_CONNECTION_STRING', '', requiredInProduction),
   sentry: {

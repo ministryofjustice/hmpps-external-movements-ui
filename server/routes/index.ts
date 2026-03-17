@@ -43,22 +43,22 @@ export default function routes(services: Services): Router {
       {
         matcher: /temporary-absence-authorisations$/,
         text: 'Browse absence plans',
-        alias: 'temp-page-1',
+        alias: Page.SEARCH_TEMPORARY_ABSENCE_AUTHORISATIONS,
       },
       {
         matcher: /temporary-absence-authorisations\/(\w|-)+$/,
         text: 'Absence plan',
-        alias: 'temp-page-2',
+        alias: Page.VIEW_TEMPORARY_ABSENCE_AUTHORISATION,
       },
       {
         matcher: /temporary-absences$/,
         text: 'Browse absence occurrences',
-        alias: 'temp-page-3',
+        alias: Page.SEARCH_TEMPORARY_ABSENCE_OCCURRENCES,
       },
       {
         matcher: /temporary-absences\/(\w|-)+$/,
         text: 'Absence occurrence',
-        alias: 'temp-page-4',
+        alias: Page.VIEW_TEMPORARY_ABSENCE_OCCURRENCE,
       },
     ]),
   )
@@ -110,7 +110,7 @@ export default function routes(services: Services): Router {
   router.use(
     '/create-documents',
     requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
-    requireFeatureFlag(Feature.DEV_LED),
+    requireFeatureFlag(Feature.DOC_GEN),
     CreateDocumentsRoutes(services),
   )
 

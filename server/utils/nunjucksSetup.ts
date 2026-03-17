@@ -24,6 +24,7 @@ import {
   lastNameCommaFirstName,
   occurrenceStatus,
   possessiveComma,
+  sentenceCase,
   statusPriority,
 } from './formatUtils'
 import { formatDate, formatInputDate, formatTime, inputDate, addDaysMonths, absenceTimeRange } from './dateTimeUtils'
@@ -97,6 +98,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('firstNameSpaceLastName', firstNameSpaceLastName)
   njkEnv.addFilter('lastNameCommaFirstName', lastNameCommaFirstName)
   njkEnv.addFilter('possessiveComma', possessiveComma)
+  njkEnv.addFilter('sentenceCase', sentenceCase)
   njkEnv.addFilter('formatRefDataName', formatRefDataName)
   njkEnv.addFilter('getQueryEntries', getQueryEntries)
   njkEnv.addFilter('formatDate', formatDate)

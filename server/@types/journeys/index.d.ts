@@ -1,4 +1,5 @@
 import { components } from '../externalMovements'
+import { DOCUMENT_TYPE } from '../../services/apis/documentGenerationService'
 
 export interface PrisonerDetails {
   prisonerNumber: string
@@ -27,6 +28,7 @@ export type JourneyData = {
   updateTapOccurrence?: UpdateTapOccurrenceJourney
   addTapOccurrence?: AddTapOccurrenceJourney
   updateTapAuthorisation?: UpdateTapAuthorisationJourney
+  createDocumentJourney?: CreateDocumentJourney
   isCheckAnswers?: boolean
   journeyCompleted?: boolean
   b64History?: string | undefined
@@ -161,4 +163,9 @@ export type UpdateTapAuthorisationJourney = {
   transport: components['schemas']['CodedDescription']
   approve: boolean
   result: components['schemas']['AuditHistory']
+}>
+
+export type CreateDocumentJourney = { documentGroup: DOCUMENT_TYPE } & Partial<{
+  templateId: string
+  returnUrl: string
 }>

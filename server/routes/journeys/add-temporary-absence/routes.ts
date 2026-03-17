@@ -34,6 +34,12 @@ import { MultiAbsencesPerDayRoutes } from './multi-absences-per-day/routes'
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
 
+  const START_ENTRY_PAGES: string[] = [
+    Page.VIEW_TEMPORARY_ABSENCE_AUTHORISATION,
+    Page.VIEW_TEMPORARY_ABSENCE_OCCURRENCE,
+    Page.SEARCH_PRISONER,
+  ]
+
   get('/start/:prisonNumber', populatePrisonerDetails(services), (req, res) => {
     if (req.middleware?.prisonerData) {
       req.journeyData.prisonerDetails = toPrisonerDetails(req.middleware.prisonerData)
@@ -41,7 +47,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
       const lastLandmark = res.locals.breadcrumbs.last()
       req.journeyData.addTemporaryAbsence = {
         backUrl:
-          lastLandmark && ['temp-page-2', 'temp-page-3', Page.SEARCH_PRISONER].includes(lastLandmark.alias || '')
+          lastLandmark && START_ENTRY_PAGES.includes(lastLandmark.alias || '')
             ? lastLandmark.href
             : `${res.locals.prisonerProfileUrl}/prisoner/${req.journeyData.prisonerDetails.prisonerNumber}`,
         historyQuery: String(req.query['history']),
