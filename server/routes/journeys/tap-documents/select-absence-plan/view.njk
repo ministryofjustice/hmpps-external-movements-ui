@@ -1,0 +1,70 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
+
+{% set fullWidth = true %}
+{% set pageTitle = 'Select absence plan - Create and download documents' %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Create and download documents</span>
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Select which plan you want to use</h1>
+
+    {% if not results.length %}
+      <p class="govuk-!-margin-bottom-6"><strong>No absence plan found for this prisoner.</strong></p>
+    {% else %}
+      {% set rows = [] %}
+      {% for authorisation in results %}
+        {% set rows = (rows.push([
+          {
+            text: authorisation.start | formatDate
+          },
+          {
+            text: authorisation.end | formatDate
+          },
+          {
+            text: authorisation.absenceCategorisation
+          },
+          {
+            text: ('Repeating (' + authorisation.occurrenceCount + ' occurrence' + (')' if authorisation.occurrenceCount === 1 else 's)')) if authorisation.repeat else 'Single'
+          },
+          {
+            html: absenceStatusTag(authorisation)
+          },
+          {
+            html: '<a class="govuk-link govuk-link--no-visited-state action-100px" href="' + documentGenerationUrl + '&absenceId=' + authorisation.id + '">Select plan<span class="govuk-visually-hidden"> start on ' + authorisation.start | formatDate + '</span></a>',
+            format: "numeric"
+          }
+        ]), rows) %}
+      {% endfor %}
+
+      {{ govukTable({
+        firstCellIsHeader: false,
+        classes: 'table-vertical-align-middle govuk-!-margin-top-6',
+        head: [
+          {
+            text: "Start date"
+          },
+          {
+            text: "End date"
+          },
+          {
+            text: "Absence type"
+          },
+          {
+            text: 'Single or repeating'
+          },
+          {
+            text: 'Status'
+          },
+          {
+            text: "Action",
+            format: "numeric"
+          }
+        ],
+        rows: rows
+      }) }}
+    {% endif %}
+  </div>
+{% endblock %}

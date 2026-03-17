@@ -7,9 +7,26 @@ import { schema } from './schema'
 
 export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
   const { router, get } = BaseRouter()
-  const controller = new SearchPrisonerController(prisonerSearchService)
 
-  get('/', Page.SEARCH_PRISONER, validateOnGET(schema, 'searchTerm'), controller.GET)
+  get(
+    '/',
+    Page.SEARCH_PRISONER,
+    validateOnGET(schema, 'searchTerm'),
+    new SearchPrisonerController(prisonerSearchService, 'Create a Temporary Absence', {
+      label: 'Add temporary absence',
+      url: '/add-temporary-absence/start/',
+    }).GET,
+  )
+
+  get(
+    '/tap-documents',
+    Page.SEARCH_PRISONER,
+    validateOnGET(schema, 'searchTerm'),
+    new SearchPrisonerController(prisonerSearchService, 'Create and download documents', {
+      label: 'Create a document',
+      url: '/tap-documents/start/',
+    }).GET,
+  )
 
   return router
 }

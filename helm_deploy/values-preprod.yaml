@@ -24,6 +24,7 @@ generic-service:
     AUDIT_ENABLED: "false"
     DEV_LED_FEATURE_PRISONS: ""
     FEAT_INTRA_DAY_SCHEDULING_PRISONS: TCI,SPI,HVI,HDI
+    FEAT_DOCUMENT_GENERATION_PRISONS: ""
 
 generic-prometheus-alerts:
   alertSeverity: move-and-improve-alerts-non-prod
