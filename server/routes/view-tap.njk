@@ -1,5 +1,7 @@
 {% extends "partials/layout.njk" %}
 
+{% set pageTitle = 'Temporary absence - External movements' %}
+
 {% block container %}
 {% addHistory %}
   <div class="govuk-width-container" id="before-content">
@@ -120,7 +122,7 @@
                   </div>
                   {% if user | hasPermission('TAP', 'MANAGE') %}
                     <div class="govuk-summary-list govuk-summary-list__actions govuk-!-font-weight-bold">
-                      <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?status=PENDING&start={{ inputDate() }}&end={{ inputDate(31) }}">View<span class="govuk-visually-hidden"> referrals with status ‘Awaiting decision’</span></a>
+                      <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations?status=PENDING&start={{ inputDate() }}&end={{ inputDate(31) }}">View<span class="govuk-visually-hidden"> temporary absences with status ‘Awaiting decision’</span></a>
                     </div>
                   {% endif %}
                 </div>
