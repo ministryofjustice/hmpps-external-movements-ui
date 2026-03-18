@@ -165,7 +165,7 @@ export type UpdateTapAuthorisationJourney = {
   result: components['schemas']['AuditHistory']
 }>
 
-export type CreateDocumentJourney = { documentGroup: DOCUMENT_TYPE } & Partial<{
+export type CreateDocumentJourney = { documentGroup: DOCUMENT_TYPE; tapHomepageUrl: string } & Partial<{
   templateId: string
-  returnUrl: string
+  selectTypeUrl: string
 }>

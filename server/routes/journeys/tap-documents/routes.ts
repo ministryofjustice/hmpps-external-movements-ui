@@ -15,6 +15,7 @@ export const TapDocumentsRoutes = (services: Services) => {
 
       req.journeyData.createDocumentJourney = {
         documentGroup: 'TEMPORARY_ABSENCE',
+        tapHomepageUrl: res.locals.breadcrumbs.breadcrumbs.find(({ alias }) => alias === 'TAP_HOME_PAGE')?.href ?? '/',
       }
       res.redirect('../select-document-type')
     } else {

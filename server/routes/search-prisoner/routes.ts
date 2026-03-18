@@ -4,6 +4,7 @@ import { Page } from '../../services/auditService'
 import { SearchPrisonerController } from './controller'
 import { validateOnGET } from '../../middleware/validation/validationMiddleware'
 import { schema } from './schema'
+import { Feature, requireFeatureFlag } from '../../utils/featureFlag'
 
 export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
   const { router, get } = BaseRouter()
@@ -21,6 +22,7 @@ export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
   get(
     '/tap-documents',
     Page.SEARCH_PRISONER,
+    requireFeatureFlag(Feature.DOC_GEN),
     validateOnGET(schema, 'searchTerm'),
     new SearchPrisonerController(prisonerSearchService, 'Create and download documents', {
       label: 'Create a document',

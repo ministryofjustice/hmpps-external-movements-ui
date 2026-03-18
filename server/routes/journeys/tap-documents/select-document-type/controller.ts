@@ -7,7 +7,7 @@ export class SelectDocumentTypeController {
   constructor(readonly documentGenerationService: DocumentGenerationService) {}
 
   GET = async (req: Request, res: Response) => {
-    req.journeyData.createDocumentJourney!.returnUrl ??= req.originalUrl
+    req.journeyData.createDocumentJourney!.selectTypeUrl ??= req.originalUrl
 
     const { templates } = await this.documentGenerationService.getTemplatesForGroup(
       { res },
@@ -25,8 +25,9 @@ export class SelectDocumentTypeController {
   POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     const template = await this.documentGenerationService.getTemplateById({ res }, req.body.template)
 
+    req.journeyData.createDocumentJourney!.templateId = template.id
+
     if (template.variables.domains.find(domain => domain.code === 'TEMPORARY_ABSENCE')) {
-      req.journeyData.createDocumentJourney!.templateId = template.id
       return res.redirect('select-absence-plan')
     }
 
@@ -34,7 +35,7 @@ export class SelectDocumentTypeController {
       `${config.serviceUrls.documentGeneration}/download-document/${req.body.template}?${new URLSearchParams({
         prisonId: res.locals.user.getActiveCaseloadId()!,
         prisonNumber: req.journeyData.prisonerDetails!.prisonerNumber,
-        returnTo: config.ingressUrl + req.journeyData.createDocumentJourney!.returnUrl!,
+        returnTo: config.ingressUrl + req.journeyData.createDocumentJourney!.tapHomepageUrl,
       }).toString()}`,
     )
   }

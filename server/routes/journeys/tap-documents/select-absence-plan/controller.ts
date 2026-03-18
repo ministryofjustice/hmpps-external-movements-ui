@@ -7,7 +7,7 @@ export class SelectAbsencePlanController {
 
   GET = async (req: Request, res: Response) => {
     res.render('tap-documents/select-absence-plan/view', {
-      backUrl: req.journeyData.createDocumentJourney!.returnUrl,
+      backUrl: req.journeyData.createDocumentJourney!.selectTypeUrl,
       results: (
         await this.externalMovementsService.searchTapAuthorisations(
           { res },
@@ -25,7 +25,7 @@ export class SelectAbsencePlanController {
         {
           prisonId: res.locals.user.getActiveCaseloadId()!,
           prisonNumber: req.journeyData.prisonerDetails!.prisonerNumber,
-          returnTo: config.ingressUrl + req.journeyData.createDocumentJourney!.returnUrl!,
+          returnTo: config.ingressUrl + req.journeyData.createDocumentJourney!.tapHomepageUrl,
         },
       ).toString()}`,
     })
