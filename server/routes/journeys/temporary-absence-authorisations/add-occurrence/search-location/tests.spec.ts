@@ -33,7 +33,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/search-location'
       personIdentifier: prisonNumber,
       firstName: 'PRISONER-NAME',
       lastName: 'PRISONER-SURNAME',
-      dateOfBirth: '1990-01-01',
+
       cellLocation: '2-1-005',
     },
     locations: [{ uprn: 1001, description: 'Random Street, UK' }],

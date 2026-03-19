@@ -37,7 +37,7 @@ test.describe('/temporary-absence-authorisations', () => {
             personIdentifier: 'A9965EA',
             firstName: 'PRISONER-NAME',
             lastName: 'PRISONER-SURNAME',
-            dateOfBirth: '1990-01-01',
+
             cellLocation: '2-1-005',
           },
           status: { code: 'APPROVED', description: 'Approved' },
@@ -66,7 +66,7 @@ test.describe('/temporary-absence-authorisations', () => {
             personIdentifier: 'A9965EB',
             firstName: 'ANOTHER',
             lastName: 'Name',
-            dateOfBirth: '1990-01-01',
+
             cellLocation: '2-1-005',
           },
           status: { code: 'PENDING', description: 'To be reviewed' },

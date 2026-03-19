@@ -303,7 +303,7 @@ export const testTapOccurrenceResult: components['schemas']['TapOccurrenceResult
       personIdentifier: 'A9965EA',
       firstName: 'PRISONER-NAME',
       lastName: 'PRISONER-SURNAME',
-      dateOfBirth: '1990-01-01',
+
       cellLocation: '2-1-005',
     },
     status: { code: 'APPROVED', description: 'Approved' },
@@ -337,7 +337,6 @@ export const testTapOccurrenceResult: components['schemas']['TapOccurrenceResult
 
 export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
   id: 'occurrence-id',
-  prisonCode: 'LEI',
   prison: { code: 'LEI', name: 'Leeds' },
   authorisation: {
     id: uuidV4(),
@@ -345,7 +344,7 @@ export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
       personIdentifier: 'A9965EA',
       firstName: 'PRISONER-NAME',
       lastName: 'PRISONER-SURNAME',
-      dateOfBirth: '1990-01-01',
+
       cellLocation: '2-1-005',
     },
     status: { code: 'APPROVED', description: 'Approved' },
@@ -371,13 +370,12 @@ export const testTapOccurrence: components['schemas']['TapOccurrence'] = {
 
 export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
   id: 'authorisation-id',
-  prisonCode: 'LEI',
   prison: { code: 'LEI', name: 'Leeds' },
   person: {
     personIdentifier: 'A9965EA',
     firstName: 'PRISONER-NAME',
     lastName: 'PRISONER-SURNAME',
-    dateOfBirth: '1990-01-01',
+
     cellLocation: '2-1-005',
   },
   status: { code: 'PENDING', description: 'To be reviewed' },
@@ -405,13 +403,12 @@ export const testTapAuthorisation: components['schemas']['TapAuthorisation'] = {
 
 export const testTapMovement: components['schemas']['TapMovement'] = {
   id: 'movement-id',
-  prisonCode: 'LEI',
   prison: { code: 'LEI', name: 'Leeds' },
   person: {
     personIdentifier: 'A9965EA',
     firstName: 'PRISONER-NAME',
     lastName: 'PRISONER-SURNAME',
-    dateOfBirth: '1990-01-01',
+
     cellLocation: '2-1-005',
   },
   absenceReason: { code: 'PP', description: 'Police production' },

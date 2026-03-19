@@ -31,7 +31,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/check-answers', 
       personIdentifier: prisonNumber,
       firstName: 'PRISONER-NAME',
       lastName: 'PRISONER-SURNAME',
-      dateOfBirth: '1990-01-01',
+
       cellLocation: '2-1-005',
     },
     repeat: true,

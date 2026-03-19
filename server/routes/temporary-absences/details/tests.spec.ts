@@ -50,7 +50,7 @@ test.describe('/temporary-absences/:id', () => {
           personIdentifier: 'A9965EA',
           firstName: 'PRISONER-NAME',
           lastName: 'PRISONER-SURNAME',
-          dateOfBirth: '1990-01-01',
+
           cellLocation: '2-1-005',
         },
         status: { code: 'APPROVED', description: 'Approved' },
@@ -190,6 +190,7 @@ test.describe('/temporary-absences/:id', () => {
       authorisation: {
         ...testTapOccurrence.authorisation,
         repeat: true,
+        schedule: { type: 'WEEKLY', weeklyPattern: [] },
       },
       occurrencePosition: 2,
       totalOccurrences: 8,
@@ -203,7 +204,6 @@ test.describe('/temporary-absences/:id', () => {
       location: { uprn: 1001, description: 'Random Street, UK' },
       accompaniedBy: { code: 'OTH', description: 'Others' },
       transport: { code: 'CAR', description: 'Car' },
-      scheduleReference: { type: 'WEEKLY' },
     })
     await stubGetTapOccurrenceHistory(occurrenceId, { content: [] })
     await page.goto(`/temporary-absences/${occurrenceId}`)

@@ -107,8 +107,8 @@ export type ShiftPatternInterval =
   | {
       type: 'REST'
       count: number
-      startTime?: undefined
-      returnTime?: undefined
+      startTime?: never
+      returnTime?: never
     }
 
 export type DayOfWeekTimeSlot = {
