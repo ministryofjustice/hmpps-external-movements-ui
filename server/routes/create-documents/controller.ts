@@ -30,6 +30,10 @@ export class CreateDocumentsController {
 
   POST = async (req: Request<{ id: string }, unknown, SchemaType>, res: Response) => {
     if (this.documentType === 'TEMPORARY_ABSENCE') {
+      const returnUrl =
+        res.locals.breadcrumbs.breadcrumbs.find(({ alias }) => alias === 'VIEW_TEMPORARY_ABSENCE_AUTHORISATION')
+          ?.href ?? req.originalUrl
+
       const entity = (await this.fetchEntity(req, res, false))!
 
       return res.redirect(
@@ -37,7 +41,7 @@ export class CreateDocumentsController {
           prisonId: entity.prison.code,
           prisonNumber: entity.person.personIdentifier,
           absenceId: entity.id,
-          returnTo: config.ingressUrl + req.originalUrl,
+          returnTo: config.ingressUrl + returnUrl,
         }).toString()}`,
       )
     }
