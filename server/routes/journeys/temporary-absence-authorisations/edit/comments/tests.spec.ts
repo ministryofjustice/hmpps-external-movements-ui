@@ -27,7 +27,7 @@ test.describe('/temporary-absence-authorisations/edit/comments', () => {
       personIdentifier: prisonNumber,
       firstName: 'PRISONER-NAME',
       lastName: 'PRISONER-SURNAME',
-      dateOfBirth: '1990-01-01',
+
       cellLocation: '2-1-005',
     },
     repeat: false,

@@ -332,7 +332,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
       absenceReasonCategory: { code: 'PW', description: 'Paid work' },
       absenceReason: { code: 'R15', description: 'IT and communication' },
       repeat: true,
-      schedule: { type: 'WEEKLY' },
+      schedule: { type: 'WEEKLY', weeklyPattern: [] },
       totalOccurrenceCount: 12,
       accompaniedBy: { code: 'U', description: 'Unaccompanied' },
       transport: { code: 'CAR', description: 'Car' },
@@ -392,7 +392,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
         personIdentifier: 'A9965EA',
         firstName: 'PRISONER-NAME',
         lastName: 'PRISONER-SURNAME',
-        dateOfBirth: '1990-01-01',
+
         cellLocation: '2-1-005',
       },
       status: { code: 'APPROVED', description: 'Approved' },

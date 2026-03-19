@@ -74,13 +74,23 @@ export class AddTapCheckAnswersController {
         request.comments = comments
       }
       if (repeat) {
-        request.schedule = {
-          type: journeyData.patternType,
-          weeklyPattern: journeyData.patternType === 'WEEKLY' ? journeyData.weeklyPattern : undefined,
-          biweeklyPattern: journeyData.patternType === 'BIWEEKLY' ? journeyData.biweeklyPattern : undefined,
-          shiftPattern: journeyData.patternType === 'SHIFT' ? journeyData.shiftPattern : undefined,
-          absencesPerDay:
-            journeyData.absencesPerDay && journeyData.absencesPerDay > 1 ? journeyData.absencesPerDay : undefined,
+        switch (journeyData.patternType) {
+          case 'WEEKLY':
+            request.schedule = { type: 'WEEKLY', weeklyPattern: journeyData.weeklyPattern! }
+            if (journeyData.absencesPerDay && journeyData.absencesPerDay > 1)
+              request.schedule.absencesPerDay = journeyData.absencesPerDay
+            break
+          case 'BIWEEKLY':
+            request.schedule = { type: 'BIWEEKLY', biweeklyPattern: journeyData.biweeklyPattern! }
+            if (journeyData.absencesPerDay && journeyData.absencesPerDay > 1)
+              request.schedule.absencesPerDay = journeyData.absencesPerDay
+            break
+          case 'SHIFT':
+            request.schedule = { type: 'SHIFT', shiftPattern: journeyData.shiftPattern! }
+            break
+          case 'FREEFORM':
+          default:
+            request.schedule = { type: 'FREEFORM' }
         }
       }
 

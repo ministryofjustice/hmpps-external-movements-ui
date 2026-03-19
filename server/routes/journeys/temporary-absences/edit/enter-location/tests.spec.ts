@@ -37,7 +37,7 @@ test.describe('/temporary-absences/edit/enter-location', () => {
       personIdentifier: prisonNumber,
       firstName: 'PRISONER-NAME',
       lastName: 'PRISONER-SURNAME',
-      dateOfBirth: '1990-01-01',
+
       cellLocation: '2-1-005',
     },
     locations: [{ uprn: 1001, description: 'Random Street, UK' }],
