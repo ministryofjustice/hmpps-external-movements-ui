@@ -900,21 +900,25 @@ export interface components {
       authorisationIds: string[]
       unscheduledMovementIds: string[]
     }
+    /** @description AuthorisationSchedule */
     AuthorisationSchedule: {
-      /** @enum {string} */
-      type: 'SINGLE' | 'FREEFORM' | 'WEEKLY' | 'BIWEEKLY' | 'SHIFT'
+      type: string
     }
     BiWeeklyPattern: {
       weekA: components['schemas']['WeekDayPattern'][]
       weekB: components['schemas']['WeekDayPattern'][]
     }
-    BiWeeklySchedule: {
-      type: 'BIWEEKLY'
-    } & (Omit<WithRequired<components['schemas']['AuthorisationSchedule'], 'type'>, 'type'> & {
+    BiWeeklySchedule: Omit<WithRequired<components['schemas']['AuthorisationSchedule'], 'type'>, 'type'> & {
       biweeklyPattern: components['schemas']['BiWeeklyPattern']
       /** Format: int32 */
       absencesPerDay?: number
-    })
+    } & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      type: 'BIWEEKLY'
+    }
     CreateTapAuthorisationRequest: {
       absenceTypeCode: string
       absenceSubTypeCode?: string
@@ -939,9 +943,33 @@ export interface components {
         | components['schemas']['SingleSchedule']
         | components['schemas']['WeeklySchedule']
     }
-    FreeFormSchedule: {
+    DayShiftPattern: Omit<WithRequired<components['schemas']['ShiftPattern'], 'count' | 'type'>, 'type'> & {
+      startTime: string
+      returnTime: string
+    } & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      type: 'DAY'
+    }
+    FreeFormSchedule: Omit<WithRequired<components['schemas']['AuthorisationSchedule'], 'type'>, 'type'> & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
       type: 'FREEFORM'
-    } & Omit<WithRequired<components['schemas']['AuthorisationSchedule'], 'type'>, 'type'>
+    }
+    NightShiftPattern: Omit<WithRequired<components['schemas']['ShiftPattern'], 'count' | 'type'>, 'type'> & {
+      startTime: string
+      returnTime: string
+    } & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      type: 'NIGHT'
+    }
     OccurrenceRequest: {
       /** Format: date-time */
       start: string
@@ -949,25 +977,42 @@ export interface components {
       end: string
       location: components['schemas']['Location']
     }
+    RestShiftPattern: Omit<WithRequired<components['schemas']['ShiftPattern'], 'count' | 'type'>, 'type'> & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      type: 'REST'
+    }
+    /** @description ShiftPattern */
     ShiftPattern: {
-      /** @enum {string} */
-      type: 'DAY' | 'NIGHT' | 'REST'
       /** Format: int32 */
       count: number
-      startTime?: string
-      returnTime?: string
+      type: string
     }
-    ShiftSchedule: {
+    ShiftSchedule: Omit<WithRequired<components['schemas']['AuthorisationSchedule'], 'type'>, 'type'> & {
+      shiftPattern: (
+        | components['schemas']['DayShiftPattern']
+        | components['schemas']['NightShiftPattern']
+        | components['schemas']['RestShiftPattern']
+      )[]
+    } & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
       type: 'SHIFT'
-    } & (Omit<WithRequired<components['schemas']['AuthorisationSchedule'], 'type'>, 'type'> & {
-      shiftPattern: components['schemas']['ShiftPattern'][]
-    })
-    SingleSchedule: {
-      type: 'SINGLE'
-    } & (Omit<WithRequired<components['schemas']['AuthorisationSchedule'], 'type'>, 'type'> & {
+    }
+    SingleSchedule: Omit<WithRequired<components['schemas']['AuthorisationSchedule'], 'type'>, 'type'> & {
       startTime: string
       returnTime: string
-    })
+    } & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      type: 'SINGLE'
+    }
     WeekDayPattern: {
       /** Format: int32 */
       day: number
@@ -975,13 +1020,17 @@ export interface components {
       startTime: string
       returnTime: string
     }
-    WeeklySchedule: {
-      type: 'WEEKLY'
-    } & (Omit<WithRequired<components['schemas']['AuthorisationSchedule'], 'type'>, 'type'> & {
+    WeeklySchedule: Omit<WithRequired<components['schemas']['AuthorisationSchedule'], 'type'>, 'type'> & {
       weeklyPattern: components['schemas']['WeekDayPattern'][]
       /** Format: int32 */
       absencesPerDay?: number
-    })
+    } & {
+      /**
+       * @description discriminator enum property added by openapi-typescript
+       * @enum {string}
+       */
+      type: 'WEEKLY'
+    }
     ReferenceId: {
       /** Format: uuid */
       id: string

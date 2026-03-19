@@ -49,8 +49,12 @@ export class BaseTestPage {
     }
   }
 
+  continueButton() {
+    return this.button('Continue')
+  }
+
   async clickContinue() {
-    await this.clickButton('Continue')
+    await this.continueButton().click()
   }
 
   async clickTab(name: string | RegExp) {
