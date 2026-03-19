@@ -537,9 +537,6 @@ test.describe('/add-temporary-absence/e2e', () => {
               postcode: 'RS1 34T',
               uprn: 1001,
             },
-            scheduleReference: {
-              type: 'WEEKLY',
-            },
           },
           {
             start: '2069-03-31T06:00:00',
@@ -548,9 +545,6 @@ test.describe('/add-temporary-absence/e2e', () => {
               address: 'Address',
               postcode: 'RS1 34T',
               uprn: 1001,
-            },
-            scheduleReference: {
-              type: 'WEEKLY',
             },
           },
           {
@@ -561,9 +555,6 @@ test.describe('/add-temporary-absence/e2e', () => {
               postcode: 'RS1 34T',
               uprn: 1001,
             },
-            scheduleReference: {
-              type: 'WEEKLY',
-            },
           },
           {
             start: '2069-04-01T06:00:00',
@@ -572,9 +563,6 @@ test.describe('/add-temporary-absence/e2e', () => {
               address: 'Address',
               postcode: 'RS1 34T',
               uprn: 1001,
-            },
-            scheduleReference: {
-              type: 'WEEKLY',
             },
           },
         ],

@@ -80,8 +80,8 @@
               },
               {
                 key: { text: "Repeating pattern type" },
-                value: { text: occurrence.scheduleReference.type | repeatTypeLabel }
-              } if occurrence.scheduleReference.type,
+                value: { text: occurrence.authorisation.schedule.type | repeatTypeLabel }
+              } if occurrence.authorisation.schedule.type,
               {
                 key: { text: "Comments" },
                 value: { text: (occurrence.comments or "Not provided") | escape | nl2br },

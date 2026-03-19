@@ -925,7 +925,6 @@ export interface components {
       /** Format: date-time */
       end: string
       location: components['schemas']['Location']
-      scheduleReference?: components['schemas']['JsonNode']
     }
     ReferenceId: {
       /** Format: uuid */
@@ -1079,7 +1078,6 @@ export interface components {
       accompaniedBy: components['schemas']['CodedDescription']
       transport: components['schemas']['CodedDescription']
       contactInformation?: string
-      scheduleReference?: components['schemas']['JsonNode']
       comments?: string
       /** Format: int32 */
       occurrencePosition: number

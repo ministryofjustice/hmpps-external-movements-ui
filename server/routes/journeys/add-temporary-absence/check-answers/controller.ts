@@ -56,7 +56,6 @@ export class AddTapCheckAnswersController {
               start: occurrence.start,
               end: occurrence.end,
               location: parseAddress(locations![occurrence.locationIdx]!),
-              scheduleReference: { type: journeyData.patternType },
             }))
           : [
               {
