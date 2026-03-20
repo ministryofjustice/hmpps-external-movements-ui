@@ -4,7 +4,7 @@ import { createSchema } from '../../middleware/validation/validationMiddleware'
 import { validateTransformOptionalDate } from '../../utils/validations/validateDatePicker'
 import { isPrisonNumber } from '../../utils/utils'
 
-const statusEnum = z.enum([
+export const TapOccurrenceStatusEnum = z.enum([
   'SCHEDULED',
   'IN_PROGRESS',
   'COMPLETED',
@@ -17,7 +17,7 @@ const statusEnum = z.enum([
 
 export const schema = createSchema({
   searchTerm: z.string().optional(),
-  status: z.union([statusEnum.transform(val => [val]), z.array(statusEnum)]).optional(),
+  status: z.union([TapOccurrenceStatusEnum.transform(val => [val]), z.array(TapOccurrenceStatusEnum)]).optional(),
   clear: z.string().optional(),
   start: validateTransformOptionalDate('Enter or select a valid start date from'),
   end: validateTransformOptionalDate('Enter or select a valid end date to'),

@@ -13,9 +13,12 @@ export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
     '/',
     Page.SEARCH_PRISONER,
     validateOnGET(schema, 'searchTerm'),
-    new SearchPrisonerController(prisonerSearchService, 'Create a Temporary Absence', {
-      label: 'Add temporary absence',
-      url: '/add-temporary-absence/start/',
+    new SearchPrisonerController(prisonerSearchService, {
+      caption: 'Create a Temporary Absence',
+      action: {
+        label: 'Add temporary absence',
+        url: '/add-temporary-absence/start/',
+      },
     }).GET,
   )
 
@@ -24,9 +27,27 @@ export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
     Page.SEARCH_PRISONER,
     requireFeatureFlag(Feature.DOC_GEN),
     validateOnGET(schema, 'searchTerm'),
-    new SearchPrisonerController(prisonerSearchService, 'Create and download documents', {
-      label: 'Create a document',
-      url: '/tap-documents/start/',
+    new SearchPrisonerController(prisonerSearchService, {
+      caption: 'Create and download documents',
+      action: {
+        label: 'Create a document',
+        url: '/tap-documents/start/',
+      },
+    }).GET,
+  )
+
+  get(
+    '/temporary-absence-schedule-enquiry',
+    Page.SEARCH_PRISONER,
+    requireFeatureFlag(Feature.DEV_LED),
+    validateOnGET(schema, 'searchTerm'),
+    new SearchPrisonerController(prisonerSearchService, {
+      caption: 'Enquire prisoner absence schedule',
+      action: {
+        label: 'View absence schedule',
+        url: '/temporary-absence-schedule-enquiry/',
+      },
+      globalSearch: true,
     }).GET,
   )
 

@@ -103,6 +103,17 @@
                 </div>
               {% endif %}
 
+              {% if user | featureEnabled('DEV_LED') and user | hasPermission('TAP', 'VIEW') %}
+                <div class="govuk-grid-column-one-third card-group__item">
+                  <div class="card card--clickable placeholder-background">
+                    <h2 class="govuk-heading-m card__heading">
+                      <a class="govuk-link govuk-link--no-visited-state card__link" href="/search-prisoner/temporary-absence-schedule-enquiry">Temporary absence schedule enquiry</a>
+                    </h2>
+                    <p class="govuk-body card__description">OIITASCH screen</p>
+                  </div>
+                </div>
+              {% endif %}
+
             </div>
           </div>
         </div>

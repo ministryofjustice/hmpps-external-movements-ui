@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { PrisonerBasePermission, prisonerPermissionsGuard } from '@ministryofjustice/hmpps-prison-permissions-lib'
 import { Services } from '../services'
 import { Page } from '../services/auditService'
 import breadcrumbs from '../middleware/history/breadcrumbs'
@@ -17,6 +18,7 @@ import { UserPermissionLevel } from '../interfaces/hmppsUser'
 import { BrowseTapMovementsRoutes } from './temporary-absence-movements/routes'
 import { CreateDocumentsRoutes } from './create-documents/routes'
 import { Feature, requireFeatureFlag } from '../utils/featureFlag'
+import { TemporaryAbsenceScheduleEnquiryRoutes } from './temporary-absence-schedule-enquiry/routes'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
@@ -59,6 +61,11 @@ export default function routes(services: Services): Router {
         matcher: /temporary-absences\/(\w|-)+$/,
         text: 'Absence occurrence',
         alias: Page.VIEW_TEMPORARY_ABSENCE_OCCURRENCE,
+      },
+      {
+        matcher: /temporary-absence-schedule-enquiry\/[\w\d]+$/,
+        text: 'Temporary absence schedule enquiry',
+        alias: Page.TEMPORARY_ABSENCE_SCHEDULE_ENQUIRY,
       },
     ]),
   )
@@ -112,6 +119,16 @@ export default function routes(services: Services): Router {
     requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
     requireFeatureFlag(Feature.DOC_GEN),
     CreateDocumentsRoutes(services),
+  )
+  router.use(
+    '/temporary-absence-schedule-enquiry/:prisonNumber',
+    requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
+    requireFeatureFlag(Feature.DEV_LED),
+    prisonerPermissionsGuard(services.prisonPermissionsService, {
+      requestDependentOn: [PrisonerBasePermission.read],
+      getPrisonerNumberFunction: req => req.params['prisonNumber'] as string,
+    }),
+    TemporaryAbsenceScheduleEnquiryRoutes(services),
   )
 
   router.use(insertJourneyIdentifier())

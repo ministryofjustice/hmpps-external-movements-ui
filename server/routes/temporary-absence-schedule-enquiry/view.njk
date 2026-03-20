@@ -1,0 +1,254 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "partials/hiddenInputs/macro.njk" import hiddenInputs %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
+{% from "partials/simplePagination/macro.njk" import simplePagination %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% set fullWidth = true %}
+{% set pageTitle = 'Enquire prisoner absence schedule - Manage temporary absences' %}
+
+{% set mainClasses = "app-container govuk-body placeholder-background" %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Enquire prisoner absence schedule</span>
+        <h1 class="govuk-heading-l">View {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence schedule</h1>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        <form class="hmpps-side-filter" method="GET">
+          {{ hiddenInputs(query | getQueryEntries(['history'])) }}
+          <input type="hidden" name="page" value="1"/>
+          <h2 class="hmpps-side-filter__header">Filter</h2>
+          <div class="hmpps-side-filter__content">
+            {{ mojDatePicker({
+              id: "start",
+              name: "start",
+              label: {
+                text: 'Show absences between'
+              },
+              value: start,
+              errorMessage: validationErrors | findError('start'),
+              classes: 'hmpps-datepicker--fixed-width'
+            }) }}
+
+            {{ mojDatePicker({
+              id: "end",
+              name: "end",
+              label: {
+                text: 'and'
+              },
+              value: end,
+              errorMessage: validationErrors | findError('end'),
+              classes: 'hmpps-datepicker--fixed-width'
+            }) }}
+
+            {{ govukDetails({
+              summaryHtml: '<strong>Absence status</strong>',
+              open: true,
+              html:govukCheckboxes({
+                fieldset: {
+                  legend: {
+                    text: "Absence status",
+                    classes: "govuk-visually-hidden"
+                  }
+                },
+                id: "status",
+                name: "status",
+                classes: "govuk-checkboxes--small",
+                items: [
+                  {
+                    value: 'PENDING',
+                    text: "To be reviewed"
+                  },
+                  {
+                    value: 'SCHEDULED',
+                    text: "Scheduled"
+                  },
+                  {
+                    value: 'IN_PROGRESS',
+                    text: "In progress"
+                  },
+                  {
+                    value: 'COMPLETED',
+                    text: "Completed"
+                  },
+                  {
+                    value: 'OVERDUE',
+                    text: "Overdue"
+                  },
+                  {
+                    value: 'EXPIRED',
+                    text: "Expired"
+                  },
+                  {
+                    value: 'CANCELLED',
+                    text: "Cancelled"
+                  },
+                  {
+                    value: 'DENIED',
+                    text: "Denied"
+                  }
+                ] | setCheckedValue(status or ''),
+                errorMessage: validationErrors | findError('status')
+              })
+            }) }}
+
+            {{ govukSelect({
+              label: {
+                text: "Absence type"
+              },
+              id: "type",
+              name: "type",
+              items: types | prependEmptyOption | setSelectedValue(type or ''),
+              errorMessage: validationErrors | findError('type')
+            }) }}
+
+            {{ govukSelect({
+              label: {
+                text: "Absence sub-type"
+              },
+              id: "subType",
+              name: "subType",
+              items: subTypes | prependEmptyOption | setSelectedValue(subType or ''),
+              errorMessage: validationErrors | findError('subType')
+            }) }}
+
+            {{ govukSelect({
+              label: {
+                text: "Absence reason"
+              },
+              id: "reason",
+              name: "reason",
+              items: reasons | prependEmptyOption | setSelectedValue(reason or ''),
+              errorMessage: validationErrors | findError('reason')
+            }) }}
+
+            {{ govukSelect({
+              label: {
+                text: "Work type"
+              },
+              id: "workType",
+              name: "workType",
+              items: workTypes | prependEmptyOption | setSelectedValue(workType or ''),
+              errorMessage: validationErrors | findError('workType')
+            }) }}
+
+
+            {{ govukButton({
+              text: "Apply filters",
+              preventDoubleClick: true
+            }) }}
+
+            <p><a class="govuk-link govuk-link--no-visited-state govuk-body no-label-form-clear-link" href="?clear=true">Clear</a></p>
+          </div>
+        </form>
+      </div>
+      <div class="govuk-grid-column-three-quarters">
+        {% if hasValidationError %}
+          <p class="govuk-!-margin-bottom-6"><strong>Enter a valid filter to search and view temporary absences.</strong></p>
+        {% elseif not results.length %}
+          <p class="govuk-!-margin-bottom-6"><strong>No temporary absence occurrences match your search.</strong></p>
+        {% else %}
+          {% set rows = [] %}
+          {% for occurrence in results %}
+            {% set rows = (rows.push([
+              {
+                text: occurrence.start | formatDate("d MMMM yyyy 'at' HH:mm")
+              },
+              {
+                text: occurrence.end | formatDate("d MMMM yyyy 'at' HH:mm")
+              },
+              {
+                text: occurrence.absenceCategorisation
+              },
+              {
+                text: occurrence.location | formatAddress
+              },
+              {
+                html: absenceStatusTag(occurrence)
+              },
+              {
+                html: '<a class="govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">View absence</a>'
+              }
+            ]), rows) %}
+          {% endfor %}
+
+          {{ simplePagination(paginationParams) }}
+
+          {{ govukTable({
+            firstCellIsHeader: false,
+            classes: 'table-vertical-align-middle govuk-!-margin-top-6 sortable-table',
+            head: [
+              {
+                text: "Start date and time",
+                key: 'start'
+              },
+              {
+                text: "End date and time",
+                key: 'end'
+              },
+              {
+                text: 'Absence type'
+              },
+              {
+                text: 'Location'
+              },
+              {
+                text: 'Status'
+              }
+            ] | convertToSortableColumns(sort or 'start,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
+            rows: rows
+          }) }}
+
+          {{ simplePagination(paginationParams) }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block pageScripts %}
+  <script nonce="{{ cspNonce }}">
+    window.onload = function () {
+      document.querySelector('select[name=type]').addEventListener('change', evt => {
+        if (evt.target.value) {
+          document.querySelector('select[name=subType]').value = ''
+          document.querySelector('select[name=reason]').value = ''
+          document.querySelector('select[name=workType]').value = ''
+        }
+      })
+      document.querySelector('select[name=subType]').addEventListener('change', evt => {
+        if (evt.target.value) {
+          document.querySelector('select[name=type]').value = ''
+          document.querySelector('select[name=reason]').value = ''
+          document.querySelector('select[name=workType]').value = ''
+        }
+      })
+      document.querySelector('select[name=reason]').addEventListener('change', evt => {
+        if (evt.target.value) {
+          document.querySelector('select[name=type]').value = ''
+          document.querySelector('select[name=subType]').value = ''
+          document.querySelector('select[name=workType]').value = ''
+        }
+      })
+      document.querySelector('select[name=workType]').addEventListener('change', evt => {
+        if (evt.target.value) {
+          document.querySelector('select[name=type]').value = ''
+          document.querySelector('select[name=subType]').value = ''
+          document.querySelector('select[name=reason]').value = ''
+        }
+      })
+    }
+  </script>
+{% endblock %}
