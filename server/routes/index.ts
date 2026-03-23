@@ -117,7 +117,6 @@ export default function routes(services: Services): Router {
   router.use(
     '/create-documents',
     requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
-    requireFeatureFlag(Feature.DOC_GEN),
     CreateDocumentsRoutes(services),
   )
   router.use(

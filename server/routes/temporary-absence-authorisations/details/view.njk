@@ -167,16 +167,12 @@
       </div>
 
       <div class="govuk-grid-column-one-quarter align-right">
-        {% if (user | hasPermission('TAP', 'MANAGE') and prisonerDetails.prisonId === user.activeCaseLoad.caseLoadId) or user | featureEnabled('DOC_GEN') %}
-          <h2 class="govuk-heading-m">Related tasks</h2>
-          {% if user | hasPermission('TAP', 'MANAGE') and prisonerDetails.prisonId === user.activeCaseLoad.caseLoadId %}
-            <p><a class="govuk-link govuk-link--no-visited-state" href="/add-temporary-absence/start/{{ prisonerDetails.prisonerNumber }}">Create a new absence for {{ prisonerDetails | firstNameSpaceLastName }}</a></p>
-          {% endif %}
-
-          {% if user | featureEnabled('DOC_GEN') %}
-            <p><a class="govuk-link govuk-link--no-visited-state" href="/create-documents/temporary-absence/{{ result.id }}">Create a document for this plan</a></p>
-          {% endif %}
+        <h2 class="govuk-heading-m">Related tasks</h2>
+        {% if user | hasPermission('TAP', 'MANAGE') and prisonerDetails.prisonId === user.activeCaseLoad.caseLoadId %}
+          <p><a class="govuk-link govuk-link--no-visited-state" href="/add-temporary-absence/start/{{ prisonerDetails.prisonerNumber }}">Create a new absence for {{ prisonerDetails | firstNameSpaceLastName }}</a></p>
         {% endif %}
+
+        <p><a class="govuk-link govuk-link--no-visited-state" href="/create-documents/temporary-absence/{{ result.id }}">Create a document for this plan</a></p>
       </div>
     </div>
 

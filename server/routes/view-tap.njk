@@ -92,16 +92,14 @@
                 </div>
               </div>
 
-              {% if user | featureEnabled('DOC_GEN') and user | hasPermission('TAP', 'VIEW') %}
-                <div class="govuk-grid-column-one-third card-group__item">
-                  <div class="card card--clickable">
-                    <h2 class="govuk-heading-m card__heading">
-                      <a class="govuk-link govuk-link--no-visited-state card__link" href="/search-prisoner/tap-documents">Create and download documents</a>
-                    </h2>
-                    <p class="govuk-body card__description">Choose a template to create and download a document for a prisoner.</p>
-                  </div>
+              <div class="govuk-grid-column-one-third card-group__item">
+                <div class="card card--clickable">
+                  <h2 class="govuk-heading-m card__heading">
+                    <a class="govuk-link govuk-link--no-visited-state card__link" href="/search-prisoner/tap-documents">Create and download documents</a>
+                  </h2>
+                  <p class="govuk-body card__description">Choose a template to create and download a document for a prisoner.</p>
                 </div>
-              {% endif %}
+              </div>
 
               {% if user | featureEnabled('DEV_LED') and user | hasPermission('TAP', 'VIEW') %}
                 <div class="govuk-grid-column-one-third card-group__item">
