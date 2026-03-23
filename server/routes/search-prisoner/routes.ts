@@ -47,7 +47,6 @@ export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
         label: 'View absence schedule',
         url: '/temporary-absence-schedule-enquiry/',
       },
-      globalSearch: true,
     }).GET,
   )
 

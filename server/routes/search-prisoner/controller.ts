@@ -10,7 +10,6 @@ export class SearchPrisonerController {
     readonly config: {
       caption: string
       action: { label: string; url: string }
-      globalSearch?: boolean
     },
   ) {}
 
@@ -20,15 +19,12 @@ export class SearchPrisonerController {
     let searchResponse: Prisoner[] = []
 
     if (resQuery?.validated?.searchTerm) {
-      searchResponse = this.config.globalSearch
-        ? await this.prisonerSearchApiService.globalSearchPrisoner({ res }, resQuery.validated.searchTerm)
-        : await this.prisonerSearchApiService.searchPrisoner({ res }, resQuery.validated.searchTerm)
+      searchResponse = await this.prisonerSearchApiService.searchPrisoner({ res }, resQuery.validated.searchTerm)
     }
 
     res.render('search-prisoner/view', {
       caption: this.config.caption,
       action: this.config.action,
-      globalSearch: this.config.globalSearch,
       showBreadcrumbs: true,
       searchTerm: resQuery?.searchTerm,
       results: searchResponse.length

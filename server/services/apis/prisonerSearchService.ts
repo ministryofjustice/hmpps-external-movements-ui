@@ -6,7 +6,6 @@ import Prisoner from './model/prisoner'
 import CustomRestClient, { ApiRequestContext } from '../../data/customRestClient'
 import config from '../../config'
 import logger from '../../../logger'
-import { isPrisonNumber } from '../../utils/utils'
 
 export default class PrisonerSearchApiService {
   private prisonerSearchApiClient: CustomRestClient
@@ -59,30 +58,5 @@ export default class PrisonerSearchApiService {
         path: `/prison/${context.res.locals.user.getActiveCaseloadId()}/prisoners?size=10&term=${encodeURIComponent(searchTerm)}`,
       })
     ).content
-  }
-
-  async globalSearchPrisoner(context: ApiRequestContext, searchTerm: string): Promise<Prisoner[]> {
-    const request: { [key: string]: string } = {}
-    if (isPrisonNumber(searchTerm)) {
-      request['prisonerIdentifier'] = searchTerm.trim().toUpperCase()
-    } else {
-      const [firstName, lastName] = searchTerm.split(/\s+/)
-      if (firstName) request['firstName'] = firstName
-      if (lastName) request['lastName'] = lastName
-    }
-
-    return (
-      await this.prisonerSearchApiClient.withContext(context).post<{ content: Prisoner[] }>({
-        path: '/global-search?size=10',
-        data: request,
-      })
-    ).content.filter(
-      prisoner =>
-        this.prisonPermissionsService.getPrisonerPermissions({
-          user: context.res.locals.user as HmppsUser,
-          prisoner,
-          requestDependentOn: [],
-        })['prisoner:base-record:read'],
-    )
   }
 }
