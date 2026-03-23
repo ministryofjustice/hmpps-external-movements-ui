@@ -46,14 +46,12 @@ export class TemporaryAbsenceScheduleEnquiryController {
 
     const hasValidationError = Object.keys(resQuery).find(key => ['start', 'end'].includes(key)) && !resQuery.validated
 
-    let searchResponse: components['schemas']['TapOccurrenceSearchResponse'] | undefined
-    let results: components['schemas']['TapOccurrenceResult'][] = []
+    let searchResponse: components['schemas']['PersonTapSearchResponse'] | undefined
+    let results: components['schemas']['PersonOccurrenceResult'][] = []
 
     try {
       if (!hasValidationError) {
-        const requestBody: components['schemas']['TapOccurrenceSearchRequest'] = {
-          query: res.locals.prisonerDetails.prisonerNumber,
-          prisonCode: res.locals.prisonerDetails.prisonId ?? res.locals.user.getActiveCaseloadId()!,
+        const requestBody: components['schemas']['PersonTapSearchRequest'] = {
           status: resQuery.validated?.status ?? [],
           sort: resQuery.validated?.sort ?? 'start,asc',
           page: resQuery.validated?.page || 1,
@@ -84,7 +82,11 @@ export class TemporaryAbsenceScheduleEnquiryController {
           }
         }
 
-        searchResponse = await this.externalMovementsService.searchTapOccurrences({ res }, requestBody)
+        searchResponse = await this.externalMovementsService.searchTapOccurrencesByPrisonNumber(
+          { res },
+          res.locals.prisonerDetails.prisonerNumber,
+          requestBody,
+        )
         results = searchResponse?.content ?? []
       } else {
         results = []
