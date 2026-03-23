@@ -8,6 +8,7 @@ export interface PrisonerDetails {
   dateOfBirth: string
   prisonName?: string | undefined
   cellLocation?: string | undefined
+  prisonId?: string
 }
 
 export type Address = {

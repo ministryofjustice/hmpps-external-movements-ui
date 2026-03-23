@@ -176,6 +176,19 @@ export default class ExternalMovementsService {
       })
   }
 
+  searchTapOccurrencesByPrisonNumber(
+    context: ApiRequestContext,
+    prisonNumber: string,
+    request: components['schemas']['PersonTapSearchRequest'],
+  ) {
+    return this.externalMovementsApiClient
+      .withContext({ ...context, readOnly: true })
+      .post<components['schemas']['PersonTapSearchResponse']>({
+        path: `/search/people/${prisonNumber}/temporary-absence-occurrences`,
+        data: request,
+      })
+  }
+
   searchTapAuthorisations(context: ApiRequestContext, request: components['schemas']['TapAuthorisationSearchRequest']) {
     return this.externalMovementsApiClient
       .withContext({ ...context, readOnly: true })

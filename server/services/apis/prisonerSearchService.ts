@@ -52,9 +52,11 @@ export default class PrisonerSearchApiService {
     }
   }
 
-  searchPrisoner(context: ApiRequestContext, searchTerm: string): Promise<{ content: Prisoner[] }> {
-    return this.prisonerSearchApiClient.withContext(context).get<{ content: Prisoner[] }>({
-      path: `/prison/${context.res.locals.user.getActiveCaseloadId()}/prisoners?term=${encodeURIComponent(searchTerm)}`,
-    })
+  async searchPrisoner(context: ApiRequestContext, searchTerm: string): Promise<Prisoner[]> {
+    return (
+      await this.prisonerSearchApiClient.withContext(context).get<{ content: Prisoner[] }>({
+        path: `/prison/${context.res.locals.user.getActiveCaseloadId()}/prisoners?size=10&term=${encodeURIComponent(searchTerm)}`,
+      })
+    ).content
   }
 }
