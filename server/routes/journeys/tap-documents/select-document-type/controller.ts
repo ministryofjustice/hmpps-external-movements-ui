@@ -36,6 +36,7 @@ export class SelectDocumentTypeController {
         prisonId: res.locals.user.getActiveCaseloadId()!,
         prisonNumber: req.journeyData.prisonerDetails!.prisonerNumber,
         returnTo: config.ingressUrl + req.journeyData.createDocumentJourney!.tapHomepageUrl,
+        backTo: config.ingressUrl + req.originalUrl,
       }).toString()}`,
     )
   }

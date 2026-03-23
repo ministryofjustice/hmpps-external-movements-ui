@@ -119,11 +119,15 @@ test.describe('/tap-documents/select-absence-plan', () => {
     ])
     await expect(testPage.link('Select plan start on 1 January 2001')).toHaveAttribute(
       'href',
-      `http://localhost:9091/document-generation-ui/download-document/template-1?prisonId=LEI&prisonNumber=${prisonNumber}&returnTo=http%3A%2F%2Flocalhost%3A3000%2Ftemporary-absence-home&absenceId=authorisation-id-1`,
+      new RegExp(
+        `http://localhost:9091/document-generation-ui/download-document/template-1\\?prisonId=LEI&prisonNumber=${prisonNumber}&returnTo=http%3A%2F%2Flocalhost%3A3000%2Ftemporary-absence-home&backTo=http%3A%2F%2Flocalhost%3A3000%2F${journeyId}%2Ftap-documents%2Fselect-absence-plan%3Fpage%3D2%26history%3D.*&absenceId=authorisation-id-1`,
+      ),
     )
     await expect(testPage.link('Select plan start on 2 January 2001')).toHaveAttribute(
       'href',
-      `http://localhost:9091/document-generation-ui/download-document/template-1?prisonId=LEI&prisonNumber=${prisonNumber}&returnTo=http%3A%2F%2Flocalhost%3A3000%2Ftemporary-absence-home&absenceId=authorisation-id-2`,
+      new RegExp(
+        `http://localhost:9091/document-generation-ui/download-document/template-1\\?prisonId=LEI&prisonNumber=${prisonNumber}&returnTo=http%3A%2F%2Flocalhost%3A3000%2Ftemporary-absence-home&backTo=http%3A%2F%2Flocalhost%3A3000%2F${journeyId}%2Ftap-documents%2Fselect-absence-plan%3Fpage%3D2%26history%3D.*&absenceId=authorisation-id-2`,
+      ),
     )
   })
 })

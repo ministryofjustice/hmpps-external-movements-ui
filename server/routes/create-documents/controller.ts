@@ -42,6 +42,7 @@ export class CreateDocumentsController {
           prisonNumber: entity.person.personIdentifier,
           absenceId: entity.id,
           returnTo: config.ingressUrl + returnUrl,
+          backTo: config.ingressUrl + req.originalUrl,
         }).toString()}`,
       )
     }
