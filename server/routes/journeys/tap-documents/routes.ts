@@ -5,6 +5,7 @@ import { Page } from '../../../services/auditService'
 import preventNavigationToExpiredJourneys from '../../../middleware/journey/preventNavigationToExpiredJourneys'
 import { SelectDocumentTypeRoutes } from './select-document-type/routes'
 import { SelectAbsencePlanRoutes } from './select-absence-plan/routes'
+import journeyStateGuard from '../../../middleware/journey/journeyStateGuard'
 
 export const TapDocumentsRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -33,6 +34,7 @@ export const TapDocumentsRoutes = (services: Services) => {
       next()
     },
     preventNavigationToExpiredJourneys(),
+    journeyStateGuard({ '*': () => undefined }, services.telemetryClient),
   )
 
   router.use('/select-document-type', SelectDocumentTypeRoutes(services))
