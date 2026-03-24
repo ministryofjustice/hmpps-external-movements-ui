@@ -7,7 +7,6 @@ import { ManageTemporaryAbsenceRoutes } from './temporary-absences/routes'
 import { ManageTapAuthorisationRoutes } from './temporary-absence-authorisations/routes'
 import { requirePermissions } from '../../middleware/permissions/requirePermissions'
 import { UserPermissionLevel } from '../../interfaces/hmppsUser'
-import { Feature, requireFeatureFlag } from '../../utils/featureFlag'
 import { TapDocumentsRoutes } from './tap-documents/routes'
 
 export const JourneyRoutes = (services: Services) => {
@@ -37,12 +36,7 @@ export const JourneyRoutes = (services: Services) => {
     requirePermissions('TAP', UserPermissionLevel.MANAGE),
     ManageTapAuthorisationRoutes(services),
   )
-  router.use(
-    '/tap-documents',
-    requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
-    requireFeatureFlag(Feature.DOC_GEN),
-    TapDocumentsRoutes(services),
-  )
+  router.use('/tap-documents', requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY), TapDocumentsRoutes(services))
 
   if (process.env.NODE_ENV === 'e2e-test') {
     router.get('/inject-journey-data', (req, res) => {

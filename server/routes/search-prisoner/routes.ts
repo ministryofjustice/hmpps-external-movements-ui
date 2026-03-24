@@ -25,7 +25,6 @@ export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
   get(
     '/tap-documents',
     Page.SEARCH_PRISONER,
-    requireFeatureFlag(Feature.DOC_GEN),
     validateOnGET(schema, 'searchTerm'),
     new SearchPrisonerController(prisonerSearchService, {
       caption: 'Create and download documents',

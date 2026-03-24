@@ -24,7 +24,6 @@ generic-service:
     AUDIT_ENABLED: "true"
     DEV_LED_FEATURE_PRISONS: MDI
     FEAT_INTRA_DAY_SCHEDULING_PRISONS: MDI
-    FEAT_DOCUMENT_GENERATION_PRISONS: MDI
 
   allowlist:
     groups:
