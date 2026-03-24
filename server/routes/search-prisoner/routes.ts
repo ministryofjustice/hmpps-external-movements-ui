@@ -41,9 +41,9 @@ export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
     requireFeatureFlag(Feature.DEV_LED),
     validateOnGET(schema, 'searchTerm'),
     new SearchPrisonerController(prisonerSearchService, {
-      caption: 'Enquire prisoner absence schedule',
+      caption: 'View a prisoner’s temporary absences',
       action: {
-        label: 'View absence schedule',
+        label: 'View',
         url: '/temporary-absence-schedule-enquiry/',
       },
     }).GET,

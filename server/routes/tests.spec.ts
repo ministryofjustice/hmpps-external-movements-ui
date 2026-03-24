@@ -31,6 +31,11 @@ test.describe('/temporary-absences-home', () => {
       'href',
       /temporary-absence-authorisations\?status=PENDING/,
     )
+
+    await expect(testPage.link('View a prisoner’s temporary absences')).toHaveAttribute(
+      'href',
+      /\/search-prisoner\/temporary-absence-schedule-enquiry/,
+    )
   })
 
   test('should show temporary absence homepage (read-only role)', async ({ page }) => {
@@ -48,5 +53,10 @@ test.describe('/temporary-absences-home', () => {
     )
 
     await expect(testPage.link('View temporary absences with status ‘Awaiting decision’')).toHaveCount(0)
+
+    await expect(testPage.link('View a prisoner’s temporary absences')).toHaveAttribute(
+      'href',
+      /\/search-prisoner\/temporary-absence-schedule-enquiry/,
+    )
   })
 })
