@@ -9,25 +9,20 @@
 {% from "partials/simplePagination/macro.njk" import simplePagination %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
-{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
 {% set fullWidth = true %}
-{% set pageTitle = 'Enquire prisoner absence schedule - Manage temporary absences' %}
+{% set pageTitle = 'View a prisoner’s temporary absences - Manage temporary absences' %}
 
-{% set mainClasses = "app-container govuk-body placeholder-background" %}
+{% set mainClasses = "app-container govuk-body" %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <span class="govuk-caption-l">Enquire prisoner absence schedule</span>
-        <h1 class="govuk-heading-l">View {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absence schedule</h1>
+        <span class="govuk-caption-l">View a prisoner’s temporary absences</span>
+        <h1 class="govuk-heading-l">View {{ prisonerDetails | firstNameSpaceLastName | possessiveComma }} temporary absences</h1>
       </div>
     </div>
-    {{ govukWarningText({
-      text: "To view futher details, you must have selected the relevant prison as your caseload.",
-      iconFallbackText: "Warning"
-    }) }}
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter">
@@ -182,11 +177,8 @@
               },
               {
                 html: absenceStatusTag(occurrence)
-              },
-              {
-                html: '<a class="govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">View absence</a>'
-              } if user.activeCaseLoad.caseLoadId === occurrence.prison.code else null
-            ] | removeNullish), rows) %}
+              }
+            ]), rows) %}
           {% endfor %}
 
           {{ simplePagination(paginationParams) }}
@@ -211,9 +203,6 @@
               },
               {
                 text: 'Status'
-              },
-              {
-                text: ''
               }
             ] | convertToSortableColumns(sort or 'start,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
             rows: rows

@@ -117,6 +117,16 @@ export const stubSearchTapOccurrence = (response: components['schemas']['TapOccu
     response,
   })
 
+export const stubSearchPrisonerTap = (
+  prisonNumber: string,
+  response: components['schemas']['PersonTapSearchResponse'],
+) =>
+  successStub({
+    method: 'POST',
+    urlPattern: `/external-movements-api/search/people/${prisonNumber}/temporary-absence-occurrences`,
+    response,
+  })
+
 export const stubSearchTapAuthorisation = (response: components['schemas']['TapAuthorisationSearchResponse']) =>
   successStub({
     method: 'POST',
