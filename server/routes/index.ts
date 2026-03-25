@@ -17,7 +17,6 @@ import { requirePermissions } from '../middleware/permissions/requirePermissions
 import { UserPermissionLevel } from '../interfaces/hmppsUser'
 import { BrowseTapMovementsRoutes } from './temporary-absence-movements/routes'
 import { CreateDocumentsRoutes } from './create-documents/routes'
-import { Feature, requireFeatureFlag } from '../utils/featureFlag'
 import { TemporaryAbsenceScheduleEnquiryRoutes } from './temporary-absence-schedule-enquiry/routes'
 
 export default function routes(services: Services): Router {
@@ -122,7 +121,6 @@ export default function routes(services: Services): Router {
   router.use(
     '/temporary-absence-schedule-enquiry/:prisonNumber',
     requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
-    requireFeatureFlag(Feature.DEV_LED),
     prisonerPermissionsGuard(services.prisonPermissionsService, {
       requestDependentOn: [PrisonerBasePermission.read],
       getPrisonerNumberFunction: req => req.params['prisonNumber'] as string,

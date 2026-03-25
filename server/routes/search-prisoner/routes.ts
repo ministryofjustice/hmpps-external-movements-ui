@@ -4,7 +4,6 @@ import { Page } from '../../services/auditService'
 import { SearchPrisonerController } from './controller'
 import { validateOnGET } from '../../middleware/validation/validationMiddleware'
 import { schema } from './schema'
-import { Feature, requireFeatureFlag } from '../../utils/featureFlag'
 
 export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
   const { router, get } = BaseRouter()
@@ -38,7 +37,6 @@ export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
   get(
     '/temporary-absence-schedule-enquiry',
     Page.SEARCH_PRISONER,
-    requireFeatureFlag(Feature.DEV_LED),
     validateOnGET(schema, 'searchTerm'),
     new SearchPrisonerController(prisonerSearchService, {
       caption: 'View a prisoner’s temporary absences',
