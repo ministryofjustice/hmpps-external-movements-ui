@@ -28,7 +28,7 @@ export class TapCancelController {
 
   POST = async (req: Request, res: Response) => {
     const journey = req.journeyData.updateTapAuthorisation!
-
+    req.journeyData.journeyCompleted = true
     res.redirect(
       journey.result!.content.length ? 'confirmation' : `/temporary-absence-authorisations/${journey.authorisation.id}`,
     )

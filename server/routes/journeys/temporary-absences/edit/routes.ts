@@ -10,6 +10,7 @@ import { EditTransportRoutes } from './transport/routes'
 import { EditTapOccurrenceSearchLocationRoutes } from './search-location/routes'
 import { EditTapOccurrenceSelectLocationRoutes } from './select-location/routes'
 import { EditTapOccurrenceEnterLocationRoutes } from './enter-location/routes'
+import journeyStateGuard from '../../../../middleware/journey/journeyStateGuard'
 
 export const EditTapOccurrenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -24,6 +25,7 @@ export const EditTapOccurrenceRoutes = (services: Services) => {
       next()
     },
     preventNavigationToExpiredJourneys(),
+    journeyStateGuard({ '*': () => undefined }, services.telemetryClient),
   )
 
   router.use('/start-end-dates', EditOccurrenceStartEndDatesRoutes(services))

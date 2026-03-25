@@ -1,3 +1,4 @@
+import { Request } from 'express'
 import { Services } from '../../../services'
 import { BaseRouter } from '../../common/routes'
 import { populatePrisonerDetails, toPrisonerDetails } from '../../../middleware/populatePrisonerDetails'
@@ -5,6 +6,7 @@ import { Page } from '../../../services/auditService'
 import preventNavigationToExpiredJourneys from '../../../middleware/journey/preventNavigationToExpiredJourneys'
 import { SelectDocumentTypeRoutes } from './select-document-type/routes'
 import { SelectAbsencePlanRoutes } from './select-absence-plan/routes'
+import journeyStateGuard from '../../../middleware/journey/journeyStateGuard'
 
 export const TapDocumentsRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -33,6 +35,14 @@ export const TapDocumentsRoutes = (services: Services) => {
       next()
     },
     preventNavigationToExpiredJourneys(),
+    journeyStateGuard(
+      {
+        '*': () => undefined,
+        'select-absence-plan': (req: Request) =>
+          req.journeyData.createDocumentJourney?.templateId ? undefined : '/select-document-type',
+      },
+      services.telemetryClient,
+    ),
   )
 
   router.use('/select-document-type', SelectDocumentTypeRoutes(services))

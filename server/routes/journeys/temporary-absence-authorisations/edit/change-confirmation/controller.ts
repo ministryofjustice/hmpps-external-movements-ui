@@ -122,6 +122,8 @@ export class EditTapAuthorisationChangeConfirmationController {
         )
       }
 
+      req.journeyData.journeyCompleted = true
+
       res.redirect(
         journey.result?.content.length
           ? 'confirmation'

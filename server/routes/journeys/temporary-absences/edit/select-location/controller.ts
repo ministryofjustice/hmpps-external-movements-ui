@@ -38,6 +38,7 @@ export class EditTapOccurrenceSelectLocationController {
     if (!journey.result) {
       res.redirect('search-location')
     } else {
+      req.journeyData.journeyCompleted = true
       res.redirect(journey.result.content.length ? 'confirmation' : `/temporary-absences/${journey.occurrence.id}`)
     }
   }
