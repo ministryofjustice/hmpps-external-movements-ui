@@ -53,7 +53,7 @@ export class TemporaryAbsenceScheduleEnquiryController {
       if (!hasValidationError) {
         const requestBody: components['schemas']['PersonTapSearchRequest'] = {
           status: resQuery.validated?.status ?? [],
-          sort: resQuery.validated?.sort ?? 'start,asc',
+          sort: resQuery.validated?.sort ?? 'start,desc',
           page: resQuery.validated?.page || 1,
           size: this.PAGE_SIZE,
         }
@@ -98,7 +98,7 @@ export class TemporaryAbsenceScheduleEnquiryController {
         resQuery?.validated?.page ?? 1,
         searchResponse?.metadata?.totalElements ?? 0,
         results.length,
-        `?page={page}&${filterQueries}&sort=${resQuery?.sort ?? 'start,asc'}`,
+        `?page={page}&${filterQueries}&sort=${resQuery?.sort ?? 'start,desc'}`,
       )
     } catch (error: unknown) {
       res.locals['validationErrors'] = { apiError: [getApiUserErrorMessage(error as HTTPError)] }
@@ -115,7 +115,7 @@ export class TemporaryAbsenceScheduleEnquiryController {
       workType: resQuery?.workType,
       results,
       filterQueries,
-      sort: resQuery?.sort ?? 'start,asc',
+      sort: resQuery?.sort ?? 'start,desc',
       hasValidationError,
       types: types.map(absenceCategorisationMapper),
       subTypes: subTypes.map(absenceCategorisationMapper),
