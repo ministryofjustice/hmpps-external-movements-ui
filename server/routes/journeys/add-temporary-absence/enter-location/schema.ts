@@ -11,7 +11,9 @@ export const enterLocationSchema = createSchema({
   line2: optionalString,
   city: z.string().min(1, { message: 'Enter town or city' }),
   county: optionalString,
-  postcode: optionalString,
+  postcode: optionalString.refine(val => (val?.length ?? 0) <= 12, {
+    message: 'Postcode must be 12 characters or fewer',
+  }),
 })
 
 export type EnterLocationSchemaType = z.infer<typeof enterLocationSchema>

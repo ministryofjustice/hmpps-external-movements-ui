@@ -66,14 +66,18 @@ test.describe('/add-temporary-absence/enter-location', () => {
     // verify validation error
     await testPage.organisationNameField().fill('n'.repeat(41))
     await testPage.line1Field().fill('1 Manual Street')
+    await testPage.postcodeField().fill('n'.repeat(13))
     await testPage.clickContinue()
     await testPage.link('Description must be 40 characters or fewer').click()
     await expect(testPage.organisationNameField()).toBeFocused()
     await testPage.link('Enter town or city').click()
     await expect(testPage.cityField()).toBeFocused()
+    await testPage.link('Postcode must be 12 characters or fewer').click()
+    await expect(testPage.postcodeField()).toBeFocused()
 
     // verify next page routing
     await testPage.organisationNameField().fill('n'.repeat(40))
+    await testPage.postcodeField().fill('n'.repeat(12))
     await testPage.cityField().fill('Manual City')
     await testPage.clickContinue()
     expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
@@ -84,5 +88,6 @@ test.describe('/add-temporary-absence/enter-location', () => {
     await expect(testPage.organisationNameField()).toHaveValue('n'.repeat(40))
     await expect(testPage.line1Field()).toHaveValue('1 Manual Street')
     await expect(testPage.cityField()).toHaveValue('Manual City')
+    await expect(testPage.postcodeField()).toHaveValue('n'.repeat(12))
   })
 })
