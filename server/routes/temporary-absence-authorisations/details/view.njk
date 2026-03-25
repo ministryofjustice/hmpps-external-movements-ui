@@ -31,7 +31,7 @@
                   preventDoubleClick: true
                 }) }}
               {% endif %}
-              {% if result.status.code === 'APPROVED' %}
+              {% if cancellable %}
                 {{ govukButton({
                   classes: "govuk-button--warning",
                   text: "Cancel this absence",
