@@ -37,6 +37,10 @@ export class TapAuthorisationDetailsController {
           ({ uprn, address, description, postcode }) =>
             uprn || description?.length || address?.length || postcode?.length,
         )
+      const cancellable =
+        authorisation.status.code === 'APPROVED' &&
+        (authorisation.repeat ||
+          !['IN_PROGRESS', 'OVERDUE', 'COMPLETED'].includes(authorisation.occurrences[0]?.status.code ?? ''))
 
       res.render('temporary-absence-authorisations/details/view', {
         showBreadcrumbs: true,
@@ -46,6 +50,7 @@ export class TapAuthorisationDetailsController {
         auditedActions: parseAuditHistory(history.content.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt))),
         editable,
         approvable,
+        cancellable,
       })
     } catch (error: unknown) {
       if ((error as { message?: string }).message) {

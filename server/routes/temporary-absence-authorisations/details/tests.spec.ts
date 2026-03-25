@@ -228,6 +228,41 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await expect(testPage.button('Cancel this absence')).toBeVisible()
   })
 
+  test('should not show CANCEL button when a non-repeating TAP has its occurrence progressed', async ({ page }) => {
+    await signIn(page)
+
+    const authorisationId = uuidV4()
+    await stubGetTapAuthorisation({
+      ...testTapAuthorisation,
+      id: authorisationId,
+      status: { code: 'APPROVED', description: 'Approved' },
+      absenceType: { code: 'PP', description: 'Police production' },
+      repeat: false,
+      accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+      transport: { code: 'CAR', description: 'Car' },
+      locations: [{ uprn: 1001, description: 'Random Street, UK' }],
+      occurrences: [
+        {
+          id: 'occurrence-id',
+          status: { code: 'IN_PROGRESS', description: 'In progress' },
+          start: '2001-01-01T10:00:00',
+          end: '2001-01-01T17:30:00',
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
+          transport: { code: 'CAR', description: 'Car' },
+          location: { uprn: 1001, description: 'Random Street, UK' },
+        },
+      ],
+    })
+    await stubGetTapAuthorisationHistory(authorisationId, { content: [] })
+
+    await page.goto(`/temporary-absence-authorisations/${authorisationId}`)
+
+    // verify page content
+    const testPage = await new TapAuthorisationDetailsPage(page).verifyContent()
+    await expect(testPage.button('Review this absence')).toHaveCount(0)
+    await expect(testPage.button('Cancel this absence')).toHaveCount(0)
+  })
+
   test('should show temporary absence details for DENIED absence', async ({ page }) => {
     await signIn(page)
 
