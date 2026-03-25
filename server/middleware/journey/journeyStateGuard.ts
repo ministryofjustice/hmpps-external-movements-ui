@@ -36,7 +36,8 @@ const recordJourneyGuardFailedEvent = (
 
 export default function journeyStateGuard(rules: JourneyStateGuard, appInsightsClient: TelemetryClient | null) {
   return (req: Request, res: Response, next: NextFunction): void => {
-    const [, uuid, flow, rawRequestedPage] = req.originalUrl.split('/')
+    const [, uuid, flow, ...remaingPaths] = req.originalUrl.split('/')
+    const rawRequestedPage = remaingPaths.join('/')
     const requestedPage = rawRequestedPage!.split('?')[0]!
 
     if (!uuid || !validate(uuid) || req.originalUrl.endsWith('/start')) {
