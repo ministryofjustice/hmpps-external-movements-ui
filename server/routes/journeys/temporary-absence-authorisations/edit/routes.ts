@@ -16,6 +16,7 @@ import { EditTapAuthorisationChangeConfirmationRoutes } from './change-confirmat
 import { EditTapAuthorisationAccompaniedOrUnaccompaniedRoutes } from './accompanied-or-unaccompanied/routes'
 import { EditTapAuthorisationAccompaniedRoutes } from './accompanied/routes'
 import { EditTapAuthorisationTransportRoutes } from './transport/routes'
+import journeyStateGuard from '../../../../middleware/journey/journeyStateGuard'
 
 export const EditTapAuthorisationRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -30,6 +31,7 @@ export const EditTapAuthorisationRoutes = (services: Services) => {
       next()
     },
     preventNavigationToExpiredJourneys(),
+    journeyStateGuard({ '*': () => undefined }, services.telemetryClient),
   )
 
   router.use('/absence-type', EditAbsenceTypeRoutes(services))

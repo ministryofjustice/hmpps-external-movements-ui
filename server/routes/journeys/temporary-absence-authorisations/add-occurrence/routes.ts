@@ -1,3 +1,4 @@
+import { Request } from 'express'
 import { Services } from '../../../../services'
 import { BaseRouter } from '../../../common/routes'
 import { Page } from '../../../../services/auditService'
@@ -11,6 +12,7 @@ import { AddTapOccurrenceCheckAnswersRoutes } from './check-answers/routes'
 import { AddTapOccurrenceSearchLocationRoutes } from './search-location/routes'
 import { AddTapOccurrenceEnterLocationRoutes } from './enter-location/routes'
 import { AddTapOccurrenceConfirmationRoutes } from './confirmation/routes'
+import journeyStateGuard from '../../../../middleware/journey/journeyStateGuard'
 
 export const AddTapOccurrenceRoutes = (services: Services) => {
   const { router, get, post } = BaseRouter()
@@ -26,6 +28,25 @@ export const AddTapOccurrenceRoutes = (services: Services) => {
       next()
     },
     preventNavigationToExpiredJourneys(),
+    journeyStateGuard(
+      {
+        '*': () => undefined,
+        'add-occurrence/select-location': (req: Request) =>
+          req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
+        'add-occurrence/search-location': (req: Request) =>
+          req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
+        'add-occurrence/enter-location': (req: Request) =>
+          req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
+        'add-occurrence/comments': (req: Request) =>
+          typeof req.journeyData.addTapOccurrence?.locationOption === 'number' ||
+          req.journeyData.addTapOccurrence?.location
+            ? undefined
+            : '/add-occurrence/select-location',
+        'add-occurrence/check-answers': (req: Request) =>
+          req.journeyData.addTapOccurrence?.comments !== undefined ? undefined : '/add-occurrence/comments',
+      },
+      services.telemetryClient,
+    ),
   )
 
   get('/', controller.GET)

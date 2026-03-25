@@ -47,6 +47,7 @@ export class EditOccurrenceStartEndDatesController {
 
   POST = async (req: Request, res: Response) => {
     const journey = req.journeyData.updateTapOccurrence!
+    req.journeyData.journeyCompleted = true
     res.redirect(journey.result!.content.length ? 'confirmation' : `/temporary-absences/${journey.occurrence.id}`)
   }
 }

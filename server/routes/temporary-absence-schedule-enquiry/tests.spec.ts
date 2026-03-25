@@ -7,10 +7,15 @@ import {
   stubSearchPrisonerTap,
 } from '../../../integration_tests/mockApis/externalMovementsApi'
 import { ViewPrisonerAbsencesPage } from './test.page'
-import { testPrisonerDetails, testTapOccurrenceResult } from '../../../integration_tests/data/testData'
+import {
+  randomPrisonNumber,
+  testPrisonerDetails,
+  testTapOccurrenceResult,
+} from '../../../integration_tests/data/testData'
 import { verifyAuditEvents } from '../../../integration_tests/steps/verifyAuditEvents'
 import { stubGetPrisonerImage } from '../../../integration_tests/mockApis/prisonApi'
 import { stubGetPrisonerDetails } from '../../../integration_tests/mockApis/prisonerSearchApi'
+import { NotAuthorisedPage } from '../../../integration_tests/pages/NotAuthorisedPage'
 
 test.describe(`/temporary-absence-schedule-enquiry`, () => {
   test.beforeAll(async () => {
@@ -83,5 +88,20 @@ test.describe(`/temporary-absence-schedule-enquiry`, () => {
         when: expect.any(String),
       },
     ])
+  })
+
+  test('should show unauthorised error if prisoner is outside user caseload', async ({ page }) => {
+    const prisonNumber = randomPrisonNumber()
+    await stubGetPrisonerDetails({
+      ...testPrisonerDetails,
+      prisonerNumber: prisonNumber,
+      prisonId: 'OUTSIDE',
+    })
+    await page.goto(
+      `/temporary-absence-schedule-enquiry/${prisonNumber}?start=01/01/2001&end=02/01/2001&status=SCHEDULED&page=2`,
+    )
+
+    // verify page content
+    await new NotAuthorisedPage(page).verifyContent()
   })
 })

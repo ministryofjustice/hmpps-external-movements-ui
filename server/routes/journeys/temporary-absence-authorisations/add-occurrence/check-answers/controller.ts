@@ -40,5 +40,8 @@ export class AddTapOccurrenceCheckAnswersController {
     }
   }
 
-  POST = async (_req: Request, res: Response) => res.redirect('confirmation')
+  POST = async (req: Request, res: Response) => {
+    req.journeyData.journeyCompleted = true
+    res.redirect('confirmation')
+  }
 }
