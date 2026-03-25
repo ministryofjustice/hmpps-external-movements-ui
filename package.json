@@ -76,18 +76,18 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.1011.0",
+    "@aws-sdk/client-sqs": "^3.1014.0",
     "@axe-core/playwright": "^4.11.1",
     "@microsoft/applicationinsights-clickanalytics-js": "3.3.11",
     "@microsoft/applicationinsights-web": "3.3.11",
     "@ministryofjustice/frontend": "^9.0.0",
     "@ministryofjustice/hmpps-auth-clients": "^1.0.2",
     "@ministryofjustice/hmpps-connect-dps-components": "^5.3.2",
-    "@ministryofjustice/hmpps-connect-dps-shared-items": "^3.6.0",
+    "@ministryofjustice/hmpps-connect-dps-shared-items": "^3.7.0",
     "@ministryofjustice/hmpps-monitoring": "^1.0.2",
     "@ministryofjustice/hmpps-prison-permissions-lib": "^2.4.1",
     "@ministryofjustice/hmpps-rest-client": "^1.1.0",
-    "@sentry/node": "^10.44.0",
+    "@sentry/node": "^10.45.0",
     "applicationinsights": "^2.9.7",
     "body-parser": "^2.2.2",
     "bunyan": "^1.8.15",
@@ -162,7 +162,7 @@
   },
   "overrides": {
     "@aws-sdk/xml-builder": {
-      "fast-xml-parser": "^5.5.6"
+      "fast-xml-parser": "^5.5.8"
     }
   }
 }
