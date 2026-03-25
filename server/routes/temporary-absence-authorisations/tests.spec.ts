@@ -77,7 +77,10 @@ test.describe('/temporary-absence-authorisations', () => {
           repeat: true,
           start: '2001-01-02',
           end: '2001-03-01',
-          locations: [{ uprn: 1001, description: 'Random Street, UK' }],
+          locations: [
+            { uprn: 1001, description: 'Random Street, UK' },
+            { uprn: 1002, description: 'Random Street 2, UK' },
+          ],
           occurrenceCount: 12,
           absenceCategorisation: 'Police production',
         },
@@ -106,6 +109,7 @@ test.describe('/temporary-absence-authorisations', () => {
       '1 January 2001',
       '1 January 2001',
       'Restricted ROTL (Release on Temporary Licence) > RDR (Resettlement Day Release) > Paid work > IT and communication',
+      'Random Street, UK',
       'Single',
       'Approved',
     ])
@@ -114,6 +118,7 @@ test.describe('/temporary-absence-authorisations', () => {
       '2 January 2001',
       '1 March 2001',
       'Police production',
+      'Multiple locations',
       'Repeating (12 occurrences)',
       'To be reviewed',
     ])

@@ -173,6 +173,9 @@
                 text: occurrence.absenceCategorisation
               },
               {
+                text: occurrence.location | formatAddress
+              },
+              {
                 text: occurrence.prison.name
               },
               {
@@ -199,12 +202,15 @@
                 text: 'Absence type'
               },
               {
+                text: 'Location'
+              },
+              {
                 text: 'Prison where it was added'
               },
               {
                 text: 'Status'
               }
-            ] | convertToSortableColumns(sort or 'start,asc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
+            ] | convertToSortableColumns(sort or 'start,desc', '?sort={sortKey},{sortDirection}&page=1&' + filterQueries),
             rows: rows
           }) }}
 

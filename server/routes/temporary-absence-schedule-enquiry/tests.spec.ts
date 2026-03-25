@@ -57,6 +57,7 @@ test.describe(`/temporary-absence-schedule-enquiry`, () => {
       '1 January 2001 at 10:00',
       '1 January 2001 at 17:30',
       'Restricted ROTL (Release on Temporary Licence) > RDR (Resettlement Day Release) > Paid work > IT and communication',
+      'Random Street, UK',
       'Leeds',
       'Scheduled',
     ])

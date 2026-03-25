@@ -172,6 +172,9 @@
                 text: authorisation.absenceCategorisation
               },
               {
+                text: 'Not provided' if not authorisation.locations.length else (authorisation.locations[0] | formatAddress if authorisation.locations.length === 1 else 'Multiple locations')
+              },
+              {
                 text: ('Repeating (' + authorisation.occurrenceCount + ' occurrence' + (')' if authorisation.occurrenceCount === 1 else 's)')) if authorisation.repeat else 'Single'
               },
               {
@@ -200,6 +203,9 @@
               },
               {
                 text: 'Absence type'
+              },
+              {
+                text: 'Location'
               },
               {
                 text: 'Single or repeating'
