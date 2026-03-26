@@ -31,9 +31,11 @@ export const auditPageViewMiddleware =
         res.locals.auditEvent.subjectId = prisonNumber
       },
       searchTerm: (searchTerm: string) => {
+        const query = searchTerm.trim().replaceAll(String.fromCharCode(0), '')
+
         res.locals.auditEvent.subjectType = 'SEARCH_TERM'
-        res.locals.auditEvent.subjectId = searchTerm.trim().substring(0, 80)
-        res.locals.auditEvent.details!.query = searchTerm.trim()
+        res.locals.auditEvent.subjectId = query.substring(0, 80)
+        res.locals.auditEvent.details!.query = query
       },
       suppress: (suppress: boolean = false) => {
         res.locals.auditEvent.suppress = suppress
