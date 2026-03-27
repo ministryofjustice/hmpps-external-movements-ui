@@ -26,13 +26,13 @@ generic-service:
     FEAT_INTRA_DAY_SCHEDULING_PRISONS: MDI
 
   allowlist:
+    kmpg: 195.68.59.74
     groups:
       - digital_staff_and_mojo
       - moj_cloud_platform
       - prisons
       - private_prisons
       - accessibility-testing-1
-      - 195.68.59.74
 
 generic-prometheus-alerts:
   alertSeverity: move-and-improve-alerts-non-prod
