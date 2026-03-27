@@ -152,7 +152,7 @@
     "lint-staged": "^16.4.0",
     "nock": "^14.0.11",
     "openapi-typescript": "^7.13.0",
-    "playwright-ctrf-json-reporter": "^0.0.28",
+    "playwright-ctrf-json-reporter": "^0.0.29",
     "prettier": "^3.8.1",
     "prettier-plugin-jinja-template": "^2.1.0",
     "sass-embedded": "^1.98.0",
