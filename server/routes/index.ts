@@ -97,7 +97,11 @@ export default function routes(services: Services): Router {
     },
   )
 
-  router.use('/search-prisoner', requirePermissions('TAP', UserPermissionLevel.MANAGE), SearchPrisonerRoutes(services))
+  router.use(
+    '/search-prisoner',
+    requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
+    SearchPrisonerRoutes(services),
+  )
   router.use(
     '/temporary-absence-authorisations',
     requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
