@@ -16,6 +16,8 @@
       </div>
     {% endif %}
 
+    {% include 'partials/switch-off-banner.njk' %}
+
     {% set errorSummaryList = validationErrors | buildErrorSummaryList %}
     {% if errorSummaryList.length > 0 %}
       <div class="govuk-grid-row">

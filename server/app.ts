@@ -30,7 +30,6 @@ import { permissionsMiddleware } from './middleware/permissions/permissionsMiddl
 import { AuthorisedRoles } from './middleware/permissions/populateUserPermissions'
 import { handleJsonErrorResponse, jsonErrorMiddleware } from './middleware/handleJsonErrorResponse'
 import { populateEnabledFeatures } from './utils/featureFlag'
-import { populatePhaseBanner } from './middleware/populatePhaseBanner'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -115,7 +114,6 @@ export default function createApp(services: Services): express.Application {
     }),
   )
   app.use(populateEnabledFeatures)
-  app.use(populatePhaseBanner)
 
   app.get(/(.*)/, permissionsMiddleware)
   app.use(routes(services))

@@ -18,6 +18,7 @@ import { UserPermissionLevel } from '../interfaces/hmppsUser'
 import { BrowseTapMovementsRoutes } from './temporary-absence-movements/routes'
 import { CreateDocumentsRoutes } from './create-documents/routes'
 import { TemporaryAbsenceScheduleEnquiryRoutes } from './temporary-absence-schedule-enquiry/routes'
+import { populateSwitchOffBanner } from '../middleware/populateSwitchOffBanner'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
@@ -89,6 +90,7 @@ export default function routes(services: Services): Router {
     '/temporary-absences-home',
     Page.TAP_HOME_PAGE,
     requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
+    populateSwitchOffBanner,
     async (_req, res) => {
       res.render('view-tap', {
         showBreadcrumbs: true,
