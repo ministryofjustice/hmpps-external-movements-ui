@@ -4,14 +4,7 @@ import componentsApi from '../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../integration_tests/steps/signIn'
 import { stubSearchPrisoner } from '../../../../integration_tests/mockApis/prisonerSearchApi'
 import { stubGetPrisonerImage } from '../../../../integration_tests/mockApis/prisonApi'
-import { testNotAuthorisedPage } from '../../../../integration_tests/steps/testNotAuthorisedPage'
 import { TapDocumentSearchPrisonerPage } from './test.page'
-
-test.describe('/search-prisoner/tap-documents unauthorised', () => {
-  test('should show unauthorised error', async ({ page }) => {
-    await testNotAuthorisedPage(page, '/search-prisoner/tap-documents')
-  })
-})
 
 test.describe('/search-prisoner/tap-documents', () => {
   test.beforeAll(async () => {
@@ -49,7 +42,7 @@ test.describe('/search-prisoner/tap-documents', () => {
   })
 
   test.beforeEach(async ({ page }) => {
-    await signIn(page)
+    await signIn(page, { roles: ['EXTERNAL_MOVEMENTS_TAP_RO'] })
   })
 
   test('should try all cases', async ({ page }) => {

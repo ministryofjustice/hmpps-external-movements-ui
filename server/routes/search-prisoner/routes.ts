@@ -4,6 +4,8 @@ import { Page } from '../../services/auditService'
 import { SearchPrisonerController } from './controller'
 import { validateOnGET } from '../../middleware/validation/validationMiddleware'
 import { schema } from './schema'
+import { requirePermissions } from '../../middleware/permissions/requirePermissions'
+import { UserPermissionLevel } from '../../interfaces/hmppsUser'
 
 export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
   const { router, get } = BaseRouter()
@@ -11,6 +13,7 @@ export const SearchPrisonerRoutes = ({ prisonerSearchService }: Services) => {
   get(
     '/',
     Page.SEARCH_PRISONER,
+    requirePermissions('TAP', UserPermissionLevel.MANAGE),
     validateOnGET(schema, 'searchTerm'),
     new SearchPrisonerController(prisonerSearchService, {
       caption: 'Create a Temporary Absence',
