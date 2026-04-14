@@ -7,15 +7,22 @@ import { components } from '../../@types/externalMovements'
 import { parseQueryParams } from '../../utils/utils'
 
 export type UpdateTapAuthorisation =
-  | components['schemas']['ChangeAuthorisationComments']
   | components['schemas']['ApproveAuthorisation']
   | components['schemas']['CancelAuthorisation']
   | components['schemas']['ChangeAuthorisationAccompaniment']
+  | components['schemas']['ChangeAuthorisationComments']
   | components['schemas']['ChangeAuthorisationDateRange']
+  | components['schemas']['ChangeAuthorisationLocation']
+  | components['schemas']['ChangeAuthorisationLocations']
   | components['schemas']['ChangeAuthorisationTransport']
   | components['schemas']['ChangePrisonPerson']
+  | components['schemas']['ClearAuthorisationSchedule']
+  | components['schemas']['DeferAuthorisation']
   | components['schemas']['DenyAuthorisation']
+  | components['schemas']['ExpireAuthorisation']
+  | components['schemas']['PauseAuthorisation']
   | components['schemas']['RecategoriseAuthorisation']
+  | components['schemas']['ResumeAuthorisation']
 
 export type UpdateTapOccurrence =
   | components['schemas']['ChangeOccurrenceComments']
