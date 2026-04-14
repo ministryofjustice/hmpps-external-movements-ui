@@ -17,7 +17,7 @@ export class TapCancelController {
     const journey = req.journeyData.updateTapAuthorisation!
     try {
       journey.result = await this.externalMovementsService.updateTapAuthorisation({ res }, journey.authorisation.id, {
-        type: 'CancelAuthorisation',
+        type: 'ClearAuthorisationSchedule',
         reason: req.body.reason,
       })
       next()
