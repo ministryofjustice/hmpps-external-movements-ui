@@ -1,0 +1,10 @@
+{%- from "moj/components/alert/macro.njk" import mojAlert -%}
+
+{% if switchOffBanner %}
+  {{ mojAlert({
+    variant: "information",
+    showTitleAsHeading: false,
+    dismissible: true,
+    html: switchOffBanner.html
+  }) }}
+{% endif %}

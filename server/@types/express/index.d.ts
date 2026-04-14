@@ -3,6 +3,7 @@ import { Breadcrumbs } from '../../middleware/history/breadcrumbs'
 import Prisoner from '../../services/apis/model/prisoner'
 import { PrisonerDetails, JourneyData } from '../journeys'
 import { Feature } from '../../utils/featureFlag'
+import { SwitchOffBanner } from '../../middleware/populateSwitchOffBanner'
 
 export declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
@@ -93,6 +94,7 @@ export declare global {
       appInsightsApplicationName?: string
       buildNumber?: string
       jsonError?: { status: number; error: string }
+      switchOffBanner?: SwitchOffBanner
     }
   }
 }
