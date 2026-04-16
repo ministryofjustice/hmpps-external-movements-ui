@@ -31,6 +31,21 @@
                   preventDoubleClick: true
                 }) }}
               {% endif %}
+              {% if pausable %}
+                {{ govukButton({
+                  classes: "govuk-button--secondary",
+                  text: "Temporarily pause this plan",
+                  href: baseEditUrl + "/pause",
+                  preventDoubleClick: true
+                }) }}
+              {% endif %}
+              {% if resumable %}
+                {{ govukButton({
+                  text: "Resume this absence",
+                  href: baseEditUrl + "/resume",
+                  preventDoubleClick: true
+                }) }}
+              {% endif %}
               {% if cancellable %}
                 {{ govukButton({
                   classes: "govuk-button--warning",

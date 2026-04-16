@@ -1,0 +1,27 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = 'Resume absence plan - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <h1 class="govuk-heading-l">Are you sure you want to resume this absence plan?</h1>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Resume this absence",
+          preventDoubleClick: true
+        }) }}
+
+        {{ govukButton({
+          classes: "govuk-button--secondary",
+          text: "Do not resume this absence",
+          href: '/temporary-absence-authorisations/' + authorisation.id,
+          preventDoubleClick: true
+        }) }}
+      </div>
+    </form>
+  </div>
+{% endblock %}

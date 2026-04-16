@@ -38,9 +38,13 @@ export class TapAuthorisationDetailsController {
             uprn || description?.length || address?.length || postcode?.length,
         )
       const cancellable =
-        authorisation.status.code === 'APPROVED' &&
+        (authorisation.status.code === 'APPROVED' || authorisation.status.code === 'PAUSED') &&
         (authorisation.repeat ||
           !['IN_PROGRESS', 'OVERDUE', 'COMPLETED'].includes(authorisation.occurrences[0]?.status.code ?? ''))
+      const pausable =
+        authorisation.status.code === 'APPROVED' &&
+        authorisation.occurrences.every(({ status }) => !['IN_PROGRESS', 'OVERDUE'].includes(status.code))
+      const resumable = authorisation.status.code === 'PAUSED'
 
       res.render('temporary-absence-authorisations/details/view', {
         showBreadcrumbs: true,
@@ -51,6 +55,8 @@ export class TapAuthorisationDetailsController {
         editable,
         approvable,
         cancellable,
+        pausable,
+        resumable,
       })
     } catch (error: unknown) {
       if ((error as { message?: string }).message) {

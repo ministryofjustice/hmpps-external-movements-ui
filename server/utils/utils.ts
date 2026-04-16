@@ -149,7 +149,7 @@ export const isTapAuthorisationEditable = ({
   occurrences?: components['schemas']['TapAuthorisation.Occurrence'][]
   repeat: boolean
 }) =>
-  ['PENDING', 'APPROVED'].includes(status.code) &&
+  ['PENDING', 'APPROVED', 'PAUSED'].includes(status.code) &&
   end >= format(new Date(), 'yyyy-MM-dd') &&
   (repeat || !(occurrences?.length === 0))
 
