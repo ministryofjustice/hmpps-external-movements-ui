@@ -9,7 +9,6 @@ import {
   stubGetAllAbsenceTypes,
   stubGetTapAuthorisation,
   stubPutTapAuthorisation,
-  stubPutTapOccurrence,
 } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { EditTapAuthorisationChangeConfirmationPage } from './test.page'
@@ -47,7 +46,7 @@ test.describe('/temporary-absence-authorisations/edit/change-confirmation', () =
         id: 'occurrence-id-1',
         status: { code: 'SCHEDULED', description: 'Scheduled' },
         start: '2001-01-02T10:00:00',
-        end: '2001-01-02T17:30:00',
+        end: '2050-01-02T17:30:00',
         location: { uprn: 1001, address: 'Random Street, UK' },
         accompaniedBy: { code: 'U', description: 'Unaccompanied' },
         transport: { code: 'CAR', description: 'Car' },
@@ -134,9 +133,10 @@ test.describe('/temporary-absence-authorisations/edit/change-confirmation', () =
     await stubGetTapAuthorisation({
       ...authorisation,
       id: authorisationId,
+      occurrences: [],
     })
 
-    await stubPutTapOccurrence('occurrence-id-1', {
+    await stubPutTapAuthorisation(authorisationId, {
       content: [
         {
           user: { username: 'USERNAME', name: 'User Name' },
