@@ -19,6 +19,8 @@ import { EditTapAuthorisationTransportRoutes } from './transport/routes'
 import journeyStateGuard from '../../../../middleware/journey/journeyStateGuard'
 import { TapPauseRoutes } from './pause/routes'
 import { TapResumeRoutes } from './resume/routes'
+import { EditTapAuthorisationSearchLocationRoutes } from './search-location/routes'
+import { EditTapAuthorisationEnterLocationRoutes } from './enter-location/routes'
 
 export const EditTapAuthorisationRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -45,6 +47,9 @@ export const EditTapAuthorisationRoutes = (services: Services) => {
   router.use('/accompanied-or-unaccompanied', EditTapAuthorisationAccompaniedOrUnaccompaniedRoutes())
   router.use('/accompanied', EditTapAuthorisationAccompaniedRoutes(services))
   router.use('/transport', EditTapAuthorisationTransportRoutes(services))
+
+  router.use('/search-location', EditTapAuthorisationSearchLocationRoutes(services))
+  router.use('/enter-location', EditTapAuthorisationEnterLocationRoutes())
 
   router.use('/cancel', TapCancelRoutes(services))
   router.use('/pause', TapPauseRoutes(services))

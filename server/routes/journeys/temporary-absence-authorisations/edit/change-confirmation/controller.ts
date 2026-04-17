@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { isFuture } from 'date-fns'
 import { formatAddress, joinAddress } from '../../../../../utils/formatUtils'
 import { getUpdateAbsenceCategoryRequest } from '../utils'
 import ExternalMovementsService, { UpdateTapAuthorisation } from '../../../../../services/apis/externalMovementsService'
@@ -52,7 +53,8 @@ export class EditTapAuthorisationChangeConfirmationController {
       newValue = transport.description
     } else if (location) {
       fieldName = 'location'
-      previousValue = formatAddress(authorisation.locations[0]!)
+      const futureOccurrences = authorisation.occurrences.filter(({ end }) => isFuture(end))
+      previousValue = formatAddress(futureOccurrences[0]!.location)
       newValue = joinAddress(location)
     } else if (accompanied !== undefined || accompaniedBy) {
       fieldName = 'accompaniment'
@@ -85,42 +87,36 @@ export class EditTapAuthorisationChangeConfirmationController {
     } = journey
 
     try {
-      if (location) {
-        journey.result = await this.externalMovementsService.updateTapOccurrence(
-          { res },
-          journey.authorisation.occurrences[0]!.id,
-          {
-            type: 'ChangeOccurrenceLocation',
-            location: parseAddress(location),
-          },
-        )
-      } else {
-        let requestBody: UpdateTapAuthorisation
-        if (absenceType || absenceSubType || reason || reasonCategory) {
-          requestBody = getUpdateAbsenceCategoryRequest(req)
-        } else if (comments !== undefined) {
-          requestBody = {
-            type: 'ChangeAuthorisationComments',
-            ...(comments ? { comments } : {}),
-          }
-        } else if (transport) {
-          requestBody = {
-            type: 'ChangeAuthorisationTransport',
-            transportCode: transport.code,
-          }
-        } else if (accompanied !== undefined || accompaniedBy) {
-          requestBody = {
-            type: 'ChangeAuthorisationAccompaniment',
-            accompaniedByCode: accompaniedBy?.code || 'U',
-          }
+      let requestBody: UpdateTapAuthorisation
+      if (absenceType || absenceSubType || reason || reasonCategory) {
+        requestBody = getUpdateAbsenceCategoryRequest(req)
+      } else if (comments !== undefined) {
+        requestBody = {
+          type: 'ChangeAuthorisationComments',
+          ...(comments ? { comments } : {}),
         }
-
-        journey.result = await this.externalMovementsService.updateTapAuthorisation(
-          { res },
-          journey.authorisation.id,
-          requestBody!,
-        )
+      } else if (transport) {
+        requestBody = {
+          type: 'ChangeAuthorisationTransport',
+          transportCode: transport.code,
+        }
+      } else if (accompanied !== undefined || accompaniedBy) {
+        requestBody = {
+          type: 'ChangeAuthorisationAccompaniment',
+          accompaniedByCode: accompaniedBy?.code || 'U',
+        }
+      } else if (location) {
+        requestBody = {
+          type: 'ChangeAuthorisationLocation',
+          location: parseAddress(location),
+        }
       }
+
+      journey.result = await this.externalMovementsService.updateTapAuthorisation(
+        { res },
+        journey.authorisation.id,
+        requestBody!,
+      )
 
       req.journeyData.journeyCompleted = true
 

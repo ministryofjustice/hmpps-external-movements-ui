@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import type { HTTPError } from 'superagent'
+import { isFuture } from 'date-fns'
 import { getAuthorisationAndPopulatePrisonerDetails } from '../utils'
 import { ResQuerySchemaType } from './schema'
 import { getApiUserErrorMessage, isTapAuthorisationEditable } from '../../../utils/utils'
@@ -46,6 +47,17 @@ export class TapAuthorisationDetailsController {
         authorisation.occurrences.every(({ status }) => !['IN_PROGRESS', 'OVERDUE'].includes(status.code))
       const resumable = authorisation.status.code === 'PAUSED'
 
+      const futureOccurrences = authorisation.occurrences.filter(({ end }) => isFuture(end))
+      const singleFutureAddress =
+        futureOccurrences.length &&
+        futureOccurrences.every(
+          ({ location }) =>
+            futureOccurrences[0]!.location.address === location.address &&
+            futureOccurrences[0]!.location.description === location.description &&
+            futureOccurrences[0]!.location.postcode === location.postcode &&
+            futureOccurrences[0]!.location.uprn === location.uprn,
+        )
+
       res.render('temporary-absence-authorisations/details/view', {
         showBreadcrumbs: true,
         result: authorisation,
@@ -57,6 +69,7 @@ export class TapAuthorisationDetailsController {
         cancellable,
         pausable,
         resumable,
+        singleFutureAddress,
       })
     } catch (error: unknown) {
       if ((error as { message?: string }).message) {

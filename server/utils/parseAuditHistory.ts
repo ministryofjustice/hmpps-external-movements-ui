@@ -193,7 +193,9 @@ const parseTapAuthorisationLocationChange = (action: components['schemas']['Audi
       heading: change.length === 1 ? 'Absence location changed' : 'Absence locations changed',
     }
     if (change.length)
-      eventText.changes = change.map((val, idx) => `Location was changed from ${previous[idx]} to ${val}.`)
+      eventText.changes = change
+        .filter((val, idx) => val !== previous[idx])
+        .map((val, idx) => `Location was changed from ${previous[idx]} to ${val}.`)
   } else if (change.length > previous.length) {
     const newItems = change.filter(val => !previous.includes(val))
     eventText = {
