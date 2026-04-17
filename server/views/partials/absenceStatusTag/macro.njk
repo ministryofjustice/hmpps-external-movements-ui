@@ -5,6 +5,8 @@
     {% set colour = " govuk-tag--green" %}
   {% case 'PENDING' %}
     {% set colour = " govuk-tag--grey" %}
+  {% case 'PAUSED' %}
+    {% set colour = " govuk-tag--orange" %}
   {% case 'SCHEDULED' %}
     {% set colour = " govuk-tag--yellow" %}
   {% case 'IN_PROGRESS' %}

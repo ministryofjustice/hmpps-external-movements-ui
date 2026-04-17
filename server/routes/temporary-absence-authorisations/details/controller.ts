@@ -39,9 +39,13 @@ export class TapAuthorisationDetailsController {
             uprn || description?.length || address?.length || postcode?.length,
         )
       const cancellable =
-        authorisation.status.code === 'APPROVED' &&
+        (authorisation.status.code === 'APPROVED' || authorisation.status.code === 'PAUSED') &&
         (authorisation.repeat ||
           !['IN_PROGRESS', 'OVERDUE', 'COMPLETED'].includes(authorisation.occurrences[0]?.status.code ?? ''))
+      const pausable =
+        authorisation.status.code === 'APPROVED' &&
+        authorisation.occurrences.every(({ status }) => !['IN_PROGRESS', 'OVERDUE'].includes(status.code))
+      const resumable = authorisation.status.code === 'PAUSED'
 
       const futureOccurrences = authorisation.occurrences.filter(({ end }) => isFuture(end))
       const singleFutureAddress =
@@ -63,6 +67,8 @@ export class TapAuthorisationDetailsController {
         editable,
         approvable,
         cancellable,
+        pausable,
+        resumable,
         singleFutureAddress,
       })
     } catch (error: unknown) {

@@ -121,6 +121,24 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
     content: 'Temporary absence movement migrated from NOMIS',
     skipUser: true,
   },
+  'person.temporary-absence-authorisation.paused': {
+    heading: 'Absence plan paused',
+    content: 'Temporary absence paused for <prisoner>',
+    reasonRequested: true,
+  },
+  'person.temporary-absence.paused': {
+    heading: 'Absence paused',
+    content: 'Temporary absence occurrence paused for <prisoner>',
+    reasonRequested: true,
+  },
+  'person.temporary-absence-authorisation.resumed': {
+    heading: 'Absence plan resumed',
+    content: 'Temporary absence resumed for <prisoner>',
+  },
+  'person.temporary-absence.resumed': {
+    heading: 'Absence resumed',
+    content: 'Temporary absence occurrence resumed for <prisoner>',
+  },
 }
 
 const CHANGE_PROPERTY_MAP: { [key: string]: string } = {

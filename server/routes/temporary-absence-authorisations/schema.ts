@@ -4,7 +4,7 @@ import { createSchema } from '../../middleware/validation/validationMiddleware'
 import { validateTransformOptionalDate } from '../../utils/validations/validateDatePicker'
 import { isPrisonNumber } from '../../utils/utils'
 
-const statusEnum = z.enum(['PENDING', 'APPROVED', 'CANCELLED', 'DENIED', 'EXPIRED'])
+const statusEnum = z.enum(['PENDING', 'APPROVED', 'CANCELLED', 'DENIED', 'EXPIRED', 'PAUSED'])
 
 export const schema = createSchema({
   searchTerm: z.string().optional(),

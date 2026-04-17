@@ -1,0 +1,47 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+
+{% set pageTitle = 'Pause absence plan - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <h1 class="govuk-heading-l">Are you sure you want to pause this plan?</h1>
+    {{ govukWarningText({
+      text: "Future occurrences of this absence will be temporarily paused. Any occurrences that take place during the pause will be marked as paused and will not appear at receptions. You can resume this plan at a later date.",
+      iconFallbackText: "Warning"
+    }) }}
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukTextarea({
+        id: "reason",
+        name: "reason",
+        errorMessage: validationErrors | findError('reason'),
+        label: {
+          text: "Enter a reason for temporarily pausing this plan",
+          classes: "govuk-label--m",
+          isPageHeading: false
+        },
+        value: approveReason
+      }) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          classes: "govuk-button--warning",
+          text: "Pause this absence",
+          preventDoubleClick: true
+        }) }}
+
+        {{ govukButton({
+          classes: "govuk-button--secondary",
+          text: "Do not pause this absence",
+          href: '/temporary-absence-authorisations/' + authorisation.id,
+          preventDoubleClick: true
+        }) }}
+      </div>
+    </form>
+  </div>
+{% endblock %}
