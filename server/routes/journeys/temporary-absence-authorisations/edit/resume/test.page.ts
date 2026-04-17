@@ -10,4 +10,12 @@ export class ResumeTapAuthorisationPage extends BaseTestPage {
       backUrl: /\/temporary-absence-authorisations\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
     })
   }
+
+  yesRadio() {
+    return this.radio('Yes')
+  }
+
+  noRadio() {
+    return this.radio('No')
+  }
 }

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
+import { SchemaType } from './schema'
 
 export class TapResumeController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -11,7 +12,12 @@ export class TapResumeController {
     })
   }
 
-  submitToApi = async (req: Request, res: Response, next: NextFunction) => {
+  submitToApi = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
+    if (!req.body.resume) {
+      next()
+      return
+    }
+
     const journey = req.journeyData.updateTapAuthorisation!
     try {
       journey.result = await this.externalMovementsService.updateTapAuthorisation({ res }, journey.authorisation.id, {
@@ -23,11 +29,11 @@ export class TapResumeController {
     }
   }
 
-  POST = async (req: Request, res: Response) => {
+  POST = async (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     const journey = req.journeyData.updateTapAuthorisation!
     req.journeyData.journeyCompleted = true
     res.redirect(
-      journey.result!.content.length ? 'confirmation' : `/temporary-absence-authorisations/${journey.authorisation.id}`,
+      journey.result?.content.length ? 'confirmation' : `/temporary-absence-authorisations/${journey.authorisation.id}`,
     )
   }
 }

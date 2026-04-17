@@ -71,17 +71,35 @@ test.describe('/temporary-absence-authorisations/edit/resume', () => {
 
     // verify page content
     const testPage = await new ResumeTapAuthorisationPage(page).verifyContent()
+    await expect(testPage.yesRadio()).toBeVisible()
+    await expect(testPage.yesRadio()).not.toBeChecked()
+    await expect(testPage.noRadio()).toBeVisible()
+    await expect(testPage.noRadio()).not.toBeChecked()
+    await expect(testPage.button('Save', true)).toBeVisible()
 
-    await expect(testPage.button('Resume this absence', true)).toBeVisible()
-    await expect(testPage.button('Do not resume this absence')).toBeVisible()
-    await expect(testPage.button('Do not resume this absence')).toHaveAttribute(
-      'href',
-      /\/temporary-absence-authorisations\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
-    )
+    // verify validation error
+    await testPage.clickButton('Save')
+    await testPage.link('Select if you want to resume this absence').click()
+    await expect(testPage.yesRadio()).toBeFocused()
 
     // verify next page routing
-    await testPage.clickButton('Resume this absence', 0)
+    await testPage.yesRadio().click()
+    await testPage.clickButton('Save')
 
     expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/confirmation/)
+  })
+
+  test('should route to TAP plan details page if `No` is selected', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    // verify page content
+    const testPage = await new ResumeTapAuthorisationPage(page).verifyContent()
+
+    // verify next page routing
+    await testPage.noRadio().click()
+    await testPage.clickButton('Save')
+
+    expect(page.url()).toContain(`/temporary-absence-authorisations/${authorisationId}`)
   })
 })

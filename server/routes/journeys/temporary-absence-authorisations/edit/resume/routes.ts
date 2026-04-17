@@ -1,13 +1,15 @@
 import { Services } from '../../../../../services'
 import { BaseRouter } from '../../../../common/routes'
 import { TapResumeController } from './controller'
+import { validate } from '../../../../../middleware/validation/validationMiddleware'
+import { schema } from './schema'
 
 export const TapResumeRoutes = ({ externalMovementsService }: Services) => {
   const { router, get, post } = BaseRouter()
   const controller = new TapResumeController(externalMovementsService)
 
   get('/', controller.GET)
-  post('/', controller.submitToApi, controller.POST)
+  post('/', validate(schema), controller.submitToApi, controller.POST)
 
   return router
 }

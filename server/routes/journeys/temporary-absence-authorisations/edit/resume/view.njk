@@ -1,27 +1,41 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% set pageTitle = 'Resume absence plan - Manage temporary absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Manage Temporary Absences</span>
-    <h1 class="govuk-heading-l">Are you sure you want to resume this absence plan?</h1>
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-      <div class="govuk-button-group">
-        {{ govukButton({
-          text: "Resume this absence",
-          preventDoubleClick: true
-        }) }}
+      {{ govukRadios({
+        name: "resume",
+        errorMessage: validationErrors | findError('resume'),
+        fieldset: {
+          legend: {
+            text: "Are you sure you want to resume this absence plan?",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--xl"
+          }
+        },
+        hint: { text: 'Resuming this plan will set future occurrences back to scheduled.' },
+        items: [
+          {
+            value: 'YES',
+            text: "Yes"
+          },
+          {
+            value: 'NO',
+            text: "No"
+          }
+        ]
+      }) }}
 
-        {{ govukButton({
-          classes: "govuk-button--secondary",
-          text: "Do not resume this absence",
-          href: '/temporary-absence-authorisations/' + authorisation.id,
-          preventDoubleClick: true
-        }) }}
-      </div>
+      {{ govukButton({
+        text: "Save",
+        preventDoubleClick: true
+      }) }}
     </form>
   </div>
 {% endblock %}
