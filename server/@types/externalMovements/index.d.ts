@@ -693,8 +693,8 @@ export interface components {
     }
     Change: {
       propertyName: string
-      previous?: null | string
-      change?: null | string
+      previous?: (string | number | boolean) | null
+      change?: (string | number | boolean) | null
     }
     User: {
       username: string
@@ -1008,11 +1008,14 @@ export interface components {
       end: string
       contactInformation?: string | null
       schedule?:
-        | components['schemas']['BiweeklySchedule']
-        | components['schemas']['FreeFormSchedule']
-        | components['schemas']['ShiftSchedule']
-        | components['schemas']['SingleSchedule']
-        | components['schemas']['WeeklySchedule']
+        | (
+            | components['schemas']['BiweeklySchedule']
+            | components['schemas']['FreeFormSchedule']
+            | components['schemas']['ShiftSchedule']
+            | components['schemas']['SingleSchedule']
+            | components['schemas']['WeeklySchedule']
+          )
+        | null
     }
     DayShiftPattern: Omit<WithRequired<components['schemas']['ShiftPattern'], 'count' | 'type'>, 'type'> & {
       startTime: string
@@ -1180,14 +1183,15 @@ export interface components {
       absenceReasonCategory?: components['schemas']['CodedDescription'] | null
       absenceReason?: components['schemas']['CodedDescription'] | null
       repeat: boolean
-      schedule?: null &
-        (
-          | components['schemas']['BiweeklySchedule']
-          | components['schemas']['FreeFormSchedule']
-          | components['schemas']['ShiftSchedule']
-          | components['schemas']['SingleSchedule']
-          | components['schemas']['WeeklySchedule']
-        )
+      schedule?:
+        | (
+            | components['schemas']['BiweeklySchedule']
+            | components['schemas']['FreeFormSchedule']
+            | components['schemas']['ShiftSchedule']
+            | components['schemas']['SingleSchedule']
+            | components['schemas']['WeeklySchedule']
+          )
+        | null
     }
     TapOccurrenceResult: {
       /** Format: uuid */
@@ -1353,11 +1357,14 @@ export interface components {
       repeat: boolean
       comments?: string | null
       schedule?:
-        | components['schemas']['BiweeklySchedule']
-        | components['schemas']['FreeFormSchedule']
-        | components['schemas']['ShiftSchedule']
-        | components['schemas']['SingleSchedule']
-        | components['schemas']['WeeklySchedule']
+        | (
+            | components['schemas']['BiweeklySchedule']
+            | components['schemas']['FreeFormSchedule']
+            | components['schemas']['ShiftSchedule']
+            | components['schemas']['SingleSchedule']
+            | components['schemas']['WeeklySchedule']
+          )
+        | null
     }
     'TapOccurrence.Movement': {
       /** Format: uuid */
@@ -1419,11 +1426,14 @@ export interface components {
       occurrences: components['schemas']['TapAuthorisation.Occurrence'][]
       locations: components['schemas']['Location'][]
       schedule?:
-        | components['schemas']['BiweeklySchedule']
-        | components['schemas']['FreeFormSchedule']
-        | components['schemas']['ShiftSchedule']
-        | components['schemas']['SingleSchedule']
-        | components['schemas']['WeeklySchedule']
+        | (
+            | components['schemas']['BiweeklySchedule']
+            | components['schemas']['FreeFormSchedule']
+            | components['schemas']['ShiftSchedule']
+            | components['schemas']['SingleSchedule']
+            | components['schemas']['WeeklySchedule']
+          )
+        | null
       comments?: string | null
     }
     'TapAuthorisation.Occurrence': {
