@@ -2,6 +2,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "partials/absenceStatusTag/macro.njk" import absenceStatusTag %}
 {% from "partials/simplePagination/macro.njk" import simplePagination %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set fullWidth = true %}
 {% set pageTitle = 'Select absence plan - Create and download documents' %}
@@ -13,7 +14,19 @@
     <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Select which plan you want to use</h1>
 
     {% if not results.length %}
-      <p class="govuk-!-margin-bottom-6"><strong>No absence plan found for this prisoner.</strong></p>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <p><strong>No absence plan found for this prisoner.</strong></p>
+
+          <p class="govuk-!-margin-bottom-6">You can continue without selecting an absence plan. On the next screen, you can enter absence information if available or leave it blank.</p>
+
+          {{ govukButton({
+            text: "Continue without an absence plan",
+            href: documentGenerationUrl,
+            preventDoubleClick: true
+          }) }}
+        </div>
+      </div>
     {% else %}
       {% set rows = [] %}
       {% for authorisation in results %}
@@ -70,6 +83,13 @@
       }) }}
 
       {{ simplePagination(paginationParams) }}
+
+      {{ govukButton({
+        classes: "govuk-button--secondary govuk-!-margin-top-6",
+        text: "Continue without an absence plan",
+        href: documentGenerationUrl,
+        preventDoubleClick: true
+      }) }}
     {% endif %}
   </div>
 {% endblock %}
