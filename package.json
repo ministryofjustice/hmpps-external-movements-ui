@@ -76,7 +76,7 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.1032.0",
+    "@aws-sdk/client-sqs": "^3.1034.0",
     "@axe-core/playwright": "^4.11.2",
     "@microsoft/applicationinsights-clickanalytics-js": "3.4.1",
     "@microsoft/applicationinsights-web": "3.4.1",
@@ -150,7 +150,7 @@
     "jest-junit": "^16.0.0",
     "jsonwebtoken": "^9.0.3",
     "lint-staged": "^16.4.0",
-    "nock": "^14.0.12",
+    "nock": "^14.0.13",
     "openapi-typescript": "^7.13.0",
     "playwright-ctrf-json-reporter": "^0.0.29",
     "prettier": "^3.8.3",
