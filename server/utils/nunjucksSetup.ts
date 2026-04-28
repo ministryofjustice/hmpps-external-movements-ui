@@ -27,7 +27,7 @@ import {
   sentenceCase,
   statusPriority,
 } from './formatUtils'
-import { formatDate, formatInputDate, formatTime, inputDate, addDaysMonths, absenceTimeRange } from './dateTimeUtils'
+import { formatDate, formatInputDate, inputDate, addDaysMonths, absenceTimeRange } from './dateTimeUtils'
 import {
   buildErrorSummaryList,
   customErrorOrderBuilder,
@@ -102,7 +102,6 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatRefDataName', formatRefDataName)
   njkEnv.addFilter('getQueryEntries', getQueryEntries)
   njkEnv.addFilter('formatDate', formatDate)
-  njkEnv.addFilter('formatTime', formatTime)
   njkEnv.addFilter('formatInputDate', formatInputDate)
   njkEnv.addFilter('addDaysMonths', addDaysMonths)
   njkEnv.addFilter('absenceTimeRange', absenceTimeRange)
@@ -117,7 +116,6 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('fromRefData', fromRefData)
   njkEnv.addFilter('statusPriority', statusPriority)
   njkEnv.addFilter('occurrenceStatus', occurrenceStatus)
-  njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('contains', (arr, value) => arr.includes(value))
   njkEnv.addFilter('joinAddress', joinAddress)
   njkEnv.addFilter('formatAddress', formatAddress)

@@ -9,10 +9,6 @@ export const formatDate = (date?: string | Date, fmt = 'd MMMM yyyy') => {
   return format(richDate, fmt)
 }
 
-export const formatTime = (date?: string) => {
-  return date?.substring(9, 14) || ''
-}
-
 export const addDaysMonths = (dateString: string, plusDays: number = 0, plusMonth: number = 0) => {
   const date = new Date(dateString)
   if (plusDays !== 0) date.setDate(date.getDate() + plusDays)
