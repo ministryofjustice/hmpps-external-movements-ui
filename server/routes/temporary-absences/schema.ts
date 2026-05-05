@@ -16,7 +16,10 @@ export const TapOccurrenceStatusEnum = z.enum([
 ])
 
 export const schema = createSchema({
-  searchTerm: z.string().optional(),
+  searchTerm: z
+    .string()
+    .optional()
+    .transform(val => val?.replace(/[\r\n]/g, '').trim()),
   status: z.union([TapOccurrenceStatusEnum.transform(val => [val]), z.array(TapOccurrenceStatusEnum)]).optional(),
   clear: z.string().optional(),
   start: validateTransformOptionalDate('Enter or select a valid start date from'),

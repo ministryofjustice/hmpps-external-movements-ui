@@ -7,7 +7,10 @@ import { isPrisonNumber } from '../../utils/utils'
 const statusEnum = z.enum(['PENDING', 'APPROVED', 'CANCELLED', 'DENIED', 'EXPIRED', 'PAUSED'])
 
 export const schema = createSchema({
-  searchTerm: z.string().optional(),
+  searchTerm: z
+    .string()
+    .optional()
+    .transform(val => val?.replace(/[\r\n]/g, '').trim()),
   status: z.union([statusEnum.transform(val => [val]), z.array(statusEnum)]).optional(),
   clear: z.string().optional(),
   start: validateTransformOptionalDate('Enter or select a valid start date from'),
