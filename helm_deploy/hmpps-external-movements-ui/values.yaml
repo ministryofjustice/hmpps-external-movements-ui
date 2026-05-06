@@ -16,6 +16,14 @@ generic-service:
     enabled: true
     host: app-hostname.local # override per environment
     tlsSecretName: hmpps-external-movements-ui-cert
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "H2C"
+      nginx.ingress.kubernetes.io/server-snippet: |
+        server_tokens off;
+        more_set_headers "Strict-Transport-Security: \"max-age=31536000; includeSubDomains; preload\"";
+        if ($server_protocol !~ "^HTTP/2") {
+          return 426;
+        }
 
   livenessProbe:
     httpGet:
