@@ -13,13 +13,12 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getTapOccurrence']
     /**
      * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     put: operations['applyActions']
     post?: never
@@ -38,13 +37,14 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
      *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
      */
     get: operations['getTapAuthorisation']
     /**
      * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     put: operations['applyActions_1']
     post?: never
@@ -165,7 +165,7 @@ export interface paths {
     put?: never
     /**
      * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     post: operations['createTapAuthorisation']
     delete?: never
@@ -185,7 +185,7 @@ export interface paths {
     put?: never
     /**
      * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     post: operations['createOccurrence']
     delete?: never
@@ -234,6 +234,48 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/search/prisons/{prisonCode}/external-movements/schedules': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RW
+     */
+    post: operations['externalMovementSchedules']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/search/prisons/{prisonCode}/external-activities': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RW
+     */
+    post: operations['externalActivities']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/search/people/{personIdentifier}/temporary-absence-occurrences': {
     parameters: {
       query?: never
@@ -263,8 +305,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getTapOccurrenceHistory']
     put?: never
@@ -324,8 +365,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getTapAuthorisationHistory']
     put?: never
@@ -408,27 +448,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/search/prisons/{prisonCode}/external-movements/schedules': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RO
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RW
-     */
-    get: operations['externalMovementSchedules']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/reference-data/{domain}': {
     parameters: {
       query?: never
@@ -438,8 +457,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getDomain']
     put?: never
@@ -510,6 +528,121 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/integrations/temporary-absence-occurrences/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     */
+    get: operations['occurrence']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/integrations/temporary-absence-occurrences/{id}/movements': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     */
+    get: operations['movementsForOccurrence']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/integrations/temporary-absence-movements/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     */
+    get: operations['movement']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/integrations/temporary-absence-authorisations/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     */
+    get: operations['authorisation']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/integrations/temporary-absence-authorisations/{id}/occurrences': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
+     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     */
+    get: operations['occurrencesForAuthorisation']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/absence-categorisation/{domain}': {
     parameters: {
       query?: never
@@ -519,8 +652,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getAbsenceCategorisationDomain']
     put?: never
@@ -540,8 +672,7 @@ export interface paths {
     }
     /**
      * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RO
-     *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
     get: operations['getAbsenceCategorisationOptions']
     put?: never
@@ -685,7 +816,10 @@ export interface components {
     }
     AuditedAction: {
       user: components['schemas']['User']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       occurredAt: string
       domainEvents: string[]
       reason?: string | null
@@ -800,7 +934,10 @@ export interface components {
       reason?: string | null
     })
     SyncAtAndBy: {
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       at: string
       by: string
     }
@@ -809,7 +946,10 @@ export interface components {
       id?: string | null
       /** Format: uuid */
       occurrenceId?: string | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       occurredAt: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
@@ -855,9 +995,15 @@ export interface components {
       /** Format: uuid */
       id?: string | null
       isCancelled: boolean
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
       location: components['schemas']['Location']
       absenceTypeCode?: string | null
@@ -898,7 +1044,10 @@ export interface components {
       occurrences: components['schemas']['MigrateTapOccurrence'][]
     }
     MigrateTapMovement: {
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       occurredAt: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
@@ -916,9 +1065,15 @@ export interface components {
     }
     MigrateTapOccurrence: {
       isCancelled: boolean
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
       location: components['schemas']['Location']
       absenceTypeCode?: string | null
@@ -1045,9 +1200,15 @@ export interface components {
       type: 'NIGHT'
     }
     OccurrenceRequest: {
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
       location: components['schemas']['Location']
     }
@@ -1112,9 +1273,15 @@ export interface components {
       id: string
     }
     CreateOccurrenceRequest: {
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
       location: components['schemas']['Location']
       comments?: string | null
@@ -1150,6 +1317,7 @@ export interface components {
         | 'DENIED'
       )[]
       absenceCategorisation?: components['schemas']['AbsenceCategorisationFilter'] | null
+      isAccompanied?: boolean | null
       query?: string | null
       /** Format: int32 */
       page: number
@@ -1202,9 +1370,15 @@ export interface components {
       absenceSubType?: components['schemas']['CodedDescription'] | null
       absenceReasonCategory?: components['schemas']['CodedDescription'] | null
       absenceReason?: components['schemas']['CodedDescription'] | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
       accompaniedBy: components['schemas']['CodedDescription']
       transport: components['schemas']['CodedDescription']
@@ -1224,6 +1398,7 @@ export interface components {
       end?: string | null
       status: ('PENDING' | 'APPROVED' | 'PAUSED' | 'CANCELLED' | 'DENIED' | 'EXPIRED')[]
       absenceCategorisation?: components['schemas']['AbsenceCategorisationFilter'] | null
+      isAccompanied?: boolean | null
       query?: string | null
       /** Format: int32 */
       page: number
@@ -1253,6 +1428,92 @@ export interface components {
     TapAuthorisationSearchResponse: {
       content: components['schemas']['TapAuthorisationResult'][]
       metadata: components['schemas']['PageMetadata']
+    }
+    SearchScheduledMovementsRequest: {
+      movementTypes: 'TEMPORARY_ABSENCE'[]
+      personIdentifiers: string[]
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
+      start: string
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
+      end: string
+      includeSensitive: boolean
+      includeLocation: boolean
+    }
+    LocationDescription: {
+      description: string
+    }
+    ScheduledMovement: {
+      /** Format: uuid */
+      id: string
+      personIdentifier: string
+      domain: components['schemas']['CodedDescription']
+      type: components['schemas']['CodedDescription']
+      description: components['schemas']['ScheduledMovementDescription']
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
+      start: string
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
+      end: string
+      location: components['schemas']['LocationDescription']
+      status: components['schemas']['CodedDescription']
+      detail: components['schemas']['ScheduledMovementDetail']
+    }
+    ScheduledMovementDescription: {
+      full: string
+      short: string
+      code: string
+    }
+    ScheduledMovementDetail: {
+      uiUrl: string
+      requiredRoles: string[]
+    }
+    ScheduledMovements: {
+      content: components['schemas']['ScheduledMovement'][]
+    }
+    SearchExternalActivitiesRequest: {
+      personIdentifiers: string[]
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
+      start: string
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
+      end: string
+    }
+    ExternalActivities: {
+      content: components['schemas']['ExternalActivity'][]
+    }
+    ExternalActivity: {
+      /** Format: uuid */
+      id: string
+      personIdentifier: string
+      description: components['schemas']['ScheduledMovementDescription']
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
+      start: string
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
+      end: string
+      status: components['schemas']['CodedDescription']
+      detail: components['schemas']['ScheduledMovementDetail']
     }
     PersonTapSearchRequest: {
       /** Format: date */
@@ -1297,9 +1558,15 @@ export interface components {
       absenceSubType?: components['schemas']['CodedDescription'] | null
       absenceReasonCategory?: components['schemas']['CodedDescription'] | null
       absenceReason?: components['schemas']['CodedDescription'] | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
       accompaniedBy: components['schemas']['CodedDescription']
       transport: components['schemas']['CodedDescription']
@@ -1325,9 +1592,15 @@ export interface components {
       absenceReasonCategory?: components['schemas']['CodedDescription'] | null
       absenceReason?: components['schemas']['CodedDescription'] | null
       status: components['schemas']['CodedDescription']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
       location: components['schemas']['Location']
       accompaniedBy: components['schemas']['CodedDescription']
@@ -1369,7 +1642,10 @@ export interface components {
     'TapOccurrence.Movement': {
       /** Format: uuid */
       id: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       occurredAt: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
@@ -1380,7 +1656,10 @@ export interface components {
       id: string
       person: components['schemas']['Person']
       occurrence?: components['schemas']['TapMovement.Occurrence'] | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       occurredAt: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
@@ -1399,9 +1678,15 @@ export interface components {
       absenceReasonCategory?: components['schemas']['CodedDescription'] | null
       absenceReason?: components['schemas']['CodedDescription'] | null
       status: components['schemas']['CodedDescription']
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
     }
     TapAuthorisation: {
@@ -1444,9 +1729,15 @@ export interface components {
       absenceSubType?: components['schemas']['CodedDescription'] | null
       absenceReasonCategory?: components['schemas']['CodedDescription'] | null
       absenceReason?: components['schemas']['CodedDescription'] | null
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
       location: components['schemas']['Location']
       accompaniedBy: components['schemas']['CodedDescription']
@@ -1458,9 +1749,15 @@ export interface components {
       id: string
       authorisation: components['schemas']['SyncReadTapOccurrenceAuthorisation']
       statusCode: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
       location: components['schemas']['Location']
       absenceTypeCode?: string | null
@@ -1485,7 +1782,10 @@ export interface components {
       /** Format: uuid */
       occurrenceId?: string | null
       personIdentifier: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       occurredAt: string
       /** @enum {string} */
       direction: 'IN' | 'OUT'
@@ -1523,9 +1823,15 @@ export interface components {
       /** Format: uuid */
       id: string
       statusCode: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
       location: components['schemas']['Location']
       absenceTypeCode?: string | null
@@ -1536,38 +1842,6 @@ export interface components {
       comments?: string | null
       created: components['schemas']['SyncAtAndBy']
       updated?: components['schemas']['SyncAtAndBy'] | null
-    }
-    SearchScheduledMovementsRequest: {
-      movementTypes: 'TEMPORARY_ABSENCE'[]
-      personIdentifiers: string[]
-      /** Format: date-time */
-      start: string
-      /** Format: date-time */
-      end: string
-      includeSensitive: boolean
-      includeLocation: boolean
-    }
-    Detail: {
-      uiUrl: string
-      requiredRoles: string[]
-    }
-    ScheduledMovement: {
-      /** Format: uuid */
-      id: string
-      personIdentifier: string
-      domain: components['schemas']['CodedDescription']
-      type: components['schemas']['CodedDescription']
-      description: string
-      /** Format: date-time */
-      start: string
-      /** Format: date-time */
-      end: string
-      location: string
-      status: components['schemas']['CodedDescription']
-      detail: components['schemas']['Detail']
-    }
-    ScheduledMovements: {
-      content: components['schemas']['ScheduledMovement'][]
     }
     ReferenceDataResponse: {
       domain: components['schemas']['CodedDescription']
@@ -1631,9 +1905,15 @@ export interface components {
         | 'DENIED'
       prisonCode: string
       reasonCode: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       start: string
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
       end: string
       location?: components['schemas']['Location'] | null
       movements: components['schemas']['ReconciliationMovement'][]
@@ -1655,6 +1935,99 @@ export interface components {
       returningToday: number
       /** Format: int32 */
       approvalsRequired: number
+    }
+    IntegrationCodedDescription: {
+      code: string
+      description: string
+    }
+    IntegrationOccurrence: {
+      /** Format: uuid */
+      id: string
+      /** Format: uuid */
+      authorisationId: string
+      personIdentifier: string
+      prisonCode: string
+      status: components['schemas']['IntegrationCodedDescription']
+      reason: components['schemas']['IntegrationReason']
+      transport: components['schemas']['IntegrationCodedDescription']
+      accompaniedBy: components['schemas']['IntegrationCodedDescription']
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
+      start: string
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
+      end: string
+      location: components['schemas']['Location']
+      comments?: string | null
+    }
+    IntegrationReason: {
+      code: string
+      description: string
+      fullDescription?: string | null
+    }
+    IntegrationResponseIntegrationOccurrence: {
+      data: components['schemas']['IntegrationOccurrence']
+      previousUrl?: string | null
+      nextUrl?: string | null
+    }
+    IntegrationMovement: {
+      /** Format: uuid */
+      id: string
+      /** Format: uuid */
+      occurrenceId?: string | null
+      personIdentifier: string
+      prisonCode: string
+      /** @enum {string} */
+      direction: 'IN' | 'OUT'
+      reason: components['schemas']['IntegrationReason']
+      accompaniedBy: components['schemas']['IntegrationCodedDescription']
+      accompaniedByComments?: string | null
+      /**
+       * Format: date-time
+       * @example 2026-05-07T12:37:01
+       */
+      occurredAt: string
+      location: components['schemas']['Location']
+      comments?: string | null
+    }
+    IntegrationResponseIntegrationMovement: {
+      data: components['schemas']['IntegrationMovement']
+      previousUrl?: string | null
+      nextUrl?: string | null
+    }
+    IntegrationResponsesIntegrationMovement: {
+      data: components['schemas']['IntegrationResponseIntegrationMovement'][]
+      previousUrl?: string | null
+    }
+    IntegrationAuthorisation: {
+      /** Format: uuid */
+      id: string
+      personIdentifier: string
+      prisonCode: string
+      status: components['schemas']['IntegrationCodedDescription']
+      reason: components['schemas']['IntegrationReason']
+      transport: components['schemas']['IntegrationCodedDescription']
+      accompaniedBy: components['schemas']['IntegrationCodedDescription']
+      repeat: boolean
+      /** Format: date */
+      start: string
+      /** Format: date */
+      end: string
+      locations: components['schemas']['Location'][]
+      comments?: string | null
+    }
+    IntegrationResponseIntegrationAuthorisation: {
+      data: components['schemas']['IntegrationAuthorisation']
+      previousUrl?: string | null
+      nextUrl?: string | null
+    }
+    IntegrationResponsesIntegrationOccurrence: {
+      data: components['schemas']['IntegrationResponseIntegrationOccurrence'][]
+      previousUrl?: string | null
     }
     AbsenceCategorisation: {
       code: string
@@ -1730,7 +2103,10 @@ export interface operations {
   applyActions: {
     parameters: {
       query?: never
-      header?: never
+      header?: {
+        /** @description Relevant caseload id for the client identity in context e.g. the active caseload id of the logged in user. */
+        CaseloadId?: string
+      }
       path: {
         id: string
       }
@@ -1797,7 +2173,10 @@ export interface operations {
   applyActions_1: {
     parameters: {
       query?: never
-      header?: never
+      header?: {
+        /** @description Relevant caseload id for the client identity in context e.g. the active caseload id of the logged in user. */
+        CaseloadId?: string
+      }
       path: {
         id: string
       }
@@ -1965,7 +2344,10 @@ export interface operations {
   createTapAuthorisation: {
     parameters: {
       query?: never
-      header?: never
+      header?: {
+        /** @description Relevant caseload id for the client identity in context e.g. the active caseload id of the logged in user. */
+        CaseloadId?: string
+      }
       path: {
         personIdentifier: string
       }
@@ -1991,7 +2373,10 @@ export interface operations {
   createOccurrence: {
     parameters: {
       query?: never
-      header?: never
+      header?: {
+        /** @description Relevant caseload id for the client identity in context e.g. the active caseload id of the logged in user. */
+        CaseloadId?: string
+      }
       path: {
         id: string
       }
@@ -2058,6 +2443,58 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['TapAuthorisationSearchResponse']
+        }
+      }
+    }
+  }
+  externalMovementSchedules: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonCode: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SearchScheduledMovementsRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ScheduledMovements']
+        }
+      }
+    }
+  }
+  externalActivities: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonCode: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SearchExternalActivitiesRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ExternalActivities']
         }
       }
     }
@@ -2302,30 +2739,6 @@ export interface operations {
       }
     }
   }
-  externalMovementSchedules: {
-    parameters: {
-      query: {
-        request: components['schemas']['SearchScheduledMovementsRequest']
-      }
-      header?: never
-      path: {
-        prisonCode: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['ScheduledMovements']
-        }
-      }
-    }
-  }
   getDomain: {
     parameters: {
       query?: never
@@ -2419,6 +2832,116 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['PrisonExternalMovementOverview']
+        }
+      }
+    }
+  }
+  occurrence: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['IntegrationResponseIntegrationOccurrence']
+        }
+      }
+    }
+  }
+  movementsForOccurrence: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['IntegrationResponsesIntegrationMovement']
+        }
+      }
+    }
+  }
+  movement: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['IntegrationResponseIntegrationMovement']
+        }
+      }
+    }
+  }
+  authorisation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['IntegrationResponseIntegrationAuthorisation']
+        }
+      }
+    }
+  }
+  occurrencesForAuthorisation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['IntegrationResponsesIntegrationOccurrence']
         }
       }
     }
