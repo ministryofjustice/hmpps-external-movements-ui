@@ -100,6 +100,30 @@
   }
 }
 
+.sameDayReturnTimeLabel {
+  display: inline;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.overnightCheckbox:has(> .govuk-checkboxes input:checked) ~ .govuk-form-group {
+  .sameDayReturnTimeLabel {
+    display: none!important;
+  }
+}
+
 .govuk-table__header {
   button {
     svg {
