@@ -73,7 +73,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-l">Create a Temporary Absence</span>
-    <h1 class="govuk-heading-l govuk-!-margin-bottom-7"><label for="selectedDays">{{ "Week 1 of 2" if week === 'FIRST' else 'Week 2 of 2' }}: Enter the days and times for these absences</label></h1>
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-7">{{ "Week 1 of 2" if week === 'FIRST' else 'Week 2 of 2' }}: Enter the days and times for these absences</h1>
     {{ govukInsetText({
       html: "<span>The absence pattern will alternate every other week between " + startDate | formatDate + " and "+ endDate | formatDate + '. <span><a class="govuk-link govuk-link--no-visited-state" href="start-end-dates">Go back if you need to change these dates.</a>'
     }) }}
@@ -105,8 +105,9 @@
         name: "selectedDays",
         errorMessage: validationErrors | findError('selectedDays'),
         hint: {
-          text: "You can select more than one day. When entering times use the 24-hour clock. For example, 09:09 or 17:32."
+          html: 'You can select more than one day. When entering times use the 24-hour clock. For example, 09:09 or 17:32. <span class="govuk-visually-hidden">Selecting the checkboxes will reveal additional related inputs.</span>'
         },
+        fieldset: { legend: { text: 'Enter the days and times for these absences', classes: 'govuk-visually-hidden' } },
         items: dayItems
       }) }}
 
