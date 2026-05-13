@@ -112,6 +112,17 @@
                 </div>
               </div>
 
+              {% if user | featureEnabled('DEV_LED') %}
+                <div class="govuk-grid-column-one-third card-group__item">
+                  <div class="card card--clickable placeholder-background">
+                    <h2 class="govuk-heading-m card__heading">
+                      <a class="govuk-link govuk-link--no-visited-state card__link" href="/manage-locations">Manage saved temporary absence locations</a>
+                    </h2>
+                    <p class="govuk-body card__description">Add, remove and change the order of the list of commonly used temporary absence destinations for this prison.</p>
+                  </div>
+                </div>
+              {% endif %}
+
             </div>
           </div>
         </div>

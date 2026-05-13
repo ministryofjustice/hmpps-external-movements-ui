@@ -1,0 +1,212 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "dps/components/address-autosuggest/macro.njk" import addressAutosuggest %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set mainClasses = "app-container govuk-body placeholder-background" %}
+
+{% set fullWidth = true %}
+{% set pageTitle = 'Manage temporary absence locations' %}
+
+{% block innerContent %}
+  <div class="govuk-!-static-margin-bottom-6">
+    <h1 class="govuk-heading-l">Manage temporary absence locations</h1>
+  </div>
+
+  {% set locationsHtml %}
+    {% for location in locations %}
+      {% if location.address %}
+        <input type="hidden" name="locations[{{ loop.index0 }}][address]" value="{{ location.address }}" />
+      {% endif %}
+      {% if location.description %}
+        <input type="hidden" name="locations[{{ loop.index0 }}][description]" value="{{ location.description }}" />
+      {% endif %}
+      {% if location.postcode %}
+        <input type="hidden" name="locations[{{ loop.index0 }}][postcode]" value="{{ location.postcode }}" />
+      {% endif %}
+      {% if location.uprn %}
+        <input type="hidden" name="locations[{{ loop.index0 }}][uprn]" value="{{ location.uprn }}" />
+      {% endif %}
+    {% endfor %}
+  {% endset %}
+
+
+  <section role="region" aria-label="Add a location">
+    <div class="block-background govuk-!-padding-6 govuk-!-margin-bottom-7">
+      <h2 class="govuk-heading-m">Add a location</h2>
+
+      {% set searchAddressesHtml %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <form method="post" action="manage-locations/add-searched-address?history={{ b64History }}">
+              <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+              <input type="hidden" name="version" value="{{ version }}" />
+              {{ locationsHtml | safe }}
+              <div id="address-hint" class="govuk-hint">Enter an address or postcode</div>
+              <div id="address-input">
+                {{ addressAutosuggest({
+                  classes: 'govuk-!-margin-bottom-5',
+                  inputValue: inputValue,
+                  errorMessage: validationErrors | findError('address-autosuggest-input'),
+                  findUrl: '/api/addresses/find'
+                }) }}
+              </div>
+              {{ govukButton({
+                text: "Save",
+                preventDoubleClick: true
+              }) }}
+            </form>
+          </div>
+        </div>
+      {% endset %}
+
+      {% set enterAddressHtml %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <form method="post" action="manage-locations/add-address?history={{ b64History }}">
+              <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+              <input type="hidden" name="version" value="{{ version }}" />
+              {{ locationsHtml | safe }}
+              {{ govukInput({
+                id: "description",
+                name: "description",
+                label: { text: "Business or organisation name (optional)" },
+                classes: 'govuk-!-width-two-thirds',
+                errorMessage: validationErrors | findError('description'),
+                value: description,
+                attributes: { autocomplete: "organization" }
+              }) }}
+              {{ govukInput({
+                id: "line1",
+                name: "line1",
+                label: { text: "Address line 1 (optional)" },
+                classes: 'govuk-!-width-two-thirds',
+                errorMessage: validationErrors | findError('line1'),
+                value: line1,
+                attributes: { autocomplete: "address-line1" }
+              }) }}
+              {{ govukInput({
+                id: "line2",
+                name: "line2",
+                label: { text: "Address line 2 (optional)" },
+                classes: 'govuk-!-width-two-thirds',
+                errorMessage: validationErrors | findError('line2'),
+                value: line2,
+                attributes: { autocomplete: "address-line2" }
+              }) }}
+              {{ govukInput({
+                id: "city",
+                name: "city",
+                label: { text: "Town or city" },
+                classes: 'govuk-!-width-one-half',
+                errorMessage: validationErrors | findError('city'),
+                value: city,
+                attributes: { autocomplete: "address-level2" }
+              }) }}
+              {{ govukInput({
+                id: "county",
+                name: "county",
+                label: { text: "County (optional)" },
+                classes: 'govuk-!-width-one-half',
+                errorMessage: validationErrors | findError('county'),
+                value: county,
+                attributes: { autocomplete: "address-level1" }
+              }) }}
+              {{ govukInput({
+                id: "postcode",
+                name: "postcode",
+                label: { text: "Postcode (optional)" },
+                classes: 'govuk-!-width-one-third',
+                errorMessage: validationErrors | findError('postcode'),
+                value: postcode,
+                attributes: { autocomplete: "postal-code" }
+              }) }}
+              {{ govukButton({
+                text: "Save",
+                preventDoubleClick: true
+              }) }}
+            </form>
+          </div>
+        </div>
+      {% endset %}
+
+      {% set enterAreaHtml %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <form method="post" action="manage-locations/add-area?history={{ b64History }}">
+              <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+              <input type="hidden" name="version" value="{{ version }}" />
+              {{ locationsHtml | safe }}
+              {{ govukInput({
+                id: "area",
+                name: "area",
+                label: { text: "Area description" },
+                hint: { text: "Eg, York city centre" },
+                errorMessage: validationErrors | findError('area'),
+                value: area
+              }) }}
+              {{ govukButton({
+                text: "Save",
+                preventDoubleClick: true
+              }) }}
+            </form>
+          </div>
+        </div>
+      {% endset %}
+
+      {{ govukTabs({
+        items: [
+          {
+            label: "Search all UK addresses",
+            id: "search-address",
+            panel: { html: searchAddressesHtml }
+          },
+          {
+            label: "Enter an address",
+            id: "enter-address",
+            panel: { html: enterAddressHtml }
+          },
+          {
+            label: "Enter an area",
+            id: "enter-area",
+            panel: { html: enterAreaHtml }
+          }
+        ]
+      }) }}
+    </div>
+  </section>
+
+  <h2 class="govuk-heading-m">You have {{ locations.length }} save {{ 'location' if locations.length === 1 else 'locations' }}</h2>
+  {% if locations.length %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <form method="post" action="manage-locations/remove-location?history={{ b64History }}">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+          <input type="hidden" name="version" value="{{ version }}" />
+          {{ locationsHtml | safe }}
+          <ul class="govuk-list">
+            {% for location in locations %}
+              <li>
+                <div class="govuk-grid-row">
+                  <div class="govuk-grid-column-three-quarters">
+                    {{ location | formatAddress }}
+                  </div>
+                  <div class="govuk-grid-column-one-quarter">
+                    {{ govukButton({
+                      classes: "govuk-button--secondary",
+                      text: "Remove",
+                      name: "remove",
+                      value: loop.index0,
+                      preventDoubleClick: true
+                    }) }}
+                  </div>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

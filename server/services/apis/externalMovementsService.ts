@@ -224,4 +224,17 @@ export default class ExternalMovementsService {
       path: `/temporary-absence-movements/${id}/history`,
     })
   }
+
+  async getTapLocations(context: ApiRequestContext) {
+    return this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapLocations']>({
+      path: `/prisons/${context.res.locals.user.getActiveCaseloadId()}/temporary-absence-locations`,
+    })
+  }
+
+  async putTapLocations(context: ApiRequestContext, request: components['schemas']['TapLocations']) {
+    return this.externalMovementsApiClient.withContext(context).put({
+      path: `/prisons/${context.res.locals.user.getActiveCaseloadId()}/temporary-absence-locations`,
+      data: request,
+    })
+  }
 }

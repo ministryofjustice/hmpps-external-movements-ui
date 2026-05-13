@@ -16,7 +16,7 @@ export const auditApiCallMiddleware =
         },
       }
 
-      if (req.journeyData.prisonerDetails?.prisonerNumber) {
+      if (req.journeyData?.prisonerDetails?.prisonerNumber) {
         event.subjectType = 'PRISONER_ID'
         event.subjectId = req.journeyData.prisonerDetails.prisonerNumber
       }
