@@ -27,6 +27,7 @@ export const ManageLocationsRoutes = ({ externalMovementsService, osPlacesAddres
   get('/add-area', redirectAndForwardValidationErrorsHandler('../manage-locations#enter-area'))
   post('/add-area', validate(enterAreaSchema), controller.postArea)
 
+  get('/remove-location', redirectAndForwardValidationErrorsHandler('../manage-locations'))
   post('/remove-location', validate(removeLocationSchema), controller.postRemoveLocation)
 
   return router
