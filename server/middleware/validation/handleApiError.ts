@@ -14,7 +14,8 @@ export const handleApiError = (error: HTTPError, req: Request, res: Response, ne
         }),
       )
       req.flash(FLASH_KEY__FORM_RESPONSES, JSON.stringify(req.body))
-      res.redirect(req.get('Referrer') || '/')
+
+      res.redirect(req.get('Referrer') ?? (req.method === 'GET' ? '/' : req.originalUrl))
     } else {
       next(error)
     }

@@ -19,6 +19,8 @@ import { BrowseTapMovementsRoutes } from './temporary-absence-movements/routes'
 import { CreateDocumentsRoutes } from './create-documents/routes'
 import { TemporaryAbsenceScheduleEnquiryRoutes } from './temporary-absence-schedule-enquiry/routes'
 import { populateSwitchOffBanner } from '../middleware/populateSwitchOffBanner'
+import { Feature, requireFeatureFlag } from '../utils/featureFlag'
+import { ManageLocationsRoutes } from './manage-locations/routes'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
@@ -133,6 +135,7 @@ export default function routes(services: Services): Router {
     }),
     TemporaryAbsenceScheduleEnquiryRoutes(services),
   )
+  router.use('/manage-locations', requireFeatureFlag(Feature.DEV_LED), ManageLocationsRoutes(services))
 
   router.use(insertJourneyIdentifier())
   router.use('/:journeyId', JourneyRoutes(services))
