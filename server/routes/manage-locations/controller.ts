@@ -18,6 +18,15 @@ export class ManageLocationsController {
       locations: locationsResult.locations,
       version: locationsResult.version,
       b64History: req.query['history'],
+      uprn: res.locals.formResponses?.['uprn'],
+      inputValue: res.locals.formResponses?.['address-autosuggest-input'],
+      description: res.locals.formResponses?.['description'],
+      line1: res.locals.formResponses?.['line1'],
+      line2: res.locals.formResponses?.['line2'],
+      city: res.locals.formResponses?.['city'],
+      county: res.locals.formResponses?.['county'],
+      postcode: res.locals.formResponses?.['postcode'],
+      area: res.locals.formResponses?.['area'],
     })
   }
 
