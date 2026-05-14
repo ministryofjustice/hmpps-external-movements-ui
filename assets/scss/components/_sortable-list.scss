@@ -1,0 +1,10 @@
+.dragged-item {
+  background-color: govuk-colour("blue", $variant: "tint-80");
+  border: govuk-spacing(1) solid govuk-colour("black", $variant: "tint-80");
+}
+
+.sortable-list {
+  > li {
+    min-height: 60px;
+  }
+}

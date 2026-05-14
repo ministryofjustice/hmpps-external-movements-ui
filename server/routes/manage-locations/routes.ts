@@ -7,7 +7,7 @@ import { validate } from '../../middleware/validation/validationMiddleware'
 import { searchLocationSchemaFactory } from './add-searched-address/schema'
 import { enterNewLocationSchema } from './add-address/schema'
 import { enterAreaSchema } from './add-area/schema'
-import { removeLocationSchema } from './remove-location/schema'
+import { sortOrRemoveLocationSchema } from './sort-or-remove-location/schema'
 import { redirectAndForwardValidationErrorsHandler } from '../../middleware/validation/redirectAndForwardValidationErrorsHandler'
 import { FLASH_KEY__FORM_RESPONSES, FLASH_KEY__VALIDATION_ERRORS } from '../../utils/constants'
 
@@ -29,8 +29,8 @@ export const ManageLocationsRoutes = ({ externalMovementsService, osPlacesAddres
   get('/add-area', redirectAndForwardValidationErrorsHandler('../manage-locations#enter-area'))
   post('/add-area', validate(enterAreaSchema), controller.postArea)
 
-  get('/remove-location', redirectAndForwardValidationErrorsHandler('../manage-locations'))
-  post('/remove-location', validate(removeLocationSchema), controller.postRemoveLocation)
+  get('/sort-or-remove-location', redirectAndForwardValidationErrorsHandler('../manage-locations'))
+  post('/sort-or-remove-location', validate(sortOrRemoveLocationSchema), controller.postSortOrRemoveLocation)
 
   router.use((error: { responseStatus?: number }, req: Request, res: Response, next: NextFunction) => {
     if (error?.responseStatus === 409) {

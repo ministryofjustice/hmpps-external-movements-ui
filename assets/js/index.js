@@ -7,6 +7,7 @@ import { initShiftPreviewToggle } from './shift-preview'
 import { initAddAnotherForm } from './add-another-form-enhanced'
 import { initPreventDoubleClickHyperlink } from './prevent-double-click-hyperlink'
 import { initSortableTable } from './sortable-table'
+import { initSortableList } from './sortable-list'
 
 govukFrontend.initAll()
 mojFrontend.initAll()
@@ -21,3 +22,4 @@ initAddAnotherForm()
 initShiftPreviewToggle()
 initPreventDoubleClickHyperlink()
 initSortableTable()
+initSortableList()
