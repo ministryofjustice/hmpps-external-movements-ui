@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { SchemaType } from './schema'
+import { Feature, featureEnabled } from '../../../../../utils/featureFlag'
 
 export class AddTapOccurrenceSelectLocationController {
   GET = async (req: Request, res: Response) => {
@@ -18,7 +19,14 @@ export class AddTapOccurrenceSelectLocationController {
     if (req.journeyData.isCheckAnswers && req.body.locationOption !== 'NEW') {
       res.redirect('check-answers')
     } else {
-      res.redirect(req.body.locationOption === 'NEW' ? 'search-location' : 'comments')
+      res.redirect(
+        // eslint-disable-next-line no-nested-ternary
+        req.body.locationOption === 'NEW'
+          ? featureEnabled(res.locals.user, Feature.DEV_LED)
+            ? 'location'
+            : 'search-location'
+          : 'comments',
+      )
     }
   }
 }

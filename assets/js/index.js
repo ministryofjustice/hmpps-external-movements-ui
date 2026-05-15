@@ -8,6 +8,7 @@ import { initAddAnotherForm } from './add-another-form-enhanced'
 import { initPreventDoubleClickHyperlink } from './prevent-double-click-hyperlink'
 import { initSortableTable } from './sortable-table'
 import { initSortableList } from './sortable-list'
+import { AutoComplete } from './autocomplete'
 
 govukFrontend.initAll()
 mojFrontend.initAll()
@@ -16,6 +17,10 @@ connectDps.initAll()
 var $cards = document.querySelectorAll('.card--clickable')
 nodeListForEach($cards, function ($card) {
   new Card($card)
+})
+var $autoCompleteElements = document.getElementsByName('autocompleteElements')
+nodeListForEach($autoCompleteElements, function ($autoCompleteElements) {
+  new AutoComplete($autoCompleteElements)
 })
 
 initAddAnotherForm()

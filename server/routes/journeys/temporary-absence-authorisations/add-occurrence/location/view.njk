@@ -1,0 +1,193 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "dps/components/address-autosuggest/macro.njk" import addressAutosuggest %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% set mainClasses = "app-container govuk-body placeholder-background" %}
+
+{% set fullWidth = true %}
+{% set pageTitle = 'Enter location for this absence - Manage temporary absences' %}
+
+{% block meta %}
+  <meta name="autocompleteElements" content="location"/>
+{% endblock %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <h1 class="govuk-heading-l"><label for="address-autosuggest-input">Enter location for this absence</label></h1>
+
+    <p>Enter a location manually if it:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>does not appear in the search results</li>
+      <li>is not a specific address but a whole area (for example, York)</li>
+    </ul>
+
+    {% if locations.length %}
+      {% set selectSavedLocationHtml %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <form method="post" action="location/selected-location?history={{ b64History }}">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            {{ govukSelect({
+              label: {
+                text: "Select a location"
+              },
+              id: "location",
+              name: "location",
+              items: locations | prependEmptyOption,
+              errorMessage: validationErrors | findError('location')
+            }) }}
+
+            {{ govukButton({
+              text: "Continue",
+              preventDoubleClick: true
+            }) }}
+          </form>
+        </div>
+      </div>
+      {% endset %}
+    {% endif %}
+
+    {% set searchAddressesHtml %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <form method="post" action="location/searched-address?history={{ b64History }}">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            <div id="address-hint" class="govuk-hint">Enter an address or postcode</div>
+            <div id="address-input">
+              {{ addressAutosuggest({
+                classes: 'govuk-!-margin-bottom-5',
+                inputValue: inputValue,
+                uprn: uprn,
+                errorMessage: validationErrors | findError('address-autosuggest-input'),
+                findUrl: '/api/addresses/find'
+              }) }}
+            </div>
+            {{ govukButton({
+              text: "Continue",
+              preventDoubleClick: true
+            }) }}
+          </form>
+        </div>
+      </div>
+    {% endset %}
+
+    {% set enterAddressHtml %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <form method="post" action="location/entered-address?history={{ b64History }}">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            {{ govukInput({
+              id: "description",
+              name: "description",
+              label: { text: "Business or organisation name (optional)" },
+              classes: 'govuk-!-width-two-thirds',
+              errorMessage: validationErrors | findError('description'),
+              value: description,
+              attributes: { autocomplete: "organization" }
+            }) }}
+            {{ govukInput({
+              id: "line1",
+              name: "line1",
+              label: { text: "Address line 1 (optional)" },
+              classes: 'govuk-!-width-two-thirds',
+              errorMessage: validationErrors | findError('line1'),
+              value: line1,
+              attributes: { autocomplete: "address-line1" }
+            }) }}
+            {{ govukInput({
+              id: "line2",
+              name: "line2",
+              label: { text: "Address line 2 (optional)" },
+              classes: 'govuk-!-width-two-thirds',
+              errorMessage: validationErrors | findError('line2'),
+              value: line2,
+              attributes: { autocomplete: "address-line2" }
+            }) }}
+            {{ govukInput({
+              id: "city",
+              name: "city",
+              label: { text: "Town or city" },
+              classes: 'govuk-!-width-one-half',
+              errorMessage: validationErrors | findError('city'),
+              value: city,
+              attributes: { autocomplete: "address-level2" }
+            }) }}
+            {{ govukInput({
+              id: "county",
+              name: "county",
+              label: { text: "County (optional)" },
+              classes: 'govuk-!-width-one-half',
+              errorMessage: validationErrors | findError('county'),
+              value: county,
+              attributes: { autocomplete: "address-level1" }
+            }) }}
+            {{ govukInput({
+              id: "postcode",
+              name: "postcode",
+              label: { text: "Postcode (optional)" },
+              classes: 'govuk-!-width-one-third',
+              errorMessage: validationErrors | findError('postcode'),
+              value: postcode,
+              attributes: { autocomplete: "postal-code" }
+            }) }}
+            {{ govukButton({
+              text: "Continue",
+              preventDoubleClick: true
+            }) }}
+          </form>
+        </div>
+      </div>
+    {% endset %}
+
+    {% set enterAreaHtml %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <form method="post" action="location/area?history={{ b64History }}">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            {{ govukInput({
+              id: "area",
+              name: "area",
+              label: { text: "Area description" },
+              hint: { text: "Eg, York city centre" },
+              errorMessage: validationErrors | findError('area'),
+              value: area
+            }) }}
+            {{ govukButton({
+              text: "Continue",
+              preventDoubleClick: true
+            }) }}
+          </form>
+        </div>
+      </div>
+    {% endset %}
+
+    {{ govukTabs({
+      items: [
+        {
+          label: "Select a commonly used location",
+          id: "select-location",
+          panel: { html: selectSavedLocationHtml }
+        } if locations.length,
+        {
+          label: "Search all UK addresses",
+          id: "search-address",
+          panel: { html: searchAddressesHtml }
+        },
+        {
+          label: "Enter an address",
+          id: "enter-address",
+          panel: { html: enterAddressHtml }
+        },
+        {
+          label: "Enter an area",
+          id: "enter-area",
+          panel: { html: enterAreaHtml }
+        }
+      ] | removeNullish
+    }) }}
+  </div>
+{% endblock %}
