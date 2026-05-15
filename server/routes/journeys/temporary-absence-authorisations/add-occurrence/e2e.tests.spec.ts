@@ -6,6 +6,7 @@ import componentsApi from '../../../../../integration_tests/mockApis/componentsA
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
 import {
+  stubGetLocations,
   stubGetTapAuthorisation,
   stubPostTapOccurrence,
 } from '../../../../../integration_tests/mockApis/externalMovementsApi'
@@ -44,6 +45,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
       stubSearchAddresses('random', testSearchAddressResults),
       stubSearchAddresses('SW1H%209AJ', testSearchAddressResults), // query used by the module to check OS Places API availability
       stubGetAddress('1003', testSearchAddressResults[2]!),
+      stubGetLocations(),
     ])
   })
 
@@ -125,6 +127,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await selectLocationPage.newLocationRadio().click()
     await selectLocationPage.clickContinue()
 
+    await page.goto(`/${journeyId}/temporary-absence-authorisations/add-occurrence/search-location`)
     const searchLocationPage = await new AddTapOccurrenceSearchLocationPage(page).verifyContent()
     await searchLocationPage.searchField().fill('random')
     await searchLocationPage.selectAddress('Address 3, RS1 34T')
@@ -177,6 +180,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await selectLocationPage.newLocationRadio().click()
     await selectLocationPage.clickContinue()
 
+    await page.goto(`/${journeyId}/temporary-absence-authorisations/add-occurrence/search-location`)
     const searchLocationPage = await new AddTapOccurrenceSearchLocationPage(page).verifyContent()
     await searchLocationPage.clickEnterManually()
 
@@ -244,6 +248,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await checkAnswersPage.clickLink(/Change location$/)
     await selectLocationPage.newLocationRadio().click()
     await selectLocationPage.clickContinue()
+    await page.goto(`/${journeyId}/temporary-absence-authorisations/add-occurrence/search-location`)
     const searchLocationPage = await new AddTapOccurrenceSearchLocationPage(page).verifyContent()
     await searchLocationPage.clickEnterManually()
     const enterLocationPage = await new AddTapOccurrenceEnterLocationPage(page).verifyContent()

@@ -4,6 +4,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
 {% set mainClasses = "app-container govuk-body placeholder-background" %}
 
@@ -192,13 +193,34 @@
   {% if locations.length %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <form method="post" action="manage-locations/remove-location?history={{ b64History }}">
+        <form method="post" action="manage-locations/sort-or-remove-location?history={{ b64History }}">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
           <input type="hidden" name="version" value="{{ version }}" />
           {{ locationsHtml | safe }}
-          <ul class="govuk-list">
+
+          {% if locations.length > 1 %}
+            {{ govukButton({
+              classes: "govuk-button--secondary sortable-list-button govuk-!-display-none",
+              text: "Sort locations",
+              preventDoubleClick: true
+            }) }}
+
+            {{ govukButton({
+              classes: "sortable-list-save-button govuk-!-display-none",
+              text: "Save changes",
+              preventDoubleClick: true
+            }) }}
+
+            {{ govukInsetText({
+              classes: "govuk-!-margin-top-0 sortable-list-hint govuk-!-display-none",
+              text: "Drag and drop to re-order the locations, then click ‘Save changes’ to save the sort order."
+            }) }}
+          {% endif %}
+
+          <ul class="govuk-list sortable-list">
             {% for location in locations %}
               <li>
+                <input type="hidden" name="order" value="{{ loop.index0 }}" />
                 <div class="govuk-grid-row">
                   <div class="govuk-grid-column-three-quarters">
                     {{ location | formatAddress }}

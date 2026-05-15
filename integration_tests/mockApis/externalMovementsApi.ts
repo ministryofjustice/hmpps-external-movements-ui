@@ -192,3 +192,16 @@ export const stubPostCreateTap = (prisonNumber: string) =>
     urlPattern: `/external-movements-api/temporary-absence-authorisations/${prisonNumber}`,
     response: { id: '3fa85f64-5717-4562-b3fc-2c963f66afa6' },
   })
+
+export const stubGetLocations = (
+  caseloadId: string = 'LEI',
+  response: components['schemas']['TapLocations'] = {
+    version: 'version',
+    locations: [],
+  },
+) =>
+  successStub({
+    method: 'GET',
+    urlPattern: `/external-movements-api/prisons/${caseloadId}/temporary-absence-locations`,
+    response,
+  })

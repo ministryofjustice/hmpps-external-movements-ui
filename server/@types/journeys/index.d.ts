@@ -146,6 +146,7 @@ export type AddTapOccurrenceJourney = {
   locationOption: number | 'NEW'
   location: Address
   comments: string | null
+  savedLocations: components['schemas']['Location'][]
   result: components['schemas']['ReferenceId']
 }>
 

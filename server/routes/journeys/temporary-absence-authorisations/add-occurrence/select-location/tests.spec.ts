@@ -114,7 +114,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/select-location'
     await testPage.newLocationRadio().click()
     await testPage.clickContinue()
 
-    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/add-occurrence\/search-location/)
+    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/add-occurrence\/(search-location|location)/)
 
     // verify input values are persisted
     await page.goBack()

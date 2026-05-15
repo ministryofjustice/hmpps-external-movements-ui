@@ -1,0 +1,19 @@
+import z from 'zod'
+import { createSchema } from '../../../../../../middleware/validation/validationMiddleware'
+import { optionalString } from '../../../../../../utils/validations/validateString'
+
+export const enteredAddressSchema = createSchema({
+  description: z
+    .string()
+    .max(40, { message: 'Description must be 40 characters or fewer' })
+    .transform(val => (val?.trim().length ? val : null)),
+  line1: optionalString,
+  line2: optionalString,
+  city: z.string().min(1, { message: 'Enter town or city' }),
+  county: optionalString,
+  postcode: optionalString.refine(val => (val?.length ?? 0) <= 12, {
+    message: 'Postcode must be 12 characters or fewer',
+  }),
+})
+
+export type EnteredAddressSchemaType = z.infer<typeof enteredAddressSchema>

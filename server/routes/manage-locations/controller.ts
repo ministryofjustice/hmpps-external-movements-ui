@@ -4,7 +4,7 @@ import { SearchLocationSchemaType } from './add-searched-address/schema'
 import { parseAddress } from '../../utils/utils'
 import { EnterNewLocationSchemaType } from './add-address/schema'
 import { EnterAreaSchemaType } from './add-area/schema'
-import { RemoveLocationSchemaType } from './remove-location/schema'
+import { SortOrRemoveLocationSchemaType } from './sort-or-remove-location/schema'
 import { FLASH_KEY__SUCCESS_BANNER } from '../../utils/constants'
 import { formatAddress } from '../../utils/formatUtils'
 
@@ -73,7 +73,7 @@ export class ManageLocationsController {
     res.redirect('../manage-locations')
   }
 
-  postRemoveLocation = async (req: Request<unknown, unknown, RemoveLocationSchemaType>, res: Response) => {
+  postSortOrRemoveLocation = async (req: Request<unknown, unknown, SortOrRemoveLocationSchemaType>, res: Response) => {
     if (req.body.remove !== null) {
       await this.externalMovementsService.putTapLocations(
         { res },
@@ -83,6 +83,15 @@ export class ManageLocationsController {
         },
       )
       req.flash(FLASH_KEY__SUCCESS_BANNER, `Location “${formatAddress(req.body.locations[req.body.remove]!)}” removed.`)
+    } else {
+      await this.externalMovementsService.putTapLocations(
+        { res },
+        {
+          version: req.body.version,
+          locations: req.body.order.map(idx => req.body.locations[idx]!),
+        },
+      )
+      req.flash(FLASH_KEY__SUCCESS_BANNER, `Locations sort order updated.`)
     }
     res.redirect('../manage-locations')
   }
