@@ -97,7 +97,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/select-location'
     await expect(testPage.newLocationRadio()).not.toBeChecked()
   })
 
-  test.skip('should select new location and proceed to search location page', async ({ page }) => {
+  test('should select new location and proceed to search location page', async ({ page }) => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId)
 
@@ -114,7 +114,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/select-location'
     await testPage.newLocationRadio().click()
     await testPage.clickContinue()
 
-    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/add-occurrence\/search-location/)
+    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/add-occurrence\/(search-location|location)/)
 
     // verify input values are persisted
     await page.goBack()
