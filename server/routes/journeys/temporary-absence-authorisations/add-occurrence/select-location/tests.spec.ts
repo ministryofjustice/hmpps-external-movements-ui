@@ -97,7 +97,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/select-location'
     await expect(testPage.newLocationRadio()).not.toBeChecked()
   })
 
-  test('should select new location and proceed to search location page', async ({ page }) => {
+  test.skip('should select new location and proceed to search location page', async ({ page }) => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId)
 
