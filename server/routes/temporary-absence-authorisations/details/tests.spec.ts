@@ -137,6 +137,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
 
     await expect(testPage.button('Review this absence')).toBeVisible()
     await expect(testPage.button('Cancel this absence')).toHaveCount(0)
+    await expect(testPage.button('Temporarily pause this plan')).toHaveCount(0)
 
     // verify short-cut change link for occurrence's location
     await expect(testPage.link('Change location')).toBeVisible()
@@ -226,6 +227,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
 
     await expect(testPage.button('Review this absence')).toHaveCount(0)
     await expect(testPage.button('Cancel this absence')).toBeVisible()
+    await expect(testPage.button('Temporarily pause this plan')).toBeVisible()
   })
 
   test('should not show CANCEL button when a non-repeating TAP has its occurrence progressed', async ({ page }) => {
@@ -261,6 +263,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     const testPage = await new TapAuthorisationDetailsPage(page).verifyContent()
     await expect(testPage.button('Review this absence')).toHaveCount(0)
     await expect(testPage.button('Cancel this absence')).toHaveCount(0)
+    await expect(testPage.button('Temporarily pause this plan')).toHaveCount(0)
   })
 
   test('should show temporary absence details for DENIED absence', async ({ page }) => {

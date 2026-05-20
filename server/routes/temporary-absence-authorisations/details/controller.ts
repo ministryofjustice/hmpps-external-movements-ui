@@ -44,7 +44,8 @@ export class TapAuthorisationDetailsController {
           !['IN_PROGRESS', 'OVERDUE', 'COMPLETED'].includes(authorisation.occurrences[0]?.status.code ?? ''))
       const pausable =
         authorisation.status.code === 'APPROVED' &&
-        authorisation.occurrences.every(({ status }) => !['IN_PROGRESS', 'OVERDUE'].includes(status.code))
+        (authorisation.repeat ||
+          !['IN_PROGRESS', 'OVERDUE', 'COMPLETED'].includes(authorisation.occurrences[0]?.status.code ?? ''))
       const resumable = authorisation.status.code === 'PAUSED'
 
       const futureOccurrences = authorisation.occurrences.filter(({ end }) => isFuture(end))
