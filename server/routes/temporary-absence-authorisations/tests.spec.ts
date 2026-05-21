@@ -59,6 +59,7 @@ test.describe('/temporary-absence-authorisations', () => {
           occurrenceCount: 1,
           absenceCategorisation:
             'Restricted ROTL (Release on Temporary Licence) > RDR (Resettlement Day Release) > Paid work > IT and communication',
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
         },
         {
           id: 'authorisation-id-2',
@@ -83,6 +84,7 @@ test.describe('/temporary-absence-authorisations', () => {
           ],
           occurrenceCount: 12,
           absenceCategorisation: 'Police production',
+          accompaniedBy: { code: 'U', description: 'Unaccompanied' },
         },
       ],
     })
@@ -110,6 +112,7 @@ test.describe('/temporary-absence-authorisations', () => {
       '1 January 2001',
       'Restricted ROTL (Release on Temporary Licence) > RDR (Resettlement Day Release) > Paid work > IT and communication',
       'Random Street, UK',
+      'Unaccompanied',
       'Single',
       'Approved',
     ])
@@ -119,6 +122,7 @@ test.describe('/temporary-absence-authorisations', () => {
       '1 March 2001',
       'Police production',
       'Multiple locations',
+      'Unaccompanied',
       'Repeating (12 occurrences)',
       'To be reviewed',
     ])

@@ -37,6 +37,12 @@ export class BrowseTapAuthorisationsController {
       `reason=${resQuery?.reason ?? ''}`,
       `workType=${resQuery?.workType ?? ''}`,
       ...(resQuery?.status?.map(itm => `status=${itm}`) ?? []),
+      // eslint-disable-next-line no-nested-ternary
+      ...(Array.isArray(resQuery?.isAccompanied)
+        ? resQuery.isAccompanied.map(itm => `isAccompanied=${itm}`)
+        : resQuery.isAccompanied
+          ? [`isAccompanied=${resQuery.isAccompanied}`]
+          : []),
     ].join('&')
 
     const {
@@ -91,6 +97,9 @@ export class BrowseTapAuthorisationsController {
             codes: [resQuery.validated.type],
           }
         }
+        if (resQuery.validated.isAccompanied?.length === 1) {
+          requestBody.isAccompanied = resQuery.validated.isAccompanied[0] === 'ACCOMPANIED'
+        }
 
         searchResponse = await this.externalMovementsService.searchTapAuthorisations({ res }, requestBody)
         results = searchResponse?.content ?? []
@@ -116,6 +125,7 @@ export class BrowseTapAuthorisationsController {
       start: resQuery?.start,
       end: resQuery?.end,
       status: resQuery?.status,
+      isAccompanied: resQuery?.isAccompanied,
       type: !resQuery?.workType && !resQuery?.reason && !resQuery?.subType && resQuery?.type,
       subType: !resQuery?.workType && !resQuery?.reason && resQuery?.subType,
       reason: !resQuery?.workType && resQuery?.reason,

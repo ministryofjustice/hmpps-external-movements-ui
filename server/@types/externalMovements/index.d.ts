@@ -842,7 +842,7 @@ export interface components {
       user: components['schemas']['User']
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       occurredAt: string
       domainEvents: string[]
@@ -960,7 +960,7 @@ export interface components {
     SyncAtAndBy: {
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       at: string
       by: string
@@ -972,7 +972,7 @@ export interface components {
       occurrenceId?: string | null
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       occurredAt: string
       /** @enum {string} */
@@ -1021,12 +1021,12 @@ export interface components {
       isCancelled: boolean
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       location: components['schemas']['Location']
@@ -1070,7 +1070,7 @@ export interface components {
     MigrateTapMovement: {
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       occurredAt: string
       /** @enum {string} */
@@ -1091,12 +1091,12 @@ export interface components {
       isCancelled: boolean
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       location: components['schemas']['Location']
@@ -1230,12 +1230,12 @@ export interface components {
     OccurrenceRequest: {
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       location: components['schemas']['Location']
@@ -1303,12 +1303,12 @@ export interface components {
     CreateOccurrenceRequest: {
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       location: components['schemas']['Location']
@@ -1400,12 +1400,12 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription'] | null
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       accompaniedBy: components['schemas']['CodedDescription']
@@ -1443,6 +1443,7 @@ export interface components {
       absenceSubType?: components['schemas']['CodedDescription'] | null
       absenceReasonCategory?: components['schemas']['CodedDescription'] | null
       absenceReason?: components['schemas']['CodedDescription'] | null
+      accompaniedBy: components['schemas']['CodedDescription']
       repeat: boolean
       /** Format: date */
       start: string
@@ -1462,12 +1463,12 @@ export interface components {
       personIdentifiers: string[]
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       includeSensitive: boolean
@@ -1485,12 +1486,12 @@ export interface components {
       description: components['schemas']['ScheduledMovementDescription']
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       location: components['schemas']['LocationDescription']
@@ -1513,12 +1514,12 @@ export interface components {
       personIdentifiers: string[]
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
     }
@@ -1532,12 +1533,12 @@ export interface components {
       description: components['schemas']['ScheduledMovementDescription']
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       status: components['schemas']['CodedDescription']
@@ -1561,6 +1562,7 @@ export interface components {
         | 'DENIED'
       )[]
       absenceCategorisation?: components['schemas']['AbsenceCategorisationFilter'] | null
+      isAccompanied?: boolean | null
       /** Format: int32 */
       page: number
       /** Format: int32 */
@@ -1589,12 +1591,12 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription'] | null
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       accompaniedBy: components['schemas']['CodedDescription']
@@ -1623,12 +1625,12 @@ export interface components {
       status: components['schemas']['CodedDescription']
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       location: components['schemas']['Location']
@@ -1673,7 +1675,7 @@ export interface components {
       id: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       occurredAt: string
       /** @enum {string} */
@@ -1687,7 +1689,7 @@ export interface components {
       occurrence?: components['schemas']['TapMovement.Occurrence'] | null
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       occurredAt: string
       /** @enum {string} */
@@ -1709,12 +1711,12 @@ export interface components {
       status: components['schemas']['CodedDescription']
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
     }
@@ -1760,12 +1762,12 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription'] | null
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       location: components['schemas']['Location']
@@ -1780,12 +1782,12 @@ export interface components {
       statusCode: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       location: components['schemas']['Location']
@@ -1813,7 +1815,7 @@ export interface components {
       personIdentifier: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       occurredAt: string
       /** @enum {string} */
@@ -1854,12 +1856,12 @@ export interface components {
       statusCode: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       location: components['schemas']['Location']
@@ -1936,12 +1938,12 @@ export interface components {
       reasonCode: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       location?: components['schemas']['Location'] | null
@@ -1982,12 +1984,12 @@ export interface components {
       accompaniedBy: components['schemas']['IntegrationCodedDescription']
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       end: string
       location: components['schemas']['Location']
@@ -2017,7 +2019,7 @@ export interface components {
       accompaniedByComments?: string | null
       /**
        * Format: date-time
-       * @example 2026-05-12T11:48:09
+       * @example 2026-05-21T11:38:51
        */
       occurredAt: string
       location: components['schemas']['Location']

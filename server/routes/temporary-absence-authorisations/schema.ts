@@ -5,6 +5,10 @@ import { validateTransformOptionalDate } from '../../utils/validations/validateD
 import { isPrisonNumber } from '../../utils/utils'
 
 const statusEnum = z.enum(['PENDING', 'APPROVED', 'CANCELLED', 'DENIED', 'EXPIRED', 'PAUSED'])
+const accompanimentEnum = z.enum(['ACCOMPANIED', 'UNACCOMPANIED'])
+export const accompanimentSchema = z
+  .union([accompanimentEnum.transform(val => [val]), z.array(accompanimentEnum)])
+  .optional()
 
 export const schema = createSchema({
   searchTerm: z
@@ -12,6 +16,7 @@ export const schema = createSchema({
     .optional()
     .transform(val => val?.replace(/[\r\n]/g, '').trim()),
   status: z.union([statusEnum.transform(val => [val]), z.array(statusEnum)]).optional(),
+  isAccompanied: accompanimentSchema,
   clear: z.string().optional(),
   start: validateTransformOptionalDate('Enter or select a valid start date from'),
   end: validateTransformOptionalDate('Enter or select a valid end date to'),

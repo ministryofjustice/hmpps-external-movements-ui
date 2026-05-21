@@ -103,6 +103,29 @@
               })
             }) }}
 
+            {{ govukCheckboxes({
+              id: "isAccompanied",
+              name: "isAccompanied",
+              fieldset: {
+                legend: {
+                  text: "Accompaniment",
+                  classes: "govuk-fieldset__legend--m"
+                }
+              },
+              classes: "govuk-checkboxes--small",
+              errorMessage: validationErrors | findError('isAccompanied'),
+              items: [
+                {
+                  value: 'ACCOMPANIED',
+                  text: "Accompanied"
+                },
+                {
+                  value: 'UNACCOMPANIED',
+                  text: "Unaccompanied"
+                }
+              ] | setCheckedValue(isAccompanied or '')
+            }) }}
+
             {{ govukSelect({
               label: {
                 text: "Absence type"
@@ -179,6 +202,9 @@
                 text: 'Not provided' if not authorisation.locations.length else (authorisation.locations[0] | formatAddress if authorisation.locations.length === 1 else 'Multiple locations')
               },
               {
+                text: authorisation.accompaniedBy.description
+              },
+              {
                 text: ('Repeating (' + authorisation.occurrenceCount + ' occurrence' + (')' if authorisation.occurrenceCount === 1 else 's)')) if authorisation.repeat else 'Single'
               },
               {
@@ -210,6 +236,9 @@
               },
               {
                 text: 'Location'
+              },
+              {
+                text: 'Accompanied'
               },
               {
                 text: 'Single or repeating'

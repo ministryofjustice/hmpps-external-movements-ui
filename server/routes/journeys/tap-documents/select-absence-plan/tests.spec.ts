@@ -52,6 +52,7 @@ test.describe('/tap-documents/select-absence-plan', () => {
             occurrenceCount: 1,
             absenceCategorisation:
               'Restricted ROTL (Release on Temporary Licence) > RDR (Resettlement Day Release) > Paid work > IT and communication',
+            accompaniedBy: { code: 'U', description: 'Unaccompanied' },
           },
           {
             id: 'authorisation-id-2',
@@ -73,6 +74,7 @@ test.describe('/tap-documents/select-absence-plan', () => {
             locations: [{ uprn: 1001, description: 'Random Street, UK' }],
             occurrenceCount: 12,
             absenceCategorisation: 'Police production',
+            accompaniedBy: { code: 'U', description: 'Unaccompanied' },
           },
         ],
       }),

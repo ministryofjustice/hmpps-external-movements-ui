@@ -3,6 +3,7 @@ import { differenceInDays } from 'date-fns'
 import { createSchema } from '../../middleware/validation/validationMiddleware'
 import { validateTransformOptionalDate } from '../../utils/validations/validateDatePicker'
 import { isPrisonNumber } from '../../utils/utils'
+import { accompanimentSchema } from '../temporary-absence-authorisations/schema'
 
 export const TapOccurrenceStatusEnum = z.enum([
   'SCHEDULED',
@@ -21,6 +22,7 @@ export const schema = createSchema({
     .optional()
     .transform(val => val?.replace(/[\r\n]/g, '').trim()),
   status: z.union([TapOccurrenceStatusEnum.transform(val => [val]), z.array(TapOccurrenceStatusEnum)]).optional(),
+  isAccompanied: accompanimentSchema,
   clear: z.string().optional(),
   start: validateTransformOptionalDate('Enter or select a valid start date from'),
   end: validateTransformOptionalDate('Enter or select a valid end date to'),
