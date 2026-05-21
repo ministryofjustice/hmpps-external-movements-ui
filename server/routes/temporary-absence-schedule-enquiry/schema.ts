@@ -2,9 +2,11 @@ import { z } from 'zod'
 import { createSchema } from '../../middleware/validation/validationMiddleware'
 import { validateTransformOptionalDate } from '../../utils/validations/validateDatePicker'
 import { TapOccurrenceStatusEnum } from '../temporary-absences/schema'
+import { accompanimentSchema } from '../temporary-absence-authorisations/schema'
 
 export const schema = createSchema({
   status: z.union([TapOccurrenceStatusEnum.transform(val => [val]), z.array(TapOccurrenceStatusEnum)]).optional(),
+  isAccompanied: accompanimentSchema,
   clear: z.string().optional(),
   start: validateTransformOptionalDate('Enter or select a valid start date from'),
   end: validateTransformOptionalDate('Enter or select a valid end date to'),

@@ -27,6 +27,7 @@ export const BrowseTapAuthorisationsRoutes = (services: Services) => {
       'subType',
       'reason',
       'workType',
+      'isAccompanied',
     ),
     controller.GET,
   )

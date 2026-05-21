@@ -13,7 +13,7 @@ export const BrowseTapOccurrencesRoutes = ({ externalMovementsService, prisonerS
   get(
     '/',
     Page.SEARCH_TEMPORARY_ABSENCE_OCCURRENCES,
-    validateOnGET(schema, 'searchTerm', 'start', 'end', 'status', 'page', 'sort'),
+    validateOnGET(schema, 'searchTerm', 'start', 'end', 'status', 'page', 'sort', 'isAccompanied'),
     controller.GET,
   )
 

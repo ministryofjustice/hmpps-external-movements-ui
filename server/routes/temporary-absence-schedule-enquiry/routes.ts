@@ -13,7 +13,7 @@ export const TemporaryAbsenceScheduleEnquiryRoutes = (services: Services) => {
   get(
     '/',
     Page.TEMPORARY_ABSENCE_SCHEDULE_ENQUIRY,
-    validateOnGET(schema, 'start', 'end', 'status', 'page', 'sort'),
+    validateOnGET(schema, 'start', 'end', 'status', 'page', 'sort', 'isAccompanied'),
     controller.GET,
   )
 
