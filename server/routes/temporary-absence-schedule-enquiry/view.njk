@@ -213,6 +213,8 @@
           {{ simplePagination(paginationParams) }}
 
           {{ govukTable({
+            caption: 'Absence occurrences (column headers with buttons are sortable)',
+            captionClasses: 'govuk-visually-hidden',
             firstCellIsHeader: false,
             classes: 'table-vertical-align-middle govuk-!-margin-top-6 sortable-table',
             head: [

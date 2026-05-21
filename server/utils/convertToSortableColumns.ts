@@ -22,7 +22,7 @@ export const convertToSortableColumns = (
           attributes: {
             'aria-sort': 'ascending',
           },
-          html: `<a href="${urlFromTemplate(hrefTemplate, key, 'desc')}"><button>${text}</button></a>`,
+          html: `<a href="${urlFromTemplate(hrefTemplate, key, 'desc')}" role="button">${text}</a>`,
           ...others,
         }
       }
@@ -31,7 +31,7 @@ export const convertToSortableColumns = (
           attributes: {
             'aria-sort': 'descending',
           },
-          html: `<a href="${urlFromTemplate(hrefTemplate, key, 'asc')}"><button>${text}</button></a>`,
+          html: `<a href="${urlFromTemplate(hrefTemplate, key, 'asc')}" role="button">${text}</a>`,
           ...others,
         }
       }
@@ -40,7 +40,7 @@ export const convertToSortableColumns = (
       attributes: {
         'aria-sort': 'none',
       },
-      html: `<a href="${urlFromTemplate(hrefTemplate, key, 'asc')}"><button>${text}</button></a>`,
+      html: `<a href="${urlFromTemplate(hrefTemplate, key, 'asc')}" role="button">${text}</a>`,
       ...others,
     }
   })

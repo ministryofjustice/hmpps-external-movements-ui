@@ -1,0 +1,29 @@
+[aria-sort] a, [aria-sort] a:hover {
+  display: inline-flex;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border-width: 0;
+  color: #005ea5;
+  background-color: transparent;
+  box-shadow: 0 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-size: 1em;
+  font-weight: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  align-items: center;
+  text-decoration: none;
+  padding-block: 1px;
+  padding-inline: 6px;
+  box-sizing: border-box;
+}
+
+.govuk-table__header {
+  a {
+    svg {
+      overflow: visible;
+    }
+  }
+}
