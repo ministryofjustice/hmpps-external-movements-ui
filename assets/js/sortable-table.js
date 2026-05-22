@@ -14,7 +14,7 @@ export const initSortableTable = () => {
   if (sortableTable) {
     const $headings = Array.from(sortableTable.querySelectorAll('th'))
     for (const $heading of $headings) {
-      const $button = $heading.querySelector('button')
+      const $button = $heading.querySelector('a')
       if ($heading.hasAttribute('aria-sort') && $button) {
         var _$button$querySelector
         const direction = $heading.getAttribute('aria-sort')
