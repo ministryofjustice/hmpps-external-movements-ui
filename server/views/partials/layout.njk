@@ -82,7 +82,21 @@
   {% endif %}
 {% endblock %}
 
-{% block pageTitle %}{{pageTitle or "External movements"}} - DPS{% endblock %}
+{% set errorSummaryList = validationErrors | buildErrorSummaryList %}
+
+{% if errorSummaryList.length > 0 %}
+  {% set pageTitlePrefix = 'Error: ' %}
+{% elseif searchResultCount !== undefined %}
+  {% if searchResultCount === 0 %}
+    {% set pageTitlePrefix = 'No results found: ' %}
+  {% elseif searchResultCount === 1 %}
+    {% set pageTitlePrefix = '1 result found: ' %}
+  {% else %}
+    {% set pageTitlePrefix = searchResultCount + ' results found: ' %}
+  {% endif %}
+{% endif %}
+
+{% block pageTitle %}{{ pageTitlePrefix or '' }}{{pageTitle or "External movements"}} - DPS{% endblock %}
 
 {% block header %}
   {{ feComponents.header | safe }}
@@ -111,7 +125,6 @@
 
   {% include 'partials/switch-off-banner.njk' %}
 
-  {% set errorSummaryList = validationErrors | buildErrorSummaryList %}
   {% if errorSummaryList.length > 0 %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">

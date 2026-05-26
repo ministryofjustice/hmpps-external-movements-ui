@@ -4,7 +4,7 @@ export class BrowseTapAuthorisationsPage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
       pageUrl: /\/temporary-absence-authorisations/,
-      title: 'Manage temporary absence plans - Manage temporary absences - DPS',
+      title: '27 results found: Manage temporary absence plans - Manage temporary absences - DPS',
       caption: 'Manage Temporary Absences',
       heading: /Manage temporary absence plans in .+/,
     })

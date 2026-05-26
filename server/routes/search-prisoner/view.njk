@@ -7,6 +7,10 @@
 {% set fullWidth = true %}
 {% set pageTitle = 'Search for a prisoner - ' + caption | sentenceCase %}
 
+{% if searchTerm %}
+  {% set searchResultCount = results.length %}
+{% endif %}
+
 {% block innerContent %}
   <div class="govuk-width-container">
     <div class="govuk-!-static-margin-bottom-6">

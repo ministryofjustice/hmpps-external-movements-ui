@@ -13,6 +13,10 @@
 {% set fullWidth = true %}
 {% set pageTitle = 'Manage temporary absence occurrences - Manage temporary absences' %}
 
+{% if not hasValidationError and not missingDateRange %}
+  {% set searchResultCount = paginationParams.totalRows %}
+{% endif %}
+
 {% block innerContent %}
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
