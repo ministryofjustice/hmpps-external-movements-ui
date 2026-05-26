@@ -4,7 +4,7 @@ export class ViewPrisonerAbsencesPage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
       pageUrl: /\/temporary-absence-schedule-enquiry/,
-      title: 'View a prisoner’s temporary absences - Manage temporary absences - DPS',
+      title: '26 results found: View a prisoner’s temporary absences - Manage temporary absences - DPS',
       caption: 'View a prisoner’s temporary absences',
       heading: /View .+’s temporary absences/,
     })
