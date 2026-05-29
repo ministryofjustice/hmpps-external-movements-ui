@@ -76,7 +76,7 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.1052.0",
+    "@aws-sdk/client-sqs": "^3.1053.0",
     "@axe-core/playwright": "^4.11.3",
     "@microsoft/applicationinsights-clickanalytics-js": "3.4.1",
     "@microsoft/applicationinsights-web": "3.4.1",
@@ -96,7 +96,7 @@
     "connect-flash": "^0.1.1",
     "connect-redis": "^9.0.0",
     "csrf-sync": "^4.2.1",
-    "date-fns": "^4.2.1",
+    "date-fns": "^4.3.0",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "govuk-frontend": "^6.1.0",
