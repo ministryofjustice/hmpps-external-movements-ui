@@ -31,7 +31,7 @@
         value: startDate,
         errorMessage: validationErrors | findError('startDate'),
         classes: 'hmpps-datepicker--fixed-width govuk-body',
-        minDate: (start | formatInputDate) if repeat else inputDate(),
+        minDate: (start | formatInputDate) if repeat else null,
         maxDate: (end | formatInputDate) if repeat else null
       }) }}
 
@@ -66,7 +66,7 @@
         value: returnDate,
         errorMessage: validationErrors | findError('returnDate'),
         classes: 'hmpps-datepicker--fixed-width govuk-body',
-        minDate: (start | formatInputDate) if repeat else inputDate(),
+        minDate: (start | formatInputDate) if repeat else null,
         maxDate: (end | formatInputDate) if repeat else null
       }) }}
 
