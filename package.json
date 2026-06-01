@@ -76,7 +76,7 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.1053.0",
+    "@aws-sdk/client-sqs": "^3.1055.0",
     "@axe-core/playwright": "^4.11.3",
     "@microsoft/applicationinsights-clickanalytics-js": "3.4.1",
     "@microsoft/applicationinsights-web": "3.4.1",
@@ -87,7 +87,7 @@
     "@ministryofjustice/hmpps-monitoring": "^2.1.0",
     "@ministryofjustice/hmpps-prison-permissions-lib": "^2.6.0",
     "@ministryofjustice/hmpps-rest-client": "^2.1.0",
-    "@sentry/node": "^10.53.1",
+    "@sentry/node": "^10.54.0",
     "applicationinsights": "^2.9.7",
     "body-parser": "^2.2.2",
     "bunyan": "^1.8.15",
