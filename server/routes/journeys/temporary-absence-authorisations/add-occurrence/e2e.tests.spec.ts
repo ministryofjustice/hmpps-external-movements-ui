@@ -93,13 +93,17 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     expect(
       await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
     ).toContainEqual({
-      start: '2001-01-03T12:00:00',
-      end: '2001-01-03T13:30:00',
-      location: {
-        description: 'Random Street, UK',
-        uprn: 1001,
-      },
-      comments: 'new comments',
+      occurrences: [
+        {
+          start: '2001-01-03T12:00:00',
+          end: '2001-01-03T13:30:00',
+          location: {
+            description: 'Random Street, UK',
+            uprn: 1001,
+          },
+          comments: 'new comments',
+        },
+      ],
     })
   })
 
@@ -145,14 +149,18 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     expect(
       await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
     ).toContainEqual({
-      start: '2001-01-03T12:00:00',
-      end: '2001-01-03T13:30:00',
-      location: {
-        address: 'Address 3',
-        postcode: 'RS1 34T',
-        uprn: 1003,
-      },
-      comments: 'new comments',
+      occurrences: [
+        {
+          start: '2001-01-03T12:00:00',
+          end: '2001-01-03T13:30:00',
+          location: {
+            address: 'Address 3',
+            postcode: 'RS1 34T',
+            uprn: 1003,
+          },
+          comments: 'new comments',
+        },
+      ],
     })
   })
 
