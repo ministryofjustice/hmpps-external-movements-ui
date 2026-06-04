@@ -201,12 +201,16 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     expect(
       await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
     ).toContainEqual({
-      start: '2001-01-03T12:00:00',
-      end: '2001-01-03T13:30:00',
-      location: {
-        address: '1 Manual Street, Manual City',
-      },
-      comments: 'new comments',
+      occurrences: [
+        {
+          start: '2001-01-03T12:00:00',
+          end: '2001-01-03T13:30:00',
+          location: {
+            address: '1 Manual Street, Manual City',
+          },
+          comments: 'new comments',
+        },
+      ],
     })
   })
 
@@ -267,13 +271,17 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     expect(
       await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
     ).toContainEqual({
-      start: '2001-01-03T05:00:00',
-      end: '2001-01-03T09:30:00',
-      location: {
-        address: '1 Manual Street, Manual City',
-        postcode: 'W1TH SP4C3',
-      },
-      comments: 'another comments',
+      occurrences: [
+        {
+          start: '2001-01-03T05:00:00',
+          end: '2001-01-03T09:30:00',
+          location: {
+            address: '1 Manual Street, Manual City',
+            postcode: 'W1TH SP4C3',
+          },
+          comments: 'another comments',
+        },
+      ],
     })
   })
 })

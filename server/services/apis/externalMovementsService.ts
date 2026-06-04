@@ -141,9 +141,13 @@ export default class ExternalMovementsService {
     authorisationId: string,
     request: components['schemas']['CreateOccurrenceRequest'],
   ) {
+    const data: components['schemas']['CreateOccurrencesRequest'] = {
+      occurrences: [request],
+    }
+
     return this.externalMovementsApiClient.withContext(context).post<components['schemas']['ReferenceId']>({
       path: `/temporary-absence-authorisations/${authorisationId}/occurrences`,
-      data: request,
+      data,
     })
   }
 
