@@ -9,16 +9,21 @@ export class EditTapAutofillOccurrencesController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
+    const { authorisation } = req.journeyData.updateTapAuthorisation!
+
+    const occurrences = this.getOccurrences(req).map(({ start, end }) => {
+      return {
+        startDate: format(start, 'yyyy-MM-dd'),
+        returnDate: format(end, 'yyyy-MM-dd'),
+        startTime: format(start, 'HH:mm'),
+        returnTime: format(end, 'HH:mm'),
+      }
+    })
+
     res.render('temporary-absence-authorisations/edit/autofill-occurrences/view', {
       backUrl: 'start-end-dates',
-      occurrences: this.getOccurrences(req).map(({ start, end }) => {
-        return {
-          startDate: format(start, 'yyyy-MM-dd'),
-          returnDate: format(end, 'yyyy-MM-dd'),
-          startTime: format(start, 'HH:mm'),
-          returnTime: format(end, 'HH:mm'),
-        }
-      }),
+      prependOccurrences: occurrences.filter(({ startDate }) => startDate < authorisation.start),
+      appendOccurrences: occurrences.filter(({ returnDate }) => returnDate > authorisation.end),
     })
   }
 

@@ -11,27 +11,57 @@
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-      {% set rows = [] %}
-      {% for absence in occurrences %}
-        {% set rows = (rows.push({
-          key: {
-            classes: 'half-width',
-            html: absence.startDate | formatDate('cccc d MMMM') if absence.startDate === absence.returnDate else (absence.startDate | formatDate('cccc d MMMM') + ' to <br/>' + absence.returnDate | formatDate('cccc d MMMM'))
-          },
-          value: {
-            html: 'Start time: ' + absence.startTime + '<br/>Return time: ' + absence.returnTime
-          }
-        }), rows) %}
-      {% endfor %}
+      {% if prependOccurrences.length %}
+        {% set rows = [] %}
+        {% for absence in prependOccurrences %}
+          {% set rows = (rows.push({
+            key: {
+              classes: 'half-width',
+              html: absence.startDate | formatDate('cccc d MMMM') if absence.startDate === absence.returnDate else (absence.startDate | formatDate('cccc d MMMM') + ' to <br/>' + absence.returnDate | formatDate('cccc d MMMM'))
+            },
+            value: {
+              html: 'Start time: ' + absence.startTime + '<br/>Return time: ' + absence.returnTime
+            }
+          }), rows) %}
+        {% endfor %}
 
-      {{ govukSummaryList({
-        card: {
-          title: {
-            text: "New occurrences to be created for the new date range"
-          }
-        },
-        rows: rows if rows.length else [{ key: { text: "No absence to be created" } }]
-      }) }}
+        {{ govukSummaryList({
+          card: {
+            title: {
+              text: "New occurrences before the original date range"
+            }
+          },
+          rows: rows
+        }) }}
+      {% endif %}
+
+      {% if appendOccurrences.length %}
+        {% set rows = [] %}
+        {% for absence in appendOccurrences %}
+          {% set rows = (rows.push({
+            key: {
+              classes: 'half-width',
+              html: absence.startDate | formatDate('cccc d MMMM') if absence.startDate === absence.returnDate else (absence.startDate | formatDate('cccc d MMMM') + ' to <br/>' + absence.returnDate | formatDate('cccc d MMMM'))
+            },
+            value: {
+              html: 'Start time: ' + absence.startTime + '<br/>Return time: ' + absence.returnTime
+            }
+          }), rows) %}
+        {% endfor %}
+
+        {{ govukSummaryList({
+          card: {
+            title: {
+              text: "New occurrences after the original date range"
+            }
+          },
+          rows: rows
+        }) }}
+      {% endif %}
+
+      {% if appendOccurrences.length === 0 and prependOccurrences.length === 0 %}
+        <p>No absences will be created with this date range change.</p>
+      {% endif %}
 
       {{ govukButton({
         text: "Confirm and save",
