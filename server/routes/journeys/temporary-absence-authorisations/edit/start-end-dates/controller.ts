@@ -7,16 +7,16 @@ export class EditStartEndDatesController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
+    const { backUrl, authorisation, start, end } = req.journeyData.updateTapAuthorisation!
+
     res.render('temporary-absence-authorisations/edit/start-end-dates/view', {
-      backUrl: req.journeyData.updateTapAuthorisation!.backUrl,
+      backUrl,
       start:
         res.locals.formResponses?.['start'] ??
-        formatInputDate(req.journeyData.updateTapAuthorisation!.authorisation.start),
-      end:
-        res.locals.formResponses?.['end'] ?? formatInputDate(req.journeyData.updateTapAuthorisation!.authorisation.end),
-      hasRepeatPattern: ['BIWEEKLY', 'WEEKLY', 'SHIFT'].includes(
-        req.journeyData.updateTapAuthorisation!.authorisation.schedule?.type ?? '',
-      ),
+        (start && formatInputDate(start)) ??
+        formatInputDate(authorisation.start),
+      end: res.locals.formResponses?.['end'] ?? (end && formatInputDate(end)) ?? formatInputDate(authorisation.end),
+      hasRepeatPattern: ['BIWEEKLY', 'WEEKLY', 'SHIFT'].includes(authorisation.schedule?.type ?? ''),
     })
   }
 

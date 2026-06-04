@@ -44,8 +44,8 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
           })
           .filter(({ startDate, returnDate }) => startDate >= from && (isFinalWeek ? returnDate : startDate) <= to)
           .map(({ startDate, startTime, returnDate, returnTime }) => ({
-            start: `${startDate}T${startTime}:00`,
-            end: `${returnDate}T${returnTime}:00`,
+            start: `${startDate}T${startTime.substring(0, 5)}:00`,
+            end: `${returnDate}T${returnTime.substring(0, 5)}:00`,
           }))
       })
       .flat()
@@ -63,8 +63,8 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
         const returnDate = time.startTime >= time.returnTime ? format(addDays(currentDay, 1), 'yyyy-MM-dd') : startDate
         if (returnDate <= journey.end!) {
           occurrencesToMatch.push({
-            start: `${startDate}T${time.startTime}:00`,
-            end: `${returnDate}T${time.returnTime}:00`,
+            start: `${startDate}T${time.startTime.substring(0, 5)}:00`,
+            end: `${returnDate}T${time.returnTime.substring(0, 5)}:00`,
           })
         }
       }
@@ -87,8 +87,8 @@ export const getOccurrencesToMatch = <T, ResBody, ReqBody, Q>(req: Request<T, Re
         const returnDate = time.startTime >= time.returnTime ? format(addDays(currentDay, 1), 'yyyy-MM-dd') : startDate
         if (returnDate <= journey.end!) {
           occurrencesToMatch.push({
-            start: `${startDate}T${time.startTime}:00`,
-            end: `${returnDate}T${time.returnTime}:00`,
+            start: `${startDate}T${time.startTime.substring(0, 5)}:00`,
+            end: `${returnDate}T${time.returnTime.substring(0, 5)}:00`,
           })
         }
       }
