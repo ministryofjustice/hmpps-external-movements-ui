@@ -1,0 +1,26 @@
+{% extends "partials/layout.njk" %}
+{% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
+
+{% set pageTitle = 'Do you want the following occurrences to be added based on the new date range - Manage temporary absences' %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <h1 class="govuk-heading-l">Do you want the following occurrences to be added based on the new date range?</h1>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+      {{ authorisation.schedule | dump }}
+      <br/>
+      {{ occurrences | dump }}
+      <br/>
+
+      {{ govukButton({
+        text: "Confirm and save",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

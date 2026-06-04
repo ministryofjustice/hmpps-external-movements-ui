@@ -21,6 +21,7 @@ import { TapPauseRoutes } from './pause/routes'
 import { TapResumeRoutes } from './resume/routes'
 import { EditTapAuthorisationSearchLocationRoutes } from './search-location/routes'
 import { EditTapAuthorisationEnterLocationRoutes } from './enter-location/routes'
+import { EditTapAutofillOccurrencesRoutes } from './autofill-occurrences/routes'
 
 export const EditTapAuthorisationRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -58,6 +59,8 @@ export const EditTapAuthorisationRoutes = (services: Services) => {
   router.use('/review-reason', TapReviewReasonRoutes(services))
 
   router.use('/change-confirmation', EditTapAuthorisationChangeConfirmationRoutes(services))
+
+  router.use('/autofill-occurrences', EditTapAutofillOccurrencesRoutes(services))
 
   router.use('/confirmation', EditTapAuthorisationConfirmationRoutes())
 

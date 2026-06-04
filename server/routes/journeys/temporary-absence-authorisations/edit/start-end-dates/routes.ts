@@ -9,7 +9,7 @@ export const EditStartEndDatesRoutes = ({ externalMovementsService }: Services) 
   const controller = new EditStartEndDatesController(externalMovementsService)
 
   get('/', controller.GET)
-  post('/', validate(schema), controller.submitToApi, controller.POST)
+  post('/', validate(schema), controller.POST)
 
   return router
 }

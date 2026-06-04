@@ -165,6 +165,8 @@ export type UpdateTapAuthorisationJourney = {
   transport: components['schemas']['CodedDescription']
   approve: boolean
   result: components['schemas']['AuditHistory']
+  start: string
+  end: string
 }>
 
 export type CreateDocumentJourney = { documentGroup: DOCUMENT_TYPE; tapHomepageUrl: string } & Partial<{
