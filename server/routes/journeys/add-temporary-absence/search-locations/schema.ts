@@ -7,7 +7,7 @@ const ERROR_MSG = 'Enter and select an address or postcode'
 
 export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) => async (req: Request) =>
   createSchema({
-    'address-autosuggest-input': z.string(),
+    'address-autosuggest-input': z.string().optional(),
     uprn: z.string().optional(),
     add: z.string().optional(),
     save: z.string().optional(),
