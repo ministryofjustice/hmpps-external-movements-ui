@@ -61,7 +61,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/confirmation', (
         returnTime: '17:30',
         locationOption: 0,
         comments: 'new comments',
-        result: { id: 'occurrence-id' },
+        result: { content: [], newOccurrenceIds: ['occurrence-id'] },
       },
     })
 

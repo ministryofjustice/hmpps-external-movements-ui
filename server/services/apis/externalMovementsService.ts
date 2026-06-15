@@ -142,13 +142,39 @@ export default class ExternalMovementsService {
     })
   }
 
-  async updateTapAuthorisation(context: ApiRequestContext, id: string, request: UpdateTapAuthorisation) {
+  async updateTapAuthorisation(
+    context: ApiRequestContext,
+    id: string,
+    request: UpdateTapAuthorisation,
+    authorisation?: components['schemas']['TapAuthorisation'],
+  ) {
     const data: components['schemas']['AuthorisationActions'] = { actions: [request] }
 
-    return this.externalMovementsApiClient.withContext(context).put<components['schemas']['AuditHistory']>({
-      path: `/temporary-absence-authorisations/${id}/actions`,
-      data,
-    })
+    const isCreatingOccurrences = !!data.actions.find(({ type }) => type === 'CreateOccurrences')
+
+    if (isCreatingOccurrences && !authorisation) {
+      throw new Error('Authorisation data is mandatory for CreateOccurrences action to diff the occurrences')
+    }
+
+    const result = await this.externalMovementsApiClient
+      .withContext(context)
+      .put<components['schemas']['AuditHistory']>({
+        path: `/temporary-absence-authorisations/${id}/actions`,
+        data,
+      })
+
+    if (isCreatingOccurrences) {
+      const existingIds = authorisation!.occurrences.map(itm => itm.id)
+
+      const occurrenceIds = (await this.getTapAuthorisation(context, id)).occurrences.map(itm => itm.id)
+      const newOccurrenceIds = occurrenceIds.filter(itm => !existingIds.includes(itm))
+      return {
+        ...result,
+        newOccurrenceIds,
+      }
+    }
+
+    return result
   }
 
   searchTapOccurrences(context: ApiRequestContext, request: components['schemas']['TapOccurrenceSearchRequest']) {

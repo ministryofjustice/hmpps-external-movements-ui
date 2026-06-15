@@ -147,7 +147,7 @@ export type AddTapOccurrenceJourney = {
   location: Address
   comments: string | null
   savedLocations: components['schemas']['Location'][]
-  result: components['schemas']['ReferenceId']
+  result: components['schemas']['AuditHistory'] & { newOccurrenceIds?: string[] }
 }>
 
 export type UpdateTapAuthorisationJourney = {
@@ -164,7 +164,7 @@ export type UpdateTapAuthorisationJourney = {
   accompaniedBy: components['schemas']['CodedDescription']
   transport: components['schemas']['CodedDescription']
   approve: boolean
-  result: components['schemas']['AuditHistory']
+  result: components['schemas']['AuditHistory'] & { newOccurrenceIds?: string[] }
 }>
 
 export type CreateDocumentJourney = { documentGroup: DOCUMENT_TYPE; tapHomepageUrl: string } & Partial<{

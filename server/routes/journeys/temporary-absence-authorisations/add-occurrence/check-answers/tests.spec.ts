@@ -7,7 +7,7 @@ import { randomPrisonNumber, testTapAuthorisation } from '../../../../../../inte
 import { stubGetPrisonerDetails } from '../../../../../../integration_tests/mockApis/prisonerSearchApi'
 import {
   stubGetTapAuthorisation,
-  stubPostTapOccurrence,
+  stubPutTapAuthorisation,
 } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { AddTapOccurrenceCheckAnswersPage } from './test.page'
@@ -47,7 +47,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/check-answers', 
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetTapAuthorisation(authorisation),
-      stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
+      stubPutTapAuthorisation(authorisationId, { content: [], newOccurrenceIds: ['occurrence-id'] }),
     ])
   })
 

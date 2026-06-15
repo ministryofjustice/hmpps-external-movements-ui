@@ -5,7 +5,7 @@ export class AddTapOccurrenceConfirmationController {
     req.journeyData.journeyCompleted = true
     res.render('temporary-absence-authorisations/add-occurrence/confirmation/view', {
       authorisation: req.journeyData.addTapOccurrence!.authorisation,
-      occurrenceId: req.journeyData.addTapOccurrence!.result!.id,
+      occurrenceId: req.journeyData.addTapOccurrence!.result!.newOccurrenceIds![0],
     })
   }
 }
