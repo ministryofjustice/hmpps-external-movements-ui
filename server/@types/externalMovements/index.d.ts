@@ -20,6 +20,26 @@ export interface paths {
      * @description Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
+    put: operations['applyAction']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/temporary-absence-occurrences/{id}/actions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
     put: operations['applyActions']
     post?: never
     delete?: never
@@ -42,6 +62,26 @@ export interface paths {
      *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
      */
     get: operations['getTapAuthorisation']
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
+    put: operations['applyAction_1']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/temporary-absence-authorisations/{id}/actions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * @description Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
@@ -211,7 +251,7 @@ export interface paths {
      * @description Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
-    post: operations['createOccurrence']
+    post: operations['createOccurrences']
     delete?: never
     options?: never
     head?: never
@@ -842,7 +882,7 @@ export interface components {
       user: components['schemas']['User']
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       occurredAt: string
       domainEvents: string[]
@@ -857,6 +897,27 @@ export interface components {
     User: {
       username: string
       name: string
+    }
+    OccurrenceActions: {
+      actions: (
+        | components['schemas']['CancelOccurrence']
+        | components['schemas']['ChangeOccurrenceAccompaniment']
+        | components['schemas']['ChangeOccurrenceComments']
+        | components['schemas']['ChangeOccurrenceContactInformation']
+        | components['schemas']['ChangeOccurrenceLocation']
+        | components['schemas']['ChangeOccurrenceTransport']
+        | components['schemas']['CommenceOccurrence']
+        | components['schemas']['CompleteOccurrence']
+        | components['schemas']['DenyOccurrence']
+        | components['schemas']['ExpireOccurrence']
+        | components['schemas']['MarkOccurrenceOverdue']
+        | components['schemas']['PauseOccurrence']
+        | components['schemas']['RecategoriseOccurrence']
+        | components['schemas']['RescheduleOccurrence']
+        | components['schemas']['ResumeOccurrence']
+        | components['schemas']['ScheduleOccurrence']
+      )[]
+      reason?: string | null
     }
     ApproveAuthorisation: {
       type: 'ApproveAuthorisation'
@@ -923,6 +984,26 @@ export interface components {
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
       reason?: string | null
     })
+    CreateOccurrenceRequest: {
+      /**
+       * Format: date-time
+       * @example 2026-06-05T10:20:11
+       */
+      start: string
+      /**
+       * Format: date-time
+       * @example 2026-06-05T10:20:11
+       */
+      end: string
+      location: components['schemas']['Location']
+      comments?: string | null
+    }
+    CreateOccurrences: {
+      type: 'CreateOccurrences'
+    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
+      occurrences: components['schemas']['CreateOccurrenceRequest'][]
+      reason?: string | null
+    })
     DeferAuthorisation: {
       type: 'DeferAuthorisation'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
@@ -957,10 +1038,32 @@ export interface components {
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
       reason?: string | null
     })
+    AuthorisationActions: {
+      actions: (
+        | components['schemas']['ApproveAuthorisation']
+        | components['schemas']['CancelAuthorisation']
+        | components['schemas']['ChangeAuthorisationAccompaniment']
+        | components['schemas']['ChangeAuthorisationComments']
+        | components['schemas']['ChangeAuthorisationDateRange']
+        | components['schemas']['ChangeAuthorisationLocation']
+        | components['schemas']['ChangeAuthorisationLocations']
+        | components['schemas']['ChangeAuthorisationTransport']
+        | components['schemas']['ChangePrisonPerson']
+        | components['schemas']['ClearAuthorisationSchedule']
+        | components['schemas']['CreateOccurrences']
+        | components['schemas']['DeferAuthorisation']
+        | components['schemas']['DenyAuthorisation']
+        | components['schemas']['ExpireAuthorisation']
+        | components['schemas']['PauseAuthorisation']
+        | components['schemas']['RecategoriseAuthorisation']
+        | components['schemas']['ResumeAuthorisation']
+      )[]
+      reason?: string | null
+    }
     SyncAtAndBy: {
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       at: string
       by: string
@@ -972,7 +1075,7 @@ export interface components {
       occurrenceId?: string | null
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       occurredAt: string
       /** @enum {string} */
@@ -1021,12 +1124,12 @@ export interface components {
       isCancelled: boolean
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       location: components['schemas']['Location']
@@ -1070,7 +1173,7 @@ export interface components {
     MigrateTapMovement: {
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       occurredAt: string
       /** @enum {string} */
@@ -1091,12 +1194,12 @@ export interface components {
       isCancelled: boolean
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       location: components['schemas']['Location']
@@ -1230,12 +1333,12 @@ export interface components {
     OccurrenceRequest: {
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       location: components['schemas']['Location']
@@ -1300,19 +1403,25 @@ export interface components {
       /** Format: uuid */
       id: string
     }
-    CreateOccurrenceRequest: {
+    CreateOccurrencesRequest: {
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
-      start: string
+      start?: string | null
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
-      end: string
-      location: components['schemas']['Location']
+      end?: string | null
+      location?: components['schemas']['Location'] | null
       comments?: string | null
+      occurrences: components['schemas']['CreateOccurrenceRequest'][]
+    }
+    ReferenceIds: {
+      ids: components['schemas']['ReferenceId'][]
+      /** Format: uuid */
+      id: string
     }
     AbsenceCategorisationFilter: {
       /** @enum {string} */
@@ -1400,12 +1509,12 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription'] | null
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       accompaniedBy: components['schemas']['CodedDescription']
@@ -1459,20 +1568,20 @@ export interface components {
       metadata: components['schemas']['PageMetadata']
     }
     SearchScheduledMovementsRequest: {
-      movementTypes: 'TEMPORARY_ABSENCE'[]
-      personIdentifiers: string[]
+      movementTypes?: 'TEMPORARY_ABSENCE'[]
+      personIdentifiers?: string[]
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
-      start: string
+      start?: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
-      end: string
-      includeSensitive: boolean
-      includeLocation: boolean
+      end?: string
+      includeSensitive?: boolean
+      includeLocation?: boolean
     }
     LocationDescription: {
       description: string
@@ -1486,12 +1595,12 @@ export interface components {
       description: components['schemas']['ScheduledMovementDescription']
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       location: components['schemas']['LocationDescription']
@@ -1511,17 +1620,17 @@ export interface components {
       content: components['schemas']['ScheduledMovement'][]
     }
     SearchExternalActivitiesRequest: {
-      personIdentifiers: string[]
+      personIdentifiers?: string[]
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
-      start: string
+      start?: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
-      end: string
+      end?: string
     }
     ExternalActivities: {
       content: components['schemas']['ExternalActivity'][]
@@ -1533,12 +1642,12 @@ export interface components {
       description: components['schemas']['ScheduledMovementDescription']
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       status: components['schemas']['CodedDescription']
@@ -1591,12 +1700,12 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription'] | null
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       accompaniedBy: components['schemas']['CodedDescription']
@@ -1625,12 +1734,12 @@ export interface components {
       status: components['schemas']['CodedDescription']
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       location: components['schemas']['Location']
@@ -1675,7 +1784,7 @@ export interface components {
       id: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       occurredAt: string
       /** @enum {string} */
@@ -1689,7 +1798,7 @@ export interface components {
       occurrence?: components['schemas']['TapMovement.Occurrence'] | null
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       occurredAt: string
       /** @enum {string} */
@@ -1711,12 +1820,12 @@ export interface components {
       status: components['schemas']['CodedDescription']
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
     }
@@ -1762,12 +1871,12 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription'] | null
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       location: components['schemas']['Location']
@@ -1782,12 +1891,12 @@ export interface components {
       statusCode: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       location: components['schemas']['Location']
@@ -1815,7 +1924,7 @@ export interface components {
       personIdentifier: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       occurredAt: string
       /** @enum {string} */
@@ -1856,12 +1965,12 @@ export interface components {
       statusCode: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       location: components['schemas']['Location']
@@ -1938,12 +2047,12 @@ export interface components {
       reasonCode: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       location?: components['schemas']['Location'] | null
@@ -1984,12 +2093,12 @@ export interface components {
       accompaniedBy: components['schemas']['IntegrationCodedDescription']
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       end: string
       location: components['schemas']['Location']
@@ -2019,7 +2128,7 @@ export interface components {
       accompaniedByComments?: string | null
       /**
        * Format: date-time
-       * @example 2026-05-21T11:38:51
+       * @example 2026-06-05T10:20:11
        */
       occurredAt: string
       location: components['schemas']['Location']
@@ -2131,7 +2240,7 @@ export interface operations {
       }
     }
   }
-  applyActions: {
+  applyAction: {
     parameters: {
       query?: never
       header?: {
@@ -2176,6 +2285,35 @@ export interface operations {
       }
     }
   }
+  applyActions: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description Relevant caseload id for the client identity in context e.g. the active caseload id of the logged in user. */
+        CaseloadId?: string
+      }
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OccurrenceActions']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['AuditHistory']
+        }
+      }
+    }
+  }
   getTapAuthorisation: {
     parameters: {
       query?: {
@@ -2201,7 +2339,7 @@ export interface operations {
       }
     }
   }
-  applyActions_1: {
+  applyAction_1: {
     parameters: {
       query?: never
       header?: {
@@ -2226,12 +2364,42 @@ export interface operations {
           | components['schemas']['ChangeAuthorisationTransport']
           | components['schemas']['ChangePrisonPerson']
           | components['schemas']['ClearAuthorisationSchedule']
+          | components['schemas']['CreateOccurrences']
           | components['schemas']['DeferAuthorisation']
           | components['schemas']['DenyAuthorisation']
           | components['schemas']['ExpireAuthorisation']
           | components['schemas']['PauseAuthorisation']
           | components['schemas']['RecategoriseAuthorisation']
           | components['schemas']['ResumeAuthorisation']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['AuditHistory']
+        }
+      }
+    }
+  }
+  applyActions_1: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description Relevant caseload id for the client identity in context e.g. the active caseload id of the logged in user. */
+        CaseloadId?: string
+      }
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AuthorisationActions']
       }
     }
     responses: {
@@ -2287,8 +2455,8 @@ export interface operations {
       }
     }
     responses: {
-      /** @description OK */
-      200: {
+      /** @description Accepted */
+      202: {
         headers: {
           [name: string]: unknown
         }
@@ -2313,8 +2481,8 @@ export interface operations {
       }
     }
     responses: {
-      /** @description OK */
-      200: {
+      /** @description Accepted */
+      202: {
         headers: {
           [name: string]: unknown
         }
@@ -2447,7 +2615,7 @@ export interface operations {
       }
     }
   }
-  createOccurrence: {
+  createOccurrences: {
     parameters: {
       query?: never
       header?: {
@@ -2461,7 +2629,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['CreateOccurrenceRequest']
+        'application/json': components['schemas']['CreateOccurrencesRequest']
       }
     }
     responses: {
@@ -2471,7 +2639,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['ReferenceId']
+          '*/*': components['schemas']['ReferenceIds']
         }
       }
     }
@@ -2723,8 +2891,8 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description No Content */
-      204: {
+      /** @description Accepted */
+      202: {
         headers: {
           [name: string]: unknown
         }
@@ -2765,8 +2933,8 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description No Content */
-      204: {
+      /** @description Accepted */
+      202: {
         headers: {
           [name: string]: unknown
         }
@@ -2807,8 +2975,8 @@ export interface operations {
     }
     requestBody?: never
     responses: {
-      /** @description No Content */
-      204: {
+      /** @description Accepted */
+      202: {
         headers: {
           [name: string]: unknown
         }

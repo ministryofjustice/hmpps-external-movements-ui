@@ -6,36 +6,9 @@ import logger from '../../../logger'
 import { components } from '../../@types/externalMovements'
 import { parseQueryParams } from '../../utils/utils'
 
-export type UpdateTapAuthorisation =
-  | components['schemas']['ApproveAuthorisation']
-  | components['schemas']['CancelAuthorisation']
-  | components['schemas']['ChangeAuthorisationAccompaniment']
-  | components['schemas']['ChangeAuthorisationComments']
-  | components['schemas']['ChangeAuthorisationDateRange']
-  | components['schemas']['ChangeAuthorisationLocation']
-  | components['schemas']['ChangeAuthorisationLocations']
-  | components['schemas']['ChangeAuthorisationTransport']
-  | components['schemas']['ChangePrisonPerson']
-  | components['schemas']['ClearAuthorisationSchedule']
-  | components['schemas']['DeferAuthorisation']
-  | components['schemas']['DenyAuthorisation']
-  | components['schemas']['ExpireAuthorisation']
-  | components['schemas']['PauseAuthorisation']
-  | components['schemas']['RecategoriseAuthorisation']
-  | components['schemas']['ResumeAuthorisation']
+export type UpdateTapAuthorisation = components['schemas']['AuthorisationActions']['actions'][0]
 
-export type UpdateTapOccurrence =
-  | components['schemas']['ChangeOccurrenceComments']
-  | components['schemas']['CancelOccurrence']
-  | components['schemas']['ChangeOccurrenceAccompaniment']
-  | components['schemas']['ChangeOccurrenceContactInformation']
-  | components['schemas']['ChangeOccurrenceLocation']
-  | components['schemas']['ChangeOccurrenceTransport']
-  | components['schemas']['ExpireOccurrence']
-  | components['schemas']['MarkOccurrenceOverdue']
-  | components['schemas']['RecategoriseOccurrence']
-  | components['schemas']['RescheduleOccurrence']
-  | components['schemas']['ScheduleOccurrence']
+export type UpdateTapOccurrence = components['schemas']['OccurrenceActions']['actions'][0]
 
 export default class ExternalMovementsService {
   private externalMovementsApiClient: CustomRestClient
@@ -130,9 +103,11 @@ export default class ExternalMovementsService {
   }
 
   async updateTapOccurrence(context: ApiRequestContext, id: string, request: UpdateTapOccurrence) {
+    const data: components['schemas']['OccurrenceActions'] = { actions: [request] }
+
     return this.externalMovementsApiClient.withContext(context).put<components['schemas']['AuditHistory']>({
-      path: `/temporary-absence-occurrences/${id}`,
-      data: request,
+      path: `/temporary-absence-occurrences/${id}/actions`,
+      data,
     })
   }
 
@@ -167,11 +142,39 @@ export default class ExternalMovementsService {
     })
   }
 
-  async updateTapAuthorisation(context: ApiRequestContext, id: string, request: UpdateTapAuthorisation) {
-    return this.externalMovementsApiClient.withContext(context).put<components['schemas']['AuditHistory']>({
-      path: `/temporary-absence-authorisations/${id}`,
-      data: request,
-    })
+  async updateTapAuthorisation(
+    context: ApiRequestContext,
+    id: string,
+    request: UpdateTapAuthorisation,
+    authorisation?: components['schemas']['TapAuthorisation'],
+  ) {
+    const data: components['schemas']['AuthorisationActions'] = { actions: [request] }
+
+    const isCreatingOccurrences = !!data.actions.find(({ type }) => type === 'CreateOccurrences')
+
+    if (isCreatingOccurrences && !authorisation) {
+      throw new Error('Authorisation data is mandatory for CreateOccurrences action to diff the occurrences')
+    }
+
+    const result = await this.externalMovementsApiClient
+      .withContext(context)
+      .put<components['schemas']['AuditHistory']>({
+        path: `/temporary-absence-authorisations/${id}/actions`,
+        data,
+      })
+
+    if (isCreatingOccurrences) {
+      const existingIds = authorisation!.occurrences.map(itm => itm.id)
+
+      const occurrenceIds = (await this.getTapAuthorisation(context, id)).occurrences.map(itm => itm.id)
+      const newOccurrenceIds = occurrenceIds.filter(itm => !existingIds.includes(itm))
+      return {
+        ...result,
+        newOccurrenceIds,
+      }
+    }
+
+    return result
   }
 
   searchTapOccurrences(context: ApiRequestContext, request: components['schemas']['TapOccurrenceSearchRequest']) {

@@ -108,10 +108,16 @@ test.describe('/temporary-absences/edit/comments', () => {
     await testPage.clickButton('Continue')
     expect(page.url()).toMatch(/\/temporary-absences\/edit\/confirmation/)
 
-    expect(await getApiBody(`/external-movements-api/temporary-absence-occurrences/${occurrenceId}`, 'PUT')).toEqual([
+    expect(
+      await getApiBody(`/external-movements-api/temporary-absence-occurrences/${occurrenceId}/actions`, 'PUT'),
+    ).toEqual([
       {
-        type: 'ChangeOccurrenceComments',
-        comments: 'Test text',
+        actions: [
+          {
+            type: 'ChangeOccurrenceComments',
+            comments: 'Test text',
+          },
+        ],
       },
     ])
   })
@@ -131,9 +137,15 @@ test.describe('/temporary-absences/edit/comments', () => {
     await testPage.clickButton('Continue')
     expect(page.url()).toMatch(/\/temporary-absences\/edit\/confirmation/)
 
-    expect(await getApiBody(`/external-movements-api/temporary-absence-occurrences/${occurrenceId}`, 'PUT')).toEqual([
+    expect(
+      await getApiBody(`/external-movements-api/temporary-absence-occurrences/${occurrenceId}/actions`, 'PUT'),
+    ).toEqual([
       {
-        type: 'ChangeOccurrenceComments',
+        actions: [
+          {
+            type: 'ChangeOccurrenceComments',
+          },
+        ],
       },
     ])
   })

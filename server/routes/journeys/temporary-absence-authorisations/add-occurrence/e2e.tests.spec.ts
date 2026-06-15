@@ -8,7 +8,7 @@ import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApi
 import {
   stubGetLocations,
   stubGetTapAuthorisation,
-  stubPostTapOccurrence,
+  stubPutTapAuthorisation,
 } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetAddress, stubSearchAddresses } from '../../../../../integration_tests/mockApis/osPlacesApi'
 import { signIn } from '../../../../../integration_tests/steps/signIn'
@@ -61,7 +61,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     const { authorisationId, authorisation } = mockAuthorisation()
     await Promise.all([
       stubGetTapAuthorisation(authorisation),
-      stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
+      stubPutTapAuthorisation(authorisationId, { content: [], newOccurrenceIds: ['occurrence-id'] }),
     ])
 
     const journeyId = uuidV4()
@@ -91,15 +91,21 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await new AddTapOccurrenceConfirmationPage(page).verifyContent()
 
     expect(
-      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
+      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/actions`, 'PUT'),
     ).toContainEqual({
-      start: '2001-01-03T12:00:00',
-      end: '2001-01-03T13:30:00',
-      location: {
-        description: 'Random Street, UK',
-        uprn: 1001,
-      },
-      comments: 'new comments',
+      actions: [
+        {
+          type: 'CreateOccurrences',
+          occurrences: [
+            {
+              start: '2001-01-03T12:00:00',
+              end: '2001-01-03T13:30:00',
+              location: { description: 'Random Street, UK', uprn: 1001 },
+              comments: 'new comments',
+            },
+          ],
+        },
+      ],
     })
   })
 
@@ -107,7 +113,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     const { authorisationId, authorisation } = mockAuthorisation()
     await Promise.all([
       stubGetTapAuthorisation(authorisation),
-      stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
+      stubPutTapAuthorisation(authorisationId, { content: [], newOccurrenceIds: ['occurrence-id'] }),
     ])
 
     const journeyId = uuidV4()
@@ -143,16 +149,25 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await new AddTapOccurrenceConfirmationPage(page).verifyContent()
 
     expect(
-      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
+      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/actions`, 'PUT'),
     ).toContainEqual({
-      start: '2001-01-03T12:00:00',
-      end: '2001-01-03T13:30:00',
-      location: {
-        address: 'Address 3',
-        postcode: 'RS1 34T',
-        uprn: 1003,
-      },
-      comments: 'new comments',
+      actions: [
+        {
+          type: 'CreateOccurrences',
+          occurrences: [
+            {
+              start: '2001-01-03T12:00:00',
+              end: '2001-01-03T13:30:00',
+              location: {
+                address: 'Address 3',
+                postcode: 'RS1 34T',
+                uprn: 1003,
+              },
+              comments: 'new comments',
+            },
+          ],
+        },
+      ],
     })
   })
 
@@ -160,7 +175,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     const { authorisationId, authorisation } = mockAuthorisation()
     await Promise.all([
       stubGetTapAuthorisation(authorisation),
-      stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
+      stubPutTapAuthorisation(authorisationId, { content: [], newOccurrenceIds: ['occurrence-id'] }),
     ])
 
     const journeyId = uuidV4()
@@ -199,14 +214,23 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await new AddTapOccurrenceConfirmationPage(page).verifyContent()
 
     expect(
-      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
+      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/actions`, 'PUT'),
     ).toContainEqual({
-      start: '2001-01-03T12:00:00',
-      end: '2001-01-03T13:30:00',
-      location: {
-        address: '1 Manual Street, Manual City',
-      },
-      comments: 'new comments',
+      actions: [
+        {
+          type: 'CreateOccurrences',
+          occurrences: [
+            {
+              start: '2001-01-03T12:00:00',
+              end: '2001-01-03T13:30:00',
+              location: {
+                address: '1 Manual Street, Manual City',
+              },
+              comments: 'new comments',
+            },
+          ],
+        },
+      ],
     })
   })
 
@@ -214,7 +238,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     const { authorisationId, authorisation } = mockAuthorisation()
     await Promise.all([
       stubGetTapAuthorisation(authorisation),
-      stubPostTapOccurrence(authorisationId, { id: 'occurrence-id' }),
+      stubPutTapAuthorisation(authorisationId, { content: [], newOccurrenceIds: ['occurrence-id'] }),
     ])
 
     const journeyId = uuidV4()
@@ -265,15 +289,24 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await new AddTapOccurrenceConfirmationPage(page)
 
     expect(
-      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`),
+      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/actions`, 'PUT'),
     ).toContainEqual({
-      start: '2001-01-03T05:00:00',
-      end: '2001-01-03T09:30:00',
-      location: {
-        address: '1 Manual Street, Manual City',
-        postcode: 'W1TH SP4C3',
-      },
-      comments: 'another comments',
+      actions: [
+        {
+          type: 'CreateOccurrences',
+          occurrences: [
+            {
+              start: '2001-01-03T05:00:00',
+              end: '2001-01-03T09:30:00',
+              location: {
+                address: '1 Manual Street, Manual City',
+                postcode: 'W1TH SP4C3',
+              },
+              comments: 'another comments',
+            },
+          ],
+        },
+      ],
     })
   })
 })

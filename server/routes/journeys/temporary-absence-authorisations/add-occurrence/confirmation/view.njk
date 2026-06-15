@@ -10,9 +10,11 @@
       text: ""
     }) }}
 
-    <p class="govuk-body">
-      <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/{{ occurrenceId }}">View this occurrence</a>
-    </p>
+    {% if occurrenceId %}
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absences/{{ occurrenceId }}">View this occurrence</a>
+      </p>
+    {% endif %}
 
     <p class="govuk-body">
       <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ authorisation.id }}">View this temporary absence</a>
