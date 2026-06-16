@@ -9,9 +9,11 @@ export const getMovementAndPopulatePrisonerDetails = async (
   res: Response,
 ) => {
   const result = await externalMovementsService.getTapMovement({ res }, req.params.id)
-  res.locals.prisonerDetails = await prisonerSearchApiService.getPrisonerDetails(
-    { res },
-    result.person.personIdentifier,
-  )
+  if (result) {
+    res.locals.prisonerDetails = await prisonerSearchApiService.getPrisonerDetails(
+      { res },
+      result.person.personIdentifier,
+    )
+  }
   return result
 }

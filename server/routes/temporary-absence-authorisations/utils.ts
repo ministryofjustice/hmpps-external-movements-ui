@@ -11,9 +11,11 @@ export const getAuthorisationAndPopulatePrisonerDetails = async (
   end?: string | null,
 ) => {
   const result = await externalMovementsService.getTapAuthorisation({ res }, req.params.id, start, end)
-  res.locals.prisonerDetails = await prisonerSearchApiService.getPrisonerDetails(
-    { res },
-    result.person.personIdentifier,
-  )
+  if (result) {
+    res.locals.prisonerDetails = await prisonerSearchApiService.getPrisonerDetails(
+      { res },
+      result.person.personIdentifier,
+    )
+  }
   return result
 }

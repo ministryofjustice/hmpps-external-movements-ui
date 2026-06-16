@@ -21,6 +21,11 @@ export class CreateDocumentsController {
       this.fetchEntity(req, res, true),
     ])
 
+    if (!entity) {
+      res.notFound()
+      return
+    }
+
     res.render('create-documents/view', {
       showBreadcrumbs: true,
       templates: templates.map(({ id: value, name: text }) => ({ value, text })),
@@ -34,7 +39,11 @@ export class CreateDocumentsController {
         res.locals.breadcrumbs.breadcrumbs.find(({ alias }) => alias === 'VIEW_TEMPORARY_ABSENCE_AUTHORISATION')
           ?.href ?? req.originalUrl
 
-      const entity = (await this.fetchEntity(req, res, false))!
+      const entity = await this.fetchEntity(req, res, false)
+
+      if (!entity) {
+        return res.notFound()
+      }
 
       return res.redirect(
         `${config.serviceUrls.documentGeneration}/download-document/${req.body.template}?${new URLSearchParams({
@@ -53,7 +62,7 @@ export class CreateDocumentsController {
   fetchEntity = async (req: Request<{ id: string }>, res: Response, populatePrisonerDetails: boolean) => {
     if (this.documentType === 'TEMPORARY_ABSENCE') {
       const entity = await this.externalMovementsService.getTapAuthorisation({ res }, req.params.id)
-      if (populatePrisonerDetails) {
+      if (entity && populatePrisonerDetails) {
         res.locals.prisonerDetails = await this.prisonerSearchApiService.getPrisonerDetails(
           { res },
           entity.person.personIdentifier,
