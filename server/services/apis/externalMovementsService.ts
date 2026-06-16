@@ -90,8 +90,8 @@ export default class ExternalMovementsService {
         .get<components['schemas']['TapOccurrence']>({
           path: `/temporary-absence-occurrences/${id}`,
         })
-    } catch {
-      return null
+    } catch (error) {
+      return this.handleGetError(error)
     }
 
     if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prison.code)) {
@@ -106,8 +106,8 @@ export default class ExternalMovementsService {
       return await this.externalMovementsApiClient.withContext(context).get<components['schemas']['AuditHistory']>({
         path: `/temporary-absence-occurrences/${id}/history`,
       })
-    } catch {
-      return null
+    } catch (error) {
+      return this.handleGetError(error)
     }
   }
 
@@ -129,8 +129,8 @@ export default class ExternalMovementsService {
         .get<components['schemas']['TapAuthorisation']>({
           path: `/temporary-absence-authorisations/${id}${parseQueryParams({ start, end })}`,
         })
-    } catch {
-      return null
+    } catch (error) {
+      return this.handleGetError(error)
     }
 
     if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prison.code)) {
@@ -145,8 +145,8 @@ export default class ExternalMovementsService {
       return await this.externalMovementsApiClient.withContext(context).get<components['schemas']['AuditHistory']>({
         path: `/temporary-absence-authorisations/${id}/history`,
       })
-    } catch {
-      return null
+    } catch (error) {
+      return this.handleGetError(error)
     }
   }
 
@@ -222,8 +222,8 @@ export default class ExternalMovementsService {
       response = await this.externalMovementsApiClient.withContext(context).get<components['schemas']['TapMovement']>({
         path: `/temporary-absence-movements/${id}`,
       })
-    } catch {
-      return null
+    } catch (error) {
+      return this.handleGetError(error)
     }
 
     if (!context.res.locals.user.caseLoads?.find(caseload => caseload.caseLoadId === response.prison.code)) {
@@ -238,8 +238,8 @@ export default class ExternalMovementsService {
       return await this.externalMovementsApiClient.withContext(context).get<components['schemas']['AuditHistory']>({
         path: `/temporary-absence-movements/${id}/history`,
       })
-    } catch {
-      return null
+    } catch (error) {
+      return this.handleGetError(error)
     }
   }
 
@@ -254,5 +254,11 @@ export default class ExternalMovementsService {
       path: `/prisons/${context.res.locals.user.getActiveCaseloadId()}/temporary-absence-locations`,
       data: request,
     })
+  }
+
+  private handleGetError = (error: unknown) => {
+    const statusCode = (error as { data?: { status?: number } })?.data?.status
+    if (statusCode && statusCode >= 400 && statusCode <= 499) return null
+    throw error
   }
 }
