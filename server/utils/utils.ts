@@ -41,6 +41,8 @@ export const getQueryEntries = (query: object | undefined | null, keys: string[]
 /* eslint-disable no-param-reassign */
 export const mergeObjects = <T extends Record<string, unknown>>(destination: T, source: Partial<T>) => {
   Object.entries(source).forEach(([key, value]) => {
+    if (key === '__proto__' || key === 'constructor') return
+
     if (typeof value === 'object' && !Array.isArray(value)) {
       if (!destination[key]) {
         // @ts-expect-error set up object for future recursive writes

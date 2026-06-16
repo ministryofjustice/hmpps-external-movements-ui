@@ -106,13 +106,19 @@ test.describe('/temporary-absences/edit/select-location', () => {
 
     expect(page.url()).toMatch(/\/temporary-absences\/edit\/confirmation/)
 
-    expect(await getApiBody(`/external-movements-api/temporary-absence-occurrences/${occurrenceId}`, 'PUT')).toEqual([
+    expect(
+      await getApiBody(`/external-movements-api/temporary-absence-occurrences/${occurrenceId}/actions`, 'PUT'),
+    ).toEqual([
       {
-        type: 'ChangeOccurrenceLocation',
-        location: {
-          description: 'Random Street, UK',
-          uprn: 1001,
-        },
+        actions: [
+          {
+            type: 'ChangeOccurrenceLocation',
+            location: {
+              description: 'Random Street, UK',
+              uprn: 1001,
+            },
+          },
+        ],
       },
     ])
   })

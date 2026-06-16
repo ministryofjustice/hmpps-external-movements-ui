@@ -47,7 +47,7 @@ test.describe('/temporary-absence-movements/:id', () => {
     await stubGetTapMovementHistory(movementId, {
       content: [
         {
-          domainEvents: ['person.external-movement.migrated'],
+          domainEvents: ['person.temporary-absence-movement.migrated'],
           occurredAt: '2001-01-01T10:00:00',
           user: { name: 'User Name', username: 'USERNAME' },
           changes: [],

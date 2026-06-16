@@ -116,10 +116,14 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
     heading: 'Absence deferred',
     content: 'Temporary absence sent back for review for <prisoner>',
   },
-  'person.external-movement.migrated': {
+  'person.temporary-absence-movement.migrated': {
     heading: 'Absence movement migrated',
     content: 'Temporary absence movement migrated from NOMIS',
     skipUser: true,
+  },
+  'person.temporary-absence-movement.recorded': {
+    heading: 'Absence movement recorded',
+    content: 'Temporary absence movement recorded for <prisoner>',
   },
   'person.temporary-absence-authorisation.paused': {
     heading: 'Absence plan paused',
