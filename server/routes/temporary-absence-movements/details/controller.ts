@@ -18,6 +18,7 @@ export class TapMovementDetailsController {
 
     if (!movement) {
       res.notFound()
+      return
     }
 
     res.render('temporary-absence-movements/details/view', {
