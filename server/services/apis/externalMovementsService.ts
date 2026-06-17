@@ -113,9 +113,10 @@ export default class ExternalMovementsService {
 
   async updateTapOccurrence(context: ApiRequestContext, id: string, request: UpdateTapOccurrence) {
     const data: components['schemas']['OccurrenceActions'] = { actions: [request] }
+    if (request.reason) data.reason = request.reason
 
     return this.externalMovementsApiClient.withContext(context).put<components['schemas']['AuditHistory']>({
-      path: `/temporary-absence-occurrences/${id}/actions`,
+      path: `/temporary-absence-occurrences/${id}`,
       data,
     })
   }
@@ -157,6 +158,7 @@ export default class ExternalMovementsService {
     authorisation?: components['schemas']['TapAuthorisation'],
   ) {
     const data: components['schemas']['AuthorisationActions'] = { actions: [request] }
+    if (request.reason) data.reason = request.reason
 
     const isCreatingOccurrences = !!data.actions.find(({ type }) => type === 'CreateOccurrences')
 
@@ -167,7 +169,7 @@ export default class ExternalMovementsService {
     const result = await this.externalMovementsApiClient
       .withContext(context)
       .put<components['schemas']['AuditHistory']>({
-        path: `/temporary-absence-authorisations/${id}/actions`,
+        path: `/temporary-absence-authorisations/${id}`,
         data,
       })
 

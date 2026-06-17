@@ -91,7 +91,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await new AddTapOccurrenceConfirmationPage(page).verifyContent()
 
     expect(
-      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/actions`, 'PUT'),
+      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}`, 'PUT'),
     ).toContainEqual({
       actions: [
         {
@@ -149,7 +149,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await new AddTapOccurrenceConfirmationPage(page).verifyContent()
 
     expect(
-      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/actions`, 'PUT'),
+      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}`, 'PUT'),
     ).toContainEqual({
       actions: [
         {
@@ -214,7 +214,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await new AddTapOccurrenceConfirmationPage(page).verifyContent()
 
     expect(
-      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/actions`, 'PUT'),
+      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}`, 'PUT'),
     ).toContainEqual({
       actions: [
         {
@@ -289,7 +289,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await new AddTapOccurrenceConfirmationPage(page)
 
     expect(
-      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}/actions`, 'PUT'),
+      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}`, 'PUT'),
     ).toContainEqual({
       actions: [
         {
