@@ -109,9 +109,7 @@ test.describe('/temporary-absences/edit/enter-location', () => {
     await testPage.clickButton('Confirm and save')
     expect(page.url()).toMatch(/\/temporary-absences\/edit\/confirmation/)
 
-    expect(
-      await getApiBody(`/external-movements-api/temporary-absence-occurrences/${occurrenceId}/actions`, 'PUT'),
-    ).toEqual([
+    expect(await getApiBody(`/external-movements-api/temporary-absence-occurrences/${occurrenceId}`, 'PUT')).toEqual([
       {
         actions: [
           {

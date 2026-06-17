@@ -115,7 +115,7 @@ export default class ExternalMovementsService {
     const data: components['schemas']['OccurrenceActions'] = { actions: [request] }
 
     return this.externalMovementsApiClient.withContext(context).put<components['schemas']['AuditHistory']>({
-      path: `/temporary-absence-occurrences/${id}/actions`,
+      path: `/temporary-absence-occurrences/${id}`,
       data,
     })
   }
@@ -167,7 +167,7 @@ export default class ExternalMovementsService {
     const result = await this.externalMovementsApiClient
       .withContext(context)
       .put<components['schemas']['AuditHistory']>({
-        path: `/temporary-absence-authorisations/${id}/actions`,
+        path: `/temporary-absence-authorisations/${id}`,
         data,
       })
 

@@ -67,14 +67,7 @@ export const stubPutTapAuthorisation = (
 ) =>
   successStub({
     method: 'PUT',
-    urlPattern: `/external-movements-api/temporary-absence-authorisations/${authorisationId}/actions`,
-    response,
-  })
-
-export const stubPostTapOccurrence = (authorisationId: string, response: components['schemas']['ReferenceId']) =>
-  successStub({
-    method: 'POST',
-    urlPattern: `/external-movements-api/temporary-absence-authorisations/${authorisationId}/occurrences`,
+    urlPattern: `/external-movements-api/temporary-absence-authorisations/${authorisationId}`,
     response,
   })
 
@@ -109,7 +102,7 @@ export const stubGetTapMovementHistory = (movementId: string, response: componen
 export const stubPutTapOccurrence = (occurrenceId: string, response: components['schemas']['AuditHistory']) =>
   successStub({
     method: 'PUT',
-    urlPattern: `/external-movements-api/temporary-absence-occurrences/${occurrenceId}/actions`,
+    urlPattern: `/external-movements-api/temporary-absence-occurrences/${occurrenceId}`,
     response,
   })
 
