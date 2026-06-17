@@ -18,6 +18,11 @@ export const ManageTapAuthorisationRoutes = (services: Services) => {
           req.params.authorisationId,
         )
 
+        if (!authorisation) {
+          res.notFound()
+          return
+        }
+
         if (!isTapAuthorisationEditable(authorisation)) {
           res.conflict()
           return
@@ -50,6 +55,11 @@ export const ManageTapAuthorisationRoutes = (services: Services) => {
           { res },
           req.params.authorisationId,
         )
+
+        if (!authorisation) {
+          res.notFound()
+          return
+        }
 
         if (!isTapAuthorisationEditable(authorisation)) {
           res.conflict()
