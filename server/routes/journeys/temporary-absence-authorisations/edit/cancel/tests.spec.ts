@@ -12,6 +12,7 @@ import {
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { CancelTapAuthorisationPage } from './test.page'
 import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
+import { getApiBody } from '../../../../../../integration_tests/mockApis/wiremock'
 
 test.describe('/temporary-absence-authorisations/edit/cancel unauthorised', () => {
   test('should show unauthorised error', async ({ page }) => {
@@ -91,5 +92,18 @@ test.describe('/temporary-absence-authorisations/edit/cancel', () => {
     await testPage.clickButton('Cancel this absence', 0)
 
     expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/confirmation/)
+
+    expect(
+      await getApiBody(`/external-movements-api/temporary-absence-authorisations/${authorisationId}`, 'PUT'),
+    ).toEqual([
+      {
+        actions: [
+          {
+            type: 'ClearAuthorisationSchedule',
+          },
+        ],
+        reason: 'test',
+      },
+    ])
   })
 })

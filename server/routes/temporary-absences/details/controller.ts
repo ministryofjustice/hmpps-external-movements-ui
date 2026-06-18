@@ -18,6 +18,11 @@ export class TapOccurrenceDetailsController {
         this.externalMovementsService.getTapOccurrenceHistory({ res }, req.params.id),
       ])
 
+      if (!occurrence) {
+        res.notFound()
+        return
+      }
+
       res.locals.prisonerDetails = await this.prisonerSearchApiService.getPrisonerDetails(
         { res },
         occurrence.authorisation.person.personIdentifier,
@@ -27,7 +32,9 @@ export class TapOccurrenceDetailsController {
         showBreadcrumbs: true,
         result: occurrence.authorisation,
         occurrence,
-        auditedActions: parseAuditHistory(history.content.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt))),
+        auditedActions: parseAuditHistory(
+          history?.content.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt)) ?? [],
+        ),
         editable: isTapOccurrenceEditable(occurrence),
         authorisationEditable: isTapAuthorisationEditable(occurrence.authorisation),
       })

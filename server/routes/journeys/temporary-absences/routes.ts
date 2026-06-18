@@ -12,6 +12,11 @@ export const ManageTemporaryAbsenceRoutes = (services: Services) => {
     try {
       const occurrence = await services.externalMovementsService.getTapOccurrence({ res }, req.params.occurrenceId)
 
+      if (!occurrence) {
+        res.notFound()
+        return
+      }
+
       if (!isTapOccurrenceEditable(occurrence)) {
         res.conflict()
         return
@@ -21,6 +26,12 @@ export const ManageTemporaryAbsenceRoutes = (services: Services) => {
         { res },
         occurrence.authorisation.id,
       )
+
+      if (!authorisation) {
+        res.notFound()
+        return
+      }
+
       req.journeyData.updateTapOccurrence = {
         occurrence,
         authorisation,

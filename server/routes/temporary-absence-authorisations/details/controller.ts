@@ -30,6 +30,11 @@ export class TapAuthorisationDetailsController {
         this.externalMovementsService.getTapAuthorisationHistory({ res }, req.params.id),
       ])
 
+      if (!authorisation) {
+        res.notFound()
+        return
+      }
+
       const editable = isTapAuthorisationEditable(authorisation)
       const approvable =
         authorisation.status.code === 'PENDING' &&
@@ -64,7 +69,9 @@ export class TapAuthorisationDetailsController {
         result: authorisation,
         dateFrom,
         dateTo,
-        auditedActions: parseAuditHistory(history.content.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt))),
+        auditedActions: parseAuditHistory(
+          history?.content.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt)) ?? [],
+        ),
         editable,
         approvable,
         cancellable,
