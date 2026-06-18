@@ -4,6 +4,26 @@
  */
 
 export interface paths {
+  '/temporary-absence-occurrences/{id}/actions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * @description Requires one of the following roles:
+     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
+     */
+    put: operations['applyActions']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/temporary-absence-occurrences/{id}': {
     parameters: {
       query?: never
@@ -20,27 +40,7 @@ export interface paths {
      * @description Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
      */
-    put: operations['applyAction']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/temporary-absence-occurrences/{id}/actions': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    /**
-     * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
-     */
-    put: operations['applyActions']
+    put: operations['applyActions_1']
     post?: never
     delete?: never
     options?: never
@@ -62,26 +62,6 @@ export interface paths {
      *     * ROLE_EXTERNAL_MOVEMENTS__TEMPORARY_ABSENCE__RW
      */
     get: operations['getTapAuthorisation']
-    /**
-     * @description Requires one of the following roles:
-     *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
-     */
-    put: operations['applyActions_1']
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/temporary-absence-authorisations/{id}/actions': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
     /**
      * @description Requires one of the following roles:
      *     * ROLE_EXTERNAL_MOVEMENTS__EXTERNAL_MOVEMENTS_UI
@@ -753,59 +733,44 @@ export interface components {
   schemas: {
     CancelOccurrence: {
       type: 'CancelOccurrence'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
     ChangeOccurrenceAccompaniment: {
       type: 'ChangeOccurrenceAccompaniment'
     } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
       accompaniedByCode: string
-      reason?: string | null
     })
     ChangeOccurrenceComments: {
       type: 'ChangeOccurrenceComments'
     } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
       comments?: string | null
-      reason?: string | null
     })
     ChangeOccurrenceContactInformation: {
       type: 'ChangeOccurrenceContactInformation'
     } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
       information: string
-      reason?: string | null
     })
     ChangeOccurrenceLocation: {
       type: 'ChangeOccurrenceLocation'
     } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
       location: components['schemas']['Location']
-      reason?: string | null
     })
     ChangeOccurrenceTransport: {
       type: 'ChangeOccurrenceTransport'
     } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
       transportCode: string
-      reason?: string | null
     })
     CommenceOccurrence: {
       type: 'CommenceOccurrence'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
     CompleteOccurrence: {
       type: 'CompleteOccurrence'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
     DenyOccurrence: {
       type: 'DenyOccurrence'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
     ExpireOccurrence: {
       type: 'ExpireOccurrence'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
     Location: {
       description?: string | null
       address?: string | null
@@ -815,68 +780,9 @@ export interface components {
     }
     MarkOccurrenceOverdue: {
       type: 'MarkOccurrenceOverdue'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
     OccurrenceAction: {
-      reason?: string
       type: string
-    }
-    PauseOccurrence: {
-      type: 'PauseOccurrence'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      reason?: string | null
-    })
-    RecategoriseOccurrence: {
-      type: 'RecategoriseOccurrence'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      absenceTypeCode?: string | null
-      absenceSubTypeCode?: string | null
-      absenceReasonCategoryCode?: string | null
-      absenceReasonCode?: string | null
-      reason?: string | null
-    })
-    RescheduleOccurrence: {
-      type: 'RescheduleOccurrence'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      /** Format: date-time */
-      start?: string | null
-      /** Format: date-time */
-      end?: string | null
-      reason?: string | null
-    })
-    ResumeOccurrence: {
-      type: 'ResumeOccurrence'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      reason?: string | null
-    })
-    ScheduleOccurrence: {
-      type: 'ScheduleOccurrence'
-    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
-      reason?: string | null
-    })
-    AuditHistory: {
-      content: components['schemas']['AuditedAction'][]
-    }
-    AuditedAction: {
-      user: components['schemas']['User']
-      /**
-       * Format: date-time
-       * @example 2026-06-17T14:22:24
-       */
-      occurredAt: string
-      domainEvents: string[]
-      reason?: string | null
-      changes: components['schemas']['Change'][]
-    }
-    Change: {
-      propertyName: string
-      previous?: (string | number | boolean) | null
-      change?: (string | number | boolean) | null
-    }
-    User: {
-      username: string
-      name: string
     }
     OccurrenceActions: {
       actions: (
@@ -899,13 +805,58 @@ export interface components {
       )[]
       reason?: string | null
     }
+    PauseOccurrence: {
+      type: 'PauseOccurrence'
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
+    RecategoriseOccurrence: {
+      type: 'RecategoriseOccurrence'
+    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
+      absenceTypeCode?: string | null
+      absenceSubTypeCode?: string | null
+      absenceReasonCategoryCode?: string | null
+      absenceReasonCode?: string | null
+    })
+    RescheduleOccurrence: {
+      type: 'RescheduleOccurrence'
+    } & (Omit<components['schemas']['OccurrenceAction'], 'type'> & {
+      /** Format: date-time */
+      start?: string | null
+      /** Format: date-time */
+      end?: string | null
+    })
+    ResumeOccurrence: {
+      type: 'ResumeOccurrence'
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
+    ScheduleOccurrence: {
+      type: 'ScheduleOccurrence'
+    } & Omit<components['schemas']['OccurrenceAction'], 'type'>
+    AuditHistory: {
+      content: components['schemas']['AuditedAction'][]
+    }
+    AuditedAction: {
+      user: components['schemas']['User']
+      /**
+       * Format: date-time
+       * @example 2026-06-18T08:49:09
+       */
+      occurredAt: string
+      domainEvents: string[]
+      reason?: string | null
+      changes: components['schemas']['Change'][]
+    }
+    Change: {
+      propertyName: string
+      previous?: (string | number | boolean) | null
+      change?: (string | number | boolean) | null
+    }
+    User: {
+      username: string
+      name: string
+    }
     ApproveAuthorisation: {
       type: 'ApproveAuthorisation'
-    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
     AuthorisationAction: {
-      reason?: string
       type: string
     }
     AuthorisationActions: {
@@ -932,20 +883,16 @@ export interface components {
     }
     CancelAuthorisation: {
       type: 'CancelAuthorisation'
-    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
     ChangeAuthorisationAccompaniment: {
       type: 'ChangeAuthorisationAccompaniment'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
       accompaniedByCode: string
-      reason?: string | null
     })
     ChangeAuthorisationComments: {
       type: 'ChangeAuthorisationComments'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
       comments?: string | null
-      reason?: string | null
     })
     ChangeAuthorisationDateRange: {
       type: 'ChangeAuthorisationDateRange'
@@ -954,47 +901,40 @@ export interface components {
       start: string
       /** Format: date */
       end: string
-      reason?: string | null
     })
     ChangeAuthorisationLocation: {
       type: 'ChangeAuthorisationLocation'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
       location: components['schemas']['Location']
-      reason?: string | null
     })
     ChangeAuthorisationLocations: {
       type: 'ChangeAuthorisationLocations'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
       locations: components['schemas']['Location'][]
-      reason?: string | null
     })
     ChangeAuthorisationTransport: {
       type: 'ChangeAuthorisationTransport'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
       transportCode: string
-      reason?: string | null
     })
     ChangePrisonPerson: {
       type: 'ChangePrisonPerson'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
       personIdentifier: string
       prisonCode: string
-      reason?: string | null
     })
     ClearAuthorisationSchedule: {
       type: 'ClearAuthorisationSchedule'
-    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
     CreateOccurrenceRequest: {
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       location: components['schemas']['Location']
@@ -1004,28 +944,19 @@ export interface components {
       type: 'CreateOccurrences'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
       occurrences: components['schemas']['CreateOccurrenceRequest'][]
-      reason?: string | null
     })
     DeferAuthorisation: {
       type: 'DeferAuthorisation'
-    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
     DenyAuthorisation: {
       type: 'DenyAuthorisation'
-    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
     ExpireAuthorisation: {
       type: 'ExpireAuthorisation'
-    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
     PauseAuthorisation: {
       type: 'PauseAuthorisation'
-    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
     RecategoriseAuthorisation: {
       type: 'RecategoriseAuthorisation'
     } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
@@ -1033,17 +964,14 @@ export interface components {
       absenceSubTypeCode?: string | null
       absenceReasonCategoryCode?: string | null
       absenceReasonCode?: string | null
-      reason?: string | null
     })
     ResumeAuthorisation: {
       type: 'ResumeAuthorisation'
-    } & (Omit<components['schemas']['AuthorisationAction'], 'type'> & {
-      reason?: string | null
-    })
+    } & Omit<components['schemas']['AuthorisationAction'], 'type'>
     SyncAtAndBy: {
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       at: string
       by: string
@@ -1055,7 +983,7 @@ export interface components {
       occurrenceId?: string | null
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       occurredAt: string
       /** @enum {string} */
@@ -1104,12 +1032,12 @@ export interface components {
       isCancelled: boolean
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       location: components['schemas']['Location']
@@ -1153,7 +1081,7 @@ export interface components {
     MigrateTapMovement: {
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       occurredAt: string
       /** @enum {string} */
@@ -1174,12 +1102,12 @@ export interface components {
       isCancelled: boolean
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       location: components['schemas']['Location']
@@ -1313,12 +1241,12 @@ export interface components {
     OccurrenceRequest: {
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       location: components['schemas']['Location']
@@ -1469,12 +1397,12 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription'] | null
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       accompaniedBy: components['schemas']['CodedDescription']
@@ -1532,12 +1460,12 @@ export interface components {
       personIdentifiers?: string[]
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start?: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end?: string
       includeSensitive?: boolean
@@ -1555,12 +1483,12 @@ export interface components {
       description: components['schemas']['ScheduledMovementDescription']
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       location: components['schemas']['LocationDescription']
@@ -1583,12 +1511,12 @@ export interface components {
       personIdentifiers?: string[]
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start?: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end?: string
     }
@@ -1602,12 +1530,12 @@ export interface components {
       description: components['schemas']['ScheduledMovementDescription']
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       status: components['schemas']['CodedDescription']
@@ -1660,12 +1588,12 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription'] | null
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       accompaniedBy: components['schemas']['CodedDescription']
@@ -1694,12 +1622,12 @@ export interface components {
       status: components['schemas']['CodedDescription']
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       location: components['schemas']['Location']
@@ -1744,7 +1672,7 @@ export interface components {
       id: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       occurredAt: string
       /** @enum {string} */
@@ -1758,7 +1686,7 @@ export interface components {
       occurrence?: components['schemas']['TapMovement.Occurrence'] | null
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       occurredAt: string
       /** @enum {string} */
@@ -1780,12 +1708,12 @@ export interface components {
       status: components['schemas']['CodedDescription']
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
     }
@@ -1831,12 +1759,12 @@ export interface components {
       absenceReason?: components['schemas']['CodedDescription'] | null
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       location: components['schemas']['Location']
@@ -1851,12 +1779,12 @@ export interface components {
       statusCode: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       location: components['schemas']['Location']
@@ -1884,7 +1812,7 @@ export interface components {
       personIdentifier: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       occurredAt: string
       /** @enum {string} */
@@ -1925,12 +1853,12 @@ export interface components {
       statusCode: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       location: components['schemas']['Location']
@@ -1990,7 +1918,7 @@ export interface components {
       directionPrisonCode: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       occurredAt: string
       absenceReasonCode: string
@@ -2016,12 +1944,12 @@ export interface components {
       reasonCode: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       location?: components['schemas']['Location'] | null
@@ -2062,12 +1990,12 @@ export interface components {
       accompaniedBy: components['schemas']['IntegrationCodedDescription']
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       start: string
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       end: string
       location: components['schemas']['Location']
@@ -2097,7 +2025,7 @@ export interface components {
       accompaniedByComments?: string | null
       /**
        * Format: date-time
-       * @example 2026-06-17T14:22:24
+       * @example 2026-06-18T08:49:09
        */
       occurredAt: string
       location: components['schemas']['Location']
@@ -2187,6 +2115,35 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  applyActions: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description Relevant caseload id for the client identity in context e.g. the active caseload id of the logged in user. */
+        CaseloadId?: string
+      }
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OccurrenceActions']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['AuditHistory']
+        }
+      }
+    }
+  }
   getTapOccurrence: {
     parameters: {
       query?: never
@@ -2209,52 +2166,7 @@ export interface operations {
       }
     }
   }
-  applyAction: {
-    parameters: {
-      query?: never
-      header?: {
-        /** @description Relevant caseload id for the client identity in context e.g. the active caseload id of the logged in user. */
-        CaseloadId?: string
-      }
-      path: {
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json':
-          | components['schemas']['CancelOccurrence']
-          | components['schemas']['ChangeOccurrenceAccompaniment']
-          | components['schemas']['ChangeOccurrenceComments']
-          | components['schemas']['ChangeOccurrenceContactInformation']
-          | components['schemas']['ChangeOccurrenceLocation']
-          | components['schemas']['ChangeOccurrenceTransport']
-          | components['schemas']['CommenceOccurrence']
-          | components['schemas']['CompleteOccurrence']
-          | components['schemas']['DenyOccurrence']
-          | components['schemas']['ExpireOccurrence']
-          | components['schemas']['MarkOccurrenceOverdue']
-          | components['schemas']['PauseOccurrence']
-          | components['schemas']['RecategoriseOccurrence']
-          | components['schemas']['RescheduleOccurrence']
-          | components['schemas']['ResumeOccurrence']
-          | components['schemas']['ScheduleOccurrence']
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['AuditHistory']
-        }
-      }
-    }
-  }
-  applyActions: {
+  applyActions_1: {
     parameters: {
       query?: never
       header?: {
@@ -2304,35 +2216,6 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['TapAuthorisation']
-        }
-      }
-    }
-  }
-  applyActions_1: {
-    parameters: {
-      query?: never
-      header?: {
-        /** @description Relevant caseload id for the client identity in context e.g. the active caseload id of the logged in user. */
-        CaseloadId?: string
-      }
-      path: {
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['AuthorisationActions']
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['AuditHistory']
         }
       }
     }
