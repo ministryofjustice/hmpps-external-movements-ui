@@ -18,10 +18,14 @@ export class TapOccurrenceCancelController {
   submitToApi = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
     const journey = req.journeyData.updateTapOccurrence!
     try {
-      journey.result = await this.externalMovementsService.updateTapOccurrence({ res }, journey.occurrence.id, {
-        type: 'CancelOccurrence',
-        reason: req.body.reason,
-      })
+      journey.result = await this.externalMovementsService.updateTapOccurrence(
+        { res },
+        journey.occurrence.id,
+        {
+          type: 'CancelOccurrence',
+        },
+        req.body.reason,
+      )
       next()
     } catch (e) {
       next(e)

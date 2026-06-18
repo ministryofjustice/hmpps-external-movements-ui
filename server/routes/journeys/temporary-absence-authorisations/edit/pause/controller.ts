@@ -16,10 +16,15 @@ export class TapPauseController {
   submitToApi = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
     const journey = req.journeyData.updateTapAuthorisation!
     try {
-      journey.result = await this.externalMovementsService.updateTapAuthorisation({ res }, journey.authorisation.id, {
-        type: 'PauseAuthorisation',
-        reason: req.body.reason,
-      })
+      journey.result = await this.externalMovementsService.updateTapAuthorisation(
+        { res },
+        journey.authorisation.id,
+        {
+          type: 'PauseAuthorisation',
+        },
+        null,
+        req.body.reason,
+      )
       next()
     } catch (e) {
       next(e)
