@@ -24,7 +24,8 @@
     "clean": "rm -rf dist test_results",
     "rebuild": "npm run clean && npm i && npm run build",
     "swagger": "npx openapi-typescript https://external-movements-api-dev.hmpps.service.justice.gov.uk/v3/api-docs > ./server/@types/externalMovements/index.d.ts && eslint --fix \"./server/@types/externalMovements/index.d.ts\"",
-    "setup": "npm ci && hmpps-npm-script-run-allowlist"
+    "setup": "npm ci && hmpps-npm-script-run-allowlist",
+    "todo-reminder": "grep -r -n --color=always --include=\"*.ts\" \"// TODO:.*\" ./server ./integration_tests || true"
   },
   "engines": {
     "node": "^24",
@@ -160,5 +161,8 @@
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.11",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "js-yaml": "4.2.0"
   }
 }
