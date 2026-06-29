@@ -37,3 +37,14 @@ repos:
       - id: check-json
       - id: check-yaml
       - id: check-merge-conflict
+  - repo: local
+    hooks:
+      - id: todo-reminder
+        name: show TODO reminders
+        language: system
+        entry: npm run todo-reminder
+        types: [ ts ]
+        require_serial: true
+        pass_filenames: false
+        always_run: true
+        verbose: true
