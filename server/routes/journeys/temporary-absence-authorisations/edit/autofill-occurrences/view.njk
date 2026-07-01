@@ -1,0 +1,158 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set pageTitle = 'Do you want the following occurrences to be added based on the new date range - Manage temporary absences' %}
+{% set fullWidth = true %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <h1 class="govuk-heading-l">Confirm new dates</h1>
+
+    <p>
+      {% if authorisation.start === start %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third"><strong>Original start date</strong></div>
+          <div class="govuk-grid-column-two-thirds">{{ authorisation.start | formatDate('d MMMM yyyy') }} (unchanged)</div>
+        </div>
+      {% else %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third"><strong>Original start date</strong></div>
+          <div class="govuk-grid-column-two-thirds">{{ authorisation.start | formatDate('d MMMM yyyy') }}</div>
+        </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third"><strong>New start date</strong></div>
+          <div class="govuk-grid-column-two-thirds">{{ start | formatDate('d MMMM yyyy') }}</div>
+        </div>
+      {% endif %}
+
+      {% if authorisation.end === end %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third"><strong>Original end date</strong></div>
+          <div class="govuk-grid-column-two-thirds">{{ authorisation.end | formatDate('d MMMM yyyy') }} (unchanged)</div>
+        </div>
+      {% else %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third"><strong>Original end date</strong></div>
+          <div class="govuk-grid-column-two-thirds">{{ authorisation.end | formatDate('d MMMM yyyy') }}</div>
+        </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third"><strong>New end date</strong></div>
+          <div class="govuk-grid-column-two-thirds">{{ end | formatDate('d MMMM yyyy') }}</div>
+        </div>
+      {% endif %}
+    </p>
+
+    {% set calendarViewHtml %}
+      {% for month in calendar %}
+        <div class="preview-calendar">
+          <h3 class="govuk-heading-s">{{ month[0] }}</h3>
+          <table>
+            <thead><tr><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th></tr></thead>
+            <tbody>
+              {% for week in month[1] %}
+                <tr>
+                  {% for day in week %}
+                    {% if day.occurrence %}
+                      <td><div>{{ day.date }}</div><div class="middle">{{ 'Multiple shifts' if day.occurrence.multi else ('Day shift' if day.occurrence.startDate === day.occurrence.returnDate else 'Night shift') }}</div><div class="middle">{{ day.occurrence.startTime }} - {{ day.occurrence.returnTime }}</div></td>
+                    {% else %}
+                      <td>{{ day.date }}</td>
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endfor %}
+    {% endset %}
+
+    {% set rows = [] %}
+    {% for absence in occurrences %}
+      {% set rows = (rows.push([
+        { text: absence.startDate | formatDate('cccc, d MMMM yyyy') },
+        { text: 'Scheduled day' if absence.startDate === absence.returnDate else 'Schedule night' },
+        { text: absence.startTime },
+        { text: absence.returnTime }
+      ]), rows) %}
+    {% endfor %}
+
+    {% set tableViewHtml %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          {{ govukTable({
+            firstCellIsHeader: true,
+            head: [
+              {
+                text: "Date"
+              },
+              {
+                text: "Shift type"
+              },
+              {
+                text: "Start time"
+              },
+              {
+                text: "End time"
+              }
+            ],
+            rows:rows
+          }) }}
+        </div>
+      </div>
+    {% endset %}
+
+    <h2 class="govuk-heading-m">New occurrences</h2>
+
+    {{ govukTabs({
+      items: [
+        {
+          label: "Calendar view",
+          id: "calendar-review",
+          panel: { html: calendarViewHtml }
+        },
+        {
+          label: "Table view",
+          id: "table-view",
+          panel: { html: tableViewHtml }
+        }
+      ]
+    }) }}
+
+
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+      {{ govukRadios({
+        name: "confirm",
+        errorMessage: validationErrors | findError('confirm'),
+        fieldset: {
+          legend: {
+            text: "Are you sure you want to change these dates?",
+            isPageHeading: false,
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        hint: { text: 'This will add new occurrences to the schedule.' },
+        items: [
+          {
+            value: 'YES',
+            text: "Yes"
+          },
+          {
+            value: 'NO',
+            text: "No"
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: "Confirm",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

@@ -1,12 +1,12 @@
 import { BaseRouter } from '../../../../common/routes'
-import { EditStartEndDatesController } from './controller'
+import { EditTapAutofillOccurrencesController } from './controller'
+import { Services } from '../../../../../services'
 import { validate } from '../../../../../middleware/validation/validationMiddleware'
 import { schema } from './schema'
-import { Services } from '../../../../../services'
 
-export const EditStartEndDatesRoutes = ({ externalMovementsService }: Services) => {
+export const EditTapAutofillOccurrencesRoutes = ({ externalMovementsService }: Services) => {
   const { router, get, post } = BaseRouter()
-  const controller = new EditStartEndDatesController(externalMovementsService)
+  const controller = new EditTapAutofillOccurrencesController(externalMovementsService)
 
   get('/', controller.GET)
   post('/', validate(schema), controller.POST)

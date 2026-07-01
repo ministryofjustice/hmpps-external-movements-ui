@@ -42,7 +42,7 @@
       }) }}
 
       {{ govukButton({
-        text: "Confirm and save",
+        text: "Continue" if hasRepeatPattern else "Confirm and save",
         preventDoubleClick: true
       }) }}
     </form>

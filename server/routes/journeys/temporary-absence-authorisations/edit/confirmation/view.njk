@@ -74,6 +74,13 @@
         text: ""
       }) }}
 
+      {% if newOccurrenceIds and newOccurrenceIds.length %}
+        <p class="govuk-body">
+          You have changed the date range of this series of temporary absences.<br/>
+          As a result, you have added {{ newOccurrenceIds.length }} new {{ 'occurrence' if newOccurrenceIds.length === 1 else 'occurrences' }}.
+        </p>
+      {% endif %}
+
       <p class="govuk-body">
         <a class="govuk-link govuk-link--no-visited-state" href="/temporary-absence-authorisations/{{ authorisation.id }}">View this temporary absence</a>
       </p>

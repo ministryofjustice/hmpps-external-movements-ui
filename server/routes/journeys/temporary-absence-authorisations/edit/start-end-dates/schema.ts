@@ -4,6 +4,7 @@ import { differenceInMonths, format, subDays } from 'date-fns'
 import { Request, Response } from 'express'
 import { createSchema } from '../../../../../middleware/validation/validationMiddleware'
 import { validateTransformDate } from '../../../../../utils/validations/validateDatePicker'
+import { getOccurrences } from '../utils'
 
 export const schema = async (req: Request, _res: Response) =>
   createSchema({
@@ -58,6 +59,23 @@ export const schema = async (req: Request, _res: Response) =>
           path: ['end'],
         })
         return z.NEVER
+      }
+
+      if (
+        ['BIWEEKLY', 'WEEKLY', 'SHIFT'].includes(
+          req.journeyData.updateTapAuthorisation!.authorisation.schedule?.type ?? '',
+        )
+      ) {
+        const occurrences = getOccurrences(req, parsedStartDate.data, parsedEndDate.data)
+        if (!occurrences.length) {
+          ctx.addIssue({
+            code: 'custom',
+            message:
+              'Enter a new date range that will have occurrences created based on this absence plan repeating pattern',
+            path: ['end'],
+          })
+          return z.NEVER
+        }
       }
 
       return {
