@@ -6,6 +6,7 @@ export class EditTapAuthorisationConfirmationController {
     res.render('temporary-absence-authorisations/edit/confirmation/view', {
       domainEvent: req.journeyData.updateTapAuthorisation!.result!.content[0]!.domainEvents[0],
       authorisation: req.journeyData.updateTapAuthorisation!.authorisation,
+      newOccurrenceIds: req.journeyData.updateTapAuthorisation!.result!.newOccurrenceIds,
     })
   }
 }
