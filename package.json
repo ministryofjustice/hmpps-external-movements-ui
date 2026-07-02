@@ -87,8 +87,8 @@
     "@ministryofjustice/hmpps-connect-dps-shared-items": "^4.1.1",
     "@ministryofjustice/hmpps-monitoring": "^2.1.0",
     "@ministryofjustice/hmpps-prison-permissions-lib": "^3.0.1",
-    "@ministryofjustice/hmpps-rest-client": "^2.1.0",
-    "@sentry/node": "^10.60.0",
+    "@ministryofjustice/hmpps-rest-client": "^2.2.0",
+    "@sentry/node": "^10.62.0",
     "applicationinsights": "^2.9.7",
     "body-parser": "^2.3.0",
     "bunyan": "^1.8.15",
@@ -108,7 +108,7 @@
     "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.8.0",
-    "redis": "^6.0.0",
+    "redis": "^6.0.1",
     "sortablejs": "1.15.7",
     "superagent": "^10.3.0",
     "uuid": "^14.0.1",
@@ -152,10 +152,10 @@
     "jest-junit": "^17.0.0",
     "jsonwebtoken": "^9.0.3",
     "lint-staged": "^17.0.8",
-    "nock": "^14.0.15",
+    "nock": "^14.0.16",
     "openapi-typescript": "^7.13.0",
     "playwright-ctrf-json-reporter": "^0.0.29",
-    "prettier": "^3.8.4",
+    "prettier": "^3.9.0",
     "prettier-plugin-jinja-template": "^2.2.0",
     "sass-embedded": "^1.100.0",
     "supertest": "^7.2.2",
@@ -163,6 +163,6 @@
     "typescript": "^5.9.3"
   },
   "overrides": {
-    "js-yaml": "4.2.0"
+    "js-yaml": "4.3.0"
   }
 }
