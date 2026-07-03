@@ -2,8 +2,6 @@
 # Per environment values which override defaults in hmpps-external-movements-ui/values.yaml
 
 generic-service:
-  replicaCount: 2
-
   ingress:
     host: external-movements-preprod.hmpps.service.justice.gov.uk
 
