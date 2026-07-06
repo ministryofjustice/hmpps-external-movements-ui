@@ -166,6 +166,12 @@ export type UpdateTapAuthorisationJourney = {
   approve: boolean
   start: string
   end: string
+  newOccurrences: {
+    start: string
+    end: string
+    locationIdx?: number
+  }[]
+  locationOption: 'MULTIPLE'
   result: components['schemas']['AuditHistory'] & { newOccurrenceIds?: string[] }
 }>
 

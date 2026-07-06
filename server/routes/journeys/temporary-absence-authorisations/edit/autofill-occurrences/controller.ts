@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from 'express'
 import { format } from 'date-fns'
 import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
 import { SchemaType } from './schema'
-import { getOccurrences, iterateCalendarDays } from '../utils'
+import { iterateCalendarDays } from '../utils'
+import { components } from '../../../../../@types/externalMovements'
 
 const MONTH_NAMES = [
   'January',
@@ -23,9 +24,9 @@ export class EditTapAutofillOccurrencesController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
-    const { authorisation, start, end } = req.journeyData.updateTapAuthorisation!
+    const { authorisation, start, end, newOccurrences } = req.journeyData.updateTapAuthorisation!
 
-    const occurrences = getOccurrences(req).map(occ => {
+    const occurrences = newOccurrences!.map(occ => {
       return {
         startDate: format(occ.start, 'yyyy-MM-dd'),
         returnDate: format(occ.end, 'yyyy-MM-dd'),
@@ -34,44 +35,43 @@ export class EditTapAutofillOccurrencesController {
       }
     })
 
-    const calendarDays = [
-      ...iterateCalendarDays(occurrences[0]!.startDate, occurrences[occurrences.length - 1]!.startDate),
-    ].map(day => {
-      const date = `${String(day.month + 1).padStart(2, '0')}-${String(day.date).padStart(2, '0')}`
-      const occs = occurrences.filter(({ startDate }) => startDate.endsWith(date))
-      if (occs.length === 1) {
-        return { ...day, occurrence: occs[0] }
-      }
-      if (occs.length > 1) {
-        return {
-          ...day,
-          occurrence: {
-            ...occs[0],
-            returnTime: occs[occs.length - 1]!.returnTime,
-            multi: true,
-          },
+    const calendarDays =
+      occurrences.length &&
+      [...iterateCalendarDays(occurrences[0]!.startDate, occurrences[occurrences.length - 1]!.startDate)].map(day => {
+        const date = `${String(day.month + 1).padStart(2, '0')}-${String(day.date).padStart(2, '0')}`
+        const occs = occurrences.filter(({ startDate }) => startDate.endsWith(date))
+        if (occs.length === 1) {
+          return { ...day, occurrence: occs[0] }
         }
-      }
-      return day
-    })
+        if (occs.length > 1) {
+          return {
+            ...day,
+            occurrence: {
+              ...occs[0],
+              returnTime: occs[occs.length - 1]!.returnTime,
+              multi: true,
+            },
+          }
+        }
+        return day
+      })
 
     res.render('temporary-absence-authorisations/edit/autofill-occurrences/view', {
       backUrl: 'start-end-dates',
       authorisation,
       start,
       end,
-      prependOccurrences: occurrences.filter(({ startDate }) => startDate < authorisation.start),
-      appendOccurrences: occurrences.filter(({ returnDate }) => returnDate > authorisation.end),
       occurrences,
-      calendar: Object.entries(Object.groupBy(calendarDays, ({ month }) => MONTH_NAMES[month]!)).map(
-        ([month, days]) => [
+      calendar:
+        calendarDays &&
+        Object.entries(Object.groupBy(calendarDays, ({ month }) => MONTH_NAMES[month]!)).map(([month, days]) => [
           month,
           days?.reduce((acc, _, i) => {
             if (i % 7 === 0) acc.push(days.slice(i, i + 7))
             return acc
           }, [] as unknown[]),
-        ],
-      ),
+        ]),
+      hasMultipleLocations: authorisation.locations.length > 1 && newOccurrences!.length,
     })
   }
 
@@ -83,29 +83,39 @@ export class EditTapAutofillOccurrencesController {
       return
     }
 
+    if (journey.authorisation.locations.length > 1 && journey.newOccurrences!.length) {
+      res.redirect('select-location')
+      return
+    }
+
     try {
-      const occurrences = getOccurrences(req as Request).map(({ start, end }) => ({
+      const request: components['schemas']['AuthorisationActions'] = {
+        actions: [
+          {
+            type: 'ChangeAuthorisationDateRange',
+            start: journey.start!,
+            end: journey.end!,
+          },
+        ],
+      }
+
+      const occurrences = journey.newOccurrences!.map(({ start, end }) => ({
         start,
         end,
         location: journey.authorisation.locations[0]!,
         ...(journey.authorisation.comments ? { comments: journey.authorisation.comments } : {}),
       }))
+      if (occurrences.length) {
+        request.actions.push({
+          type: 'CreateOccurrences',
+          occurrences,
+        })
+      }
+
       journey.result = await this.externalMovementsService.updateTapAuthorisationMultiActions(
         { res },
         journey.authorisation.id,
-        {
-          actions: [
-            {
-              type: 'ChangeAuthorisationDateRange',
-              start: journey.start!,
-              end: journey.end!,
-            },
-            {
-              type: 'CreateOccurrences',
-              occurrences,
-            },
-          ],
-        },
+        request,
         journey.authorisation,
       )
       req.journeyData.journeyCompleted = true

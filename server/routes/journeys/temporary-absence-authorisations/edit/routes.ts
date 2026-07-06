@@ -22,6 +22,8 @@ import { TapResumeRoutes } from './resume/routes'
 import { EditTapAuthorisationSearchLocationRoutes } from './search-location/routes'
 import { EditTapAuthorisationEnterLocationRoutes } from './enter-location/routes'
 import { EditTapAutofillOccurrencesRoutes } from './autofill-occurrences/routes'
+import { EditTapSelectLocationRoutes } from './select-location/routes'
+import { EditTapMatchAbsencesAndLocationsRoute } from './match-absences-and-locations/routes'
 
 export const EditTapAuthorisationRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -44,7 +46,7 @@ export const EditTapAuthorisationRoutes = (services: Services) => {
   router.use('/reason-category', EditReasonCategoryRoutes(services))
   router.use('/reason', EditAbsenceReasonRoutes(services))
   router.use('/comments', EditAbsenceCommentsRoutes())
-  router.use('/start-end-dates', EditStartEndDatesRoutes(services))
+  router.use('/start-end-dates', EditStartEndDatesRoutes())
   router.use('/accompanied-or-unaccompanied', EditTapAuthorisationAccompaniedOrUnaccompaniedRoutes())
   router.use('/accompanied', EditTapAuthorisationAccompaniedRoutes(services))
   router.use('/transport', EditTapAuthorisationTransportRoutes(services))
@@ -61,6 +63,8 @@ export const EditTapAuthorisationRoutes = (services: Services) => {
   router.use('/change-confirmation', EditTapAuthorisationChangeConfirmationRoutes(services))
 
   router.use('/autofill-occurrences', EditTapAutofillOccurrencesRoutes(services))
+  router.use('/select-location', EditTapSelectLocationRoutes(services))
+  router.use('/match-absences-and-locations', EditTapMatchAbsencesAndLocationsRoute(services))
 
   router.use('/confirmation', EditTapAuthorisationConfirmationRoutes())
 

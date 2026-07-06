@@ -46,82 +46,85 @@
       {% endif %}
     </p>
 
-    {% set calendarViewHtml %}
-      {% for month in calendar %}
-        <div class="preview-calendar">
-          <h3 class="govuk-heading-s">{{ month[0] }}</h3>
-          <table>
-            <thead><tr><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th></tr></thead>
-            <tbody>
-              {% for week in month[1] %}
-                <tr>
-                  {% for day in week %}
-                    {% if day.occurrence %}
-                      <td><div>{{ day.date }}</div><div class="middle">{{ 'Multiple shifts' if day.occurrence.multi else ('Day shift' if day.occurrence.startDate === day.occurrence.returnDate else 'Night shift') }}</div><div class="middle">{{ day.occurrence.startTime }} - {{ day.occurrence.returnTime }}</div></td>
-                    {% else %}
-                      <td>{{ day.date }}</td>
-                    {% endif %}
-                  {% endfor %}
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+    {% if occurrences.length %}
+
+      {% set calendarViewHtml %}
+        {% for month in calendar %}
+          <div class="preview-calendar">
+            <h3 class="govuk-heading-s">{{ month[0] }}</h3>
+            <table>
+              <thead><tr><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th><th>SUN</th></tr></thead>
+              <tbody>
+                {% for week in month[1] %}
+                  <tr>
+                    {% for day in week %}
+                      {% if day.occurrence %}
+                        <td><div>{{ day.date }}</div><div class="middle">{{ 'Multiple shifts' if day.occurrence.multi else ('Day shift' if day.occurrence.startDate === day.occurrence.returnDate else 'Night shift') }}</div><div class="middle">{{ day.occurrence.startTime }} - {{ day.occurrence.returnTime }}</div></td>
+                      {% else %}
+                        <td>{{ day.date }}</td>
+                      {% endif %}
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endfor %}
+      {% endset %}
+
+      {% set rows = [] %}
+      {% for absence in occurrences %}
+        {% set rows = (rows.push([
+          { text: absence.startDate | formatDate('cccc, d MMMM yyyy') },
+          { text: 'Scheduled day' if absence.startDate === absence.returnDate else 'Schedule night' },
+          { text: absence.startTime },
+          { text: absence.returnTime }
+        ]), rows) %}
       {% endfor %}
-    {% endset %}
 
-    {% set rows = [] %}
-    {% for absence in occurrences %}
-      {% set rows = (rows.push([
-        { text: absence.startDate | formatDate('cccc, d MMMM yyyy') },
-        { text: 'Scheduled day' if absence.startDate === absence.returnDate else 'Schedule night' },
-        { text: absence.startTime },
-        { text: absence.returnTime }
-      ]), rows) %}
-    {% endfor %}
-
-    {% set tableViewHtml %}
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          {{ govukTable({
-            firstCellIsHeader: true,
-            head: [
-              {
-                text: "Date"
-              },
-              {
-                text: "Shift type"
-              },
-              {
-                text: "Start time"
-              },
-              {
-                text: "End time"
-              }
-            ],
-            rows:rows
-          }) }}
+      {% set tableViewHtml %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ govukTable({
+              firstCellIsHeader: true,
+              head: [
+                {
+                  text: "Date"
+                },
+                {
+                  text: "Shift type"
+                },
+                {
+                  text: "Start time"
+                },
+                {
+                  text: "End time"
+                }
+              ],
+              rows:rows
+            }) }}
+          </div>
         </div>
-      </div>
-    {% endset %}
+      {% endset %}
 
-    <h2 class="govuk-heading-m">New occurrences</h2>
+      <h2 class="govuk-heading-m">New occurrences</h2>
 
-    {{ govukTabs({
-      items: [
-        {
-          label: "Calendar view",
-          id: "calendar-review",
-          panel: { html: calendarViewHtml }
-        },
-        {
-          label: "Table view",
-          id: "table-view",
-          panel: { html: tableViewHtml }
-        }
-      ]
-    }) }}
+      {{ govukTabs({
+        items: [
+          {
+            label: "Calendar view",
+            id: "calendar-review",
+            panel: { html: calendarViewHtml }
+          },
+          {
+            label: "Table view",
+            id: "table-view",
+            panel: { html: tableViewHtml }
+          }
+        ]
+      }) }}
 
+    {% endif %}
 
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -136,7 +139,7 @@
             classes: "govuk-fieldset__legend--m"
           }
         },
-        hint: { text: 'This will add new occurrences to the schedule.' },
+        hint: { text: 'This will add new occurrences to the schedule.' } if occurrences.length else undefined,
         items: [
           {
             value: 'YES',
@@ -150,7 +153,7 @@
       }) }}
 
       {{ govukButton({
-        text: "Confirm",
+        text: "Continue" if hasMultipleLocations else "Confirm",
         preventDoubleClick: true
       }) }}
     </form>
