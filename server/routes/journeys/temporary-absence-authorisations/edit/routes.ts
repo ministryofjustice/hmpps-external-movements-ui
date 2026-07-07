@@ -38,7 +38,7 @@ export const EditTapAuthorisationRoutes = (services: Services) => {
       next()
     },
     preventNavigationToExpiredJourneys(),
-    journeyStateGuard({ '*': () => undefined }, services.telemetryClient),
+    journeyStateGuard({ '*': () => undefined }),
   )
 
   router.use('/absence-type', EditAbsenceTypeRoutes(services))

@@ -39,8 +39,7 @@ export default class CustomRestClient extends RestClient {
     authenticationClient?: AuthenticationClient | undefined,
     private readonly audited: boolean = false,
     private readonly retryHandler:
-      | ((retry?: boolean) => (err: Error, res: SuperAgentResponse) => boolean | undefined)
-      | undefined = undefined,
+      ((retry?: boolean) => (err: Error, res: SuperAgentResponse) => boolean | undefined) | undefined = undefined,
   ) {
     super(name, config, logger, authenticationClient)
   }

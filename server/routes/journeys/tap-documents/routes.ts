@@ -35,14 +35,11 @@ export const TapDocumentsRoutes = (services: Services) => {
       next()
     },
     preventNavigationToExpiredJourneys(),
-    journeyStateGuard(
-      {
-        '*': () => undefined,
-        'select-absence-plan': (req: Request) =>
-          req.journeyData.createDocumentJourney?.templateId ? undefined : '/select-document-type',
-      },
-      services.telemetryClient,
-    ),
+    journeyStateGuard({
+      '*': () => undefined,
+      'select-absence-plan': (req: Request) =>
+        req.journeyData.createDocumentJourney?.templateId ? undefined : '/select-document-type',
+    }),
   )
 
   router.use('/select-document-type', SelectDocumentTypeRoutes(services))
