@@ -113,6 +113,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@emnapi/core": "1.11.2",
+    "@emnapi/runtime": "1.11.2",
     "@jgoz/esbuild-plugin-typecheck": "^4.0.4",
     "@microsoft/applicationinsights-clickanalytics-js": "3.4.2",
     "@microsoft/applicationinsights-web": "3.4.2",
