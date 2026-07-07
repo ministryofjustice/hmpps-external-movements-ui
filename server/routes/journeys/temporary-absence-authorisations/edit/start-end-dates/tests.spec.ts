@@ -128,6 +128,6 @@ test.describe('/temporary-absence-authorisations/edit/start-end-dates', () => {
     await testPage.endDateField().fill(`12/1/2001`)
     await testPage.clickButton('Confirm and save')
 
-    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/confirmation/)
+    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/autofill-occurrences/)
   })
 })
