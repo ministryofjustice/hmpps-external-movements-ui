@@ -25,7 +25,7 @@ export const EditTapOccurrenceRoutes = (services: Services) => {
       next()
     },
     preventNavigationToExpiredJourneys(),
-    journeyStateGuard({ '*': () => undefined }, services.telemetryClient),
+    journeyStateGuard({ '*': () => undefined }),
   )
 
   router.use('/start-end-dates', EditOccurrenceStartEndDatesRoutes(services))

@@ -68,7 +68,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
       next()
     },
     preventNavigationToExpiredJourneys(),
-    journeyStateGuard(guard, services.telemetryClient),
+    journeyStateGuard(guard),
   )
 
   router.use('/absence-type', AbsenceTypeRoutes(services))
