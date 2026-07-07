@@ -79,17 +79,15 @@
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.1078.0",
     "@axe-core/playwright": "^4.12.1",
-    "@microsoft/applicationinsights-clickanalytics-js": "3.4.2",
-    "@microsoft/applicationinsights-web": "3.4.2",
     "@ministryofjustice/frontend": "^9.0.0",
     "@ministryofjustice/hmpps-auth-clients": "^3.0.0",
+    "@ministryofjustice/hmpps-azure-telemetry": "^1.0.1",
     "@ministryofjustice/hmpps-connect-dps-components": "^6.2.1",
     "@ministryofjustice/hmpps-connect-dps-shared-items": "^4.1.1",
     "@ministryofjustice/hmpps-monitoring": "^2.1.0",
     "@ministryofjustice/hmpps-prison-permissions-lib": "^3.0.1",
     "@ministryofjustice/hmpps-rest-client": "^2.2.0",
     "@sentry/node": "^10.63.0",
-    "applicationinsights": "^2.9.7",
     "body-parser": "^2.3.0",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
@@ -116,6 +114,8 @@
   },
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.4",
+    "@microsoft/applicationinsights-clickanalytics-js": "3.4.2",
+    "@microsoft/applicationinsights-web": "3.4.2",
     "@ministryofjustice/eslint-config-hmpps": "^1.0.3",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
     "@ministryofjustice/hmpps-precommit-hooks": "^3.0.1",
@@ -163,6 +163,7 @@
     "typescript": "^5.9.3"
   },
   "overrides": {
+    "@opentelemetry/core": "2.8.0",
     "js-yaml": "4.3.0"
   }
 }

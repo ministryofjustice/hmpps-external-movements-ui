@@ -30,27 +30,24 @@ export const AddTapOccurrenceRoutes = (services: Services) => {
       next()
     },
     preventNavigationToExpiredJourneys(),
-    journeyStateGuard(
-      {
-        '*': () => undefined,
-        'add-occurrence/select-location': (req: Request) =>
-          req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
-        'add-occurrence/search-location': (req: Request) =>
-          req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
-        'add-occurrence/enter-location': (req: Request) =>
-          req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
-        'add-occurrence/location': (req: Request) =>
-          req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
-        'add-occurrence/comments': (req: Request) =>
-          typeof req.journeyData.addTapOccurrence?.locationOption === 'number' ||
-          req.journeyData.addTapOccurrence?.location
-            ? undefined
-            : '/add-occurrence/select-location',
-        'add-occurrence/check-answers': (req: Request) =>
-          req.journeyData.addTapOccurrence?.comments !== undefined ? undefined : '/add-occurrence/comments',
-      },
-      services.telemetryClient,
-    ),
+    journeyStateGuard({
+      '*': () => undefined,
+      'add-occurrence/select-location': (req: Request) =>
+        req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
+      'add-occurrence/search-location': (req: Request) =>
+        req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
+      'add-occurrence/enter-location': (req: Request) =>
+        req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
+      'add-occurrence/location': (req: Request) =>
+        req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
+      'add-occurrence/comments': (req: Request) =>
+        typeof req.journeyData.addTapOccurrence?.locationOption === 'number' ||
+        req.journeyData.addTapOccurrence?.location
+          ? undefined
+          : '/add-occurrence/select-location',
+      'add-occurrence/check-answers': (req: Request) =>
+        req.journeyData.addTapOccurrence?.comments !== undefined ? undefined : '/add-occurrence/comments',
+    }),
   )
 
   get('/', controller.GET)

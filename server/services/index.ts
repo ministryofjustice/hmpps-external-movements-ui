@@ -8,16 +8,17 @@ import config from '../config'
 import PrisonerSearchApiService from './apis/prisonerSearchService'
 import PrisonApiService from './apis/prisonApiService'
 import DocumentGenerationService from './apis/documentGenerationService'
+import { telemetryWrapper } from '../utils/telemetryWrapper'
 
 export const services = () => {
-  const { applicationInfo, hmppsAuditClient, osPlacesApiClient, telemetryClient, authenticationClient, cacheStore } =
-    dataAccess()
+  const { applicationInfo, hmppsAuditClient, osPlacesApiClient, authenticationClient, cacheStore } = dataAccess()
 
   const prisonPermissionsService = PermissionsService.create({
     prisonerSearchConfig: config.apis.prisonerSearchApi,
     authenticationClient,
     logger,
-    telemetryClient,
+    // @ts-expect-error cast hmpps-azure-telemetry into applicationinsight telemetry
+    telemetryClient: telemetryWrapper(),
   })
 
   return {
@@ -31,7 +32,6 @@ export const services = () => {
     prisonPermissionsService,
     authenticationClient,
     cacheStore,
-    telemetryClient,
   }
 }
 
