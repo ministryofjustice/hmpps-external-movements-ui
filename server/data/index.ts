@@ -1,13 +1,5 @@
-/* eslint-disable import/first */
-/*
- * Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
- * In particular, applicationinsights automatically collects bunyan logs
- */
 import { AuthenticationClient, InMemoryTokenStore, RedisTokenStore } from '@ministryofjustice/hmpps-auth-clients'
-import applicationInfoSupplier from '../applicationInfo'
-
-const applicationInfo = applicationInfoSupplier()
-
+import { OsPlacesApiClient } from '@ministryofjustice/hmpps-connect-dps-shared-items'
 import { createRedisClient } from './redisClient'
 import config from '../config'
 import HmppsAuditClient from './hmppsAuditClient'
@@ -15,8 +7,9 @@ import logger from '../../logger'
 import CacheInterface from './cache/cacheInterface'
 import RedisCache from './cache/redisCache'
 import InMemoryCache from './cache/inMemoryCache'
-// eslint-disable-next-line import/order
-import { OsPlacesApiClient } from '@ministryofjustice/hmpps-connect-dps-shared-items'
+import applicationInfoSupplier from '../applicationInfo'
+
+const applicationInfo = applicationInfoSupplier()
 
 const redisClient = config.redis.enabled ? createRedisClient() : null
 const tokenStore = redisClient ? new RedisTokenStore(redisClient) : new InMemoryTokenStore()
