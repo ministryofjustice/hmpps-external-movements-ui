@@ -166,6 +166,6 @@
   },
   "overrides": {
     "@opentelemetry/core": "2.9.0",
-    "js-yaml": "4.3.0"
+    "js-yaml": "5.2.0"
   }
 }
