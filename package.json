@@ -77,7 +77,7 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.1079.0",
+    "@aws-sdk/client-sqs": "^3.1081.0",
     "@axe-core/playwright": "^4.12.1",
     "@ministryofjustice/frontend": "^9.0.0",
     "@ministryofjustice/hmpps-auth-clients": "^3.0.0",
@@ -87,7 +87,7 @@
     "@ministryofjustice/hmpps-monitoring": "^2.1.0",
     "@ministryofjustice/hmpps-prison-permissions-lib": "^3.0.1",
     "@ministryofjustice/hmpps-rest-client": "^2.2.0",
-    "@sentry/node": "^10.63.0",
+    "@sentry/node": "^10.64.0",
     "body-parser": "^2.3.0",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
@@ -164,6 +164,6 @@
   },
   "overrides": {
     "@opentelemetry/core": "2.9.0",
-    "js-yaml": "5.2.0"
+    "js-yaml": "5.2.1"
   }
 }
