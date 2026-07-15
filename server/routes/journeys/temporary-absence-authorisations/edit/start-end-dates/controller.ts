@@ -14,7 +14,6 @@ export class EditStartEndDatesController {
         (start && formatInputDate(start)) ??
         formatInputDate(authorisation.start),
       end: res.locals.formResponses?.['end'] ?? (end && formatInputDate(end)) ?? formatInputDate(authorisation.end),
-      hasRepeatPattern: ['BIWEEKLY', 'WEEKLY', 'SHIFT'].includes(authorisation.schedule?.type ?? ''),
     })
   }
 
@@ -27,6 +26,6 @@ export class EditStartEndDatesController {
       ? getOccurrences(req as Request)
       : []
 
-    res.redirect('autofill-occurrences')
+    res.redirect('confirm-date-change')
   }
 }

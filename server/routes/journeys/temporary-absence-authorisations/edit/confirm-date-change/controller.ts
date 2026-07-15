@@ -20,7 +20,7 @@ const MONTH_NAMES = [
   'December',
 ]
 
-export class EditTapAutofillOccurrencesController {
+export class EditTapConfirmDateChangeController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
@@ -56,7 +56,7 @@ export class EditTapAutofillOccurrencesController {
         return day
       })
 
-    res.render('temporary-absence-authorisations/edit/autofill-occurrences/view', {
+    res.render('temporary-absence-authorisations/edit/confirm-date-change/view', {
       backUrl: 'start-end-dates',
       authorisation,
       start,
@@ -72,6 +72,7 @@ export class EditTapAutofillOccurrencesController {
           }, [] as unknown[]),
         ]),
       hasMultipleLocations: authorisation.locations.length > 1 && newOccurrences!.length,
+      hasRepeatPattern: ['BIWEEKLY', 'WEEKLY', 'SHIFT'].includes(authorisation.schedule?.type ?? ''),
     })
   }
 

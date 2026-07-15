@@ -4,7 +4,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
-{% set pageTitle = 'Do you want the following occurrences to be added based on the new date range - Manage temporary absences' %}
+{% set pageTitle = 'Confirm new dates - Manage temporary absences' %}
 {% set fullWidth = true %}
 
 {% block innerContent %}
@@ -139,7 +139,7 @@
             classes: "govuk-fieldset__legend--m"
           }
         },
-        hint: { text: 'This will add new occurrences to the schedule.' } if occurrences.length else undefined,
+        hint: { text: 'This will add new occurrences to the schedule.' if occurrences.length else ('You will need to add new occurrences manually. You can do this on the Temporary Absence Plan.' if hasRepeatPattern else 'As there is no repeating pattern in this schedule, you will need to add new occurrences manually. You can do this on the Temporary Absence Plan.') } ,
         items: [
           {
             value: 'YES',

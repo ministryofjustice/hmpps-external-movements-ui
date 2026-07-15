@@ -10,7 +10,7 @@ export class EditTapSelectLocationController {
     const { authorisation, locationOption } = req.journeyData.updateTapAuthorisation!
 
     res.render('temporary-absence-authorisations/edit/select-location/view', {
-      backUrl: 'autofill-occurrences',
+      backUrl: 'confirm-date-change',
       authorisation,
       locationOption: locationOption !== undefined ? String(locationOption) : null,
     })

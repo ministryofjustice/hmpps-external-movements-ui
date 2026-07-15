@@ -74,7 +74,7 @@
         text: ""
       }) }}
 
-      {% if newOccurrenceIds and newOccurrenceIds.length %}
+      {% if domainEvent === 'person.temporary-absence-authorisation.date-range-changed' and newOccurrenceIds and newOccurrenceIds.length %}
         <p class="govuk-body">
           You have changed the date range of this series of temporary absences.<br/>
           As a result, you have added {{ newOccurrenceIds.length }} new {{ 'occurrence' if newOccurrenceIds.length === 1 else 'occurrences' }}.
