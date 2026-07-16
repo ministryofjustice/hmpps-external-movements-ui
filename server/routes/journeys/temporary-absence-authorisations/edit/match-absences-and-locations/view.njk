@@ -2,11 +2,11 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = 'Match absences and locations - Manage temporary absences' %}
+{% set pageTitle = 'Select where these absences will take place - Manage temporary absences' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
-    <span class="govuk-caption-l">Manage temporary absences</span>
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
     <h1 class="govuk-heading-l">Select where these absences will take place</h1>
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -34,7 +34,7 @@
       {% endfor %}
 
       {{ govukButton({
-        text: "Confirm",
+        text: "Confirm and save",
         preventDoubleClick: true
       }) }}
     </form>

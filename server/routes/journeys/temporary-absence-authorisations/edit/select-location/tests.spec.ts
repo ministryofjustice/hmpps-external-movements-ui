@@ -10,19 +10,19 @@ import {
   stubPutTapAuthorisation,
 } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
-import { EditTapAuthorisationConfirmDateChangePage } from './test.page'
+import { EditTapAuthorisationSelectLocationPage } from './test.page'
 import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
 import { injectJourneyData } from '../../../../../../integration_tests/steps/journey'
 import { components } from '../../../../../@types/externalMovements'
 import { getApiBody } from '../../../../../../integration_tests/mockApis/wiremock'
 
-test.describe('/temporary-absence-authorisations/edit/confirm-date-change unauthorised', () => {
+test.describe('/temporary-absence-authorisations/edit/select-location unauthorised', () => {
   test('should show unauthorised error', async ({ page }) => {
-    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/edit/confirm-date-change`)
+    await testNotAuthorisedPage(page, `/${uuidV4()}/temporary-absence-authorisations/edit/select-location`)
   })
 })
 
-test.describe('/temporary-absence-authorisations/edit/confirm-date-change', () => {
+test.describe('/temporary-absence-authorisations/edit/select-location', () => {
   const prisonNumber = randomPrisonNumber()
 
   test.beforeAll(async () => {
@@ -54,60 +54,10 @@ test.describe('/temporary-absence-authorisations/edit/confirm-date-change', () =
         newOccurrences,
       },
     })
-    await page.goto(`/${journeyId}/temporary-absence-authorisations/edit/confirm-date-change`)
+    await page.goto(`/${journeyId}/temporary-absence-authorisations/edit/select-location`)
   }
 
-  test('should confirm TAP date change and proceed to select location', async ({ page }) => {
-    const journeyId = uuidV4()
-    const authorisationId = uuidV4()
-
-    const authorisation = {
-      ...testTapAuthorisation,
-      id: authorisationId,
-      person: {
-        personIdentifier: prisonNumber,
-        firstName: 'PRISONER-NAME',
-        lastName: 'PRISONER-SURNAME',
-        cellLocation: '2-1-005',
-      },
-      repeat: true,
-      start: '2001-01-02',
-      locations: [
-        { uprn: 1001, description: 'Random Street, UK' },
-        { uprn: 1002, description: 'Another Street, UK' },
-      ],
-    }
-
-    await stubGetTapAuthorisation(authorisation)
-    await startJourney(page, journeyId, authorisation, [
-      { start: '2001-01-05T10:00:00', end: '2001-01-05T17:30:00' },
-      { start: '2001-01-06T10:00:00', end: '2001-01-06T17:30:00' },
-    ])
-
-    // verify page content
-    const testPage = await new EditTapAuthorisationConfirmDateChangePage(page).verifyContent()
-
-    await expect(testPage.yesRadio()).toBeVisible()
-    await expect(testPage.yesRadio()).not.toBeChecked()
-    await expect(testPage.noRadio()).toBeVisible()
-    await expect(testPage.noRadio()).not.toBeChecked()
-    await expect(testPage.continueButton()).toBeVisible()
-    await expect(page.getByText('This will add new occurrences to the schedule.')).toBeVisible()
-    await expect(page.getByText('will need to add new occurrences manually')).toHaveCount(0)
-
-    // verify validation error
-    await testPage.clickContinue()
-    await testPage.link('Select if you want to change the dates').click()
-    await expect(testPage.yesRadio()).toBeFocused()
-
-    // verify next page routing
-    await testPage.yesRadio().click()
-    await testPage.clickContinue()
-
-    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/select-location/)
-  })
-
-  test('should confirm and save TAP date change when there is no new occurrences', async ({ page }) => {
+  test('should select a location for new occurrences and save date change', async ({ page }) => {
     const journeyId = uuidV4()
     const authorisationId = uuidV4()
 
@@ -139,22 +89,30 @@ test.describe('/temporary-absence-authorisations/edit/confirm-date-change', () =
         },
       ],
     })
-    await startJourney(page, journeyId, authorisation, [])
+    await startJourney(page, journeyId, authorisation, [
+      { start: '2001-01-05T10:00:00', end: '2001-01-05T17:30:00' },
+      { start: '2001-01-06T10:00:00', end: '2001-01-06T17:30:00' },
+    ])
 
     // verify page content
-    const testPage = await new EditTapAuthorisationConfirmDateChangePage(page).verifyContent()
+    const testPage = await new EditTapAuthorisationSelectLocationPage(page).verifyContent()
 
-    await expect(testPage.yesRadio()).toBeVisible()
-    await expect(testPage.yesRadio()).not.toBeChecked()
-    await expect(testPage.noRadio()).toBeVisible()
-    await expect(testPage.noRadio()).not.toBeChecked()
-    await expect(testPage.button('Confirm')).toBeVisible()
-    await expect(page.getByText('This will add new occurrences to the schedule.')).toHaveCount(0)
-    await expect(page.getByText('will need to add new occurrences manually')).toBeVisible()
+    await expect(testPage.radio('Random Street, UK')).toBeVisible()
+    await expect(testPage.radio('Random Street, UK')).not.toBeChecked()
+    await expect(testPage.radio('Another Street, UK')).toBeVisible()
+    await expect(testPage.radio('Another Street, UK')).not.toBeChecked()
+    await expect(testPage.radio('Across multiple of these locations')).toBeVisible()
+    await expect(testPage.radio('Across multiple of these locations')).not.toBeChecked()
+    await expect(testPage.continueButton()).toBeVisible()
+
+    // verify validation error
+    await testPage.clickContinue()
+    await testPage.link('Select a location where the new occurrences will take place').click()
+    await expect(testPage.radio('Random Street, UK')).toBeFocused()
 
     // verify next page routing
-    await testPage.yesRadio().click()
-    await testPage.clickButton('Confirm')
+    await testPage.radio('Random Street, UK').click()
+    await testPage.clickContinue()
 
     expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/confirmation/)
 
@@ -168,12 +126,27 @@ test.describe('/temporary-absence-authorisations/edit/confirm-date-change', () =
             start: '2001-01-01',
             end: '2001-01-06',
           },
+          {
+            type: 'CreateOccurrences',
+            occurrences: [
+              {
+                start: '2001-01-05T10:00:00',
+                end: '2001-01-05T17:30:00',
+                location: { uprn: 1001, description: 'Random Street, UK' },
+              },
+              {
+                start: '2001-01-06T10:00:00',
+                end: '2001-01-06T17:30:00',
+                location: { uprn: 1001, description: 'Random Street, UK' },
+              },
+            ],
+          },
         ],
       },
     ])
   })
 
-  test('should confirm and save TAP date change when there is only one location', async ({ page }) => {
+  test('should not show multi location option when there is only one new occurrence', async ({ page }) => {
     const journeyId = uuidV4()
     const authorisationId = uuidV4()
 
@@ -188,7 +161,10 @@ test.describe('/temporary-absence-authorisations/edit/confirm-date-change', () =
       },
       repeat: true,
       start: '2001-01-02',
-      locations: [{ uprn: 1001, description: 'Random Street, UK' }],
+      locations: [
+        { uprn: 1001, description: 'Random Street, UK' },
+        { uprn: 1002, description: 'Another Street, UK' },
+      ],
     }
 
     await stubGetTapAuthorisation(authorisation)
@@ -205,19 +181,18 @@ test.describe('/temporary-absence-authorisations/edit/confirm-date-change', () =
     await startJourney(page, journeyId, authorisation, [{ start: '2001-01-06T10:00:00', end: '2001-01-06T17:30:00' }])
 
     // verify page content
-    const testPage = await new EditTapAuthorisationConfirmDateChangePage(page).verifyContent()
+    const testPage = await new EditTapAuthorisationSelectLocationPage(page).verifyContent()
 
-    await expect(testPage.yesRadio()).toBeVisible()
-    await expect(testPage.yesRadio()).not.toBeChecked()
-    await expect(testPage.noRadio()).toBeVisible()
-    await expect(testPage.noRadio()).not.toBeChecked()
-    await expect(testPage.button('Confirm')).toBeVisible()
-    await expect(page.getByText('This will add new occurrences to the schedule.')).toBeVisible()
-    await expect(page.getByText('will need to add new occurrences manually')).toHaveCount(0)
+    await expect(testPage.radio('Random Street, UK')).toBeVisible()
+    await expect(testPage.radio('Random Street, UK')).not.toBeChecked()
+    await expect(testPage.radio('Another Street, UK')).toBeVisible()
+    await expect(testPage.radio('Another Street, UK')).not.toBeChecked()
+    await expect(testPage.radio('Across multiple of these locations')).toHaveCount(0)
+    await expect(testPage.continueButton()).toBeVisible()
 
     // verify next page routing
-    await testPage.yesRadio().click()
-    await testPage.clickButton('Confirm')
+    await testPage.radio('Random Street, UK').click()
+    await testPage.clickContinue()
 
     expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/confirmation/)
 
@@ -246,7 +221,9 @@ test.describe('/temporary-absence-authorisations/edit/confirm-date-change', () =
     ])
   })
 
-  test('should cancel TAP date change and go back to TAP plan page', async ({ page }) => {
+  test('should select multiple locations for new occurrences and proceed to match occurrences and locations', async ({
+    page,
+  }) => {
     const journeyId = uuidV4()
     const authorisationId = uuidV4()
 
@@ -269,19 +246,17 @@ test.describe('/temporary-absence-authorisations/edit/confirm-date-change', () =
 
     await stubGetTapAuthorisation(authorisation)
     await startJourney(page, journeyId, authorisation, [
-      { start: '2001-01-05T10:00:00', end: '2001-01-05T17:30:00' },
+      { start: '2001-01-06T10:00:00', end: '2001-01-06T17:30:00' },
       { start: '2001-01-06T10:00:00', end: '2001-01-06T17:30:00' },
     ])
 
     // verify page content
-    const testPage = await new EditTapAuthorisationConfirmDateChangePage(page).verifyContent()
+    const testPage = await new EditTapAuthorisationSelectLocationPage(page).verifyContent()
 
     // verify next page routing
-    await testPage.noRadio().click()
+    await testPage.radio('Across multiple of these locations').click()
     await testPage.clickContinue()
 
-    expect(page.url()).toMatch(
-      /\/temporary-absence-authorisations\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
-    )
+    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/match-absences-and-locations/)
   })
 })

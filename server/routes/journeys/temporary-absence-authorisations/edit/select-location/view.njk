@@ -2,7 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
-{% set pageTitle = 'Select location for new occurrences - Manage temporary absences' %}
+{% set pageTitle = 'Where will the occurrences take place - Manage temporary absences' %}
 
 {% set options = [] %}
 {% for location in authorisation.locations %}
@@ -13,12 +13,14 @@
     }
   ), options) %}
 {% endfor %}
+{% if newOccurrences.length > 1 %}
   {% set options = (options.push(
     {
       value: 'MULTIPLE',
       text: 'Across multiple of these locations'
     }
   ), options) %}
+{% endif %}
 
 {% block innerContent %}
   <div class="govuk-width-container">

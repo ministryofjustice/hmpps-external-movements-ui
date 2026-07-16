@@ -7,12 +7,13 @@ export class EditTapSelectLocationController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
 
   GET = async (req: Request, res: Response) => {
-    const { authorisation, locationOption } = req.journeyData.updateTapAuthorisation!
+    const { authorisation, locationOption, newOccurrences } = req.journeyData.updateTapAuthorisation!
 
     res.render('temporary-absence-authorisations/edit/select-location/view', {
       backUrl: 'confirm-date-change',
       authorisation,
       locationOption: locationOption !== undefined ? String(locationOption) : null,
+      newOccurrences,
     })
   }
 
