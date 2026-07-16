@@ -1,0 +1,50 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set pageTitle = 'Where will the occurrences take place - Manage temporary absences' %}
+
+{% set options = [] %}
+{% for location in authorisation.locations %}
+  {% set options = (options.push(
+    {
+      value: loop.index0 | string,
+      text: location | formatAddress
+    }
+  ), options) %}
+{% endfor %}
+{% if newOccurrences.length > 1 %}
+  {% set options = (options.push(
+    {
+      value: 'MULTIPLE',
+      text: 'Across all of these locations'
+    }
+  ), options) %}
+{% endif %}
+
+{% block innerContent %}
+  <div class="govuk-width-container">
+    <span class="govuk-caption-l">Manage Temporary Absences</span>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukRadios({
+        name: "locationOption",
+        errorMessage: validationErrors | findError('locationOption'),
+        fieldset: {
+          legend: {
+            text: "Where will the occurrences take place?",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--xl"
+          }
+        },
+        hint: { text: 'There are multiple locations for this absence. This means you must record where these occurrences will take place.' },
+        items: options | setCheckedValue(locationOption)
+      }) }}
+
+      {{ govukButton({
+        text: "Continue",
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+{% endblock %}

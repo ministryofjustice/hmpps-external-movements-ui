@@ -160,8 +160,16 @@ export default class ExternalMovementsService {
   ) {
     const data: components['schemas']['AuthorisationActions'] = { actions: [request] }
     if (reason) data.reason = reason
+    return this.updateTapAuthorisationMultiActions(context, id, data, authorisation)
+  }
 
-    const isCreatingOccurrences = !!data.actions.find(({ type }) => type === 'CreateOccurrences')
+  async updateTapAuthorisationMultiActions(
+    context: ApiRequestContext,
+    id: string,
+    request: components['schemas']['AuthorisationActions'],
+    authorisation?: components['schemas']['TapAuthorisation'] | null,
+  ) {
+    const isCreatingOccurrences = !!request.actions.find(({ type }) => type === 'CreateOccurrences')
 
     if (isCreatingOccurrences && !authorisation) {
       throw new Error('Authorisation data is mandatory for CreateOccurrences action to diff the occurrences')
@@ -171,7 +179,7 @@ export default class ExternalMovementsService {
       .withContext(context)
       .put<components['schemas']['AuditHistory']>({
         path: `/temporary-absence-authorisations/${id}`,
-        data,
+        data: request,
       })
 
     if (isCreatingOccurrences) {

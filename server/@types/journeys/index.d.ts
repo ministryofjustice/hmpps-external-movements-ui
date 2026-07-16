@@ -164,6 +164,14 @@ export type UpdateTapAuthorisationJourney = {
   accompaniedBy: components['schemas']['CodedDescription']
   transport: components['schemas']['CodedDescription']
   approve: boolean
+  start: string
+  end: string
+  newOccurrences: {
+    start: string
+    end: string
+    locationIdx?: number
+  }[]
+  locationOption: 'MULTIPLE'
   result: components['schemas']['AuditHistory'] & { newOccurrenceIds?: string[] }
 }>
 
