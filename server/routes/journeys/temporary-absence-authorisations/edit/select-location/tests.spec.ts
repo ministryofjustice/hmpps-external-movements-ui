@@ -101,8 +101,8 @@ test.describe('/temporary-absence-authorisations/edit/select-location', () => {
     await expect(testPage.radio('Random Street, UK')).not.toBeChecked()
     await expect(testPage.radio('Another Street, UK')).toBeVisible()
     await expect(testPage.radio('Another Street, UK')).not.toBeChecked()
-    await expect(testPage.radio('Across multiple of these locations')).toBeVisible()
-    await expect(testPage.radio('Across multiple of these locations')).not.toBeChecked()
+    await expect(testPage.radio('Across all of these locations')).toBeVisible()
+    await expect(testPage.radio('Across all of these locations')).not.toBeChecked()
     await expect(testPage.continueButton()).toBeVisible()
 
     // verify validation error
@@ -187,7 +187,7 @@ test.describe('/temporary-absence-authorisations/edit/select-location', () => {
     await expect(testPage.radio('Random Street, UK')).not.toBeChecked()
     await expect(testPage.radio('Another Street, UK')).toBeVisible()
     await expect(testPage.radio('Another Street, UK')).not.toBeChecked()
-    await expect(testPage.radio('Across multiple of these locations')).toHaveCount(0)
+    await expect(testPage.radio('Across all of these locations')).toHaveCount(0)
     await expect(testPage.continueButton()).toBeVisible()
 
     // verify next page routing
@@ -254,7 +254,7 @@ test.describe('/temporary-absence-authorisations/edit/select-location', () => {
     const testPage = await new EditTapAuthorisationSelectLocationPage(page).verifyContent()
 
     // verify next page routing
-    await testPage.radio('Across multiple of these locations').click()
+    await testPage.radio('Across all of these locations').click()
     await testPage.clickContinue()
 
     expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/match-absences-and-locations/)
