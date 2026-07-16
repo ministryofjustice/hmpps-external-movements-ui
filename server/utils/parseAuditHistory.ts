@@ -3,7 +3,7 @@ import { formatDate } from './dateTimeUtils'
 
 type DomainEventText = {
   heading: string
-  content?: string
+  content?: string | { html: string }
   reasonRequested?: boolean
   changes?: string[]
   skipUser?: boolean
@@ -146,7 +146,6 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
   },
   'person.temporary-absence-movement.occurrence-changed': {
     heading: 'Absence movement occurrence switched',
-    content: 'Temporary absence movement occurrence switched',
   },
   'person.temporary-absence-authorisation.paused': {
     heading: 'Absence plan paused',
@@ -256,53 +255,73 @@ export const parseAuditHistory = (history: components['schemas']['AuditedAction'
         const eventText = DOMAIN_EVENT_MAP[event]
         if (!eventText) return null
 
-        const changes = !eventText.content
-          ? action.changes
-              .map(change => {
-                if (
-                  event === 'person.temporary-absence-movement.recategorised' &&
-                  !['absenceType', 'absenceSubType', 'absenceReasonCategory', 'absenceReason'].includes(
-                    change.propertyName,
-                  )
-                ) {
-                  return null
-                }
+        let content: string | { html: string } | undefined
+        if (event === 'person.temporary-absence-movement.occurrence-changed') {
+          const occurrenceChange = action.changes.find(({ propertyName }) => propertyName === 'occurrence')
+          if (occurrenceChange) {
+            if (occurrenceChange.change && occurrenceChange.previous) {
+              content = {
+                html: `Temporary absence movement switched from <a class="govuk-link" href="/temporary-absences/${occurrenceChange.previous}">previous occurrence</a> to <a class="govuk-link" href="/temporary-absences/${occurrenceChange.change}">new occurrence</a>`,
+              }
+            } else if (occurrenceChange.change) {
+              content = {
+                html: `Temporary absence movement switched to <a class="govuk-link" href="/temporary-absences/${occurrenceChange.change}">new occurrence</a>`,
+              }
+            } else if (occurrenceChange.previous) {
+              content = {
+                html: `Temporary absence movement switched from <a class="govuk-link" href="/temporary-absences/${occurrenceChange.previous}">previous occurrence</a>`,
+              }
+            }
+          }
+        }
+        const changes =
+          !eventText.content && event !== 'person.temporary-absence-movement.occurrence-changed'
+            ? action.changes
+                .map(change => {
+                  if (
+                    event === 'person.temporary-absence-movement.recategorised' &&
+                    !['absenceType', 'absenceSubType', 'absenceReasonCategory', 'absenceReason'].includes(
+                      change.propertyName,
+                    )
+                  ) {
+                    return null
+                  }
 
-                if (event === 'person.temporary-absence-movement.relocated' && change.propertyName !== 'location') {
-                  return null
-                }
+                  if (event === 'person.temporary-absence-movement.relocated' && change.propertyName !== 'location') {
+                    return null
+                  }
 
-                if (
-                  event === 'person.temporary-absence-movement.accompaniment-changed' &&
-                  change.propertyName !== 'accompaniedBy'
-                ) {
-                  return null
-                }
+                  if (
+                    event === 'person.temporary-absence-movement.accompaniment-changed' &&
+                    change.propertyName !== 'accompaniedBy'
+                  ) {
+                    return null
+                  }
 
-                if (
-                  event === 'person.temporary-absence-movement.comments-changed' &&
-                  change.propertyName !== 'comments'
-                ) {
-                  return null
-                }
+                  if (
+                    event === 'person.temporary-absence-movement.comments-changed' &&
+                    change.propertyName !== 'comments'
+                  ) {
+                    return null
+                  }
 
-                if (
-                  event === 'person.temporary-absence-movement.occurred-at-changed' &&
-                  change.propertyName !== 'occurredAt'
-                ) {
-                  return null
-                }
+                  if (
+                    event === 'person.temporary-absence-movement.occurred-at-changed' &&
+                    change.propertyName !== 'occurredAt'
+                  ) {
+                    return null
+                  }
 
-                if (change.propertyName === 'location') {
-                  if (!change.previous && change.change) return `Location was set to ${change.change}.`
-                  if (change.previous && !change.change)
-                    return `Location was removed, and was previously ${change.previous}.`
-                }
+                  if (change.propertyName === 'location') {
+                    if (!change.previous && change.change) return `Location was set to ${change.change}.`
+                    if (change.previous && !change.change)
+                      return `Location was removed, and was previously ${change.previous}.`
+                  }
 
-                return `${parsePropertyName(event, change.propertyName)} ${change.propertyName === 'comments' ? 'were' : 'was'} changed from ${parseChangedPropertyValue(event, change.propertyName, change.previous)} to ${parseChangedPropertyValue(event, change.propertyName, change.change)}.`
-              })
-              .filter(itm => Boolean(itm))
-          : null
+                  return `${parsePropertyName(event, change.propertyName)} ${change.propertyName === 'comments' ? 'were' : 'was'} changed from ${parseChangedPropertyValue(event, change.propertyName, change.previous)} to ${parseChangedPropertyValue(event, change.propertyName, change.change)}.`
+                })
+                .filter(itm => Boolean(itm))
+            : null
 
         return {
           ...eventText,
@@ -310,6 +329,7 @@ export const parseAuditHistory = (history: components['schemas']['AuditedAction'
           user: eventText.skipUser ? null : action.user,
           occurredAt: action.occurredAt,
           ...(changes ? { changes } : {}),
+          ...(content ? { content } : {}),
         }
       }),
     )
