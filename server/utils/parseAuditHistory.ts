@@ -125,6 +125,29 @@ const DOMAIN_EVENT_MAP: { [key: string]: DomainEventText } = {
     heading: 'Absence movement recorded',
     content: 'Temporary absence movement recorded for <prisoner>',
   },
+  'person.temporary-absence-movement.reversed': {
+    heading: 'Absence movement direction reversed',
+    content: 'Temporary absence movement direction reversed',
+  },
+  'person.temporary-absence-movement.occurred-at-changed': {
+    heading: 'Absence movement happened at changed',
+  },
+  'person.temporary-absence-movement.recategorised': {
+    heading: 'Absence movement reason changed',
+  },
+  'person.temporary-absence-movement.relocated': {
+    heading: 'Absence movement destination changed',
+  },
+  'person.temporary-absence-movement.accompaniment-changed': {
+    heading: 'Absence movement accompaniment changed',
+  },
+  'person.temporary-absence-movement.comments-changed': {
+    heading: 'Absence movement comments changed',
+  },
+  'person.temporary-absence-movement.occurrence-changed': {
+    heading: 'Absence movement occurrence switched',
+    content: 'Temporary absence movement occurrence switched',
+  },
   'person.temporary-absence-authorisation.paused': {
     heading: 'Absence plan paused',
     content: 'Temporary absence paused for <prisoner>',
@@ -157,6 +180,8 @@ const CHANGE_PROPERTY_MAP: { [key: string]: string } = {
   accompaniedBy: 'Escort',
   comments: 'Comments',
   status: 'Status',
+  occurredAt: 'Happened at',
+  direction: 'Direction',
 }
 
 const OCCURRENCE_CHANGE_PROPERTY_MAP: { [key: string]: string } = {
@@ -171,7 +196,7 @@ const parseChangedPropertyValue = (domain: string, property: string, value: unkn
 
   if (domain.endsWith('date-range-changed') && ['start', 'end'].includes(property)) return formatDate(String(value))
 
-  if (domain.endsWith('rescheduled') && ['start', 'end'].includes(property))
+  if ((domain.endsWith('rescheduled') && ['start', 'end'].includes(property)) || property === 'occurredAt')
     return formatDate(String(value), `d MMMM yyyy 'at' HH:mm`)
 
   return String(value)
@@ -234,6 +259,40 @@ export const parseAuditHistory = (history: components['schemas']['AuditedAction'
         const changes = !eventText.content
           ? action.changes
               .map(change => {
+                if (
+                  event === 'person.temporary-absence-movement.recategorised' &&
+                  !['absenceType', 'absenceSubType', 'absenceReasonCategory', 'absenceReason'].includes(
+                    change.propertyName,
+                  )
+                ) {
+                  return null
+                }
+
+                if (event === 'person.temporary-absence-movement.relocated' && change.propertyName !== 'location') {
+                  return null
+                }
+
+                if (
+                  event === 'person.temporary-absence-movement.accompaniment-changed' &&
+                  change.propertyName !== 'accompaniedBy'
+                ) {
+                  return null
+                }
+
+                if (
+                  event === 'person.temporary-absence-movement.comments-changed' &&
+                  change.propertyName !== 'comments'
+                ) {
+                  return null
+                }
+
+                if (
+                  event === 'person.temporary-absence-movement.occurred-at-changed' &&
+                  change.propertyName !== 'occurredAt'
+                ) {
+                  return null
+                }
+
                 if (change.propertyName === 'location') {
                   if (!change.previous && change.change) return `Location was set to ${change.change}.`
                   if (change.previous && !change.change)
