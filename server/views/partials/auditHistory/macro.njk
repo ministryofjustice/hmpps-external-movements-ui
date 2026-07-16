@@ -27,7 +27,11 @@ Parameters:
   {% for action in actions %}
     {% set itemHtml %}
       {% if action.content %}
-        {{ action.content | replace('<prisoner>', prisonerName) | escape }}
+        {% if action.content.html %}
+          {{ action.content.html | safe }}
+        {% else %}
+          {{ action.content | replace('<prisoner>', prisonerName) | escape }}
+        {% endif %}
       {% endif %}
       {% if action.changes %}
         {% set changeDetailsHtml %}
