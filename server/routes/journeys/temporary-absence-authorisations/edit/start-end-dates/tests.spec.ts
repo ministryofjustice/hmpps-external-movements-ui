@@ -5,10 +5,7 @@ import componentsApi from '../../../../../../integration_tests/mockApis/componen
 import { signIn } from '../../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber, testTapAuthorisation } from '../../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../../integration_tests/mockApis/prisonerSearchApi'
-import {
-  stubGetTapAuthorisation,
-  stubPutTapAuthorisation,
-} from '../../../../../../integration_tests/mockApis/externalMovementsApi'
+import { stubGetTapAuthorisation } from '../../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetPrisonerImage } from '../../../../../../integration_tests/mockApis/prisonApi'
 import { EditTapAuthorisationStartEndDatesPage } from './test.page'
 import { testNotAuthorisedPage } from '../../../../../../integration_tests/steps/testNotAuthorisedPage'
@@ -64,16 +61,6 @@ test.describe('/temporary-absence-authorisations/edit/start-end-dates', () => {
       stubGetPrisonerImage(),
       stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
       stubGetTapAuthorisation(authorisation),
-      stubPutTapAuthorisation(authorisationId, {
-        content: [
-          {
-            user: { username: 'USERNAME', name: 'User Name' },
-            occurredAt: '2025-12-01T17:50:20.421301',
-            domainEvents: ['person.temporary-absence-authorisation.date-range-changed'],
-            changes: [{ propertyName: 'start', previous: '2025-12-02', change: '2025-12-01' }],
-          },
-        ],
-      }),
     ])
   })
 
@@ -96,12 +83,12 @@ test.describe('/temporary-absence-authorisations/edit/start-end-dates', () => {
     await expect(testPage.startDateField()).toHaveValue('2/1/2001')
     await expect(testPage.endDateField()).toBeVisible()
     await expect(testPage.endDateField()).not.toBeEmpty()
-    await expect(testPage.button('Confirm and save')).toBeVisible()
+    await expect(testPage.continueButton()).toBeVisible()
 
     // verify validation error
     await testPage.startDateField().clear()
     await testPage.endDateField().clear()
-    await testPage.clickButton('Confirm and save')
+    await testPage.clickContinue()
     await testPage.link('Enter or select a start date').click()
     await expect(testPage.startDateField()).toBeFocused()
     await testPage.link('Enter or select a return date').click()
@@ -109,7 +96,7 @@ test.describe('/temporary-absence-authorisations/edit/start-end-dates', () => {
 
     await testPage.startDateField().fill('3/1/2001')
     await testPage.endDateField().fill('x')
-    await testPage.clickButton('Confirm and save')
+    await testPage.clickContinue()
 
     await testPage.link('The start date must be on or before the first occurrence 2/1/2001').click()
     await expect(testPage.startDateField()).toBeFocused()
@@ -118,7 +105,7 @@ test.describe('/temporary-absence-authorisations/edit/start-end-dates', () => {
 
     await testPage.startDateField().fill(`1/1/2001`)
     await testPage.endDateField().fill(`1/1/2002`)
-    await testPage.clickButton('Confirm and save')
+    await testPage.clickContinue()
 
     await testPage.link('Absence period can only extend to 6 months from the entry date').click()
     await expect(testPage.endDateField()).toBeFocused()
@@ -126,8 +113,8 @@ test.describe('/temporary-absence-authorisations/edit/start-end-dates', () => {
     // verify next page routing
     await testPage.startDateField().fill(`1/1/2001`)
     await testPage.endDateField().fill(`12/1/2001`)
-    await testPage.clickButton('Confirm and save')
+    await testPage.clickContinue()
 
-    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/confirmation/)
+    expect(page.url()).toMatch(/\/temporary-absence-authorisations\/edit\/confirm-date-change/)
   })
 })
