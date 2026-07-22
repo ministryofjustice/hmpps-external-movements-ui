@@ -1,0 +1,72 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "partials/hiddenInputs/macro.njk" import hiddenInputs %}
+
+{% set mainClasses = "app-container govuk-body" %}
+
+{% set pageTitle = 'Confirm you want to remove this saved location - Manage temporary absence locations' %}
+
+{% block innerContent %}
+  <div class="govuk-!-static-margin-bottom-7">
+    <span class="govuk-caption-l">Manage saved temporary absence locations</span>
+    <h1 class="govuk-heading-l">Confirm you want to remove this saved location</h1>
+  </div>
+
+  {% set locationsHtml %}
+    {% for location in locations %}
+      {% if location.address %}
+        <input type="hidden" name="locations[{{ loop.index0 }}][address]" value="{{ location.address }}" />
+      {% endif %}
+      {% if location.description %}
+        <input type="hidden" name="locations[{{ loop.index0 }}][description]" value="{{ location.description }}" />
+      {% endif %}
+      {% if location.postcode %}
+        <input type="hidden" name="locations[{{ loop.index0 }}][postcode]" value="{{ location.postcode }}" />
+      {% endif %}
+      {% if location.uprn %}
+        <input type="hidden" name="locations[{{ loop.index0 }}][uprn]" value="{{ location.uprn }}" />
+      {% endif %}
+    {% endfor %}
+  {% endset %}
+
+  {% call govukInsetText() %}
+    {{ locations[remove] | formatAddress }}
+  {% endcall %}
+
+  <p>Removing this will not impact any temporary absences created using this location.</p>
+
+  <form method="POST">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+    <input type="hidden" name="version" value="{{ version }}" />
+    <input type="hidden" name="remove" value="{{ remove }}" />
+    {{ locationsHtml | safe }}
+
+    {{ govukRadios({
+      name: "confirm",
+      errorMessage: validationErrors | findError('confirm'),
+      fieldset: {
+        legend: {
+          text: 'Are you sure you want to remove this saved location?',
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: [
+        {
+          value: 'YES',
+          text: "Yes"
+        },
+        {
+          value: 'NO',
+          text: "No"
+        }
+      ]
+    }) }}
+
+    {{ govukButton({
+      text: "Confirm",
+      preventDoubleClick: true
+    }) }}
+  </form>
+{% endblock %}

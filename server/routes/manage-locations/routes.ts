@@ -10,12 +10,16 @@ import { enterAreaSchema } from './add-area/schema'
 import { sortOrRemoveLocationSchema } from './sort-or-remove-location/schema'
 import { redirectAndForwardValidationErrorsHandler } from '../../middleware/validation/redirectAndForwardValidationErrorsHandler'
 import { FLASH_KEY__FORM_RESPONSES, FLASH_KEY__VALIDATION_ERRORS } from '../../utils/constants'
+import { RemoveLocationRoutes } from './remove/routes'
+import { INVALID_LOCATIONS_VERSION_MSG } from './constants'
 
-export const ManageLocationsRoutes = ({ externalMovementsService, osPlacesAddressService }: Services) => {
+export const ManageLocationsRoutes = (services: Services) => {
   const { router, get, post } = BaseRouter()
+  const { externalMovementsService, osPlacesAddressService } = services
+
   const controller = new ManageLocationsController(externalMovementsService)
 
-  get('/', Page.SEARCH_PRISONER, controller.GET)
+  get('/', Page.MANAGE_LOCATIONS, controller.GET)
 
   get('/add-searched-address', redirectAndForwardValidationErrorsHandler('../manage-locations'))
   post(
@@ -32,16 +36,11 @@ export const ManageLocationsRoutes = ({ externalMovementsService, osPlacesAddres
   get('/sort-or-remove-location', redirectAndForwardValidationErrorsHandler('../manage-locations'))
   post('/sort-or-remove-location', validate(sortOrRemoveLocationSchema), controller.postSortOrRemoveLocation)
 
+  router.use('/remove', RemoveLocationRoutes(services))
+
   router.use((error: { responseStatus?: number }, req: Request, res: Response, next: NextFunction) => {
     if (error?.responseStatus === 409) {
-      req.flash(
-        FLASH_KEY__VALIDATION_ERRORS,
-        JSON.stringify({
-          apiError: [
-            'Another user has made changes to the temporary absence locations. Please review the new list and try your action again if required.',
-          ],
-        }),
-      )
+      req.flash(FLASH_KEY__VALIDATION_ERRORS, INVALID_LOCATIONS_VERSION_MSG)
       req.flash(FLASH_KEY__FORM_RESPONSES, JSON.stringify(req.body))
       res.redirect(req.get('Referrer') ?? (req.method === 'GET' ? '/' : req.originalUrl))
     } else {
