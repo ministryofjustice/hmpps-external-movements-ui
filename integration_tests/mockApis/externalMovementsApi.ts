@@ -201,3 +201,10 @@ export const stubGetLocations = (
     urlPattern: `/external-movements-api/prisons/${caseloadId}/temporary-absence-locations`,
     response,
   })
+
+export const stubPutLocations = (caseloadId: string = 'LEI') =>
+  successStub({
+    method: 'PUT',
+    urlPattern: `/external-movements-api/prisons/${caseloadId}/temporary-absence-locations`,
+    response: null,
+  })

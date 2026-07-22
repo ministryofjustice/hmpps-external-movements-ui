@@ -54,6 +54,8 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="version" value="{{ version }}" />
                 {{ locationsHtml | safe }}
+
+                <h3 class="govuk-visually-hidden"><label for="address-autosuggest-input">Search and add a UK address</label></h3>
                 <div id="address-hint" class="govuk-hint">Enter an address or postcode</div>
                 <div id="address-input">
                   {{ addressAutosuggest({
