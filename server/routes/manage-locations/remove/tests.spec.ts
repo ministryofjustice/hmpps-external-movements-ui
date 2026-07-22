@@ -41,7 +41,7 @@ test.describe('/manage-locations/remove', () => {
 
     // verify validation error
     await testPage.clickButton('Confirm')
-    await testPage.link('Select if you want to remove this saved location').click()
+    await testPage.link('Select yes if you want to remove this saved location').click()
     await expect(testPage.yesRadio()).toBeFocused()
 
     // verify next page routing

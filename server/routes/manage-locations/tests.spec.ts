@@ -40,7 +40,7 @@ test.describe('/manage-locations', () => {
     await expect(testPage.searchField()).toBeVisible()
     await expect(testPage.searchField()).toHaveValue('')
 
-    await expect(testPage.link('Remove location 1')).toHaveAttribute(
+    await expect(testPage.link('Remove Saved Location, UK')).toHaveAttribute(
       'href',
       /manage-locations\/remove\?version=version&idx=0/,
     )

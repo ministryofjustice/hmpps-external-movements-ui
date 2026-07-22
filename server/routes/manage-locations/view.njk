@@ -232,7 +232,7 @@
                       {{ location | formatAddress }}
                     </div>
                     <div class="govuk-grid-column-one-quarter">
-                      <a class="govuk-link govuk-link--no-visited-state" href="manage-locations/remove?version={{ version }}&idx={{ loop.index0 }}">Remove<span class="govuk-visually-hidden"> location {{ loop.index }}</span></a>
+                      <a class="govuk-link govuk-link--no-visited-state" href="manage-locations/remove?version={{ version }}&idx={{ loop.index0 }}">Remove<span class="govuk-visually-hidden"> {{ location | formatAddress }}</span></a>
                     </div>
                   </div>
                 </li>
