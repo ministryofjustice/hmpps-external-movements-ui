@@ -144,7 +144,7 @@ export type AddTapOccurrenceJourney = {
   returnDate: string
   returnTime: string
   locationOption: number | 'NEW'
-  location: Address
+  location: Address & { type?: 'SAVED_LOCATION' | 'SEARCHED_ADDRESS' | 'ENTERED_ADDRESS' | 'ENTERED_AREA' }
   comments: string | null
   savedLocations: components['schemas']['Location'][]
   result: components['schemas']['AuditHistory'] & { newOccurrenceIds?: string[] }

@@ -5,10 +5,10 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 
-{% set mainClasses = "app-container govuk-body placeholder-background" %}
+{% set mainClasses = "app-container govuk-body" %}
 
 {% set fullWidth = true %}
-{% set pageTitle = 'Enter location for this absence - Manage temporary absences' %}
+{% set pageTitle = 'Add a location for this absence - Manage temporary absences' %}
 
 {% block meta %}
   <meta name="autocompleteElements" content="location"/>
@@ -17,7 +17,7 @@
 {% block innerContent %}
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Manage Temporary Absences</span>
-    <h1 class="govuk-heading-l"><label for="address-autosuggest-input">Enter location for this absence</label></h1>
+    <h1 class="govuk-heading-l"><label for="address-autosuggest-input">Add a location for this absence</label></h1>
 
     <p>Enter a location manually if it:</p>
     <ul class="govuk-list govuk-list--bullet">
@@ -25,19 +25,22 @@
       <li>is not a specific address but a whole area (for example, York)</li>
     </ul>
 
+    <h2 class="govuk-heading-m">Select or add a location</h2>
+
     {% if locations.length %}
       {% set selectSavedLocationHtml %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
           <form method="post" action="location/selected-location?history={{ b64History }}">
             <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            <h3 class="govuk-heading-m">You have {{ locations.length }} saved location{{ 's' if locations.length !== 1 else '' }}</h3>
             {{ govukSelect({
               label: {
-                text: "Select a location"
+                text: "Search saved locations"
               },
               id: "location",
               name: "location",
-              items: locations | prependEmptyOption,
+              items: locations | prependEmptyOption | setSelectedValue(selectedSavedLocation),
               errorMessage: validationErrors | findError('location')
             }) }}
 
@@ -56,7 +59,8 @@
         <div class="govuk-grid-column-two-thirds">
           <form method="post" action="location/searched-address?history={{ b64History }}">
             <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-            <div id="address-hint" class="govuk-hint">Enter an address or postcode</div>
+            <h3 class="govuk-visually-hidden"><label for="address-autosuggest-input">Search and add a UK address</label></h3>
+            <div id="address-hint" class="govuk-body">Enter an address or postcode</div>
             <div id="address-input">
               {{ addressAutosuggest({
                 classes: 'govuk-!-margin-bottom-5',
@@ -168,15 +172,15 @@
     {{ govukTabs({
       items: [
         {
-          label: "Select a commonly used location",
-          id: "select-location",
-          panel: { html: selectSavedLocationHtml }
-        } if locations.length,
-        {
           label: "Search all UK addresses",
           id: "search-address",
           panel: { html: searchAddressesHtml }
         },
+        {
+          label: "Select a saved location",
+          id: "select-location",
+          panel: { html: selectSavedLocationHtml }
+        } if locations.length,
         {
           label: "Enter an address",
           id: "enter-address",

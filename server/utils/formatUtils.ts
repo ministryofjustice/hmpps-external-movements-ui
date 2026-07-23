@@ -136,10 +136,10 @@ export const formatAddress = ({
   address,
   postcode,
 }: {
-  description?: string | null
-  address?: string | null
-  postcode?: string | null
-  uprn?: number | null
+  description?: string | null | undefined
+  address?: string | null | undefined
+  postcode?: string | null | undefined
+  uprn?: number | null | undefined
 }) =>
   [description, address, postcode]
     .map(itm => itm?.trim())

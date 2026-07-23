@@ -9,12 +9,9 @@ import { AddOccurrenceController } from './controller'
 import { AddTapOccurrenceSelectLocationRoutes } from './select-location/routes'
 import { AddTapOccurrenceCommentsRoutes } from './comments/routes'
 import { AddTapOccurrenceCheckAnswersRoutes } from './check-answers/routes'
-import { AddTapOccurrenceSearchLocationRoutes } from './search-location/routes'
-import { AddTapOccurrenceEnterLocationRoutes } from './enter-location/routes'
 import { AddTapOccurrenceConfirmationRoutes } from './confirmation/routes'
 import journeyStateGuard from '../../../../middleware/journey/journeyStateGuard'
 import { AddTapOccurrenceLocationRoutes } from './location/routes'
-import { Feature, requireFeatureFlag } from '../../../../utils/featureFlag'
 
 export const AddTapOccurrenceRoutes = (services: Services) => {
   const { router, get, post } = BaseRouter()
@@ -54,9 +51,7 @@ export const AddTapOccurrenceRoutes = (services: Services) => {
   post('/', validate(schema), controller.POST)
 
   router.use('/select-location', AddTapOccurrenceSelectLocationRoutes())
-  router.use('/search-location', AddTapOccurrenceSearchLocationRoutes(services))
-  router.use('/location', requireFeatureFlag(Feature.DEV_LED), AddTapOccurrenceLocationRoutes(services))
-  router.use('/enter-location', AddTapOccurrenceEnterLocationRoutes())
+  router.use('/location', AddTapOccurrenceLocationRoutes(services))
   router.use('/comments', AddTapOccurrenceCommentsRoutes())
   router.use('/check-answers', AddTapOccurrenceCheckAnswersRoutes(services))
   router.use('/confirmation', AddTapOccurrenceConfirmationRoutes())

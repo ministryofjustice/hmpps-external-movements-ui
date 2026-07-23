@@ -6,7 +6,7 @@ export const selectedLocationSchema = async (req: Request, _res: Response) =>
   createSchema({
     location: z.string().transform((val, ctx) => {
       const number = Number(val)
-      if (Number.isNaN(number)) {
+      if (!val || Number.isNaN(number)) {
         ctx.addIssue({ code: 'custom', message: 'Select a location' })
         return z.NEVER
       }
