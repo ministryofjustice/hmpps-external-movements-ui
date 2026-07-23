@@ -11,13 +11,18 @@ import { formatAddress } from '../../utils/formatUtils'
 export class ManageLocationsController {
   constructor(readonly externalMovementsService: ExternalMovementsService) {}
 
-  GET = async (req: Request, res: Response) => {
+  GET = async (req: Request<unknown, unknown, unknown, { searchTerm?: string; history?: string }>, res: Response) => {
     const locationsResult = await this.externalMovementsService.getTapLocations({ res })
     res.render('manage-locations/view', {
       showBreadcrumbs: true,
-      locations: locationsResult.locations,
+      locationCount: locationsResult.locations.length,
+      locations: locationsResult.locations.filter(
+        location =>
+          !req.query.searchTerm?.trim() ||
+          formatAddress(location).toLocaleLowerCase().includes(req.query.searchTerm.trim().toLocaleLowerCase()),
+      ),
       version: locationsResult.version,
-      b64History: req.query['history'],
+      b64History: req.query.history,
       uprn: res.locals.formResponses?.['uprn'],
       inputValue: res.locals.formResponses?.['address-autosuggest-input'],
       description: res.locals.formResponses?.['description'],
@@ -27,6 +32,7 @@ export class ManageLocationsController {
       county: res.locals.formResponses?.['county'],
       postcode: res.locals.formResponses?.['postcode'],
       area: res.locals.formResponses?.['area'],
+      searchTerm: req.query.searchTerm,
     })
   }
 

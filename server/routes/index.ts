@@ -19,8 +19,8 @@ import { BrowseTapMovementsRoutes } from './temporary-absence-movements/routes'
 import { CreateDocumentsRoutes } from './create-documents/routes'
 import { TemporaryAbsenceScheduleEnquiryRoutes } from './temporary-absence-schedule-enquiry/routes'
 import { populateSwitchOffBanner } from '../middleware/populateSwitchOffBanner'
-import { Feature, requireFeatureFlag } from '../utils/featureFlag'
 import { ManageLocationsRoutes } from './manage-locations/routes'
+import { Feature, requireFeatureFlag } from '../utils/featureFlag'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
@@ -68,6 +68,11 @@ export default function routes(services: Services): Router {
         matcher: /temporary-absence-schedule-enquiry\/[\w\d]+$/,
         text: 'Temporary absence schedule enquiry',
         alias: Page.TEMPORARY_ABSENCE_SCHEDULE_ENQUIRY,
+      },
+      {
+        matcher: /manage-locations$/,
+        text: 'Manage saved locations',
+        alias: Page.MANAGE_LOCATIONS,
       },
     ]),
   )
@@ -135,7 +140,12 @@ export default function routes(services: Services): Router {
     }),
     TemporaryAbsenceScheduleEnquiryRoutes(services),
   )
-  router.use('/manage-locations', requireFeatureFlag(Feature.DEV_LED), ManageLocationsRoutes(services))
+  router.use(
+    '/manage-locations',
+    requireFeatureFlag(Feature.DEV_LED),
+    requirePermissions('TAP', UserPermissionLevel.MANAGE),
+    ManageLocationsRoutes(services),
+  )
 
   router.use(insertJourneyIdentifier())
   router.use('/:journeyId', JourneyRoutes(services))

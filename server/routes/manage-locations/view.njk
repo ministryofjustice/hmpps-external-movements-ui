@@ -4,15 +4,16 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
-{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "partials/hiddenInputs/macro.njk" import hiddenInputs %}
 
-{% set mainClasses = "app-container govuk-body placeholder-background" %}
+{% set mainClasses = "app-container govuk-body" %}
 
 {% set fullWidth = true %}
 {% set pageTitle = 'Manage temporary absence locations' %}
 
 {% block innerContent %}
-  <div class="govuk-!-static-margin-bottom-6">
+  <div class="govuk-!-static-margin-bottom-7">
+    <span class="govuk-caption-l">Manage saved temporary absence locations</span>
     <h1 class="govuk-heading-l">Manage temporary absence locations</h1>
   </div>
 
@@ -43,7 +44,7 @@
     }) }}
   {% else %}
     <section role="region" aria-label="Add a location">
-      <div class="block-background govuk-!-padding-6 govuk-!-margin-bottom-7">
+      <div class="govuk-!-margin-bottom-7">
         <h2 class="govuk-heading-m">Add a location</h2>
 
         {% set searchAddressesHtml %}
@@ -53,6 +54,8 @@
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 <input type="hidden" name="version" value="{{ version }}" />
                 {{ locationsHtml | safe }}
+
+                <h3 class="govuk-visually-hidden"><label for="address-autosuggest-input">Search and add a UK address</label></h3>
                 <div id="address-hint" class="govuk-hint">Enter an address or postcode</div>
                 <div id="address-input">
                   {{ addressAutosuggest({
@@ -189,57 +192,57 @@
     </section>
   {% endif %}
 
-  <h2 class="govuk-heading-m">You have {{ locations.length }} save {{ 'location' if locations.length === 1 else 'locations' }}</h2>
-  {% if locations.length %}
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <form method="post" action="manage-locations/sort-or-remove-location?history={{ b64History }}">
-          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-          <input type="hidden" name="version" value="{{ version }}" />
-          {{ locationsHtml | safe }}
+  <h2 class="govuk-heading-m">You have {{ locationCount }} save {{ 'location' if locationCount === 1 else 'locations' }}</h2>
+  {% if locationCount %}
+    <div class="moj-search govuk-!-width-two-thirds govuk-!-margin-bottom-6">
+      <form method="GET">
+        {{ hiddenInputs(query | getQueryEntries(['history'])) }}
+        {{ govukInput({
+          name: 'searchTerm',
+          classes: "moj-search__input",
+          label: {
+            text: "Search saved locations"
+          },
+          value: searchTerm,
+          errorMessage: validationErrors | findError('searchTerm')
+        }) }}
 
-          {% if locations.length > 1 %}
-            {{ govukButton({
-              classes: "govuk-button--secondary sortable-list-button govuk-!-display-none",
-              text: "Sort locations",
-              preventDoubleClick: true
-            }) }}
-
-            {{ govukButton({
-              classes: "sortable-list-save-button govuk-!-display-none",
-              text: "Save changes",
-              preventDoubleClick: true
-            }) }}
-
-            {{ govukInsetText({
-              classes: "govuk-!-margin-top-0 sortable-list-hint govuk-!-display-none",
-              text: "Drag and drop to re-order the locations, then click ‘Save changes’ to save the sort order."
-            }) }}
-          {% endif %}
-
-          <ul class="govuk-list sortable-list">
-            {% for location in locations %}
-              <li>
-                <input type="hidden" name="order" value="{{ loop.index0 }}" />
-                <div class="govuk-grid-row">
-                  <div class="govuk-grid-column-three-quarters">
-                    {{ location | formatAddress }}
-                  </div>
-                  <div class="govuk-grid-column-one-quarter">
-                    {{ govukButton({
-                      classes: "govuk-button--secondary",
-                      text: "Remove",
-                      name: "remove",
-                      value: loop.index0,
-                      preventDoubleClick: true
-                    }) }}
-                  </div>
-                </div>
-              </li>
-            {% endfor %}
-          </ul>
-        </form>
-      </div>
+        {{ govukButton({
+          classes: "moj-search__button",
+          text: "Search",
+          preventDoubleClick: true
+        }) }}
+      </form>
     </div>
+
+    {% if locations.length %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <form method="post" action="manage-locations/sort-or-remove-location?history={{ b64History }}">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            <input type="hidden" name="version" value="{{ version }}" />
+            {{ locationsHtml | safe }}
+
+            <ul class="govuk-list">
+              {% for location in locations %}
+                <li>
+                  <input type="hidden" name="order" value="{{ loop.index0 }}" />
+                  <div class="govuk-grid-row govuk-!-margin-bottom-5">
+                    <div class="govuk-grid-column-three-quarters">
+                      {{ location | formatAddress }}
+                    </div>
+                    <div class="govuk-grid-column-one-quarter">
+                      <a class="govuk-link govuk-link--no-visited-state" href="manage-locations/remove?version={{ version }}&idx={{ loop.index0 }}">Remove<span class="govuk-visually-hidden"> {{ location | formatAddress }}</span></a>
+                    </div>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </form>
+        </div>
+      </div>
+    {% else %}
+      No locations match your search.
+    {% endif %}
   {% endif %}
 {% endblock %}
