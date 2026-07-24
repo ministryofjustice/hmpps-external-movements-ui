@@ -103,7 +103,7 @@
               {
                 key: { text: "Location" },
                 value: { text: occurrence.location | formatAddress },
-                actions: { items: [{ href: baseEditUrl + "/location", text: "Change", visuallyHiddenText: "address" }] }
+                actions: { items: [{ href: baseEditUrl + "/change-location", text: "Change", visuallyHiddenText: "address" }] }
               }
             ] | removeNullish | showChangeLinksIf(user | hasPermission('TAP', 'MANAGE') and editable)
           }) }}

@@ -130,7 +130,8 @@ export type UpdateTapOccurrenceJourney = {
   returnDate: string
   returnTime: string
   locationOption: number | 'NEW'
-  location: Address
+  savedLocations: components['schemas']['Location'][]
+  location: Address & { type?: 'SAVED_LOCATION' | 'SEARCHED_ADDRESS' | 'ENTERED_ADDRESS' | 'ENTERED_AREA' }
   transport: components['schemas']['CodedDescription']
   comments: string
   result: components['schemas']['AuditHistory']
@@ -160,7 +161,8 @@ export type UpdateTapAuthorisationJourney = {
   reasonCategory: components['schemas']['AbsenceCategorisation']
   reason: components['schemas']['AbsenceCategorisation']
   comments: string | null
-  location: Address
+  savedLocations: components['schemas']['Location'][]
+  location: Address & { type?: 'SAVED_LOCATION' | 'SEARCHED_ADDRESS' | 'ENTERED_ADDRESS' | 'ENTERED_AREA' }
   accompanied: boolean
   accompaniedBy: components['schemas']['CodedDescription']
   transport: components['schemas']['CodedDescription']

@@ -36,7 +36,7 @@ export class EditTapOccurrenceSelectLocationController {
   POST = async (req: Request, res: Response) => {
     const journey = req.journeyData.updateTapOccurrence!
     if (!journey.result) {
-      res.redirect('search-location')
+      res.redirect('location')
     } else {
       req.journeyData.journeyCompleted = true
       res.redirect(journey.result.content.length ? 'confirmation' : `/temporary-absences/${journey.occurrence.id}`)

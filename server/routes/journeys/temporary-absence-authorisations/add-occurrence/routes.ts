@@ -31,10 +31,6 @@ export const AddTapOccurrenceRoutes = (services: Services) => {
       '*': () => undefined,
       'add-occurrence/select-location': (req: Request) =>
         req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
-      'add-occurrence/search-location': (req: Request) =>
-        req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
-      'add-occurrence/enter-location': (req: Request) =>
-        req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
       'add-occurrence/location': (req: Request) =>
         req.journeyData.addTapOccurrence?.startDate ? undefined : '/add-occurrence',
       'add-occurrence/comments': (req: Request) =>

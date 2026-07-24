@@ -140,7 +140,7 @@ test.describe('/temporary-absences/edit/select-location', () => {
     await expect(testPage.button('Continue', true)).toBeVisible()
     await testPage.clickContinue()
 
-    expect(page.url()).toMatch(/\/temporary-absences\/edit\/search-location/)
+    expect(page.url()).toMatch(/\/temporary-absences\/edit\/location/)
 
     // verify input values are persisted
     await testPage.clickLink(/^Back$/)
