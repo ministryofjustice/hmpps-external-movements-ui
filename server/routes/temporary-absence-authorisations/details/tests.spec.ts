@@ -143,7 +143,7 @@ test.describe('/temporary-absence-authorisations/:id', () => {
     await expect(testPage.link('Change location')).toBeVisible()
     await expect(testPage.link('Change location')).toHaveAttribute(
       'href',
-      /\/temporary-absences\/start-edit\/occurrence-id\/location/,
+      /\/temporary-absences\/start-edit\/occurrence-id\/change-location/,
     )
 
     // verify history tab

@@ -79,7 +79,7 @@ test.describe('/temporary-absences/edit/select-location', () => {
   })
 
   const startJourney = async (page: Page, journeyId: string) => {
-    await page.goto(`/${journeyId}/temporary-absences/start-edit/${occurrenceId}/location`)
+    await page.goto(`/${journeyId}/temporary-absences/start-edit/${occurrenceId}/change-location`)
   }
 
   test('should select existing location and confirm to save change', async ({ page }) => {
