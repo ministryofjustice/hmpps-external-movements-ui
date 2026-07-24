@@ -1,13 +1,13 @@
 import { BaseTestPage } from '../../../../../integration_tests/pages/baseTestPage'
 
-export class SearchLocationsPage extends BaseTestPage {
+export class TapLocationPage extends BaseTestPage {
   async verifyContent() {
     return this.verify({
-      pageUrl: /\/add-temporary-absence\/search-locations/,
-      title: 'Search for a location - Add a temporary absence - DPS',
+      pageUrl: /\/add-temporary-absence\/location/,
+      title: 'Add a location for this absence - Add a temporary absence - DPS',
       caption: 'Create a Temporary Absence',
       heading: 'Add a location for this absence',
-      backUrl: /check-absences/,
+      backUrl: /start-end-dates-and-times/,
     })
   }
 

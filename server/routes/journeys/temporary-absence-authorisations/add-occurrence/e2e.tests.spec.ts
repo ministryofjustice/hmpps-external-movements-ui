@@ -140,7 +140,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await searchLocationPage.selectAddress('Address 3, RS1 34T')
     await searchLocationPage.clickContinue()
 
-    const commentsPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/search-location/)
+    const commentsPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/location/)
     await commentsPage.commentsInput().fill('new comments')
     await commentsPage.clickContinue()
 
@@ -202,7 +202,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await searchLocationPage.cityField().fill('Manual City')
     await searchLocationPage.clickContinue()
 
-    const commentsPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/search-location/)
+    const commentsPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/location/)
     await commentsPage.commentsInput().fill('new comments')
     await commentsPage.clickContinue()
 

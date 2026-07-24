@@ -9,7 +9,6 @@ import { EditAbsenceCommentsRoutes } from './comments/routes'
 import { EditTransportRoutes } from './transport/routes'
 import { EditTapOccurrenceSearchLocationRoutes } from './search-location/routes'
 import { EditTapOccurrenceSelectLocationRoutes } from './select-location/routes'
-import { EditTapOccurrenceEnterLocationRoutes } from './enter-location/routes'
 import journeyStateGuard from '../../../../middleware/journey/journeyStateGuard'
 
 export const EditTapOccurrenceRoutes = (services: Services) => {
@@ -42,7 +41,6 @@ export const EditTapOccurrenceRoutes = (services: Services) => {
 
   router.use('/select-location', EditTapOccurrenceSelectLocationRoutes(services))
   router.use('/search-location', EditTapOccurrenceSearchLocationRoutes(services))
-  router.use('/enter-location', EditTapOccurrenceEnterLocationRoutes(services))
 
   return router
 }

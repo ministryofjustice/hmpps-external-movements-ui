@@ -20,7 +20,6 @@ import journeyStateGuard from '../../../../middleware/journey/journeyStateGuard'
 import { TapPauseRoutes } from './pause/routes'
 import { TapResumeRoutes } from './resume/routes'
 import { EditTapAuthorisationSearchLocationRoutes } from './search-location/routes'
-import { EditTapAuthorisationEnterLocationRoutes } from './enter-location/routes'
 import { EditTapAutofillOccurrencesRoutes } from './confirm-date-change/routes'
 import { EditTapSelectLocationRoutes } from './select-location/routes'
 import { EditTapMatchAbsencesAndLocationsRoute } from './match-absences-and-locations/routes'
@@ -52,7 +51,6 @@ export const EditTapAuthorisationRoutes = (services: Services) => {
   router.use('/transport', EditTapAuthorisationTransportRoutes(services))
 
   router.use('/search-location', EditTapAuthorisationSearchLocationRoutes(services))
-  router.use('/enter-location', EditTapAuthorisationEnterLocationRoutes())
 
   router.use('/cancel', TapCancelRoutes(services))
   router.use('/pause', TapPauseRoutes(services))

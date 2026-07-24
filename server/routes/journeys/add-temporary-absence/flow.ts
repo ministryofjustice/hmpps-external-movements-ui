@@ -78,6 +78,7 @@ export class AddTapFlowControl {
       }
       if (data.location) {
         journey.location = data.location
+        return '../check-answers'
       }
       if (data.accompanied !== undefined) {
         if (data.accompanied && !journey.accompaniedBy) {
@@ -146,11 +147,11 @@ export class AddTapFlowControl {
       journey.startTime = data.startTime
       journey.returnDate = data.returnDate
       journey.returnTime = data.returnTime
-      return 'search-location'
+      return 'location'
     }
     if (data.location) {
       journey.location = data.location
-      return 'accompanied-or-unaccompanied'
+      return '../accompanied-or-unaccompanied'
     }
     if (data.accompanied !== undefined) {
       if (data.accompanied) {

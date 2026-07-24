@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 import ExternalMovementsService from '../../../../../services/apis/externalMovementsService'
 import { formatAddress } from '../../../../../utils/formatUtils'
-import { SearchedAddressSchemaType } from './searched-address/schema'
-import { EnteredAddressSchemaType } from './entered-address/schema'
-import { AreaSchemaType } from './area/schema'
 import { SelectedLocationSchemaType } from './selected-location/schema'
+import { SearchedAddressSchemaType } from '../../../add-temporary-absence/location/searched-address/schema'
+import { EnteredAddressSchemaType } from '../../../add-temporary-absence/location/entered-address/schema'
+import { AreaSchemaType } from '../../../add-temporary-absence/location/area/schema'
 
 export class AddTapOccurrenceLocationController {
   constructor(readonly externalMovementsService: ExternalMovementsService) {}
@@ -25,7 +25,6 @@ export class AddTapOccurrenceLocationController {
 
     res.render('temporary-absence-authorisations/add-occurrence/location/view', {
       backUrl: 'select-location',
-      b64History: req.query['history'],
       locations: locationOptions,
       uprn: location?.id ? String(location?.id) : null,
       inputValue: res.locals.formResponses?.['address-autosuggest-input'] ?? location?.address,

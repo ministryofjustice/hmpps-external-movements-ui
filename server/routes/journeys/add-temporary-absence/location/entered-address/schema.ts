@@ -1,8 +1,8 @@
-import { z } from 'zod'
-import { createSchema } from '../../../../middleware/validation/validationMiddleware'
-import { optionalString } from '../../../../utils/validations/validateString'
+import z from 'zod'
+import { createSchema } from '../../../../../middleware/validation/validationMiddleware'
+import { optionalString } from '../../../../../utils/validations/validateString'
 
-export const enterLocationSchema = createSchema({
+export const enteredAddressSchema = createSchema({
   description: z
     .string()
     .max(40, { message: 'Description must be 40 characters or fewer' })
@@ -16,4 +16,4 @@ export const enterLocationSchema = createSchema({
   }),
 })
 
-export type EnterLocationSchemaType = z.infer<typeof enterLocationSchema>
+export type EnteredAddressSchemaType = z.infer<typeof enteredAddressSchema>

@@ -1,10 +1,10 @@
 import { z } from 'zod'
 import { OsPlacesAddressService } from '@ministryofjustice/hmpps-connect-dps-shared-items'
-import { createSchema } from '../../../../middleware/validation/validationMiddleware'
+import { createSchema } from '../../../../../middleware/validation/validationMiddleware'
 
 const ERROR_MSG = 'Enter and select an address or postcode'
 
-export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
+export const searchedAddressSchemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
   createSchema({
     'address-autosuggest-input': z.string().optional(),
     uprn: z.string().optional(),
@@ -20,6 +20,7 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
         addressString: address.addressString,
         postcode: address.postcode,
         description: address.organisationName,
+        ...val,
       }
     }
 
@@ -27,4 +28,4 @@ export const schemaFactory = (osPlacesAddressService: OsPlacesAddressService) =>
     return z.NEVER
   })
 
-export type SchemaType = z.infer<Awaited<ReturnType<typeof schemaFactory>>>
+export type SearchedAddressSchemaType = z.infer<Awaited<ReturnType<typeof searchedAddressSchemaFactory>>>
