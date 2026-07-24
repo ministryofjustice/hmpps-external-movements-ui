@@ -113,7 +113,7 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await testPage.verifyLink('Change end date', /start-end-dates-and-times#returnDate/)
     await testPage.verifyLink('Change end time', /start-end-dates-and-times#returnTimeHour/)
 
-    await testPage.verifyLink(/Change location$/, /search-location/)
+    await testPage.verifyLink(/Change location$/, /location$/)
     await testPage.verifyLink(
       'Change if the prisoner will be accompanied or unaccompanied',
       /accompanied-or-unaccompanied/,
@@ -183,7 +183,7 @@ test.describe('/add-temporary-absence/check-answers', () => {
     await testPage.verifyLink('Change end date', /start-end-dates-and-times#returnDate/)
     await testPage.verifyLink('Change end time', /start-end-dates-and-times#returnTimeHour/)
 
-    await testPage.verifyLink(/Change location$/, /search-location/)
+    await testPage.verifyLink(/Change location$/, /location$/)
     await testPage.verifyLink(
       'Change if the prisoner will be accompanied or unaccompanied',
       /accompanied-or-unaccompanied/,

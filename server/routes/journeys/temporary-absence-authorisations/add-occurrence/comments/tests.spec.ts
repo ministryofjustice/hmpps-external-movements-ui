@@ -109,7 +109,7 @@ test.describe('/temporary-absence-authorisations/add-occurrence/comments', () =>
     await startJourney(page, journeyId, 'NEW', '')
 
     // verify page content
-    const testPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/search-location/)
+    const testPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/location/)
 
     await expect(testPage.commentsInput()).toBeVisible()
     await expect(testPage.commentsInput()).toHaveValue('')
