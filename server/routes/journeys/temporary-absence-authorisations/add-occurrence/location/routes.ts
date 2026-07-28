@@ -3,10 +3,10 @@ import { BaseRouter } from '../../../../common/routes'
 import { Services } from '../../../../../services'
 import { validate } from '../../../../../middleware/validation/validationMiddleware'
 import { redirectAndForwardValidationErrorsHandler } from '../../../../../middleware/validation/redirectAndForwardValidationErrorsHandler'
-import { searchedAddressSchemaFactory } from './searched-address/schema'
-import { enteredAddressSchema } from './entered-address/schema'
-import { areaSchema } from './area/schema'
 import { selectedLocationSchema } from './selected-location/schema'
+import { searchedAddressSchemaFactory } from '../../../add-temporary-absence/location/searched-address/schema'
+import { enteredAddressSchema } from '../../../add-temporary-absence/location/entered-address/schema'
+import { areaSchema } from '../../../add-temporary-absence/location/area/schema'
 
 export const AddTapOccurrenceLocationRoutes = ({ osPlacesAddressService, externalMovementsService }: Services) => {
   const { router, get, post } = BaseRouter()

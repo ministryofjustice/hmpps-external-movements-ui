@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import ExternalMovementsService from '../../../../services/apis/externalMovementsService'
 import { components } from '../../../../@types/externalMovements'
 import { parseAddress } from '../../../../utils/utils'
+import { AddTemporaryAbsenceJourney } from '../../../../@types/journeys'
 
 export class AddTapCheckAnswersController {
   constructor(private readonly externalMovementsService: ExternalMovementsService) {}
@@ -15,6 +16,7 @@ export class AddTapCheckAnswersController {
     res.render('add-temporary-absence/check-answers/view', {
       ...req.journeyData.addTemporaryAbsence!,
       backUrl: 'approval',
+      changeLocationUrl: this.getChangeLocationUrl(req.journeyData.addTemporaryAbsence!),
     })
   }
 
@@ -111,4 +113,26 @@ export class AddTapCheckAnswersController {
   }
 
   POST = (_req: Request, res: Response) => res.redirect('confirmation')
+
+  private getChangeLocationUrl = (journey: AddTemporaryAbsenceJourney) => {
+    const { repeat, location } = journey
+
+    if (!repeat) {
+      if (location?.type === 'SAVED_LOCATION') {
+        return 'location#select-location'
+      }
+      if (location?.type === 'SEARCHED_ADDRESS') {
+        return 'location#search-address'
+      }
+      if (location?.type === 'ENTERED_ADDRESS') {
+        return 'location#enter-address'
+      }
+      if (location?.type === 'ENTERED_AREA') {
+        return 'location#enter-area'
+      }
+      return 'location'
+    }
+
+    return 'search-locations'
+  }
 }

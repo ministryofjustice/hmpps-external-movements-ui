@@ -139,7 +139,7 @@ test.describe('/add-temporary-absence/start-end-dates-and-times', () => {
     await testPage.hourField().fill('12')
     await testPage.clickContinue()
 
-    expect(page.url()).toMatch(/\/add-temporary-absence\/search-location/)
+    expect(page.url()).toMatch(/\/add-temporary-absence\/location/)
 
     // verify input values are persisted
     await page.goBack()

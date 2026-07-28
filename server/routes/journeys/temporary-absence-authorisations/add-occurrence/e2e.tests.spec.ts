@@ -12,14 +12,13 @@ import {
 } from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { stubGetAddress, stubSearchAddresses } from '../../../../../integration_tests/mockApis/osPlacesApi'
 import { signIn } from '../../../../../integration_tests/steps/signIn'
-import { AddTapOccurrenceSearchLocationPage } from './search-location/test.page'
+import { AddTapOccurrenceSearchLocationPage } from './location/test.page'
 import { AddTapOccurrenceSelectLocationPage } from './select-location/test.page'
 import { AddTapOccurrenceCommentsPage } from './comments/test.page'
 import { AddTapOccurrenceCheckAnswersPage } from './check-answers/test.page'
 import { AddTapOccurrenceConfirmationPage } from './confirmation/test.page'
 import { AddTapOccurrencePage } from './test.page'
 import { getApiBody } from '../../../../../integration_tests/mockApis/wiremock'
-import { AddTapOccurrenceEnterLocationPage } from './enter-location/test.page'
 
 const mockAuthorisation = () => {
   const authorisationId = uuidV4()
@@ -45,7 +44,10 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
       stubSearchAddresses('random', testSearchAddressResults),
       stubSearchAddresses('SW1H%209AJ', testSearchAddressResults), // query used by the module to check OS Places API availability
       stubGetAddress('1003', testSearchAddressResults[2]!),
-      stubGetLocations(),
+      stubGetLocations('LEI', {
+        version: 'version',
+        locations: [{ uprn: 9999, address: 'Saved Location, UK' }],
+      }),
     ])
   })
 
@@ -133,13 +135,12 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await selectLocationPage.newLocationRadio().click()
     await selectLocationPage.clickContinue()
 
-    await page.goto(`/${journeyId}/temporary-absence-authorisations/add-occurrence/search-location`)
     const searchLocationPage = await new AddTapOccurrenceSearchLocationPage(page).verifyContent()
     await searchLocationPage.searchField().fill('random')
     await searchLocationPage.selectAddress('Address 3, RS1 34T')
     await searchLocationPage.clickContinue()
 
-    const commentsPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/search-location/)
+    const commentsPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/location/)
     await commentsPage.commentsInput().fill('new comments')
     await commentsPage.clickContinue()
 
@@ -195,16 +196,13 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await selectLocationPage.newLocationRadio().click()
     await selectLocationPage.clickContinue()
 
-    await page.goto(`/${journeyId}/temporary-absence-authorisations/add-occurrence/search-location`)
     const searchLocationPage = await new AddTapOccurrenceSearchLocationPage(page).verifyContent()
-    await searchLocationPage.clickEnterManually()
+    await searchLocationPage.clickTab('Enter an address')
+    await searchLocationPage.line1Field().fill('1 Manual Street')
+    await searchLocationPage.cityField().fill('Manual City')
+    await searchLocationPage.clickContinue()
 
-    const enterLocationPage = await new AddTapOccurrenceEnterLocationPage(page).verifyContent()
-    await enterLocationPage.line1Field().fill('1 Manual Street')
-    await enterLocationPage.cityField().fill('Manual City')
-    await enterLocationPage.clickContinue()
-
-    const commentsPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/search-location/)
+    const commentsPage = await new AddTapOccurrenceCommentsPage(page).verifyContent(/location/)
     await commentsPage.commentsInput().fill('new comments')
     await commentsPage.clickContinue()
 
@@ -272,14 +270,11 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
     await checkAnswersPage.clickLink(/Change location$/)
     await selectLocationPage.newLocationRadio().click()
     await selectLocationPage.clickContinue()
-    await page.goto(`/${journeyId}/temporary-absence-authorisations/add-occurrence/search-location`)
     const searchLocationPage = await new AddTapOccurrenceSearchLocationPage(page).verifyContent()
-    await searchLocationPage.clickEnterManually()
-    const enterLocationPage = await new AddTapOccurrenceEnterLocationPage(page).verifyContent()
-    await enterLocationPage.line1Field().fill('1 Manual Street')
-    await enterLocationPage.cityField().fill('Manual City')
-    await enterLocationPage.postcodeField().fill('W1TH SP4C3 ')
-    await enterLocationPage.clickContinue()
+    await searchLocationPage.clickTab('Select a saved location')
+    await searchLocationPage.savedLocationDropdown().click()
+    await searchLocationPage.selectSavedLocation('Saved Location, UK')
+    await searchLocationPage.clickContinue()
 
     await checkAnswersPage.clickLink('Change comments')
     await commentsPage.commentsInput().fill('another comments')
@@ -299,8 +294,8 @@ test.describe('/temporary-absence-authorisations/add-occurrence/e2e', () => {
               start: '2001-01-03T05:00:00',
               end: '2001-01-03T09:30:00',
               location: {
-                address: '1 Manual Street, Manual City',
-                postcode: 'W1TH SP4C3',
+                address: 'Saved Location, UK',
+                uprn: 9999,
               },
               comments: 'another comments',
             },

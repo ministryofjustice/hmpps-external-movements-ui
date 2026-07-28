@@ -20,7 +20,24 @@ export class AddTapOccurrenceCommentsController {
   }
 
   private getBackUrl = (journey: JourneyData) => {
+    const { locationOption, location } = journey.addTapOccurrence!
     if (journey.isCheckAnswers) return 'check-answers'
-    return journey.addTapOccurrence!.locationOption === 'NEW' ? 'search-location' : 'select-location'
+    if (locationOption === 'NEW') {
+      if (location?.type === 'SAVED_LOCATION') {
+        return 'location#select-location'
+      }
+      if (location?.type === 'SEARCHED_ADDRESS') {
+        return 'location#search-address'
+      }
+      if (location?.type === 'ENTERED_ADDRESS') {
+        return 'location#enter-address'
+      }
+      if (location?.type === 'ENTERED_AREA') {
+        return 'location#enter-area'
+      }
+
+      return 'location'
+    }
+    return 'select-location'
   }
 }

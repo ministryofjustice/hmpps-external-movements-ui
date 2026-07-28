@@ -75,15 +75,11 @@ export const guard = {
   },
   'start-end-dates-and-times': (req: Request) =>
     get(req, '', 'repeat') === undefined ? '/single-or-repeating' : undefined,
-  'search-location': (req: Request) => (get(req, '', 'returnDate') ? undefined : '/start-end-dates-and-times'),
-  'enter-location': (req: Request) => {
-    if (req.journeyData.addTemporaryAbsence!.repeat) return checkRepeatAbsencesFilled(req)
-    return get(req, '', 'returnDate') ? undefined : '/end-date'
-  },
+  location: (req: Request) => (get(req, '', 'returnDate') ? undefined : '/start-end-dates-and-times'),
   'accompanied-or-unaccompanied': (req: Request) => {
     if (req.journeyData.addTemporaryAbsence!.repeat)
       return get(req, '', 'occurrences') ? undefined : '/match-absences-and-locations'
-    return get(req, '', 'location') ? undefined : '/search-location'
+    return get(req, '', 'location') ? undefined : '/location'
   },
   accompanied: (req: Request) =>
     get(req, 'accompaniedSubJourney', 'accompanied') ? undefined : '/accompanied-or-unaccompanied',

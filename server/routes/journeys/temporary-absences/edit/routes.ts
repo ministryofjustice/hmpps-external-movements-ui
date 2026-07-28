@@ -7,10 +7,9 @@ import { Page } from '../../../../services/auditService'
 import preventNavigationToExpiredJourneys from '../../../../middleware/journey/preventNavigationToExpiredJourneys'
 import { EditAbsenceCommentsRoutes } from './comments/routes'
 import { EditTransportRoutes } from './transport/routes'
-import { EditTapOccurrenceSearchLocationRoutes } from './search-location/routes'
 import { EditTapOccurrenceSelectLocationRoutes } from './select-location/routes'
-import { EditTapOccurrenceEnterLocationRoutes } from './enter-location/routes'
 import journeyStateGuard from '../../../../middleware/journey/journeyStateGuard'
+import { EditTapOccurrenceLocationRoutes } from './location/routes'
 
 export const EditTapOccurrenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -34,15 +33,14 @@ export const EditTapOccurrenceRoutes = (services: Services) => {
   router.use('/comments', EditAbsenceCommentsRoutes(services))
   router.use('/transport', EditTransportRoutes(services))
 
-  router.get('/location', (req, res) =>
+  router.get('/change-location', (req, res) =>
     res.redirect(
-      req.journeyData.updateTapOccurrence!.authorisation.locations.length <= 1 ? 'search-location' : 'select-location',
+      req.journeyData.updateTapOccurrence!.authorisation.locations.length <= 1 ? 'location' : 'select-location',
     ),
   )
 
   router.use('/select-location', EditTapOccurrenceSelectLocationRoutes(services))
-  router.use('/search-location', EditTapOccurrenceSearchLocationRoutes(services))
-  router.use('/enter-location', EditTapOccurrenceEnterLocationRoutes(services))
+  router.use('/location', EditTapOccurrenceLocationRoutes(services))
 
   return router
 }

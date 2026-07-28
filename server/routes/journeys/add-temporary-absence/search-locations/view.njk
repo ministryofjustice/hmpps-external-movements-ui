@@ -1,13 +1,13 @@
 {% extends "partials/layout.njk" %}
-{% from "dps/components/address-autosuggest/macro.njk" import addressAutosuggest %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
+{% set fullWidth = true %}
 {% set pageTitle = 'Search for a location - Add a temporary absence' %}
 
 {% block innerContent %}
   <div class="govuk-width-container">
     <span class="govuk-caption-l">Create a Temporary Absence</span>
-    <h1 class="govuk-heading-l"><label for="address-autosuggest-input">Add a location for this absence</label></h1>
+    <h1 class="govuk-heading-l">Add a location for this absence</h1>
 
     <p>You can add multiple locations if this absence will happen in multiple places.</p>
     <p>Enter a location manually if it:</p>
@@ -16,35 +16,19 @@
       <li>is not a specific address but a whole area (for example, York)</li>
     </ul>
 
-    <form method="post" class="govuk-!-width-full">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-      <div class="horizontal-form govuk-!-margin-bottom-5 govuk-!-width-full">
-        <div class="govuk-form-group govuk-!-width-three-quarters">
-          <div id="address-hint" class="govuk-hint">Enter an address or postcode</div>
-          <div id="address-input" class="govuk-!-width-full">
-            {{ addressAutosuggest({
-              classes: "govuk-!-width-full",
-              inputValue: inputValue,
-              uprn: uprn,
-              errorMessage: validationErrors | findError('address-autosuggest-input'),
-              findUrl: '/api/addresses/find'
-            }) }}
-          </div>
-        </div>
+    {% set postUrl = 'search-locations' %}
+    {% set locationButton %}
+      {{ govukButton({
+        classes: "govuk-button--secondary",
+        text: "Add location",
+        preventDoubleClick: true
+      }) }}
+    {% endset %}
+    {% include 'partials/selectLocationTab.njk' %}
 
-        {{ govukButton({
-          name: "add",
-          classes: "govuk-button--secondary moj-search__button",
-          text: "Add location",
-          preventDoubleClick: true
-        }) }}
-      </div>
-
-      <p class="govuk-!-margin-bottom-7">
-        <a class="govuk-link govuk-link--no-visited-state" href="enter-location">Enter a location manually</a>
-      </p>
-
-      {% if locations.length %}
+    {% if locations.length %}
+      <form method="post" class="govuk-!-width-full">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         <h2 class="govuk-heading-m">You have added {{ locations.length }} {{ "location" if locations.length === 1 else "locations" }}</h2>
 
         <div class="govuk-!-margin-bottom-6">
@@ -61,7 +45,7 @@
           text: "Continue",
           preventDoubleClick: true
         }) }}
-      {% endif %}
-    </form>
+      </form>
+    {% endif %}
   </div>
 {% endblock %}

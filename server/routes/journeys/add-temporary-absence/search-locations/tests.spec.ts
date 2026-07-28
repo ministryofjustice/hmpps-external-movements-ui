@@ -5,7 +5,10 @@ import componentsApi from '../../../../../integration_tests/mockApis/componentsA
 import { signIn } from '../../../../../integration_tests/steps/signIn'
 import { randomPrisonNumber, testSearchAddressResults } from '../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../integration_tests/mockApis/prisonerSearchApi'
-import { stubGetAllAbsenceTypes } from '../../../../../integration_tests/mockApis/externalMovementsApi'
+import {
+  stubGetAllAbsenceTypes,
+  stubGetLocations,
+} from '../../../../../integration_tests/mockApis/externalMovementsApi'
 import { injectJourneyData } from '../../../../../integration_tests/steps/journey'
 import { stubGetPrisonerImage } from '../../../../../integration_tests/mockApis/prisonApi'
 import { SearchLocationsPage } from './test.page'
@@ -33,6 +36,10 @@ test.describe('/add-temporary-absence/search-locations', () => {
       stubSearchAddresses('SW1H%209AJ', testSearchAddressResults), // query used by the module to check OS Places API availability
       stubGetAddress('1001', testSearchAddressResults[0]!),
       stubGetAddress('1002', testSearchAddressResults[1]!),
+      stubGetLocations('LEI', {
+        version: 'version',
+        locations: [{ uprn: 9999, address: 'Saved Location, UK' }],
+      }),
     ])
   })
 
@@ -54,7 +61,7 @@ test.describe('/add-temporary-absence/search-locations', () => {
     await page.goto(`/${journeyId}/add-temporary-absence/search-locations`)
   }
 
-  test('should try all cases', async ({ page }) => {
+  test('should search and select a UK address and proceed to accompanied-or-unaccompanied page', async ({ page }) => {
     const journeyId = uuidV4()
     await startJourney(page, journeyId)
 
@@ -88,13 +95,6 @@ test.describe('/add-temporary-absence/search-locations', () => {
     await expect(page.getByText('Address, RS1 34T')).toBeVisible()
     await expect(page.getByText('Address 2, RS1 34T')).toBeVisible()
 
-    // validation error on duplicate address
-    await testPage.searchField().fill('random')
-    await testPage.selectAddress('Address, RS1 34T')
-    await testPage.clickButton('Add location')
-    await testPage.link('Enter and select an address that has not been already added').click()
-    await expect(testPage.searchField()).toBeFocused()
-
     // remove an address
     await testPage.clickLink('Remove location 2')
     await expect(page.getByText('Address, RS1 34T')).toBeVisible()
@@ -102,6 +102,79 @@ test.describe('/add-temporary-absence/search-locations', () => {
 
     // verify next page routing
     await testPage.clickContinue()
+    expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
+  })
+
+  test('should search and select a location and proceed to accompanied-or-unaccompanied page', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    // verify page content
+    const testPage = await new SearchLocationsPage(page).verifyContent()
+    await testPage.clickTab('Select a saved location')
+
+    // verify validation error
+    await testPage.clickButton('Add location')
+    await testPage.link('Select a location').click()
+    await expect(testPage.savedLocationDropdown()).toBeFocused()
+
+    // verify next page routing
+    await testPage.savedLocationDropdown().click()
+    await testPage.selectSavedLocation('Saved Location, UK')
+    await testPage.clickButton('Add location')
+    await testPage.clickContinue()
+
+    expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
+  })
+
+  test('should enter an address and proceed to accompanied-or-unaccompanied page', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    // verify page content
+    const testPage = await new SearchLocationsPage(page).verifyContent()
+    await testPage.clickTab('Enter an address')
+
+    // verify validation error
+    await testPage.organisationNameField().fill('n'.repeat(41))
+    await testPage.line1Field().fill('1 Manual Street')
+    await testPage.postcodeField().fill('n'.repeat(13))
+    await testPage.clickButton('Add location')
+    await testPage.link('Description must be 40 characters or fewer').click()
+    await expect(testPage.organisationNameField()).toBeFocused()
+    await testPage.link('Enter town or city').click()
+    await expect(testPage.cityField()).toBeFocused()
+    await testPage.link('Postcode must be 12 characters or fewer').click()
+    await expect(testPage.postcodeField()).toBeFocused()
+
+    // verify next page routing
+    await testPage.organisationNameField().fill('Org Name')
+    await testPage.postcodeField().fill('RS1 34T')
+    await testPage.cityField().fill('Manual City')
+    await testPage.clickButton('Add location')
+    await testPage.clickContinue()
+
+    expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
+  })
+
+  test('should enter an area and proceed to accompanied-or-unaccompanied page', async ({ page }) => {
+    const journeyId = uuidV4()
+    await startJourney(page, journeyId)
+
+    // verify page content
+    const testPage = await new SearchLocationsPage(page).verifyContent()
+    await testPage.clickTab('Enter an area')
+
+    // verify validation error
+    await testPage.clickButton('Add location')
+    await testPage.link('Enter a description of the area').click()
+    await expect(testPage.areaField()).toBeFocused()
+
+    // verify next page routing
+    await testPage.areaField().fill('Some Area')
+    await testPage.clickButton('Add location')
+    await testPage.clickContinue()
+
     expect(page.url()).toMatch(/\/add-temporary-absence\/accompanied-or-unaccompanied/)
   })
 

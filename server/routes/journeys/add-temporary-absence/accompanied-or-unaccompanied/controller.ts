@@ -19,11 +19,23 @@ export class AccompaniedOrUnaccompaniedController {
   }
 
   getNormalPreviousPage = (journey: AddTemporaryAbsenceJourney) => {
-    if (!journey.repeat) {
-      if (journey.location?.id) return 'search-location'
-      return 'enter-location'
+    const { repeat, location, locations } = journey
+    if (!repeat) {
+      if (location?.type === 'SAVED_LOCATION') {
+        return 'location#select-location'
+      }
+      if (location?.type === 'SEARCHED_ADDRESS') {
+        return 'location#search-address'
+      }
+      if (location?.type === 'ENTERED_ADDRESS') {
+        return 'location#enter-address'
+      }
+      if (location?.type === 'ENTERED_AREA') {
+        return 'location#enter-area'
+      }
+      return 'location'
     }
-    if (journey.locations?.length === 1) return 'search-locations'
+    if (locations?.length === 1) return 'search-locations'
     return 'match-absences-and-locations'
   }
 }

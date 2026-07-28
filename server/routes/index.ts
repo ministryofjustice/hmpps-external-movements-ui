@@ -20,7 +20,6 @@ import { CreateDocumentsRoutes } from './create-documents/routes'
 import { TemporaryAbsenceScheduleEnquiryRoutes } from './temporary-absence-schedule-enquiry/routes'
 import { populateSwitchOffBanner } from '../middleware/populateSwitchOffBanner'
 import { ManageLocationsRoutes } from './manage-locations/routes'
-import { Feature, requireFeatureFlag } from '../utils/featureFlag'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
@@ -142,7 +141,6 @@ export default function routes(services: Services): Router {
   )
   router.use(
     '/manage-locations',
-    requireFeatureFlag(Feature.DEV_LED),
     requirePermissions('TAP', UserPermissionLevel.MANAGE),
     ManageLocationsRoutes(services),
   )

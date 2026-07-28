@@ -11,11 +11,47 @@ export class SearchLocationsPage extends BaseTestPage {
     })
   }
 
+  savedLocationDropdown() {
+    return this.dropdown('Search saved locations')
+  }
+
+  selectSavedLocation(label: string | RegExp) {
+    return this.page.getByText(label).first().click()
+  }
+
   searchField() {
-    return this.page.getByRole('combobox', { name: 'Add a location for this absence' }).first()
+    return this.page.getByRole('combobox', { name: 'Search and add a UK address' }).first()
   }
 
   async selectAddress(addressText: string) {
-    await this.page.locator('li', { hasText: addressText }).first().click()
+    await this.page.getByText(addressText).first().click()
+  }
+
+  organisationNameField() {
+    return this.textbox('Business or organisation name (optional)')
+  }
+
+  line1Field() {
+    return this.textbox('Address line 1 (optional)')
+  }
+
+  line2Field() {
+    return this.textbox('Address line 2 (optional)')
+  }
+
+  cityField() {
+    return this.textbox('Town or city')
+  }
+
+  countyField() {
+    return this.textbox('County (optional)')
+  }
+
+  postcodeField() {
+    return this.textbox('Postcode (optional)')
+  }
+
+  areaField() {
+    return this.textbox('Area description')
   }
 }

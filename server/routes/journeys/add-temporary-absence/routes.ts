@@ -21,15 +21,14 @@ import { StartEndDatesRoutes } from './start-end-dates/routes'
 import { RepeatingPatternRoutes } from './repeating-pattern/routes'
 import { FreeformSelectDaysRoutes } from './select-days-and-times/routes'
 import { CheckPatternRoutes } from './check-absences/routes'
-import { SearchLocationRoutes } from './search-location/routes'
 import { SelectDaysTimesWeeklyRoutes } from './select-days-times-weekly/routes'
 import { SearchLocationsRoutes } from './search-locations/routes'
 import { MatchAbsencesAndLocationsRoute } from './match-absences-and-locations/routes'
 import { EnterShiftPatternRoutes } from './enter-shift-pattern/routes'
 import { SelectDaysTimesBiWeeklyRoutes } from './select-days-times-biweekly/routes'
-import { EnterLocationRoutes } from './enter-location/routes'
 import { guard } from './stateRules'
 import { MultiAbsencesPerDayRoutes } from './multi-absences-per-day/routes'
+import { TapLocationRoutes } from './location/routes'
 
 export const AddTemporaryAbsenceRoutes = (services: Services) => {
   const { router, get } = BaseRouter()
@@ -77,8 +76,7 @@ export const AddTemporaryAbsenceRoutes = (services: Services) => {
   router.use('/reason', AbsenceReasonRoutes(services))
   router.use('/single-or-repeating', SingleOrRepeatingRoutes())
   router.use('/start-end-dates-and-times', StartEndDateTimeRoutes())
-  router.use('/search-location', SearchLocationRoutes(services))
-  router.use('/enter-location', EnterLocationRoutes())
+  router.use('/location', TapLocationRoutes(services))
   router.use('/accompanied-or-unaccompanied', AccompaniedOrUnaccompaniedRoutes())
   router.use('/accompanied', AccompaniedRoutes(services))
   router.use('/transport', TransportRoutes(services))

@@ -51,9 +51,20 @@
   {% if showBreadcrumbs and breadcrumbs and(not backUrl) %}
     <div class="govuk-!-display-none-print">
       <div>
-        {{ govukBreadcrumbs({
-          items: breadcrumbs.items
-        }) }}
+        {% if breadcrumbs.items.length === 1 %}
+          {{ govukBreadcrumbs({
+            items: [breadcrumbs.items[0], {
+              text: 'External movements',
+              href: '/'
+            }]
+          }) }}
+        {% else %}
+            {{ govukBreadcrumbs({
+              items: breadcrumbs.items
+            }) }}
+        {% endif  %}
+
+
       </div>
     </div>
   {% endif %}

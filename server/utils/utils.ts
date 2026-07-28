@@ -133,10 +133,10 @@ export const parseQueryParams = (queries: {
   return searchParams.length ? `?${searchParams.join('&')}` : ''
 }
 
-export const parseAddress = (location: Address) => ({
+export const parseAddress = (location: Address & { uprn?: number }) => ({
   address: trimAddress(location),
   ...(location.description ? { description: location.description.trim() } : {}),
-  ...(location.id ? { uprn: location.id } : {}),
+  ...((location.id ?? location.uprn) ? { uprn: location.id ?? location.uprn } : {}),
   ...(location.postcode ? { postcode: location.postcode.trim() } : {}),
 })
 

@@ -79,7 +79,7 @@ test.describe('/temporary-absences/edit/select-location', () => {
   })
 
   const startJourney = async (page: Page, journeyId: string) => {
-    await page.goto(`/${journeyId}/temporary-absences/start-edit/${occurrenceId}/location`)
+    await page.goto(`/${journeyId}/temporary-absences/start-edit/${occurrenceId}/change-location`)
   }
 
   test('should select existing location and confirm to save change', async ({ page }) => {
@@ -140,7 +140,7 @@ test.describe('/temporary-absences/edit/select-location', () => {
     await expect(testPage.button('Continue', true)).toBeVisible()
     await testPage.clickContinue()
 
-    expect(page.url()).toMatch(/\/temporary-absences\/edit\/search-location/)
+    expect(page.url()).toMatch(/\/temporary-absences\/edit\/location/)
 
     // verify input values are persisted
     await testPage.clickLink(/^Back$/)

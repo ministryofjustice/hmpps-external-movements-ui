@@ -9,6 +9,7 @@ import { stubGetPrisonerImage } from '../../../../integration_tests/mockApis/pri
 import {
   stubGetAbsenceCategory,
   stubGetAllAbsenceTypes,
+  stubGetLocations,
   stubGetReferenceData,
   stubPostCreateTap,
 } from '../../../../integration_tests/mockApis/externalMovementsApi'
@@ -27,7 +28,7 @@ import { AbsenceCommentsPage } from './comments/test.page'
 import { AddTapCYAPage } from './check-answers/test.page'
 import { getApiBody } from '../../../../integration_tests/mockApis/wiremock'
 import { stubGetAddress, stubSearchAddresses } from '../../../../integration_tests/mockApis/osPlacesApi'
-import { SearchLocationPage } from './search-location/test.page'
+import { TapLocationPage } from './location/test.page'
 import { StartEndDatesPage } from './start-end-dates/test.page'
 import { RepeatingPatternPage } from './repeating-pattern/test.page'
 import { MultiAbsencesPerDayPage } from './multi-absences-per-day/test.page'
@@ -55,6 +56,10 @@ test.describe('/add-temporary-absence/e2e', () => {
       stubSearchAddresses('qwerty', testSearchAddressResults),
       stubSearchAddresses('SW1H%209AJ', testSearchAddressResults), // query used by the module to check OS Places API availability
       stubGetAddress('1001', testSearchAddressResults[0]!),
+      stubGetLocations('LEI', {
+        version: 'version',
+        locations: [{ uprn: 9999, address: 'Saved Location, UK' }],
+      }),
       stubPostCreateTap(prisonNumber),
     ])
   })
@@ -238,9 +243,9 @@ test.describe('/add-temporary-absence/e2e', () => {
       await startDatePage.clickContinue()
 
       await page.goto(`/${journeyId}/add-temporary-absence/check-answers`)
-      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/search-location/)
+      expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/location/)
 
-      const searchLocationPage = new SearchLocationPage(page)
+      const searchLocationPage = new TapLocationPage(page)
       await searchLocationPage.searchField().fill('qwerty')
       await searchLocationPage.selectAddress('Address, RS1 34T')
       await searchLocationPage.clickContinue()
@@ -324,9 +329,9 @@ test.describe('/add-temporary-absence/e2e', () => {
     await startDatePage.endMinuteField().fill('30')
     await startDatePage.clickContinue()
 
-    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/search-location/)
+    expect(page.url().split('?')[0]).toMatch(/\/add-temporary-absence\/location/)
 
-    const searchLocationPage = new SearchLocationPage(page)
+    const searchLocationPage = new TapLocationPage(page)
     await searchLocationPage.searchField().fill('qwerty')
     await searchLocationPage.selectAddress('Address, RS1 34T')
     await searchLocationPage.clickContinue()
