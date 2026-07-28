@@ -25,7 +25,7 @@ export class AddTapOccurrenceLocationController {
 
     res.render('temporary-absence-authorisations/add-occurrence/location/view', {
       backUrl: 'select-location',
-      locations: locationOptions,
+      locationOptions,
       uprn: location?.id ? String(location?.id) : null,
       inputValue: res.locals.formResponses?.['address-autosuggest-input'] ?? location?.address,
       description: res.locals.formResponses?.['description'] ?? enteredLocation?.description,

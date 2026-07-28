@@ -27,7 +27,7 @@ export class EditTapOccurrenceLocationController {
 
     res.render('temporary-absences/edit/location/view', {
       backUrl: authorisation.locations.length <= 1 ? backUrl : 'select-location',
-      locations: locationOptions,
+      locationOptions,
       uprn: location?.id ? String(location?.id) : null,
       inputValue: res.locals.formResponses?.['address-autosuggest-input'] ?? location?.address,
       description: res.locals.formResponses?.['description'] ?? enteredLocation?.description,

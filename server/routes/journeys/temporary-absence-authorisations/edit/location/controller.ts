@@ -25,7 +25,7 @@ export class EditTapAuthorisationLocationController {
 
     res.render('temporary-absence-authorisations/edit/location/view', {
       backUrl,
-      locations: locationOptions,
+      locationOptions,
       uprn: location?.id ? String(location?.id) : null,
       inputValue: res.locals.formResponses?.['address-autosuggest-input'] ?? location?.address,
       description: res.locals.formResponses?.['description'] ?? enteredLocation?.description,

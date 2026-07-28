@@ -26,7 +26,7 @@ export class TapLocationController {
 
     res.render('add-temporary-absence/location/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'start-end-dates-and-times'),
-      locations: locationOptions,
+      locationOptions,
       uprn: location?.id ? String(location?.id) : null,
       inputValue: res.locals.formResponses?.['address-autosuggest-input'] ?? location?.address,
       description: res.locals.formResponses?.['description'] ?? enteredLocation?.description,
