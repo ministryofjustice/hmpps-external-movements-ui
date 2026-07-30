@@ -1,5 +1,6 @@
 import { PermissionsService } from '@ministryofjustice/hmpps-prison-permissions-lib'
 import { OsPlacesAddressService } from '@ministryofjustice/hmpps-connect-dps-shared-items'
+import { telemetry } from '@ministryofjustice/hmpps-azure-telemetry'
 import logger from '../../logger'
 import { dataAccess } from '../data'
 import AuditService from './auditService'
@@ -8,7 +9,6 @@ import config from '../config'
 import PrisonerSearchApiService from './apis/prisonerSearchService'
 import PrisonApiService from './apis/prisonApiService'
 import DocumentGenerationService from './apis/documentGenerationService'
-import { telemetryWrapper } from '../utils/telemetryWrapper'
 
 export const services = () => {
   const { applicationInfo, hmppsAuditClient, osPlacesApiClient, authenticationClient, cacheStore } = dataAccess()
@@ -17,8 +17,7 @@ export const services = () => {
     prisonerSearchConfig: config.apis.prisonerSearchApi,
     authenticationClient,
     logger,
-    // @ts-expect-error cast hmpps-azure-telemetry into applicationinsight telemetry
-    telemetryClient: telemetryWrapper(),
+    telemetryClient: telemetry,
   })
 
   return {

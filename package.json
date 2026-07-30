@@ -85,7 +85,7 @@
     "@ministryofjustice/hmpps-connect-dps-components": "^6.3.0",
     "@ministryofjustice/hmpps-connect-dps-shared-items": "^4.2.0",
     "@ministryofjustice/hmpps-monitoring": "^2.1.0",
-    "@ministryofjustice/hmpps-prison-permissions-lib": "^3.1.0",
+    "@ministryofjustice/hmpps-prison-permissions-lib": "^4.2.0",
     "@ministryofjustice/hmpps-rest-client": "^2.2.0",
     "@sentry/node": "^10.68.0",
     "body-parser": "^2.3.0",
@@ -120,7 +120,7 @@
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
     "@ministryofjustice/hmpps-precommit-hooks": "^3.0.1",
     "@playwright/test": "^1.62.0",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^7.0.0",
     "@tsconfig/node22": "^22.0.5",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
@@ -165,6 +165,6 @@
   "overrides": {
     "@opentelemetry/core": "2.10.0",
     "brace-expansion": "5.0.8",
-    "js-yaml": "5.2.1"
+    "js-yaml": "5.2.2"
   }
 }
