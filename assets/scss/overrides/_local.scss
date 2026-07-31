@@ -124,17 +124,23 @@
   }
 }
 
-
-
 .add-another-form-freeform-pattern-offset {
   .moj-add-another__remove-button {
-    transform: translateY(128px);
+    transform: translateY(75px);
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
   }
 }
 
 .add-another-form-shift-pattern-offset {
   .moj-add-another__remove-button {
     transform: translateY(75px);
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
   }
 }
 
