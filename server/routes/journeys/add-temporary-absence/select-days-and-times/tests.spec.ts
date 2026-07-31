@@ -116,12 +116,6 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await expect(testPage.button('Remove')).toHaveCount(0)
 
     // verify validation error
-    await testPage.clickButton('Add another occurrence')
-    await testPage.clickButton('Add another occurrence')
-    await testPage.clickButton('Add another occurrence')
-    await testPage.clickButton('Add another occurrence')
-    await testPage.clickButton('Add another occurrence')
-
     await testPage.releaseDateField(0).fill('31/12/2000')
     await testPage.releaseHourField(0).fill('x')
     await testPage.releaseMinuteField(0).fill('00')
@@ -129,6 +123,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await testPage.returnHourField(0).fill('10')
     await testPage.returnMinuteField(0).fill('')
 
+    await testPage.clickButton('Add another occurrence')
     await testPage.releaseDateField(1).fill('1/1/2001')
     await testPage.releaseHourField(1).fill('10')
     await testPage.releaseMinuteField(1).fill('00')
@@ -136,6 +131,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await testPage.returnHourField(1).fill('10')
     await testPage.returnMinuteField(1).fill('00')
 
+    await testPage.clickButton('Add another occurrence')
     await testPage.releaseDateField(2).fill('2/1/2001')
     await testPage.releaseHourField(2).fill('10')
     await testPage.releaseMinuteField(2).fill('00')
@@ -143,6 +139,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await testPage.returnHourField(2).fill('10')
     await testPage.returnMinuteField(2).fill('00')
 
+    await testPage.clickButton('Add another occurrence')
     await testPage.releaseDateField(3).fill('1/1/2001')
     await testPage.releaseHourField(3).fill('10')
     await testPage.releaseMinuteField(3).fill('00')
@@ -150,6 +147,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await testPage.returnHourField(3).fill('10')
     await testPage.returnMinuteField(3).fill('00')
 
+    await testPage.clickButton('Add another occurrence')
     await testPage.releaseDateField(4).fill('1/1/2001')
     await testPage.releaseHourField(4).fill('10')
     await testPage.releaseMinuteField(4).fill('00')
@@ -157,6 +155,7 @@ test.describe('/add-temporary-absence/select-days-and-time', () => {
     await testPage.returnHourField(4).fill('17')
     await testPage.returnMinuteField(4).fill('30')
 
+    await testPage.clickButton('Add another occurrence')
     await testPage.releaseHourField(5).fill('10')
     await testPage.releaseMinuteField(5).fill('00')
     await testPage.returnHourField(5).fill('17')
