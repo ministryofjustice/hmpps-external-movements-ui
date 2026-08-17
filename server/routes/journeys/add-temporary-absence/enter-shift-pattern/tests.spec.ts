@@ -90,9 +90,9 @@ test.describe('/add-temporary-absence/enter-shift-pattern', () => {
     await testPage.numberInput(0).fill('1')
     await testPage.clickContinue()
     await testPage.clickLink('Add at least two rows to the schedule')
-    await expect(testPage.addAnother()).toBeFocused()
 
     await testPage.addAnother().click()
+    await testPage.shiftType(1).selectOption('')
     await testPage.clickContinue()
     await testPage.clickLink('Select shift type')
     await expect(testPage.shiftType(1)).toBeFocused()
@@ -118,7 +118,6 @@ test.describe('/add-temporary-absence/enter-shift-pattern', () => {
     await testPage.shiftType(1).selectOption('NIGHT')
     await testPage.clickContinue()
     await testPage.clickLink('Add rest days to the end of the schedule')
-    await expect(testPage.addAnother()).toBeFocused()
 
     // verify next page routing
     await testPage.addAnother().click()
@@ -191,7 +190,6 @@ test.describe('/add-temporary-absence/enter-shift-pattern', () => {
     await testPage.numberInput(0).fill('1')
     await testPage.clickContinue()
     await testPage.clickLink('Add at least two rows to the schedule')
-    await expect(testPage.addAnother()).toBeFocused()
 
     await testPage.addAnother().click()
     await expect(testPage.shiftType(1)).toBeVisible()

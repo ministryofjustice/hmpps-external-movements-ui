@@ -74,10 +74,10 @@ export class FreeformSelectDaysController {
 
     // fallback no-js handling for add/remove actions
     req.body.absences ??= [emptyInputs]
-    if (req.body.add !== undefined) {
-      req.body.absences.push(emptyInputs)
-    } else if (req.body.remove !== undefined) {
+    if (req.body.remove !== undefined) {
       req.body.absences.splice(Number(req.body.remove), 1)
+    } else {
+      req.body.absences.push(emptyInputs)
     }
     // Always redirect back to input even if we didn't find an action, which should be impossible but there is a small
     // possibility if JS is disabled after a page load or the user somehow removes all identities.

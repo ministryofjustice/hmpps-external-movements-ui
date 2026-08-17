@@ -63,11 +63,11 @@ export class EnterShiftPatternController {
 
     // fallback no-js handling for add/remove actions
     req.body.items ??= [emptyInputs]
-    if (req.body.add !== undefined) {
+    if (req.body.remove !== undefined) {
+      req.body.items.splice(Number(req.body.remove), 1)
+    } else {
       // @ts-expect-error raw inputs have different data types from validated inputs for save action
       req.body.items.push(emptyInputs)
-    } else if (req.body.remove !== undefined) {
-      req.body.items.splice(Number(req.body.remove), 1)
     }
     // Always redirect back to input even if we didn't find an action, which should be impossible but there is a small
     // possibility if JS is disabled after a page load or the user somehow removes all identities.
