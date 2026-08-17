@@ -1,13 +1,14 @@
 import * as mojFrontend from '@ministryofjustice/frontend'
 
 export const initAddAnotherForm = () => {
-  const anotherForm = document.querySelector('.add-another-form')
+  const anotherForm = document.querySelector('.moj-add-another__items')
   if (anotherForm) {
     new MutationObserver(_mutations => {
       document.querySelectorAll(`[data-module="moj-date-picker"]`).forEach(el => {
+        console.log(el)
         el.removeAttribute('data-moj-date-picker-init')
         const wrapper = el.querySelector('.moj-datepicker__wrapper')
-        wrapper.replaceWith(wrapper.querySelector('.moj-js-datepicker-input'))
+        if (wrapper) wrapper.replaceWith(wrapper.querySelector('.moj-js-datepicker-input'))
         new mojFrontend.DatePicker(el)
       })
       anotherForm.dispatchEvent(new Event('components-init'))
