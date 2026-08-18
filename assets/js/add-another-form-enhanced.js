@@ -5,7 +5,6 @@ export const initAddAnotherForm = () => {
   if (anotherForm) {
     new MutationObserver(_mutations => {
       document.querySelectorAll(`[data-module="moj-date-picker"]`).forEach(el => {
-        console.log(el)
         el.removeAttribute('data-moj-date-picker-init')
         const wrapper = el.querySelector('.moj-datepicker__wrapper')
         if (wrapper) wrapper.replaceWith(wrapper.querySelector('.moj-js-datepicker-input'))
