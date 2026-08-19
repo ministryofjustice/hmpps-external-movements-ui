@@ -3,11 +3,7 @@ import { test, Page, expect } from '@playwright/test'
 import auth from '../../../../../../integration_tests/mockApis/auth'
 import componentsApi from '../../../../../../integration_tests/mockApis/componentsApi'
 import { signIn } from '../../../../../../integration_tests/steps/signIn'
-import {
-  randomPrisonNumber,
-  testTapAuthorisation,
-  testTapOccurrence,
-} from '../../../../../../integration_tests/data/testData'
+import { testTapAuthorisation, testTapOccurrence } from '../../../../../../integration_tests/data/testData'
 import { stubGetPrisonerDetails } from '../../../../../../integration_tests/mockApis/prisonerSearchApi'
 import {
   stubGetTapAuthorisation,
@@ -25,7 +21,6 @@ test.describe('/temporary-absences/edit/start-end-dates', () => {
 })
 
 test.describe('/temporary-absences/edit/start-end-dates', () => {
-  const prisonNumber = randomPrisonNumber()
   const authorisationId = uuidV4()
   const occurrenceId = uuidV4()
 
@@ -34,7 +29,7 @@ test.describe('/temporary-absences/edit/start-end-dates', () => {
     id: authorisationId,
     repeat: true,
     start: '2001-01-02',
-    end: '2001-01-05',
+    end: '2001-04-05',
     occurrences: [
       {
         id: 'occurrence-id-1',
@@ -62,7 +57,7 @@ test.describe('/temporary-absences/edit/start-end-dates', () => {
       auth.stubSignIn(),
       componentsApi.stubComponents(),
       stubGetPrisonerImage(),
-      stubGetPrisonerDetails({ prisonerNumber: prisonNumber }),
+      stubGetPrisonerDetails(),
       stubGetTapAuthorisation(authorisation),
       stubGetTapOccurrence(occurrence),
       stubPutTapOccurrence(occurrenceId, {
@@ -154,6 +149,11 @@ test.describe('/temporary-absences/edit/start-end-dates', () => {
     await testPage.clickButton('Confirm and save')
 
     await testPage.link('Return date must be on or after start date').click()
+    await expect(testPage.endDateField()).toBeFocused()
+
+    await testPage.endDateField().fill(`5/2/2001`)
+    await testPage.clickButton('Confirm and save')
+    await testPage.link('The temporary absence end date cannot be more than 31 days after the start date').click()
     await expect(testPage.endDateField()).toBeFocused()
 
     // verify next page routing
