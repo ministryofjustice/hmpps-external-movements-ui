@@ -6,9 +6,11 @@ import { signIn } from '../steps/signIn'
 import { stubGetAllAbsenceTypesError } from '../mockApis/externalMovementsApi'
 import { randomPrisonNumber } from '../data/testData'
 import { stubGetPrisonerDetails } from '../mockApis/prisonerSearchApi'
+import { resetStubs } from '../mockApis/wiremock'
 
 test.describe('test error handlers', () => {
   test.beforeEach(async ({ page }) => {
+    await resetStubs()
     await Promise.all([auth.stubSignIn(), componentsApi.stubComponents()])
     await signIn(page)
   })
