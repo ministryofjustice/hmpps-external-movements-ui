@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { $ZodSuperRefineIssue } from 'zod/v4/core'
-import { format } from 'date-fns'
+import { differenceInDays, format } from 'date-fns'
 import { Request, Response } from 'express'
 import { createSchema } from '../../../../../middleware/validation/validationMiddleware'
 import { validateTransformDate } from '../../../../../utils/validations/validateDatePicker'
@@ -119,6 +119,15 @@ export const schema = async (req: Request, _res: Response) =>
           path: ['returnDate'],
         })
         return z.NEVER
+      }
+
+      if (differenceInDays(parsedReturnDate.data, parsedStartDate.data) > 31) {
+        ctx.issues.push({
+          code: 'custom',
+          message: 'The temporary absence end date cannot be more than 31 days after the start date',
+          path: ['returnDate'],
+          input: ctx.value,
+        })
       }
 
       if (parsedHour?.success && parsedMinute?.success && parsedReturnHour?.success && parsedReturnMinute?.success) {
