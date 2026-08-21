@@ -88,7 +88,7 @@ export declare global {
           [key: string]: unknown
         }
       }
-      prisonerDetails?: PrisonerDetails
+      prisonerDetails?: PrisonerDetails & { alertFlags?: AlertFlagLabel[] }
       formResponses?: Record<string, unknown>
       appInsightsConnectionString?: string
       appInsightsApplicationName?: string

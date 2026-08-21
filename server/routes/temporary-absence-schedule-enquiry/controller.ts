@@ -8,6 +8,7 @@ import { components } from '../../@types/externalMovements'
 import { getApiUserErrorMessage } from '../../utils/utils'
 import { setPaginationLocals } from '../../views/partials/simplePagination/utils'
 import { absenceCategorisationMapper } from '../common/utils'
+import { getAlertFlags } from '../../utils/alertFlags'
 
 export class TemporaryAbsenceScheduleEnquiryController {
   constructor(readonly externalMovementsService: ExternalMovementsService) {}
@@ -16,6 +17,9 @@ export class TemporaryAbsenceScheduleEnquiryController {
 
   GET = async (req: Request, res: Response) => {
     res.locals.prisonerDetails = req.middleware!.prisonerData!
+    if (res.locals.prisonerDetails.alerts?.length) {
+      res.locals.prisonerDetails.alertFlags = getAlertFlags(res.locals.prisonerDetails.alerts)
+    }
     res.setAuditDetails.prisonNumber(res.locals.prisonerDetails.prisonerNumber)
 
     const resQuery = res.locals['query'] as ResQuerySchemaType

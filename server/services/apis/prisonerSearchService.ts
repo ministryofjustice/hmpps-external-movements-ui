@@ -2,10 +2,12 @@ import { Response as SuperAgentResponse } from 'superagent'
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import { PermissionsService } from '@ministryofjustice/hmpps-prison-permissions-lib'
 import { HmppsUser } from '@ministryofjustice/hmpps-prison-permissions-lib/dist/types/internal/user/HmppsUser'
+import { AlertFlagLabel } from '@ministryofjustice/hmpps-connect-dps-shared-items'
 import Prisoner from './model/prisoner'
 import CustomRestClient, { ApiRequestContext } from '../../data/customRestClient'
 import config from '../../config'
 import logger from '../../../logger'
+import { getAlertFlags } from '../../utils/alertFlags'
 
 export default class PrisonerSearchApiService {
   private prisonerSearchApiClient: CustomRestClient
@@ -31,7 +33,10 @@ export default class PrisonerSearchApiService {
     )
   }
 
-  async getPrisonerDetails(context: ApiRequestContext, prisonerNumber: string): Promise<Prisoner> {
+  async getPrisonerDetails(
+    context: ApiRequestContext,
+    prisonerNumber: string,
+  ): Promise<Prisoner & { alertFlags?: AlertFlagLabel[] }> {
     const prisoner = await this.prisonerSearchApiClient
       .withContext(context)
       .get<Prisoner>({ path: `/prisoner/${prisonerNumber}` })
@@ -42,7 +47,9 @@ export default class PrisonerSearchApiService {
       requestDependentOn: [],
     })
 
-    if (permission['prisoner:base-record:read']) return prisoner
+    const alertFlags = prisoner.alerts?.length ? getAlertFlags(prisoner.alerts) : null
+
+    if (permission['prisoner:base-record:read']) return { ...prisoner, ...(alertFlags ? { alertFlags } : {}) }
 
     return {
       ...prisoner,
