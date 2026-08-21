@@ -14,4 +14,11 @@ export default interface Prisoner {
   previousPrisonLeavingDate?: string
   lastPrisonId?: string
   releaseDate?: string
+
+  alerts?: {
+    alertType: string
+    alertCode: string
+    active: boolean
+    expired: boolean
+  }[]
 }

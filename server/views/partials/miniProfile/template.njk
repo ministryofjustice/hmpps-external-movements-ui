@@ -1,3 +1,5 @@
+{% from "dps/components/alert-flag/macro.njk" import alertFlag %}
+
 <section aria-label="Prisoner details" role="region">
   <div class="mini-profile govuk-!-margin-top-7" data-qa="mini-profile">
       {% set formattedName =  prisonerDetails | lastNameCommaFirstName %}
@@ -32,7 +34,23 @@
             </li>
           {% endif %}
         </ul>
+
+        {% if prisonerDetails.alertFlags %}
+          <div class="govuk-!-margin-top-4">
+            {% for alert in prisonerDetails.alertFlags %}
+              {{ alertFlag({
+                alert: alert,
+                href: prisonerProfileUrl + "/prisoner/" + prisonerDetails.prisonerNumber + "/alerts",
+                attributes: {
+                  'data-prisoner-number': prisonerDetails.prisonerNumber
+                }
+              }) }}
+            {% endfor %}
+          </div>
+        {% endif %}
+
       </div>
     </div>
+
   </div>
 </section>
