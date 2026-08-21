@@ -32,9 +32,17 @@ export const getAlertFlags = (alerts: Alert[]) => {
 
   if (activeAlertCodes.find(code => code === 'RROTL')) {
     alertFlags.push({
-      alertCodes: ['ROTL'],
+      alertCodes: ['RROTL'],
       classes: 'dps-alert-status dps-alert-status--risk',
       label: 'Restricted ROTL',
+    })
+  }
+
+  if (activeAlertCodes.find(code => code === 'SROTL')) {
+    alertFlags.push({
+      alertCodes: ['SROTL'],
+      classes: 'dps-alert-status dps-alert-status--risk',
+      label: 'Standard ROTL',
     })
   }
 
