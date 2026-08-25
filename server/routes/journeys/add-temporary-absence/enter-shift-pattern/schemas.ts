@@ -153,7 +153,7 @@ const shiftItemsSchema = z.array(
 
 export const schema = async (req: Request<unknown, unknown, { save?: string }>) => {
   return createSchema({
-    add: z.any().optional(),
+    'add-shift-add-another': z.any().optional(),
     save: z.any().optional(),
     remove: z.any().optional(),
     items:
@@ -175,13 +175,13 @@ export const schema = async (req: Request<unknown, unknown, { save?: string }>) 
         ctx.addIssue({
           code: 'custom',
           message: 'Add rest days to the end of the schedule',
-          path: ['add'],
+          path: ['add-shift-add-another-button'],
         })
       } else if (val.items.length === 1) {
         ctx.addIssue({
           code: 'custom',
           message: 'Add at least two rows to the schedule',
-          path: ['add'],
+          path: ['add-shift-add-another-button'],
         })
       }
     }

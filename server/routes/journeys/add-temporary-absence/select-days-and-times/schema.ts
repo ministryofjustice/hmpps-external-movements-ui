@@ -230,7 +230,7 @@ export const schema = async (
         : absenceDateTimeSchema(from, to, maxReturnDate),
     ),
     save: z.string().optional(),
-    add: z.string().optional(),
+    'add-occurrence-add-another': z.string().optional(),
     remove: z.string().optional(),
   }).transform(val => ({
     ...val,

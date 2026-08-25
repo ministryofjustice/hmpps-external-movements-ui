@@ -76,7 +76,7 @@ export class FreeformSelectDaysController {
     req.body.absences ??= [emptyInputs]
     if (req.body.remove !== undefined) {
       req.body.absences.splice(Number(req.body.remove), 1)
-    } else {
+    } else if (req.body['add-occurrence-add-another'] !== undefined) {
       req.body.absences.push(emptyInputs)
     }
     // Always redirect back to input even if we didn't find an action, which should be impossible but there is a small

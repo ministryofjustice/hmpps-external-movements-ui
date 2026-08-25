@@ -65,7 +65,7 @@ export class EnterShiftPatternController {
     req.body.items ??= [emptyInputs]
     if (req.body.remove !== undefined) {
       req.body.items.splice(Number(req.body.remove), 1)
-    } else {
+    } else if (req.body['add-shift-add-another'] !== undefined) {
       // @ts-expect-error raw inputs have different data types from validated inputs for save action
       req.body.items.push(emptyInputs)
     }
