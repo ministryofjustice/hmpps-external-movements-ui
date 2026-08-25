@@ -8,6 +8,7 @@ import { ManageTapAuthorisationRoutes } from './temporary-absence-authorisations
 import { requirePermissions } from '../../middleware/permissions/requirePermissions'
 import { UserPermissionLevel } from '../../interfaces/hmppsUser'
 import { TapDocumentsRoutes } from './tap-documents/routes'
+import { getAlertFlags } from '../../utils/alertFlags'
 
 export const JourneyRoutes = (services: Services) => {
   const router = Router({ mergeParams: true })
@@ -17,6 +18,9 @@ export const JourneyRoutes = (services: Services) => {
   router.get('*any', (req, res, next) => {
     if (req.journeyData.prisonerDetails) {
       res.locals.prisonerDetails = req.journeyData.prisonerDetails
+      if (res.locals.prisonerDetails.alerts?.length) {
+        res.locals.prisonerDetails.alertFlags = getAlertFlags(res.locals.prisonerDetails.alerts)
+      }
     }
     next()
   })

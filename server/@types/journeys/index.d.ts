@@ -9,6 +9,13 @@ export interface PrisonerDetails {
   prisonName?: string | undefined
   cellLocation?: string | undefined
   prisonId?: string
+
+  alerts?: {
+    alertType: string
+    alertCode: string
+    active: boolean
+    expired: boolean
+  }[]
 }
 
 export type Address = {
