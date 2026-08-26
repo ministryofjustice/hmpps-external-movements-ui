@@ -22,7 +22,7 @@
       <search class="moj-search govuk-!-width-two-thirds">
         <form method="GET">
           {{ hiddenInputs(query | getQueryEntries(['history'])) }}
-          <div class="govuk-input__wrapper moj-search__input-wrapper">
+          <div class="search-wrapper moj-search__input-wrapper">
             {{ govukInput({
               name: 'searchTerm',
               classes: "moj-search__input",
@@ -34,7 +34,7 @@
             }) }}
 
             {{ govukButton({
-              classes: "moj-search__button govuk-!-margin-top-7",
+              classes: "search-button",
               text: "Search",
               preventDoubleClick: true
             }) }}

@@ -207,7 +207,7 @@
         <search class="moj-search govuk-!-width-two-thirds">
           <form method="GET" action="#view-occurrences">
             {{ hiddenInputs(query | getQueryEntries(['history'])) }}
-            <div class="govuk-input__wrapper moj-search__input-wrapper">
+            <div class="search-wrapper moj-search__input-wrapper">
               {{ mojDatePicker({
                 id: "dateFrom",
                 name: "dateFrom",
@@ -228,11 +228,11 @@
                 formGroup: { classes: 'govuk-!-margin-left-3 govuk-!-margin-right-3' }
               }) }}
               {{ govukButton({
-                classes: "moj-search__button govuk-!-margin-top-6",
+                classes: "search-button",
                 text: "Apply",
                 preventDoubleClick: true
               }) }}
-              <div class="govuk-!-margin-top-6">
+              <div>
                 <a class="govuk-link govuk-link--no-visited-state govuk-body no-label-form-clear-link govuk-!-margin-left-5" href="?clear=true#view-occurrences">Clear</a>
               </div>
             </div>
