@@ -26,22 +26,23 @@ cp .env.example .env
 ```
 
 Update the environment variables in `.env` to match your environment.
-
-### Running Locally
-Using Docker compose:
-
+Dev environment secrets can be retrieved with the following commands:
 ```bash
-docker compose pull
-docker compose up
+kubectl -n hmpps-external-movements-dev get secret hmpps-external-movements-ui-client-creds -o json | jq -r ".data | map_values(@base64d)"
+kubectl -n hmpps-external-movements-dev get secret hmpps-external-movements-ui-auth-code -o json | jq -r ".data | map_values(@base64d)"
+kubectl -n hmpps-external-movements-dev get secret os-data-hub -o json | jq -r ".data | map_values(@base64d)"
 ```
 
-Or run the application directly:
+### Running Locally
+After setting up `.env` with the necessary credentials from dev environment, run the application directly:
 
 ```bash
 npm run start:dev
 ```
 
 The application will be available at http://localhost:3000
+
+As copied from `.env.example`, the API endpoint would be point at the dev environment. Edit `.env` accordingly if pointing to a local instance of API service is preferred.
 
 ## Development
 
