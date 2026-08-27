@@ -51,6 +51,7 @@ export default {
     digitalPrison: get('DPS_HOME_PAGE_URL', 'http://localhost:3001', requiredInProduction),
     prisonerProfile: get('PRISONER_PROFILE_URL', 'http://localhost:3001', requiredInProduction),
     documentGeneration: get('DOCUMENT_GENERATION_UI_URL', 'http://localhost:3001', requiredInProduction),
+    transferScheduler: get('TRANSFER_SCHEDULER_UI_URL', 'http://localhost:3001', requiredInProduction),
   },
   apis: {
     hmppsAuth: {
