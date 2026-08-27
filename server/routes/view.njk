@@ -56,6 +56,27 @@
                 </div>
               {% endif %}
 
+              {% if transferEnabled %}
+                {% if user | hasPermission('Transfer', 'MANAGE') %}
+                  <div class="govuk-grid-column-one-third card-group__item">
+                    <div class="card card--clickable">
+                      <h2 class="govuk-heading-m card__heading">
+                        <a class="govuk-link govuk-link--no-visited-state card__link" href="{{ transferUrl }}">Add and manage transfers</a>
+                      </h2>
+                      <p class="govuk-body card__description">Schedule new transfers and waitlists. View and manage scheduled transfers and waitlists.</p>
+                    </div>
+                  </div>
+                {% elseif user | hasPermission('Transfer', 'VIEW') %}
+                  <div class="govuk-grid-column-one-third card-group__item">
+                    <div class="card card--clickable">
+                      <h2 class="govuk-heading-m card__heading">
+                        <a class="govuk-link govuk-link--no-visited-state card__link" href="{{ transferUrl }}">View transfers</a>
+                      </h2>
+                      <p class="govuk-body card__description">View scheduled and planned transfers.</p>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endif %}
             </div>
           </div>
         </div>
