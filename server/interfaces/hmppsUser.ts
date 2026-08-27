@@ -70,5 +70,6 @@ export type HmppsUser = (PrisonUser | ProbationUser | ExternalUser | AzureADUser
   getActiveCaseloadId: () => string | undefined
   permissions: {
     TAP: UserPermissionLevel
+    Transfer: UserPermissionLevel
   }
 }

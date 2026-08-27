@@ -17,6 +17,7 @@ generic-service:
     EXTERNAL_MOVEMENTS_API_URL: 'https://external-movements-api-dev.hmpps.service.justice.gov.uk'
     DOCUMENT_GENERATION_API_URL: 'https://document-generation-api-dev.hmpps.service.justice.gov.uk'
     DOCUMENT_GENERATION_UI_URL: 'https://document-generation-dev.hmpps.service.justice.gov.uk'
+    TRANSFER_SCHEDULER_UI_URL: "https://transfer-scheduler-dev.hmpps.service.justice.gov.uk"
     ENVIRONMENT_NAME: DEV
     SENTRY_ENVIRONMENT: DEV
     AUDIT_ENABLED: "true"
