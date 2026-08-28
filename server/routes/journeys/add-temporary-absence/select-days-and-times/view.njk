@@ -2,9 +2,9 @@
 {% from "partials/custom-date-picker/macro.njk" import mojDatePicker %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
-{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "partials/shift-preview/macro.njk" import shiftPreview %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{%- from "moj/components/add-another/macro.njk" import mojAddAnother -%}
 
 {% set fullWidth = true %}
 {% set pageTitle = 'Enter absence dates - Add a temporary absence' %}
@@ -33,17 +33,12 @@
       </div>
     </div>
 
-    <form method="post" data-module="moj-add-another" class="add-another-form add-another-form-freeform-pattern-offset">
+    <form method="post" class="add-another-form add-another-form-freeform-pattern-offset">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+      {% set fieldsets = [] %}
       {% for absence in absences %}
-        {% call govukFieldset({
-          classes: "moj-add-another__item",
-          legend: {
-            html: '<h2 class="govuk-fieldset__legend--m">Add absence date and time</h2>',
-            classes: "moj-add-another__title",
-            isPageHeading: false
-          }
-        }) %}
+        {% set fieldsetHtml %}
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-quarter">
               {{ mojDatePicker({
@@ -128,25 +123,19 @@
               }) }}
             </div>
           </div>
+        {% endset %}
 
-          {% if absences.length > 1 %}
-            {{ govukButton({
-              name: "remove",
-              value: loop.index0,
-              text: "Remove",
-              classes: "govuk-button--secondary moj-add-another__remove-button"
-            }) }}
-          {% endif %}
-        {% endcall %}
+        {% set fieldsets = (fieldsets.push({
+          fieldset: { html: fieldsetHtml }
+        }), fieldsets) %}
       {% endfor %}
 
-      <div class="moj-button-action">
-        {{ govukButton({
-          name: "add",
-          text: "Add another occurrence",
-          classes: "govuk-button--secondary moj-add-another__add-button govuk-!-margin-bottom-4"
-        }) }}
-      </div>
+      {{ mojAddAnother({
+        id: "add-occurrence",
+        itemLabel: "occurrence",
+        layout: 'inline',
+        items: fieldsets
+      }) }}
 
       {{ govukButton({
         name: "save",
@@ -281,9 +270,10 @@
       setupDynamicPreview(updatePreview)
       setupAutoFillReturnDate()
 
-      document.querySelector(".add-another-form").addEventListener('components-init', () => {
+      document.querySelector(".moj-add-another__items").addEventListener('components-init', () => {
         setupAutoFillReturnDate()
         setupDynamicPreview(updatePreview)
+        updatePreview()
       })
     }
   </script>

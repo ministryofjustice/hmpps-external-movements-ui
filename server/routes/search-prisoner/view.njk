@@ -19,26 +19,28 @@
     </div>
 
     <div class="block-background govuk-!-padding-6 govuk-!-margin-bottom-7">
-      <div class="moj-search govuk-!-width-two-thirds">
+      <search class="moj-search govuk-!-width-two-thirds">
         <form method="GET">
           {{ hiddenInputs(query | getQueryEntries(['history'])) }}
-          {{ govukInput({
-            name: 'searchTerm',
-            classes: "moj-search__input",
-            hint: {
-              text: "Enter name or prison number. A maximum of 10 results can be returned."
-            },
-            value: searchTerm,
-            errorMessage: validationErrors | findError('searchTerm')
-          }) }}
+          <div class="search-wrapper moj-search__input-wrapper">
+            {{ govukInput({
+              name: 'searchTerm',
+              classes: "moj-search__input",
+              hint: {
+                text: "Enter name or prison number. A maximum of 10 results can be returned."
+              },
+              value: searchTerm,
+              errorMessage: validationErrors | findError('searchTerm')
+            }) }}
 
-          {{ govukButton({
-            classes: "moj-search__button",
-            text: "Search",
-            preventDoubleClick: true
-          }) }}
+            {{ govukButton({
+              classes: "search-button",
+              text: "Search",
+              preventDoubleClick: true
+            }) }}
+          </div>
         </form>
-      </div>
+      </search>
     </div>
 
     {% if not searchTerm %}

@@ -93,6 +93,7 @@ test.describe('/add-temporary-absence/enter-shift-pattern', () => {
     await expect(testPage.addAnother()).toBeFocused()
 
     await testPage.addAnother().click()
+    await testPage.shiftType(1).selectOption('')
     await testPage.clickContinue()
     await testPage.clickLink('Select shift type')
     await expect(testPage.shiftType(1)).toBeFocused()

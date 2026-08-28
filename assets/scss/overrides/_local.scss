@@ -160,3 +160,15 @@
   display: inline-block;
   min-width: 100px;
 }
+
+.search-button {
+  display: inline-block;
+  width: auto;
+  margin-bottom: 2px;
+  margin-left: 10px;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: flex-end;
+}
