@@ -24,7 +24,7 @@ export const schema = async (req: Request, _res: Response) =>
       .substring(0, 10)
 
     const parsedStartDate = validateTransformDate(
-      () => (date: Date) => date.toISOString().substring(0, 10) <= firstStartDate,
+      (date: Date) => date.toISOString().substring(0, 10) <= firstStartDate,
       'Enter or select a start date',
       'Enter or select a valid start date',
       `The start date must be on or before the first occurrence ${format(firstStartDate, 'd/M/yyyy')}`,
@@ -33,7 +33,7 @@ export const schema = async (req: Request, _res: Response) =>
     parsedStartDate.error?.issues?.forEach(issue => ctx.addIssue({ ...issue, path: ['start'] } as $ZodSuperRefineIssue))
 
     const parsedEndDate = validateTransformDate(
-      () => (date: Date) => date.toISOString().substring(0, 10) >= lastEndDate,
+      (date: Date) => date.toISOString().substring(0, 10) >= lastEndDate,
       'Enter or select a return date',
       'Enter or select a valid return date',
       `The end date must be on or after the last occurrence ${format(lastEndDate, 'd/M/yyyy')}`,
