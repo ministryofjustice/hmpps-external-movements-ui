@@ -9,7 +9,7 @@ export const schema = createSchema({
   end: z.string().optional(),
 }).transform(({ start, end }, ctx) => {
   const parsedStartDate = validateTransformDate(
-    checkTodayOrFuture,
+    checkTodayOrFuture(),
     'Enter or select a start date',
     'Enter or select a valid start date',
     'Start date must be today or in the future',
@@ -18,7 +18,7 @@ export const schema = createSchema({
   parsedStartDate.error?.issues?.forEach(issue => ctx.addIssue({ ...issue, path: ['start'] } as $ZodSuperRefineIssue))
 
   const parsedEndDate = validateTransformDate(
-    checkTodayOrFuture,
+    checkTodayOrFuture(),
     'Enter or select a return date',
     'Enter or select a valid return date',
     'Return date must be today or in the future',

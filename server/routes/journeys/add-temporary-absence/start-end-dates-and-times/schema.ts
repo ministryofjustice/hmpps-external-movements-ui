@@ -14,7 +14,7 @@ export const schema = createSchema({
   returnTimeMinute: z.string().optional(),
 }).transform(({ startDate, startTimeHour, startTimeMinute, returnDate, returnTimeHour, returnTimeMinute }, ctx) => {
   const parsedStartDate = validateTransformDate(
-    checkTodayOrFuture,
+    checkTodayOrFuture(),
     'Enter or select a start date',
     'Enter or select a valid start date',
     'Start date must be today or in the future',
@@ -61,7 +61,7 @@ export const schema = createSchema({
   }
 
   const parsedReturnDate = validateTransformDate(
-    checkTodayOrFuture,
+    checkTodayOrFuture(),
     'Enter or select a return date',
     'Enter or select a valid return date',
     'Return date must be on or after today',
