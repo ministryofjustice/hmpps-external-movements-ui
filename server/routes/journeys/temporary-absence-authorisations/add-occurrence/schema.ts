@@ -18,7 +18,7 @@ export const schema = async (req: Request, _res: Response) =>
     const { start, end } = req.journeyData.addTapOccurrence!.authorisation
 
     const parsedStartDate = validateTransformDate(
-      (date: Date) => date.toISOString().substring(0, 10) >= start,
+      () => (date: Date) => date.toISOString().substring(0, 10) >= start,
       'Enter or select a start date',
       'Enter or select a valid start date',
       `Start date must be on or after ${format(start, 'd/M/yyyy')}`,
@@ -65,7 +65,7 @@ export const schema = async (req: Request, _res: Response) =>
     }
 
     const parsedReturnDate = validateTransformDate(
-      (date: Date) => date.toISOString().substring(0, 10) <= end,
+      () => (date: Date) => date.toISOString().substring(0, 10) <= end,
       'Enter or select a return date',
       'Enter or select a valid return date',
       `Return date must be on or after ${format(end, 'd/M/yyyy')}`,

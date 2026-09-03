@@ -18,7 +18,7 @@ const absenceDateTimeSchema = (start: string, end: string, maxReturnDate: string
     returnTimeMinute: z.string().optional(),
   }).transform(({ startDate, returnDate, startTimeHour, startTimeMinute, returnTimeHour, returnTimeMinute }, ctx) => {
     const parsedStartDate = validateTransformDate(
-      (date: Date) => {
+      () => (date: Date) => {
         const dateString = format(date, 'yyyy-MM-dd')
         return dateString >= start && dateString <= end
       },
@@ -32,7 +32,7 @@ const absenceDateTimeSchema = (start: string, end: string, maxReturnDate: string
     )
 
     const parsedReturnDate = validateTransformDate(
-      (date: Date) => {
+      () => (date: Date) => {
         const dateString = format(date, 'yyyy-MM-dd')
         return dateString >= start && dateString <= maxReturnDate
       },
