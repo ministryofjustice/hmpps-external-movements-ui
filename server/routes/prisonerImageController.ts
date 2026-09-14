@@ -4,7 +4,7 @@ import PrisonApiService from '../services/apis/prisonApiService'
 
 const placeHolderImage = path.join(process.cwd(), '/dist/assets/images/prisoner-profile-image.png')
 
-export default class PrisonerImageRoutes {
+export default class PrisonerImageController {
   constructor(private readonly prisonerImageService: PrisonApiService) {}
 
   GET = async (req: Request<{ prisonNumber: string }>, res: Response) =>

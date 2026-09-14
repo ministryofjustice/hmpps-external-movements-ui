@@ -12,10 +12,20 @@ export default function setUpWebSecurity(): Router {
   // 2. https://www.npmjs.com/package/helmet
   router.use((_req: Request, res: Response, next: NextFunction) => {
     res.locals.cspNonce = crypto.randomBytes(16).toString('hex')
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
     next()
   })
   router.use(
     helmet({
+      strictTransportSecurity: {
+        maxAge: 63072000,
+        includeSubDomains: true,
+        preload: true,
+      },
+      xFrameOptions: { action: 'deny' },
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+      crossOriginResourcePolicy: { policy: 'same-site' },
+      xXssProtection: false,
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
