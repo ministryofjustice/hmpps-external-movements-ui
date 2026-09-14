@@ -36,6 +36,7 @@ export default class PrisonerSearchApiService {
   async getPrisonerDetails(
     context: ApiRequestContext,
     prisonerNumber: string,
+    throwExceptionOnNoPermission: boolean = false,
   ): Promise<Prisoner & { alertFlags?: AlertFlagLabel[] }> {
     const prisoner = await this.prisonerSearchApiClient
       .withContext(context)
@@ -50,6 +51,8 @@ export default class PrisonerSearchApiService {
     const alertFlags = prisoner.alerts?.length ? getAlertFlags(prisoner.alerts) : null
 
     if (permission['prisoner:base-record:read']) return { ...prisoner, ...(alertFlags ? { alertFlags } : {}) }
+
+    if (throwExceptionOnNoPermission) throw new Error('No permission')
 
     return {
       ...prisoner,
