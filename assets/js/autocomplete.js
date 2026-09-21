@@ -33,6 +33,8 @@ function AutoComplete(meta) {
   var autocompleteElements = this.meta.content.split(',')
   autocompleteElements.forEach(el => {
     var selectElement = document.querySelector(`#${el}`)
+    if (!selectElement) return
+
     accessibleAutocomplete.enhanceSelectElement({
       selectElement,
       showAllValues: true,
