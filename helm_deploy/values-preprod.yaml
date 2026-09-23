@@ -17,6 +17,7 @@ generic-service:
     EXTERNAL_MOVEMENTS_API_URL: 'https://external-movements-api-preprod.hmpps.service.justice.gov.uk'
     DOCUMENT_GENERATION_API_URL: 'https://document-generation-api-preprod.hmpps.service.justice.gov.uk'
     DOCUMENT_GENERATION_UI_URL: 'https://document-generation-preprod.hmpps.service.justice.gov.uk'
+    TRANSFER_SCHEDULER_UI_URL: "https://transfer-scheduler-preprod.hmpps.service.justice.gov.uk"
     ENVIRONMENT_NAME: PRE-PRODUCTION
     SENTRY_ENVIRONMENT: PRE-PRODUCTION
     AUDIT_ENABLED: "true"

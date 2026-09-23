@@ -204,36 +204,40 @@
 
     {% if result.repeat %}
       <div class="govuk-!-padding-0 govuk-!-margin-bottom-7">
-        <div class="moj-search govuk-!-width-two-thirds">
+        <search class="moj-search govuk-!-width-two-thirds">
           <form method="GET" action="#view-occurrences">
             {{ hiddenInputs(query | getQueryEntries(['history'])) }}
-            {{ mojDatePicker({
-              id: "dateFrom",
-              name: "dateFrom",
-              label: {
-                text: 'Start date from'
-              },
-              value: dateFrom,
-              classes: 'hmpps-datepicker--fixed-width moj-search__input'
-            }) }}
-            {{ mojDatePicker({
-              id: "dateTo",
-              name: "dateTo",
-              label: {
-                text: 'End date to'
-              },
-              value: dateTo,
-              classes: 'hmpps-datepicker--fixed-width moj-search__input',
-              formGroup: { classes: 'govuk-!-margin-left-3 govuk-!-margin-right-3' }
-            }) }}
-            {{ govukButton({
-              classes: "moj-search__button",
-              text: "Apply",
-              preventDoubleClick: true
-            }) }}
-            <a class="govuk-link govuk-link--no-visited-state govuk-body no-label-form-clear-link govuk-!-margin-left-5" href="?clear=true#view-occurrences">Clear</a>
+            <div class="search-wrapper moj-search__input-wrapper">
+              {{ mojDatePicker({
+                id: "dateFrom",
+                name: "dateFrom",
+                label: {
+                  text: 'Start date from'
+                },
+                value: dateFrom,
+                classes: 'hmpps-datepicker--fixed-width moj-search__input'
+              }) }}
+              {{ mojDatePicker({
+                id: "dateTo",
+                name: "dateTo",
+                label: {
+                  text: 'End date to'
+                },
+                value: dateTo,
+                classes: 'hmpps-datepicker--fixed-width moj-search__input',
+                formGroup: { classes: 'govuk-!-margin-left-3 govuk-!-margin-right-3' }
+              }) }}
+              {{ govukButton({
+                classes: "search-button",
+                text: "Apply",
+                preventDoubleClick: true
+              }) }}
+              <div>
+                <a class="govuk-link govuk-link--no-visited-state govuk-body no-label-form-clear-link govuk-!-margin-left-5" href="?clear=true#view-occurrences">Clear</a>
+              </div>
+            </div>
           </form>
-        </div>
+        </search>
       </div>
     {% endif %}
 

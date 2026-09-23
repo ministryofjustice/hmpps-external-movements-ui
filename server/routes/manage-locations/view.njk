@@ -194,26 +194,28 @@
 
   <h2 class="govuk-heading-m">You have {{ locationCount }} save {{ 'location' if locationCount === 1 else 'locations' }}</h2>
   {% if locationCount %}
-    <div class="moj-search govuk-!-width-two-thirds govuk-!-margin-bottom-6">
+    <search class="moj-search govuk-!-width-two-thirds govuk-!-margin-bottom-6">
       <form method="GET">
         {{ hiddenInputs(query | getQueryEntries(['history'])) }}
-        {{ govukInput({
-          name: 'searchTerm',
-          classes: "moj-search__input",
-          label: {
-            text: "Search saved locations"
-          },
-          value: searchTerm,
-          errorMessage: validationErrors | findError('searchTerm')
-        }) }}
+        <div class="search-wrapper moj-search__input-wrapper">
+          {{ govukInput({
+            name: 'searchTerm',
+            classes: "moj-search__input",
+            label: {
+              text: "Search saved locations"
+            },
+            value: searchTerm,
+            errorMessage: validationErrors | findError('searchTerm')
+          }) }}
 
-        {{ govukButton({
-          classes: "moj-search__button",
-          text: "Search",
-          preventDoubleClick: true
-        }) }}
+          {{ govukButton({
+            classes: "search-button",
+            text: "Search",
+            preventDoubleClick: true
+          }) }}
+        </div>
       </form>
-    </div>
+    </search>
 
     {% if locations.length %}
       <div class="govuk-grid-row">

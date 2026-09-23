@@ -20,10 +20,13 @@ import { CreateDocumentsRoutes } from './create-documents/routes'
 import { TemporaryAbsenceScheduleEnquiryRoutes } from './temporary-absence-schedule-enquiry/routes'
 import { populateSwitchOffBanner } from '../middleware/populateSwitchOffBanner'
 import { ManageLocationsRoutes } from './manage-locations/routes'
+import config from '../config'
+import sanitiseUrl from '../middleware/sanitiseUrl'
 
 export default function routes(services: Services): Router {
   const { router, get } = BaseRouter()
 
+  router.use(sanitiseUrl)
   router.use(populateUserPermissions)
   router.use(breadcrumbs())
   router.use(
@@ -87,8 +90,12 @@ export default function routes(services: Services): Router {
   })
 
   get('/', Page.HOME_PAGE, async (_req, res) => {
+    const enabledServices = res.locals.feComponents?.sharedData?.services?.map(({ id }) => id)
+
     res.render('view', {
       showBreadcrumbs: true,
+      transferEnabled: enabledServices?.includes('transfer-scheduler'),
+      transferUrl: config.serviceUrls.transferScheduler,
     })
   })
 

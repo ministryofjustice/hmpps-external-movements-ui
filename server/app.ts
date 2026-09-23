@@ -22,7 +22,7 @@ import type { Services } from './services'
 import logger from '../logger'
 import { auditPageViewMiddleware } from './middleware/audit/auditPageViewMiddleware'
 import { auditApiCallMiddleware } from './middleware/audit/auditApiCallMiddleware'
-import PrisonerImageRoutes from './routes/prisonerImageRoutes'
+import PrisonerImageController from './routes/prisonerImageController'
 import { handleApiError } from './middleware/validation/handleApiError'
 import { permissionsMiddleware } from './middleware/permissions/permissionsMiddleware'
 import { AuthorisedRoles } from './middleware/permissions/populateUserPermissions'
@@ -68,8 +68,6 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCurrentUser())
   app.use(jsonErrorMiddleware)
 
-  app.get('/prisoner-image/:prisonNumber', new PrisonerImageRoutes(services.prisonApiService).GET)
-
   app.get('/api/addresses/find/:query', async (req: Request<{ query: string }>, res: Response) => {
     try {
       const results = await services.osPlacesAddressService.getAddressesMatchingQuery(req.params.query, {
@@ -111,6 +109,9 @@ export default function createApp(services: Services): express.Application {
       prisonApiConfig: config.apis.prisonApi,
     }),
   )
+
+  app.get('/prisoner-image/:prisonNumber', new PrisonerImageController(services.prisonApiService).GET)
+
   app.use(populateEnabledFeatures)
 
   app.use(addUsernameAndCaseloadToTelemetry())

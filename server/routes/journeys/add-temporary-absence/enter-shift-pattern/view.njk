@@ -2,10 +2,10 @@
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "partials/validatedTimeInput/macro.njk" import validatedTimeInput %}
 {% from "partials/shift-preview/macro.njk" import shiftPreview %}
+{%- from "moj/components/add-another/macro.njk" import mojAddAnother -%}
 
 {% extends "partials/layout.njk" %}
 
@@ -30,12 +30,19 @@
       }) }}
     </div>
   </div>
-  <form method="post" data-module="moj-add-another" class="add-another-form add-another-form-shift-pattern-offset">
+  <form method="post" class="add-another-form-shift-pattern-offset">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+    {% if validationErrors | findError("add") %}
+      <p id="items-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{ validationErrors | findErrorMessage("add") }}
+      </p>
+    {% endif %}
+
+    {% set fieldsets = [] %}
+
     {% for item in items %}
-      {% call govukFieldset({
-          classes: "moj-add-another__item"
-        }) %}
+      {% set fieldsetHtml %}
       <div class="govuk-grid-row shift-row">
         <div class="govuk-grid-column-one-half unset-width">
           {{ govukSelect({
@@ -127,23 +134,18 @@
           }) }}
         </div>
       </div>
-
-      {% if items.length > 1 %}
-        {{ govukButton({
-              name: "remove",
-              value: loop.index0,
-              text: "Remove",
-              classes: "govuk-button--secondary moj-add-another__remove-button"
-            }) }}
-      {% endif %}
-      {% endcall %}
+      {% endset %}
+      {% set fieldsets = (fieldsets.push({
+        fieldset: { html: fieldsetHtml }
+      }), fieldsets) %}
     {% endfor %}
 
-    {% if validationErrors | findError("add") %}
-      <p id="items-error" class="govuk-error-message">
-        <span class="govuk-visually-hidden">Error:</span> {{ validationErrors | findErrorMessage("add") }}
-      </p>
-    {% endif %}
+    {{ mojAddAnother({
+      id: "add-shift",
+      itemLabel: "row",
+      layout: 'inline',
+      items: fieldsets
+    }) }}
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
@@ -154,14 +156,6 @@
       </div>
     </div>
 
-    <div class="moj-button-action">
-      {{ govukButton({
-          name: "add",
-          id: "add",
-          text: "Add another row",
-          classes: "govuk-button--secondary moj-add-another__add-button govuk-!-margin-bottom-4"
-        }) }}
-    </div>
 
     {{ govukButton({
         name: "save",
@@ -260,7 +254,10 @@
 
       updatePreview()
       setupToggleStartReturnTimeAndPreview(updatePreview)
-      document.querySelector(".add-another-form").addEventListener('components-init', () => setupToggleStartReturnTimeAndPreview(updatePreview))
+      document.querySelector(".moj-add-another__items").addEventListener('components-init', () => {
+        setupToggleStartReturnTimeAndPreview(updatePreview)
+        updatePreview()
+      })
     }
   </script>
 {% endblock %}
