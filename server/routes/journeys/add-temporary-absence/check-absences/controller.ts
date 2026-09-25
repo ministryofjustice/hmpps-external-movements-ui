@@ -6,11 +6,13 @@ import { getOccurrencesToMatch } from '../utils'
 export class CheckPatternController {
   GET = async (req: Request, res: Response) => {
     req.journeyData.addTemporaryAbsence!.isCheckPattern = true
+    const periods = this.getPeriod(req)
 
     res.render('add-temporary-absence/check-absences/view', {
       backUrl: AddTapFlowControl.getBackUrl(req, 'repeating-pattern'),
       patternType: req.journeyData.addTemporaryAbsence!.patternType,
-      periods: this.getPeriod(req),
+      periods,
+      hasNoAbsence: periods.flatMap(({ absences }) => absences).length === 0,
     })
   }
 

@@ -67,6 +67,8 @@ test.describe('/add-temporary-absence/check-absences', () => {
 
     await testPage.verifyLink('Change dates and times (Month 3 of 3: March 2001)', /select-days-and-times\/3/)
     await testPage.verifyAnswer(/Friday 16 March to(.+)?Saturday 17 March/, /Start time: 23:00(.+)?Return time: 04:30/)
+
+    await expect(testPage.continueButton()).toBeEnabled()
   })
 
   test('should show weekly absences', async ({ page }) => {
@@ -110,5 +112,37 @@ test.describe('/add-temporary-absence/check-absences', () => {
     expect(await page.getByText(/Wednesday 17 January to(.+)?Thursday 18 January/)).toHaveCount(0)
 
     await testPage.verifyLink('Go back to change this schedule', /(select-days-times-weekly|multi-absences-per-day)/)
+
+    await expect(testPage.continueButton()).toBeEnabled()
+  })
+
+  test('should show error when there is no absence in the selected date range', async ({ page }) => {
+    const journeyId = uuidV4()
+    await page.goto(`/${journeyId}/add-temporary-absence/start/${prisonNumber}`)
+    await injectJourneyData(page, journeyId, {
+      addTemporaryAbsence: {
+        absenceType: {
+          code: 'PP',
+          description: 'Police production',
+        },
+        repeat: true,
+        start: '2001-01-01',
+        end: '2001-01-02',
+        patternType: 'WEEKLY',
+        weeklyPattern: [{ day: 3, overnight: false, startTime: '10:00', returnTime: '17:30' }],
+      },
+    })
+
+    await page.goto(`/${journeyId}/add-temporary-absence/check-absences`)
+
+    // verify page content
+    const testPage = await new CheckPatternPage(page).verifyContent()
+
+    expect(
+      await page.getByText(
+        'The days chosen for this absence do not match the dates selected. Review the dates and days.',
+      ),
+    ).toBeVisible()
+    await expect(testPage.continueButton()).toBeDisabled()
   })
 })
