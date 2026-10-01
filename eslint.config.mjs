@@ -3,12 +3,7 @@ import hmppsConfig from '@ministryofjustice/eslint-config-hmpps'
 export default [
   ...hmppsConfig({
     extraIgnorePaths: ['assets', 'playwright-report'],
-    extraPathsAllowingDevDependencies: [
-      '**/*.spec.ts',
-      '**/*.page.ts',
-      '**/playwright*.config.ts',
-      '.allowed-scripts.mjs',
-    ],
+    extraPathsAllowingDevDependencies: ['**/*.spec.ts', '**/*.page.ts', '**/playwright*.config.ts'],
   }),
   {
     rules: {
