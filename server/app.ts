@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express'
 import { getFrontendComponents, retrieveCaseLoadData } from '@ministryofjustice/hmpps-connect-dps-components'
 import * as Sentry from '@sentry/node'
+import { telemetryMiddleware } from '@ministryofjustice/hmpps-azure-telemetry'
 import config from './config'
 
 import nunjucksSetup from './utils/nunjucksSetup'
@@ -28,7 +29,6 @@ import { permissionsMiddleware } from './middleware/permissions/permissionsMiddl
 import { AuthorisedRoles } from './middleware/permissions/populateUserPermissions'
 import { handleJsonErrorResponse, jsonErrorMiddleware } from './middleware/handleJsonErrorResponse'
 import { populateEnabledFeatures } from './utils/featureFlag'
-import addUsernameAndCaseloadToTelemetry from './utils/azureAppInsights'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -114,7 +114,11 @@ export default function createApp(services: Services): express.Application {
 
   app.use(populateEnabledFeatures)
 
-  app.use(addUsernameAndCaseloadToTelemetry())
+  app.use(
+    telemetryMiddleware.addUserMetadataToTelemetry({
+      getAttributes: (req: Request) => ({ username: req.user?.username }),
+    }),
+  )
 
   app.get(/(.*)/, permissionsMiddleware)
   app.use(routes(services))

@@ -24,12 +24,12 @@
     "clean": "rm -rf dist test_results",
     "rebuild": "npm run clean && npm i && npm run build",
     "swagger": "npx openapi-typescript https://external-movements-api-dev.hmpps.service.justice.gov.uk/v3/api-docs > ./server/@types/externalMovements/index.d.ts && eslint --fix \"./server/@types/externalMovements/index.d.ts\"",
-    "setup": "npm ci && hmpps-npm-script-run-allowlist",
+    "setup": "npm ci",
     "todo-reminder": "grep -r -n --color=always --include=\"*.ts\" \"// TODO:.*\" ./server ./integration_tests || true"
   },
   "engines": {
     "node": "^24",
-    "npm": "^11"
+    "npm": "^12"
   },
   "jest": {
     "transform": {
@@ -117,7 +117,6 @@
     "@emnapi/runtime": "1.11.3",
     "@jgoz/esbuild-plugin-typecheck": "^5.0.0",
     "@ministryofjustice/eslint-config-hmpps": "^1.0.3",
-    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
     "@ministryofjustice/hmpps-precommit-hooks": "^3.0.2",
     "@playwright/test": "^1.63.0",
     "@testing-library/jest-dom": "^7.0.1",
@@ -165,5 +164,12 @@
   "overrides": {
     "@opentelemetry/core": "2.11.0",
     "js-yaml": "5.4.2"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true,
+    "dtrace-provider@0.8.8": false,
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.3": true,
+    "unrs-resolver@1.12.2": true
   }
 }
