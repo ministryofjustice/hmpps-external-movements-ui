@@ -89,7 +89,7 @@ export default function routes(services: Services): Router {
     next()
   })
 
-  get('/', Page.HOME_PAGE, async (_req, res) => {
+  get('/', Page.HOME_PAGE, populateSwitchOffBanner, async (_req, res) => {
     const enabledServices = res.locals.feComponents?.sharedData?.services?.map(({ id }) => id)
 
     res.render('view', {
@@ -103,7 +103,6 @@ export default function routes(services: Services): Router {
     '/temporary-absences-home',
     Page.TAP_HOME_PAGE,
     requirePermissions('TAP', UserPermissionLevel.VIEW_ONLY),
-    populateSwitchOffBanner,
     async (_req, res) => {
       res.render('view-tap', {
         showBreadcrumbs: true,
