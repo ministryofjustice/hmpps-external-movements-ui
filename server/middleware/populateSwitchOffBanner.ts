@@ -7,47 +7,24 @@ export type SwitchOffBanner = {
 
 export const populateSwitchOffBanner = (_req: Request, res: Response, next: NextFunction) => {
   if (
-    [
-      'HVI',
-      'TCI',
-      'SUI',
-      'NSI',
-      'FDI',
-      'KMI',
-      'KVI',
-      'LYI',
-      'UPI',
-      'SPI',
-      'GNI',
-      'EHI',
-      'HDI',
-      'ESI',
-      'LNI',
-      'AGI',
-      'HBI',
-      'WII',
-    ].includes(res.locals.user.getActiveCaseloadId() ?? '')
+    ['LEI', 'PNI', 'WWI', 'DMI', 'BAI', 'BZI', 'SUI', 'FBI', 'NMI', 'ACI', 'PBI', 'HPI'].includes(
+      res.locals.user.getActiveCaseloadId() ?? '',
+    )
   ) {
     const dateString = format(new Date(), 'yyyy-MM-dd')
 
-    if (dateString < '2026-04-21') {
+    if (dateString >= '2026-10-20') {
       res.locals.switchOffBanner = {
-        html: 'Following the rollout of the temporary absence service on DPS, the corresponding TAP NOMIS screens will be switched off at your prison on 21st April. This means that from this date, you will only be able to use DPS to create and manage temporary absences and generate documents. Further information about access and guidance can be found on our <a class="govuk-link" target="_blank" href="https://justiceuk.sharepoint.com/sites/prisons-digital/SitePages/External%20Movements%20-%20Homepage.aspx">SharePoint</a> page.',
-      }
-    } else if (dateString < '2026-05-21') {
-      res.locals.switchOffBanner = {
-        html: 'You must now use DPS to create and manage temporary absences and generate documents. The temporary absence screens in NOMIS screens have now been switched off at your prison. Staff with View only or Management roles assigned by their Local System Administrator (LSA) can access temporary absences. Guidance can be found on our <a class="govuk-link" target="_blank" href="https://justiceuk.sharepoint.com/sites/prisons-digital/SitePages/External%20Movements%20-%20Homepage.aspx">SharePoint</a> page.',
-      }
-    }
-  } else {
-    const dateString = format(new Date(), 'yyyy-MM-dd')
-    if (dateString >= '2026-04-22' && dateString < '2026-05-12') {
-      res.locals.switchOffBanner = {
-        html: 'Following the rollout of the temporary absence service on DPS, the corresponding TAP NOMIS screens will be switched off at your prison on Tuesday 12th May. This means that from this date, you will only be able to use DPS to create and manage temporary absences and generate documents. Further information about access and guidance can be found on our <a class="govuk-link" target="_blank" href="https://justiceuk.sharepoint.com/sites/prisons-digital/SitePages/External%20Movements%20-%20Homepage.aspx">SharePoint</a> page.',
-      }
-    } else if (dateString >= '2026-05-12' && dateString < '2026-06-11') {
-      res.locals.switchOffBanner = {
-        html: 'You must now use DPS to create and manage temporary absences and generate documents. The temporary absence screens in NOMIS screens have now been switched off at your prison. Staff with View only or Management roles assigned by their Local System Administrator (LSA) can access temporary absences. Guidance can be found on our <a class="govuk-link" target="_blank" href="https://justiceuk.sharepoint.com/sites/prisons-digital/SitePages/External%20Movements%20-%20Homepage.aspx">SharePoint</a> page.',
+        html:
+          '<p>Transfers are now available on DPS at your prison. You can:</p>' +
+          '<ul class="govuk-list govuk-list--bullet">' +
+          '  <li>schedule and manage a transfer</li>' +
+          '  <li>plan and manage a transfer</li>' +
+          '  <li>schedule transfers in bulk</li>' +
+          '  <li>edit scheduled transfers in bulk</li>' +
+          '  <li>create and download transfer checklists </li>' +
+          '</ul>' +
+          '<p>Staff with View only or Management roles assigned by their Local System Administrator (LSA) can access the service. Please request this directly with your LSA. Guidance and access information can be found on our <a class="govuk-link" target="_blank" href="https://justiceuk.sharepoint.com/:u:/r/sites/prisons-digital/SitePages/External%20Movements%20-%20Transfers.aspx?d=w56ba4aaa39d0463c92e0ad70a7c22698&csf=1&web=1&e=usHP6E">Transfers SharePoint page</a>. If you have any further questions, please contact us at <a href="mailto:external-movements-rollout@justice.gov.uk">external-movements-rollout@justice.gov.uk</a>.</p>',
       }
     }
   }
