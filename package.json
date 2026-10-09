@@ -77,7 +77,7 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.1145.0",
+    "@aws-sdk/client-sqs": "^3.1146.0",
     "@axe-core/playwright": "^4.13.0",
     "@ministryofjustice/frontend": "^11.1.0",
     "@ministryofjustice/hmpps-auth-clients": "^3.0.0",
@@ -87,7 +87,7 @@
     "@ministryofjustice/hmpps-monitoring": "^2.1.0",
     "@ministryofjustice/hmpps-prison-permissions-lib": "^4.4.0",
     "@ministryofjustice/hmpps-rest-client": "^2.2.0",
-    "@sentry/node": "^11.1.0",
+    "@sentry/node": "^11.4.0",
     "body-parser": "^2.3.0",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
@@ -153,11 +153,11 @@
     "lint-staged": "^17.6.0",
     "nock": "^14.0.17",
     "openapi-typescript": "^7.13.0",
-    "playwright-ctrf-json-reporter": "^0.0.29",
+    "playwright-ctrf-json-reporter": "^0.1.0",
     "prettier": "^3.9.9",
     "prettier-plugin-jinja-template": "^2.2.0",
     "sass-embedded": "^1.105.1",
-    "supertest": "^7.3.0",
+    "supertest": "^7.3.1",
     "ts-jest": "^29.4.14",
     "typescript": "^5.9.3"
   },
