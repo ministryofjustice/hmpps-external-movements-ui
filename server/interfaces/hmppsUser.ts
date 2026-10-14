@@ -73,5 +73,6 @@ export type HmppsUser = (PrisonUser | ProbationUser | ExternalUser | AzureADUser
   permissions: {
     TAP: UserPermissionLevel
     Transfer: UserPermissionLevel
+    Release: UserPermissionLevel
   }
 }

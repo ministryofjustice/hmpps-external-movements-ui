@@ -4,6 +4,7 @@ import { HmppsUser, UserPermissionLevel } from '../../interfaces/hmppsUser'
 const SERVICE_NAMES = {
   TAP: 'temporary absences',
   Transfer: 'schedule a transfer for a prisoner',
+  Release: 'schedule a release for a prisoner',
 }
 
 const PERMISSION_MAP = {

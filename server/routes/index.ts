@@ -90,12 +90,10 @@ export default function routes(services: Services): Router {
   })
 
   get('/', Page.HOME_PAGE, populateSwitchOffBanner, async (_req, res) => {
-    const enabledServices = res.locals.feComponents?.sharedData?.services?.map(({ id }) => id)
-
     res.render('view', {
       showBreadcrumbs: true,
-      transferEnabled: enabledServices?.includes('transfer-scheduler'),
       transferUrl: config.serviceUrls.transferScheduler,
+      releaseUrl: config.serviceUrls.releaseScheduler,
     })
   })
 
