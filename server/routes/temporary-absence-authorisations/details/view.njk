@@ -138,7 +138,7 @@
               } if result.repeat,
               {
                 key: { text: "Comments" },
-                value: { text: (result.comments or "Not provided") | escape | nl2br },
+                value: { html: (result.comments or "Not provided") | escape | nl2br },
                 actions: { items: [{ href: baseEditUrl + "/comments", text: "Change", visuallyHiddenText: "comments", classes: "govuk-link--no-visited-state" }] }
               },
               {
