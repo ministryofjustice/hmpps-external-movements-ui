@@ -191,7 +191,7 @@
           {% for authorisation in results %}
             {% set rows = (rows.push([
               {
-                html: '<a class="govuk-link--no-visited-state" href="/temporary-absence-authorisations/' + authorisation.id + '">' + authorisation.person | firstNameSpaceLastName + "</a><br/>" + authorisation.person.personIdentifier
+                html: '<a class="govuk-link--no-visited-state" href="/temporary-absence-authorisations/' + authorisation.id + '">' + authorisation.person | lastNameCommaFirstName + "</a><br/>" + authorisation.person.personIdentifier
               },
               {
                 text: authorisation.start | formatDate

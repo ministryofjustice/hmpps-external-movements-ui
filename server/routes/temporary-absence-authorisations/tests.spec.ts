@@ -107,7 +107,7 @@ test.describe('/temporary-absence-authorisations', () => {
     // verify search results are rendered
     await expect(page.getByText('Showing 26 to 27 of 27 total results')).toHaveCount(2)
     await testPage.verifyTableRow(1, [
-      /Prisoner-Name Prisoner-Surname(.*)A9965EA/,
+      /Prisoner-Surname, Prisoner-Name(.*)A9965EA/,
       '1 January 2001',
       '1 January 2001',
       'Restricted ROTL (Release on Temporary Licence) > RDR (Resettlement Day Release) > Paid work > IT and communication',
@@ -117,7 +117,7 @@ test.describe('/temporary-absence-authorisations', () => {
       'Approved',
     ])
     await testPage.verifyTableRow(2, [
-      /Another Name(.*)A9965EB/,
+      /Name, Another(.*)A9965EB/,
       '2 January 2001',
       '1 March 2001',
       'Police production',
