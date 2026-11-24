@@ -200,7 +200,7 @@
           {% for occurrence in results %}
             {% set rows = (rows.push([
               {
-                html: '<a class="govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">' + occurrence.authorisation.person | firstNameSpaceLastName + "</a><br/>" + occurrence.authorisation.person.personIdentifier
+                html: '<a class="govuk-link--no-visited-state" href="/temporary-absences/' + occurrence.id + '">' + occurrence.authorisation.person | lastNameCommaFirstName + "</a><br/>" + occurrence.authorisation.person.personIdentifier
               },
               {
                 text: occurrence.start | formatDate("d MMMM yyyy 'at' HH:mm")
